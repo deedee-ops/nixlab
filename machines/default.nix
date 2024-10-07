@@ -6,7 +6,7 @@
   ...
 }:
 {
-  imports = [ ];
+  imports = [ ./deedee ];
 
   options = {
     flakePart = {
