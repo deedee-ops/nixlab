@@ -1,0 +1,49 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.myApps.aichat;
+in
+{
+  options.myApps.aichat = {
+    enable = lib.mkEnableOption "aichat";
+    openAIapiKeyPath = lib.mkOption {
+      type = lib.types.str;
+      description = "ChatGPT/OpenAI API Key path.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    home.packages = [
+      pkgs.aichat
+    ];
+    home.shellAliases.ai = "aichat";
+
+    myApps.shellInitScriptContents = [
+      ''
+        export OPENAI_API_KEY="$(cat ${cfg.openAIapiKeyPath} | tr -d '\n')"
+        _aichat_zsh() {
+            if [[ -n "$BUFFER" ]]; then
+                local _old=$BUFFER
+                BUFFER+="⌛"
+                zle -I && zle redisplay
+                BUFFER=$(${lib.getExe pkgs.aichat} -e "$_old")
+                zle end-of-line
+            fi
+        }
+        zle -N _aichat_zsh
+        bindkey '^E' _aichat_zsh
+      ''
+    ];
+
+    xdg.configFile."aichat/config.yaml".text = ''
+      ---
+      model: openai
+      clients:
+        - type: openai
+    '';
+  };
+}

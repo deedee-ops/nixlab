@@ -1,0 +1,113 @@
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  nerdfonts = pkgs.nerdfonts.override {
+    fonts = [
+      "FiraMono"
+      "JetBrainsMono"
+    ];
+  };
+in
+{
+  options.mySystem = {
+    filesystem = lib.mkOption {
+      type = lib.types.enum [
+        "ext4"
+        "zfs"
+      ];
+      description = "Global filesystem for the system disks. As a rule of thumb - use 'ext4' for VMs and 'zfs' for bare metal";
+      default = "zfs";
+    };
+
+    primaryUser = lib.mkOption {
+      type = lib.types.str;
+      description = "Primary unprivileged user login";
+      example = "bob";
+    };
+
+    swapSize = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Swap size with unit";
+      example = "4G";
+    };
+
+    theme = lib.mkOption {
+      type = lib.types.str;
+      description = "Global theme used for all the desktop apps";
+      example = "nord";
+      default = "catppuccin-mocha";
+    };
+
+    wallpaper = lib.mkOption {
+      # type = lib.types.nullOr lib.types.path;
+      type = lib.types.coercedTo lib.types.package toString lib.types.path;
+      description = "Desktop wallpaper";
+      default = ./assets/pixel.png;
+    };
+  };
+
+  config = {
+    nix = {
+      gc = {
+        automatic = true;
+        dates = "daily";
+        options = "--delete-older-than 30d";
+      };
+      settings = {
+        experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
+
+        trusted-users = [
+          "root"
+          "@wheel"
+          config.mySystem.primaryUser
+        ];
+        use-xdg-base-directories = true;
+      };
+    };
+
+    programs.nix-index-database.comma.enable = true;
+
+    stylix = {
+      enable = true;
+      autoEnable = false;
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/${config.mySystem.theme}.yaml";
+      image = config.mySystem.wallpaper;
+
+      cursor = {
+        package = pkgs.catppuccin-cursors.mochaDark;
+        name = "catppuccin-mocha-dark-cursors";
+        size = 48;
+      };
+
+      fonts = {
+        serif = {
+          package = pkgs.noto-fonts;
+          name = "Noto Serif";
+        };
+
+        sansSerif = {
+          package = pkgs.noto-fonts;
+          name = "Noto Sans";
+        };
+
+        monospace = {
+          package = nerdfonts;
+          name = "JetBrainsMono Nerd Font Mono";
+        };
+
+        emoji = {
+          package = pkgs.noto-fonts-emoji;
+          name = "Noto Color Emoji";
+        };
+      };
+    };
+  };
+}
