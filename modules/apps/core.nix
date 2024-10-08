@@ -12,6 +12,11 @@
       default = { };
       description = "Extra custom options which will be merged with config.home.";
     };
+    extraPackages = lib.mkOption {
+      type = lib.types.listOf lib.types.package;
+      default = [ ];
+      description = "Exrtra packages to install.";
+    };
     shellInitScriptFiles = lib.mkOption {
       type = lib.types.listOf lib.types.path;
       description = "Extra script paths invoked on shell initialization.";
@@ -27,7 +32,7 @@
   config = {
     nix.settings.use-xdg-base-directories = true;
 
-    home = {
+    home = lib.attrsets.recursiveUpdate {
       activation = {
         dirs = ''
           run mkdir -p ${config.home.homeDirectory}/Downloads || true
@@ -47,7 +52,7 @@
         pkgs.jq
         pkgs.pwgen
         pkgs.silver-searcher
-      ];
-    } // config.myApps.appendHome;
+      ] ++ config.myApps.extraPackages;
+    } config.myApps.appendHome;
   };
 }

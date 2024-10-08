@@ -17,7 +17,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.git = {
+    programs.git = lib.attrsets.recursiveUpdate {
       enable = true;
       aliases = {
         pf = "push --force-with-lease --force-if-includes";
@@ -127,6 +127,6 @@ in
           fsckobjects = true;
         };
       };
-    } // cfg.appendOptions;
+    } cfg.appendOptions;
   };
 }

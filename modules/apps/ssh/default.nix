@@ -18,12 +18,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.ssh = {
+    programs.ssh = lib.attrsets.recursiveUpdate {
       enable = true;
       package = pkgs.openssh;
 
       addKeysToAgent = "8h";
-    } // cfg.appendOptions;
+    } cfg.appendOptions;
 
     services.ssh-agent = {
       enable = true;
