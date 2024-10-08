@@ -1,5 +1,5 @@
 { config, ... }:
-{
+rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -9,10 +9,11 @@
     };
   };
 
-  mySystem = rec {
+  mySystem = {
     filesystem = "zfs";
     primaryUser = "ajgon";
-    notificationEmail = "homelab@rzegocki.dev";
+    rootDomain = "rzegocki.dev";
+    notificationEmail = "homelab@${mySystem.rootDomain}";
 
     disks = {
       enable = true;
@@ -40,7 +41,7 @@
     ssh = {
       enable = true;
       authorizedKeys = {
-        "${primaryUser}" = [
+        "${mySystem.primaryUser}" = [
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
         ];
       };
@@ -52,9 +53,15 @@
       enable = true;
       cloudflareEnvironmentFile = config.sops.secrets."cloudflare/lego_config".path;
       domains = [
-        "rzegocki.dev"
-        "*.rzegocki.dev"
+        mySystem.rootDomain
+        "*.${mySystem.rootDomain}"
       ];
+    };
+
+    nginx = {
+      inherit (mySystem) rootDomain;
+
+      enable = true;
     };
   };
 

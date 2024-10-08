@@ -2,8 +2,9 @@ _: {
   imports = [
     ./core.nix
 
-    ./letsencrypt.nix
     ./docker.nix
+    ./letsencrypt.nix
+    ./nginx.nix
     ./squid.nix
   ];
 }

@@ -35,6 +35,12 @@ in
       example = "bob";
     };
 
+    rootDomain = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Root domain of all exposed services (mostly nginx Vhosts).";
+    };
+
     swapSize = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
