@@ -1,7 +1,18 @@
-_: {
+{ config, ... }:
+{
+  sops = {
+    defaultSopsFile = ./secrets.sops.yaml;
+    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+
+    secrets = {
+      "cloudflare/lego_config" = { };
+    };
+  };
+
   mySystem = rec {
     filesystem = "zfs";
     primaryUser = "ajgon";
+    notificationEmail = "homelab@rzegocki.dev";
 
     disks = {
       enable = true;
@@ -33,6 +44,17 @@ _: {
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
         ];
       };
+    };
+  };
+
+  mySystemApps = {
+    letsencrypt = {
+      enable = true;
+      cloudflareEnvironmentFile = config.sops.secrets."cloudflare/lego_config".path;
+      domains = [
+        "rzegocki.dev"
+        "*.rzegocki.dev"
+      ];
     };
   };
 

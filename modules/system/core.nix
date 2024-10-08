@@ -23,6 +23,12 @@ in
       default = "zfs";
     };
 
+    notificationEmail = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Email receiving all notifications from the machine.";
+    };
+
     primaryUser = lib.mkOption {
       type = lib.types.str;
       description = "Primary unprivileged user login";
