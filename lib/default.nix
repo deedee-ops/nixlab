@@ -3,7 +3,6 @@ let
   inherit (inputs.nixpkgs) lib;
 in
 {
-
   mkEnableEnabledOption =
     name:
     lib.mkOption {

@@ -11,11 +11,11 @@ in
   options.mySystemApps.nginx = {
     enable = lib.mkEnableOption "nginx";
     rootDomain = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "TLD of all vhost subdomains.";
     };
     defaultCSPHeader = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = ''
         default-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline' data: mediastream: blob: wss: https://*.${cfg.rootDomain};
         object-src 'none';
@@ -61,5 +61,13 @@ in
         add_header 'Referrer-Policy' 'origin-when-cross-origin';
       '';
     };
+
+    mySystemApps.letsencrypt.certsGroup = config.services.nginx.group;
+
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
   };
+
 }

@@ -14,6 +14,11 @@ in
       type = lib.types.listOf lib.types.str;
       description = "List of domains (including wildcards) to issue LE certificates.";
     };
+    certsGroup = lib.mkOption {
+      type = lib.types.str;
+      description = "Group owner of the generated certificates.";
+      default = config.security.acme.defaults.group;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -33,6 +38,7 @@ in
           value = {
             inherit domain;
 
+            group = cfg.certsGroup;
             dnsProvider = "cloudflare";
             environmentFile = cfg.cloudflareEnvironmentFile;
           };

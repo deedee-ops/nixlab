@@ -34,6 +34,7 @@ rec {
 
     networking = {
       enable = true;
+      firewallEnable = true;
       hostname = "deedee";
       mainInterface = "enp5s0";
     };
@@ -61,6 +62,11 @@ rec {
     nginx = {
       inherit (mySystem) rootDomain;
 
+      enable = true;
+    };
+
+    # services
+    homepage = {
       enable = true;
     };
   };

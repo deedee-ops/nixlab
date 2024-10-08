@@ -55,6 +55,12 @@ in
       default = "catppuccin-mocha";
     };
 
+    timezone = lib.mkOption {
+      type = lib.types.str;
+      description = "Timezone for all services.";
+      default = "Europe/Warsaw";
+    };
+
     wallpaper = lib.mkOption {
       # type = lib.types.nullOr lib.types.path;
       type = lib.types.coercedTo lib.types.package toString lib.types.path;

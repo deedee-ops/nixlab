@@ -11,5 +11,6 @@ _: {
     ./user.nix
 
     ./apps
+    ./services
   ];
 }
