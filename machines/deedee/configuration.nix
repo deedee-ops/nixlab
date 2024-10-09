@@ -3,15 +3,6 @@ rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-    secrets = {
-      "cloudflare/lego_config" = { };
-      "credentials/admin" = {
-        mode = "0440";
-        group = "services";
-        restartUnits = [ "adguardhome.service" ];
-      };
-    };
   };
 
   mySystem = {
@@ -57,12 +48,13 @@ rec {
   mySystemApps = {
     letsencrypt = {
       enable = true;
-      cloudflareEnvironmentFile = config.sops.secrets."cloudflare/lego_config".path;
       domains = [
         mySystem.rootDomain
         "*.${mySystem.rootDomain}"
       ];
     };
+
+    maddy.enable = true;
 
     nginx = {
       inherit (mySystem) rootDomain;

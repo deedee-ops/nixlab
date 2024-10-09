@@ -25,6 +25,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."credentials/admin".restartUnits = [ "adguardhome.service" ];
+
     services.adguardhome = {
       enable = true;
       mutableSettings = false;

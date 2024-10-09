@@ -71,6 +71,13 @@ in
   };
 
   config = {
+    sops.secrets = {
+      "credentials/admin" = {
+        mode = "0440";
+        group = "services";
+      };
+    };
+
     nix = {
       gc = {
         automatic = true;

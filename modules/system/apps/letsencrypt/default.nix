@@ -6,10 +6,6 @@ in
   options.mySystemApps.letsencrypt = {
     enable = lib.mkEnableOption "letsencrypt lego app";
     useProduction = lib.mkEnableOption "Use production servers.";
-    cloudflareEnvironmentFile = lib.mkOption {
-      type = lib.types.str;
-      description = "Cloudflare environment credentials for LEGO.";
-    };
     domains = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "List of domains (including wildcards) to issue LE certificates.";
@@ -22,6 +18,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."system/apps/letsencrypt/envfile" = { };
+
     security.acme = {
       acceptTerms = true;
       defaults =
@@ -40,7 +38,7 @@ in
 
             group = cfg.certsGroup;
             dnsProvider = "cloudflare";
-            environmentFile = cfg.cloudflareEnvironmentFile;
+            environmentFile = config.sops.secrets."system/apps/letsencrypt/envfile".path;
           };
         }) cfg.domains
       );
