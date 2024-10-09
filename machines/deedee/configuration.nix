@@ -70,6 +70,8 @@ rec {
       enable = true;
     };
 
+    redis.enable = true;
+
     # services
     adguardhome = {
       enable = true;
