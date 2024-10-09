@@ -5,6 +5,7 @@ _: {
     ./docker.nix
     ./letsencrypt.nix
     ./nginx.nix
+    ./postgresql.nix
     ./redis.nix
     ./squid.nix
   ];

@@ -70,6 +70,7 @@ rec {
       enable = true;
     };
 
+    postgresql.enable = true;
     redis.enable = true;
 
     # services
