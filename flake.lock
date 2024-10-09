@@ -132,10 +132,10 @@
     },
     "ephemeral-machines": {
       "locked": {
-        "lastModified": 1728400181,
-        "narHash": "sha256-L1ETpIjh+wY4O6jKQoygr2CvukLzJifwdeC/UY4DMBM=",
+        "lastModified": 1728468101,
+        "narHash": "sha256-r0tP9GEVrKvsGqa2uMG08bAesRXXNVpMXcZEVUyNn1Y=",
         "ref": "refs/heads/master",
-        "rev": "dea029579d666b52d204a5c8f3d520cb5d64e01e",
+        "rev": "0271c7e7e5463a99d6e8dcacdad33636f1e5fb19",
         "revCount": 1,
         "type": "git",
         "url": "ssh://git@gitea.rzegocki.dev:2222/deedee/nix-machines.git"

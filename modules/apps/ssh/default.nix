@@ -9,7 +9,9 @@ let
 in
 {
   options.myApps.ssh = {
-    enable = lib.mkEnableEnabledOption "ssh";
+    enable = lib.mkEnableOption "ssh" // {
+      default = true;
+    };
     appendOptions = lib.mkOption {
       type = lib.types.attrs;
       default = { };

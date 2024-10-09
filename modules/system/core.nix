@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  svc,
   ...
 }:
 let
@@ -93,10 +94,13 @@ in
 
     programs.nix-index-database.comma.enable = true;
 
-    stylix = {
+    users.groups.services = { };
+
+    stylix = rec {
       enable = true;
       autoEnable = false;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${config.mySystem.theme}.yaml";
+      polarity = (svc.importYAML base16Scheme).variant;
       image = config.mySystem.wallpaper;
 
       cursor = {

@@ -8,7 +8,9 @@ let
 in
 {
   options.myApps.bat = {
-    enable = lib.mkEnableEnabledOption "bat";
+    enable = lib.mkEnableOption "bat" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

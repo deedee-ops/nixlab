@@ -7,7 +7,7 @@ let
 in
 {
   options.myApps.direnv = {
-    enable = lib.mkEnableEnabledOption "direnv";
+    enable = lib.mkEnableOption "direnv" // { default = true; };
   };
 
   config = lib.mkIf cfg.enable {

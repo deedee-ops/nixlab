@@ -57,17 +57,16 @@ in
     services.homepage-dashboard = {
       enable = true;
 
-      services = builtins.map (
-        key:
-        (builtins.map (innerKey: (builtins.getAttr innerKey (builtins.getAttr key cfg.services))) (
-          builtins.attrNames (builtins.getAttr key cfg.services)
-        ))
-      ) (builtins.attrNames cfg.services);
+      services = builtins.map (key: {
+        "${key}" = builtins.map (innerKey: {
+          "${innerKey}" = builtins.getAttr innerKey (builtins.getAttr key cfg.services);
+        }) (builtins.attrNames (builtins.getAttr key cfg.services));
+      }) (builtins.attrNames cfg.services);
 
       settings = {
         title = "DeeDee";
         startUrl = "https://www.${config.mySystem.rootDomain}/";
-        theme = "dark";
+        theme = if config.stylix.polarity == "either" then "auto" else "${config.stylix.polarity}";
         headerStyle = "clean";
         baseUrl = "https://www.${config.mySystem.rootDomain}/";
         target = "_blank";
@@ -112,6 +111,12 @@ in
       (svc.mkNginxVHost "www" "http://localhost:${builtins.toString config.services.homepage-dashboard.listenPort}")
       // {
         default = true;
+        extraConfig = builtins.replaceStrings [ "\n" ] [ " " ] ''
+          more_set_headers "Content-Security-Policy: default-src 'self' 'unsafe-inline' data: blob: wss:;
+          connect-src 'self' https://api.github.com *.${config.mySystem.rootDomain};
+          manifest-src 'self' *.${config.mySystem.rootDomain};
+          img-src 'self' https://cdn.jsdelivr.net; object-src 'none';";
+        '';
       };
   };
 }

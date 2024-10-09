@@ -8,7 +8,9 @@ let
 in
 {
   options.myApps.git = {
-    enable = lib.mkEnableEnabledOption "git";
+    enable = lib.mkEnableOption "git" // {
+      default = true;
+    };
     appendOptions = lib.mkOption {
       type = lib.types.attrs;
       default = { };

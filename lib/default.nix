@@ -3,15 +3,6 @@ let
   inherit (inputs.nixpkgs) lib;
 in
 {
-  mkEnableEnabledOption =
-    name:
-    lib.mkOption {
-      default = true;
-      example = false;
-      description = "Whether to enable ${name}.";
-      type = lib.types.bool;
-    };
-
   mkNixosConfig =
     {
       system,

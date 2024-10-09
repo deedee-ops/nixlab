@@ -8,7 +8,9 @@ let
 in
 {
   options.myApps.fzf = {
-    enable = lib.mkEnableEnabledOption "fzf";
+    enable = lib.mkEnableOption "fzf" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

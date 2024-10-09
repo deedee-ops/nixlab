@@ -9,7 +9,9 @@ let
 in
 {
   options.myApps.xdg-ninja = {
-    enable = lib.mkEnableEnabledOption "xdg-ninja";
+    enable = lib.mkEnableOption "xdg-ninja" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

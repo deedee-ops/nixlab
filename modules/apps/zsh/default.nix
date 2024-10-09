@@ -27,7 +27,9 @@ let
 in
 {
   options.myApps.zsh = {
-    enable = lib.mkEnableEnabledOption "zsh";
+    enable = lib.mkEnableOption "zsh" // {
+      default = true;
+    };
     promptColor = lib.mkOption {
       type = lib.types.str;
       default = "magenta";

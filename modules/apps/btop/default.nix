@@ -10,7 +10,9 @@ let
 in
 {
   options.myApps.btop = {
-    enable = lib.mkEnableEnabledOption "btop";
+    enable = lib.mkEnableOption "btop" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

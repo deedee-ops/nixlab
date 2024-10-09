@@ -9,7 +9,9 @@ let
 in
 {
   options.myApps.neovim = {
-    enable = lib.mkEnableEnabledOption "neovim";
+    enable = lib.mkEnableOption "neovim" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {

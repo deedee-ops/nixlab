@@ -6,6 +6,11 @@ rec {
 
     secrets = {
       "cloudflare/lego_config" = { };
+      "credentials/admin" = {
+        mode = "0440";
+        group = "services";
+        restartUnits = [ "adguardhome.service" ];
+      };
     };
   };
 
@@ -66,6 +71,10 @@ rec {
     };
 
     # services
+    adguardhome = {
+      enable = true;
+      adminPasswordFile = config.sops.secrets."credentials/admin".path;
+    };
     homepage = {
       enable = true;
     };

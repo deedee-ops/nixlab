@@ -9,8 +9,12 @@ let
 in
 {
   options.myApps.gnupg = {
-    enable = lib.mkEnableEnabledOption "gnupg";
-    enableGpgAgent = lib.mkEnableEnabledOption "gpg-agent";
+    enable = lib.mkEnableOption "gnupg" // {
+      default = true;
+    };
+    enableGpgAgent = lib.mkEnableOption "gpg-agent" // {
+      default = true;
+    };
     pinentryPackage = lib.mkOption {
       type = lib.types.package;
       default = pkgs.pinentry;

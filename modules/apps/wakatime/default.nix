@@ -4,7 +4,9 @@ let
 in
 {
   options.myApps.wakatime = {
-    enable = lib.mkEnableEnabledOption "wakatime";
+    enable = lib.mkEnableOption "wakatime" // {
+      default = true;
+    };
     wakapi = {
       apiKeyPath = lib.mkOption {
         type = lib.types.str;

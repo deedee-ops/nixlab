@@ -1,4 +1,9 @@
-{ config, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   _module.args.svc = {
     mkNginxVHost = host: proxyPass: {
@@ -12,5 +17,13 @@
       serverName = "${host}.${config.mySystem.rootDomain}";
       forceSSL = true;
     };
+
+    importYAML =
+      file:
+      builtins.fromJSON (
+        builtins.readFile (
+          pkgs.runCommandNoCC "converted-yaml.json" { } ''${lib.getExe pkgs.yj} < "${file}" > "$out"''
+        )
+      );
   };
 }
