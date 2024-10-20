@@ -23,7 +23,12 @@
     };
 
     mkContainer =
-      cfg:
+      {
+        cfg,
+        opts ? {
+          allowPublic = false;
+        },
+      }:
       (lib.recursiveUpdate {
         autoStart = true;
         environment = {
@@ -31,13 +36,16 @@
         };
       } cfg)
       // {
-        extraOptions = [
-          "--read-only"
-          "--cap-drop=all"
-          "--security-opt=no-new-privileges"
-          "--network=${config.mySystemApps.docker.network.name}"
-          "--add-host=host.docker.internal:${config.mySystemApps.docker.network.hostIP}"
-        ] ++ (cfg.extraOptions or [ ]);
+        extraOptions =
+          [
+            "--read-only"
+            "--cap-drop=all"
+            "--security-opt=no-new-privileges"
+            "--network=${config.mySystemApps.docker.network.private.name}"
+            "--add-host=host.docker.internal:${config.mySystemApps.docker.network.private.hostIP}"
+          ]
+          ++ (cfg.extraOptions or [ ])
+          ++ lib.optionals opts.allowPublic [ "--network=${config.mySystemApps.docker.network.public.name}" ];
       };
 
     mkContainerSecretsSops =

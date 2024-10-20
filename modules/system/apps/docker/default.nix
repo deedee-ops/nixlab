@@ -21,27 +21,64 @@ in
     network = lib.mkOption {
       type = lib.types.submodule {
         options = {
-          name = lib.mkOption {
-            type = lib.types.str;
-            description = "Name of the network used by containers.";
-            default = "homelab";
+          private = lib.mkOption {
+            type = lib.types.submodule {
+              options = {
+                name = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Name of the private (no internet) network used by containers.";
+                  default = "private";
+                };
+                subnet = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Subnet of the private (no internet) network user by containers.";
+                  default = "172.30.0.0/16";
+                };
+                hostIP = lib.mkOption {
+                  type = lib.types.str;
+                  description = "IP under which the host is reachable for given network.";
+                  default = "172.30.0.1";
+                };
+              };
+            };
+            default = {
+              name = "private";
+              subnet = "172.30.0.0/16";
+              hostIP = "172.30.0.1";
+            };
           };
-          subnet = lib.mkOption {
-            type = lib.types.str;
-            description = "Subnet of the network userd by containers.";
-            default = "172.30.0.0/16";
-          };
-          hostIP = lib.mkOption {
-            type = lib.types.str;
-            description = "IP under which the host is reachable for given network.";
-            default = "172.30.0.1";
+          public = lib.mkOption {
+            type = lib.types.submodule {
+              options = {
+                name = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Name of the public (with internet) network used by containers.";
+                  default = "public";
+                };
+                subnet = lib.mkOption {
+                  type = lib.types.str;
+                  description = "Subnet of the public (with internet) network user by containers.";
+                  default = "172.31.0.0/16";
+                };
+              };
+            };
+            default = {
+              name = "public";
+              subnet = "172.31.0.0/16";
+            };
           };
         };
       };
       default = {
-        name = "homelab";
-        subnet = "172.30.0.0/16";
-        hostIP = "172.30.0.1";
+        private = {
+          name = "private";
+          subnet = "172.30.0.0/16";
+          hostIP = "172.30.0.1";
+        };
+        public = {
+          name = "public";
+          subnet = "172.31.0.0/16";
+        };
       };
     };
   };
@@ -79,7 +116,8 @@ in
         dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
       in
       ''
-        ${dockerBin} network inspect ${cfg.network.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.name} --subnet ${cfg.network.subnet}
+        ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
+        ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
       '';
   };
 }
