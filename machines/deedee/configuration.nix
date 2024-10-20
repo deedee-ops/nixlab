@@ -84,6 +84,10 @@ _: rec {
     redis.enable = true;
 
     # containers
+    lldap = {
+      enable = true;
+      sopsSecretPrefix = "system/apps/lldap/env";
+    };
   };
 
   myApps = {

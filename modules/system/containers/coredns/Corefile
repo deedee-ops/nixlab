@@ -1,0 +1,11 @@
+. {
+    errors
+    cancel
+
+    forward . 127.0.0.11
+    rewrite name suffix .docker . answer auto
+
+    view docker {
+        expr name() endsWith '.docker.'
+    }
+}

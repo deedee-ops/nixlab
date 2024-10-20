@@ -12,5 +12,6 @@ _: {
     ./user.nix
 
     ./apps
+    ./containers
   ];
 }

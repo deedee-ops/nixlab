@@ -12,7 +12,7 @@ in
     enable = lib.mkEnableOption "maddy";
     envFileSopsSecret = lib.mkOption {
       type = lib.types.str;
-      description = "Sops secret name containing admin password.";
+      description = "Sops secret name containing environment variables.";
     };
   };
 
@@ -27,7 +27,7 @@ in
       enable = true;
       hostname = config.mySystem.rootDomain;
       secrets = [
-        config.sops.secrets."system/apps/maddy/envfile".path
+        config.sops.secrets."${cfg.envFileSopsSecret}".path
         (pkgs.writeText "ingress.env" ''
           DEBUG=no
           INGRESS_DOMAIN=${config.mySystem.rootDomain}
