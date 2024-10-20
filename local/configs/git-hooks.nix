@@ -26,6 +26,7 @@
             excludes = [ ".*\.zsh" ];
           };
           stylua.enable = true;
+          yamllint.enable = true;
 
           actionlint.enable = true;
           commitizen.enable = true;

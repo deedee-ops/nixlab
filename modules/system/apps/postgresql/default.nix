@@ -56,6 +56,8 @@ in
       ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
     };
 
+    users.users.postgres.extraGroups = [ "abc" ];
+
     systemd.services.postgresql.postStart = ''
       $PSQL -tA <<'EOF'
         DO $$

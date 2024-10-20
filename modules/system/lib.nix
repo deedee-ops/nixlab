@@ -14,6 +14,11 @@
           resolver 127.0.0.1:5533;
           set $host_to_pass ${proxyPass};
           proxy_pass $host_to_pass;
+          proxy_set_header Host $host;
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Host $host;
+          proxy_set_header X-Forwarded-Proto $scheme;
         '';
       };
 
@@ -49,10 +54,14 @@
       };
 
     mkContainerSecretsSops =
-      containerName: secretPrefix: secretEnvs:
+      {
+        containerName,
+        sopsSecretPrefix,
+        secretEnvs,
+      }:
       builtins.listToAttrs (
         builtins.map (env: {
-          name = "${secretPrefix}/${env}";
+          name = "${sopsSecretPrefix}/${env}";
           value = {
             group = config.users.groups.abc.name;
             mode = "0440";
@@ -61,10 +70,22 @@
         }) secretEnvs
       );
 
+    mkContainerSecretsEnv =
+      {
+        suffix ? "_FILE",
+        secretEnvs,
+      }:
+      builtins.listToAttrs (
+        builtins.map (env: {
+          name = "${env}${suffix}";
+          value = "/secrets/${env}";
+        }) secretEnvs
+      );
+
     mkContainerSecretsVolumes =
-      secretPrefix: secretEnvs:
+      { sopsSecretPrefix, secretEnvs }:
       builtins.map (
-        env: "${config.sops.secrets."${secretPrefix}/${env}".path}:/secrets/${env}:ro"
+        env: "${config.sops.secrets."${sopsSecretPrefix}/${env}".path}:/secrets/${env}:ro"
       ) secretEnvs;
 
     importYAML =
@@ -74,5 +95,37 @@
           pkgs.runCommandNoCC "converted-yaml.json" { } ''${lib.getExe pkgs.yj} < "${file}" > "$out"''
         )
       );
+
+    templateFile =
+      {
+        name,
+        src,
+        vars,
+      }:
+      pkgs.stdenv.mkDerivation {
+
+        name = "${name}";
+
+        nativeBuildInpts = [ pkgs.mustache-go ];
+
+        # Pass Json as file to avoid escaping
+        passAsFile = [ "jsonData" ];
+        jsonData = builtins.toJSON vars;
+
+        # Disable phases which are not needed. In particular the unpackPhase will
+        # fail, if no src attribute is set
+        phases = [
+          "buildPhase"
+          "installPhase"
+        ];
+
+        buildPhase = ''
+          ${pkgs.mustache-go}/bin/mustache $jsonDataPath ${src} > rendered_file
+        '';
+
+        installPhase = ''
+          cp rendered_file $out
+        '';
+      };
   };
 }

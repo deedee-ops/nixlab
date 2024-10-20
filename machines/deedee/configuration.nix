@@ -15,6 +15,7 @@ _: rec {
     primaryUser = "ajgon";
     rootDomain = "rzegocki.dev";
     notificationEmail = "homelab@${mySystem.rootDomain}";
+    notificationSender = "deedee@${mySystem.rootDomain}";
 
     disks = {
       enable = true;
@@ -81,9 +82,17 @@ _: rec {
     };
 
     postgresql.enable = true;
-    redis.enable = true;
+    redis = {
+      enable = true;
+      passFileSopsSecret = "system/apps/redis/password";
+    };
 
     # containers
+    authelia = {
+      enable = true;
+      sopsSecretPrefix = "system/apps/authelia/env";
+    };
+
     lldap = {
       enable = true;
       sopsSecretPrefix = "system/apps/lldap/env";

@@ -30,6 +30,12 @@ in
       description = "Email receiving all notifications from the machine.";
     };
 
+    notificationSender = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "Email sender of all notification emails.";
+    };
+
     primaryUser = lib.mkOption {
       type = lib.types.str;
       description = "Primary unprivileged user login";

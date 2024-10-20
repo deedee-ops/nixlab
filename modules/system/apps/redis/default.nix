@@ -5,7 +5,24 @@ in
 {
   options.mySystemApps.redis = {
     enable = lib.mkEnableOption "redis";
+    passFileSopsSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "Sops secret name containing master password.";
+    };
   };
 
-  config = lib.mkIf cfg.enable { services.redis.servers."".enable = true; };
+  config = lib.mkIf cfg.enable {
+    sops.secrets."${cfg.passFileSopsSecret}" = {
+      owner = "redis";
+      group = config.users.groups.abc.name;
+      mode = "0440";
+      restartUnits = [ "redis.service" ];
+    };
+
+    services.redis.servers."" = {
+      enable = true;
+      bind = config.mySystemApps.docker.network.private.hostIP;
+      requirePassFile = config.sops.secrets."${cfg.passFileSopsSecret}".path;
+    };
+  };
 }
