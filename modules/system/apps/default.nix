@@ -2,6 +2,7 @@ _: {
   imports = [
     ./core.nix
 
+    ./adguardhome
     ./docker
     ./letsencrypt
     ./maddy

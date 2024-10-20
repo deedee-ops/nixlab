@@ -15,9 +15,9 @@ in
       type = lib.types.str;
       default = "adguardhome";
     };
-    adminPasswordFile = lib.mkOption {
+    adminPasswordSopsSecret = lib.mkOption {
       type = lib.types.str;
-      description = "Path to file containing admin password.";
+      description = "Sops secret name containing admin password.";
     };
     addToHomepage = lib.mkEnableOption "adguard in homepage" // {
       default = true;
@@ -25,7 +25,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."credentials/admin".restartUnits = [ "adguardhome.service" ];
+    sops.secrets."${cfg.adminPasswordSopsSecret}".restartUnits = [ "adguardhome.service" ];
 
     services.adguardhome = {
       enable = true;
@@ -198,24 +198,19 @@ in
 
     systemd.services.adguardhome = {
       preStart = lib.mkAfter ''
-        HASH="$(cat ${cfg.adminPasswordFile} | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
+        HASH="$(cat ${
+          config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
+        } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
         ${lib.getExe pkgs.gnused} -i"" "s,ADGUARDPASS,'$HASH',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
       '';
       serviceConfig.User = cfg.user;
+      serviceConfig.Group = "services";
     };
 
     services = {
       resolved.enable = false;
 
       nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://localhost:${builtins.toString config.services.adguardhome.port}";
-    };
-
-    mySystemApps.homepage.services.Infrastructure = {
-      "AdGuardHome" = {
-        icon = "adguard-home.svg";
-        href = "https://adguard.${config.mySystem.rootDomain}/";
-        description = "DNS Ad blocking";
-      };
     };
   };
 }

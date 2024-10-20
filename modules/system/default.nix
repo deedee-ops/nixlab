@@ -1,6 +1,7 @@
 _: {
   imports = [
     ./core.nix
+    ./lib.nix
 
     ./disks.nix
     ./home-manager.nix
@@ -11,6 +12,5 @@ _: {
     ./user.nix
 
     ./apps
-    ./services
   ];
 }

@@ -10,10 +10,14 @@ in
 {
   options.mySystemApps.maddy = {
     enable = lib.mkEnableOption "maddy";
+    envFileSopsSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "Sops secret name containing admin password.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets."system/apps/maddy/envfile" = {
+    sops.secrets."${cfg.envFileSopsSecret}" = {
       owner = "maddy";
       group = "maddy";
       restartUnits = [ "maddy.service" ];

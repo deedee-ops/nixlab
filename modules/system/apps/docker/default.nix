@@ -10,16 +10,23 @@ in
       default = { };
       description = "Extra settings for docker daemon";
     };
+    rootless = lib.mkEnableOption "rootless docker" // {
+      default = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    virtualisation.docker = {
-      enable = true;
-      daemon.settings = cfg.daemonSettings;
-      rootless = {
+    virtualisation = {
+      oci-containers.backend = "docker";
+
+      docker = {
         enable = true;
         daemon.settings = cfg.daemonSettings;
-        setSocketVariable = true;
+        rootless = {
+          enable = cfg.rootless;
+          daemon.settings = cfg.daemonSettings;
+          setSocketVariable = true;
+        };
       };
     };
 

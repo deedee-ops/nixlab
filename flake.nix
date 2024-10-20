@@ -30,8 +30,7 @@
       url = "github:nix-community/impermanence";
     };
     krewfile = {
-      # url = "github:brumhard/krewfile";
-      url = "github:ajgon/krewfile?ref=feat/indexes";
+      url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     lix = {
@@ -62,7 +61,8 @@
     };
 
     ephemeral-machines = {
-      url = "git+ssh://git@gitea.rzegocki.dev:2222/deedee/nix-machines.git";
+      # url = "git+ssh://git@gitea.rzegocki.dev:2222/deedee/nix-machines.git";
+      url = "git+ssh://git@github.com/deedee-ops/nix-machines.git";
     };
   };
 

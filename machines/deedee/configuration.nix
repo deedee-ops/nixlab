@@ -1,8 +1,13 @@
-{ config, ... }:
-rec {
+_: rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    secrets = {
+      "credentials/admin" = {
+        mode = "0440";
+        group = "services";
+      };
+    };
   };
 
   mySystem = {
@@ -30,7 +35,7 @@ rec {
 
     networking = {
       enable = true;
-      firewallEnable = true;
+      firewallEnable = false;
       hostname = "deedee";
       mainInterface = "enp5s0";
     };
@@ -46,6 +51,16 @@ rec {
   };
 
   mySystemApps = {
+    adguardhome = {
+      enable = true;
+      adminPasswordSopsSecret = "credentials/admin";
+    };
+
+    docker = {
+      enable = true;
+      rootless = false;
+    };
+
     letsencrypt = {
       enable = true;
       domains = [
@@ -54,7 +69,10 @@ rec {
       ];
     };
 
-    maddy.enable = true;
+    maddy = {
+      enable = true;
+      envFileSopsSecret = "system/apps/maddy/envfile";
+    };
 
     nginx = {
       inherit (mySystem) rootDomain;
@@ -65,14 +83,7 @@ rec {
     postgresql.enable = true;
     redis.enable = true;
 
-    # services
-    adguardhome = {
-      enable = true;
-      adminPasswordFile = config.sops.secrets."credentials/admin".path;
-    };
-    homepage = {
-      enable = true;
-    };
+    # containers
   };
 
   myApps = {
