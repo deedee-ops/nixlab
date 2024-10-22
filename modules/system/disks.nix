@@ -95,8 +95,6 @@ in
     ];
 
     networking.hostId = cfg.hostId;
-    swapDevices =
-      if cfg.swapSize != null then [ { device = "/dev/disk/by-partlabel/disk-system-swap"; } ] else [ ];
 
     disko.devices =
       {
@@ -128,7 +126,7 @@ in
                     swap = lib.mkIf (cfg.swapSize != null) {
                       size = "100%";
                       content = {
-                        type = "swap";
+                        type = "swap"; # this also takes care of fstab entry so you don't need to configure `swapDevices` separately
                         discardPolicy = "both";
                         resumeDevice = true;
                       };

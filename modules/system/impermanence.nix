@@ -24,7 +24,7 @@ in
     ];
 
     # bind a initrd command to rollback to blank root after boot
-    boot.initrd.postDeviceCommands = lib.mkAfter (
+    boot.initrd.postResumeCommands = lib.mkAfter (
       lib.optionalString (config.mySystem.filesystem == "zfs") ''
         zfs rollback -r rpool@${cfg.rootBlankSnapshotName}
       ''
@@ -37,9 +37,33 @@ in
         "/var/lib/nixos" # nixos state
       ];
       files = [
-        "/etc/machine-id"
         "/etc/adjtime" # hardware clock adjustment
-      ];
+      ] ++ lib.optionals (!config.virtualisation.incus.agent.enable) [ "/etc/machine-id" ]; # on VMs machine-id is constant, regenerated for vm uuid each time, and it breaks impermanence
+    };
+
+    fileSystems."${cfg.persistPath}" = {
+      device = "rpool/persist";
+      fsType = "zfs";
+      neededForBoot = true;
+    };
+
+    programs.fuse.userAllowOther = true;
+
+    system.activationScripts = {
+      imermanence-home =
+        let
+          homedir = "${cfg.persistPath}${
+            config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory
+          }";
+        in
+        {
+          deps = [ "users" ];
+          text = ''
+            mkdir -p "${homedir}" || true
+            chown ${config.mySystem.primaryUser}:users "${homedir}"
+            chmod 700 "${homedir}"
+          '';
+        };
     };
   };
 }

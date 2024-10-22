@@ -48,6 +48,12 @@ in
       example = "bob";
     };
 
+    primaryUserPasswordSopsSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "Sops secret path for primary user password.";
+      example = "users/bob/password";
+    };
+
     rootDomain = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;

@@ -1,18 +1,25 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
-  inherit (config.mySystem) primaryUser;
+  inherit (config.mySystem) primaryUser primaryUserPasswordSopsSecret;
 in
 {
-  users.mutableUsers = true;
+  sops.secrets."${primaryUserPasswordSopsSecret}".neededForUsers = true;
 
-  users.users."${primaryUser}" = {
-    isNormalUser = true;
-    description = "${primaryUser}";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-    ];
-    shell = pkgs.zsh;
+  users = {
+    users."${primaryUser}" = {
+      isNormalUser = true;
+      description = "${primaryUser}";
+      extraGroups = [
+        "networkmanager"
+        "wheel"
+      ];
+      shell = pkgs.zsh;
+      hashedPasswordFile = config.sops.secrets."${primaryUserPasswordSopsSecret}".path;
+    };
   };
 
   programs.zsh.enable = true;

@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -53,6 +54,17 @@
         pkgs.pwgen
         pkgs.silver-searcher
       ] ++ config.myApps.extraPackages;
+
+      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}" =
+        lib.mkIf osConfig.mySystem.impermanence.enable
+          {
+            allowOther = true;
+            directories = [
+              "Downloads"
+              "Pictures"
+              "Projects"
+            ];
+          };
     } config.myApps.appendHome;
   };
 }

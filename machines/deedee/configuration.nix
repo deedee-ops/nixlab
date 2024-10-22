@@ -3,16 +3,18 @@ _: rec {
     defaultSopsFile = ./secrets.sops.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
-      "credentials/admin" = {
+      "credentials/services/admin" = {
         mode = "0440";
         group = "services";
       };
+      "credentials/system/ajgon" = { };
     };
   };
 
   mySystem = {
     filesystem = "zfs";
     primaryUser = "ajgon";
+    primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     rootDomain = "rzegocki.dev";
     nasIP = "10.100.10.1";
     notificationEmail = "homelab@${mySystem.rootDomain}";
@@ -35,6 +37,11 @@ _: rec {
       };
     };
 
+    impermanence = {
+      enable = true;
+      persistPath = "/persist";
+    };
+
     networking = {
       enable = true;
       firewallEnable = false;
@@ -55,7 +62,7 @@ _: rec {
   mySystemApps = {
     adguardhome = {
       enable = true;
-      adminPasswordSopsSecret = "credentials/admin";
+      adminPasswordSopsSecret = "credentials/services/admin";
     };
 
     docker = {

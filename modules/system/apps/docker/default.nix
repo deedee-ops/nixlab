@@ -95,6 +95,7 @@ in
           daemon.settings = cfg.daemonSettings;
           setSocketVariable = true;
         };
+        storageDriver = lib.mkIf (config.mySystem.filesystem == "zfs") "zfs";
       };
     };
 
@@ -111,13 +112,24 @@ in
     users.users."${config.mySystem.primaryUser}".extraGroups = [ "docker" ];
     networking.firewall.interfaces."docker0".allowedUDPPorts = [ 53 ];
 
-    system.activationScripts.mkDockerNetwork =
+    systemd.services.docker-network =
       let
         dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
       in
-      ''
-        ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
-        ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
-      '';
+      {
+        script = ''
+          ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
+          ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
+        '';
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+        };
+        after = [ "docker.service" ];
+      };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ "/var/lib/docker" ]; };
   };
 }

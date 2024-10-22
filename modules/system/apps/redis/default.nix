@@ -21,8 +21,12 @@ in
 
     services.redis.servers."" = {
       enable = true;
-      bind = config.mySystemApps.docker.network.private.hostIP;
+      bind = null;
       requirePassFile = config.sops.secrets."${cfg.passFileSopsSecret}".path;
     };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ "/var/lib/redis" ]; };
   };
 }

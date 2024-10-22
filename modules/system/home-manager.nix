@@ -39,6 +39,7 @@ in
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile
+          inputs.impermanence.nixosModules.home-manager.impermanence
 
           ../apps/default.nix
         ] ++ cfg.extraImports;

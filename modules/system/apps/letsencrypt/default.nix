@@ -43,5 +43,9 @@ in
         }) cfg.domains
       );
     };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ "/var/lib/acme" ]; };
   };
 }

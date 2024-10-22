@@ -1,4 +1,9 @@
-{ modulesPath, pkgs, ... }:
+{
+  modulesPath,
+  config,
+  pkgs,
+  ...
+}:
 let
   serialDevice = if pkgs.stdenv.hostPlatform.isx86 then "ttyS0" else "ttyAMA0";
 in
@@ -9,7 +14,7 @@ in
   ];
 
   boot = {
-    growPartition = true;
+    growPartition = config.mySystem.filesystem != "zfs";
     loader.systemd-boot.enable = true;
     kernelParams = [
       "console=tty1"
