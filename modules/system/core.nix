@@ -24,6 +24,12 @@ in
       default = "zfs";
     };
 
+    nasIP = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "IP of Network Attached Storage.";
+    };
+
     notificationEmail = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;

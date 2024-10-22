@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  svc,
   ...
 }:
 let
@@ -21,6 +22,14 @@ in
         object-src 'none';
       '';
       description = "Default CSP header for all VHosts (can be overriden per vhost).";
+    };
+    extraVHosts = lib.mkOption {
+      type = lib.types.attrs;
+      description = "Extra VHosts to be configured with proxy pass.";
+      default = { };
+      example = {
+        "myhost" = "http://service.somewhere:1234";
+      };
     };
   };
 
@@ -60,6 +69,8 @@ in
         # Minimize information leaked to other domains
         more_set_headers "Referrer-Policy: origin-when-cross-origin";
       '';
+
+      virtualHosts = builtins.mapAttrs (name: value: svc.mkNginxVHost name value) cfg.extraVHosts;
     };
 
     mySystemApps.letsencrypt.certsGroup = config.services.nginx.group;

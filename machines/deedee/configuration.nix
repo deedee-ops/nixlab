@@ -14,6 +14,7 @@ _: rec {
     filesystem = "zfs";
     primaryUser = "ajgon";
     rootDomain = "rzegocki.dev";
+    nasIP = "10.100.10.1";
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
@@ -79,6 +80,11 @@ _: rec {
       inherit (mySystem) rootDomain;
 
       enable = true;
+      extraVHosts = {
+        s3 = "http://${mySystem.nasIP}:9000";
+        minio = "http://${mySystem.nasIP}:9001";
+        nas = "http://${mySystem.nasIP}:5000";
+      };
     };
 
     postgresql.enable = true;
