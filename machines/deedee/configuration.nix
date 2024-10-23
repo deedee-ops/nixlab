@@ -20,6 +20,10 @@ _: rec {
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
+    nix = {
+      githubPrivateTokenSopsSecret = "credentials/github/access-token-nix-config";
+    };
+
     alerts = {
       pushover = {
         enable = true;

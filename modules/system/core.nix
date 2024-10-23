@@ -89,27 +89,6 @@ in
   };
 
   config = {
-    nix = {
-      gc = {
-        automatic = true;
-        dates = "daily";
-        options = "--delete-older-than 30d";
-      };
-      settings = {
-        experimental-features = [
-          "nix-command"
-          "flakes"
-        ];
-
-        trusted-users = [
-          "root"
-          "@wheel"
-          config.mySystem.primaryUser
-        ];
-        use-xdg-base-directories = true;
-      };
-    };
-
     programs.nix-index-database.comma.enable = true;
 
     users.groups.services = { };

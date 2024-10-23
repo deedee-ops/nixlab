@@ -132,17 +132,17 @@
     },
     "ephemeral-machines": {
       "locked": {
-        "lastModified": 1729503435,
-        "narHash": "sha256-W7+lRVc8jnvA6i4154/sLxa/GCg21u14uj5b1y1tFqQ=",
-        "ref": "refs/heads/master",
-        "rev": "6408b190d8c15854cbfac52c789190392b2802c4",
-        "revCount": 1,
-        "type": "git",
-        "url": "ssh://git@github.com/deedee-ops/nix-machines.git"
+        "lastModified": 1729783194,
+        "narHash": "sha256-EvDoRI0ZVUMLhTQQ2fJ41+nSD13qAeFxL0bY5tTKltg=",
+        "owner": "deedee-ops",
+        "repo": "nix-machines",
+        "rev": "dcebda321f7982b5580e2d140ddfdfa2b010f15e",
+        "type": "github"
       },
       "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/deedee-ops/nix-machines.git"
+        "owner": "deedee-ops",
+        "repo": "nix-machines",
+        "type": "github"
       }
     },
     "flake-compat": {

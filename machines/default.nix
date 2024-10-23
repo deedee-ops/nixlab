@@ -42,10 +42,14 @@
           ];
         };
       }
-      // lib.attrsets.recursiveUpdate config.flakePart
-        (inputs.ephemeral-machines.mkFlakePart inputs [
-          ../modules/system
-          ../modules/hardware/incus.nix
-        ]).flakePart;
+      // lib.attrsets.recursiveUpdate config.flakePart (
+        if builtins.hasAttr "ephemeral-machines" inputs then
+          (inputs.ephemeral-machines.mkFlakePart inputs [
+            ../modules/system
+            ../modules/hardware/incus.nix
+          ]).flakePart
+        else
+          { }
+      );
   };
 }

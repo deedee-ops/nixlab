@@ -10,6 +10,7 @@ _: {
     ./impermanence.nix
     ./locales.nix
     ./networking.nix
+    ./nix.nix
     ./ssh.nix
     ./user.nix
 

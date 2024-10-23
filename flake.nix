@@ -61,8 +61,7 @@
     };
 
     ephemeral-machines = {
-      # url = "git+ssh://git@gitea.rzegocki.dev:2222/deedee/nix-machines.git";
-      url = "git+ssh://git@github.com/deedee-ops/nix-machines.git";
+      url = "github:deedee-ops/nix-machines";
     };
   };
 
