@@ -88,6 +88,68 @@
         env: "${config.sops.secrets."${sopsSecretPrefix}/${env}".path}:/secrets/${env}:ro"
       ) secretEnvs;
 
+    mkRestic =
+      {
+        name,
+        paths,
+        excludePaths ? [ ],
+      }:
+      let
+        timerConfig = {
+          OnCalendar = "02:05";
+          Persistent = true;
+          RandomizedDelaySec = "3h";
+        };
+        pruneOpts = [
+          "--keep-daily 7"
+          "--keep-weekly 5"
+          "--keep-monthly 12"
+          "--keep-yearly 10"
+        ];
+        initialize = true;
+        backupPrepareCommand = ''
+          # remove stale locks - this avoids some occasional annoyance
+          #
+          ${lib.getExe pkgs.restic} unlock --remove-all || true
+        '';
+        passwordFile = config.sops.secrets."${config.mySystem.backup.passFileSopsSecret}".path;
+
+        # Move the path to the zfs snapshot path
+        includePaths = map (path: "${config.mySystem.backup.snapshotMountPath}/${path}") paths;
+      in
+      {
+        # local backup
+        "${name}-local" = lib.mkIf config.mySystem.backup.local.enable {
+          inherit
+            pruneOpts
+            timerConfig
+            initialize
+            backupPrepareCommand
+            passwordFile
+            ;
+
+          paths = includePaths;
+          exclude = excludePaths;
+          repository = "${config.mySystem.backup.local.location}/${name}";
+        };
+
+        # remote backup
+        "${name}-remote" = lib.mkIf config.mySystem.backup.remote.enable {
+          inherit
+            pruneOpts
+            timerConfig
+            initialize
+            backupPrepareCommand
+            passwordFile
+            ;
+
+          paths = includePaths;
+          exclude = excludePaths;
+          repositoryFile =
+            config.sops.secrets."${config.mySystem.backup.remote.repositoryFileSopsSecret}".path;
+        };
+      };
+
     importYAML =
       file:
       builtins.fromJSON (
@@ -103,7 +165,6 @@
         vars,
       }:
       pkgs.stdenv.mkDerivation {
-
         name = "${name}";
 
         nativeBuildInpts = [ pkgs.mustache-go ];

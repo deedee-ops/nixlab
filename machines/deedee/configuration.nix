@@ -20,6 +20,18 @@ _: rec {
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
+    backup = {
+      local = {
+        enable = true;
+        location = "/mnt/todo";
+      };
+      remote = {
+        enable = true;
+        repositoryFileSopsSecret = "backups/restic/remoterepo";
+      };
+      passFileSopsSecret = "backups/restic/password";
+    };
+
     disks = {
       enable = true;
       hostId = "d732cc87";
