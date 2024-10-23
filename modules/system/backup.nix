@@ -43,6 +43,11 @@ in
       }
     ];
 
+    warnings = [
+      (lib.mkIf (!cfg.local.enable) "WARNING: Local backups are disabled!")
+      (lib.mkIf (!cfg.remote.enable) "WARNING: Remote backups are disabled!")
+    ];
+
     sops.secrets = {
       "${cfg.passFileSopsSecret}" = { };
       "${cfg.remote.repositoryFileSopsSecret}" = { };

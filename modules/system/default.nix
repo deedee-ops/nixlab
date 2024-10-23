@@ -3,6 +3,7 @@ _: {
     ./core.nix
     ./lib.nix
 
+    ./alerts.nix
     ./backup.nix
     ./disks.nix
     ./home-manager.nix

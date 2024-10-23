@@ -20,6 +20,13 @@ _: rec {
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
+    alerts = {
+      pushover = {
+        enable = true;
+        envFileSopsSecret = "alerts/pushover/env";
+      };
+    };
+
     backup = {
       local = {
         enable = true;
