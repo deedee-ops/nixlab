@@ -20,16 +20,14 @@ _: rec {
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
-    nix = {
-      githubPrivateTokenSopsSecret = "credentials/github/access-token-nix-config";
-    };
-
     alerts = {
       pushover = {
         enable = true;
         envFileSopsSecret = "alerts/pushover/env";
       };
     };
+
+    autoUpgrade.enable = true;
 
     backup = {
       local = {
@@ -70,6 +68,10 @@ _: rec {
       firewallEnable = false;
       hostname = "deedee";
       mainInterface = "enp5s0";
+    };
+
+    nix = {
+      githubPrivateTokenSopsSecret = "credentials/github/access-token-nix-config";
     };
 
     ssh = {

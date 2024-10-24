@@ -4,6 +4,7 @@ _: {
     ./lib.nix
 
     ./alerts.nix
+    ./auto-upgrade.nix
     ./backup.nix
     ./disks.nix
     ./home-manager.nix
