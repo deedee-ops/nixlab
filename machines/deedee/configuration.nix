@@ -11,7 +11,7 @@ _: rec {
     };
   };
 
-  mySystem = {
+  mySystem = rec {
     filesystem = "zfs";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
@@ -32,7 +32,7 @@ _: rec {
     backup = {
       local = {
         enable = true;
-        location = "/mnt/todo";
+        location = "/mnt/backup";
       };
       remote = {
         enable = true;
@@ -62,6 +62,14 @@ _: rec {
       enable = true;
       persistPath = "/persist";
     };
+
+    mounts = [
+      {
+        type = "nfs";
+        src = "${nasIP}:/volume2/backup/deedee";
+        dest = backup.local.location;
+      }
+    ];
 
     networking = {
       enable = true;

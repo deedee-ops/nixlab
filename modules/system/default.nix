@@ -10,6 +10,7 @@ _: {
     ./home-manager.nix
     ./impermanence.nix
     ./locales.nix
+    ./mounts.nix
     ./networking.nix
     ./nix.nix
     ./ssh.nix
