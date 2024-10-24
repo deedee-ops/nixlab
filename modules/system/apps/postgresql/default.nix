@@ -1,10 +1,18 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  svc,
+  ...
+}:
 let
   cfg = config.mySystemApps.postgresql;
 in
 {
   options.mySystemApps.postgresql = {
     enable = lib.mkEnableOption "postgresql";
+    backup = lib.mkEnableOption "postgresql backup" // {
+      default = true;
+    };
     userDatabases = lib.mkOption {
       type = lib.types.listOf (
         lib.types.submodule {
@@ -30,31 +38,51 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.postgresql = {
-      enable = true;
-      identMap = ''
-        # ArbitraryMapName systemUser DBUser
-         superuser_map      root      postgres
-         superuser_map      postgres  postgres
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for postgresql are disabled!") ];
 
-         # Let other names login as themselves
-         superuser_map      /^(.*)$   \1
-      '';
-      authentication = ''
-        #type database  DBuser  host-mask     auth-method   optional_ident_map
-        local sameuser  all                   peer          map=superuser_map
-        host  sameuser  all     ${config.mySystemApps.docker.network.private.subnet} scram-sha-256
-      '';
-      enableTCPIP = true;
-      settings = {
-        password_encryption = "scram-sha-256";
+    services =
+      let
+        backupPath = "/var/lib/postgresql/backups";
+      in
+      {
+        postgresql = {
+          enable = true;
+          identMap = ''
+            # ArbitraryMapName systemUser DBUser
+             superuser_map      root      postgres
+             superuser_map      postgres  postgres
+
+             # Let other names login as themselves
+             superuser_map      /^(.*)$   \1
+          '';
+          authentication = ''
+            #type database  DBuser  host-mask     auth-method   optional_ident_map
+            local sameuser  all                   peer          map=superuser_map
+            host  sameuser  all     ${config.mySystemApps.docker.network.private.subnet} scram-sha-256
+          '';
+
+          enableTCPIP = true;
+          ensureDatabases = lib.flatten (builtins.map (opt: opt.databases) cfg.userDatabases);
+          ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
+
+          settings = {
+            password_encryption = "scram-sha-256";
+          };
+        };
+
+        postgresqlBackup = lib.mkIf cfg.backup {
+          enable = true;
+          location = backupPath;
+          startAt = "*-*-* 01:00:00";
+        };
+
+        restic.backups = lib.mkIf cfg.backup (
+          svc.mkRestic {
+            name = "postgresql";
+            paths = [ backupPath ];
+          }
+        );
       };
-    };
-
-    services.postgresql = {
-      ensureDatabases = lib.flatten (builtins.map (opt: opt.databases) cfg.userDatabases);
-      ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
-    };
 
     users.users.postgres.extraGroups = [ "abc" ];
 
@@ -85,7 +113,7 @@ in
         {
           directories = [
             {
-              directory = config.services.postgresql.dataDir;
+              directory = "/var/lib/postgresql";
               user = "postgres";
               group = "postgres";
               mode = "750";

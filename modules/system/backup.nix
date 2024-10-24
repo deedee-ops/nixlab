@@ -32,7 +32,6 @@ in
       type = lib.types.str;
       description = "Sops secret name containing restic backups password.";
     };
-
   };
 
   config = lib.mkIf (cfg.local.enable || cfg.remote.enable) {
@@ -73,9 +72,9 @@ in
         script = ''
           mkdir -p ${cfg.snapshotMountPath} && \
           umount ${cfg.snapshotMountPath} || true && \
-          zfs destroy rpool/persist@backup || true && \
-          zfs snapshot rpool/persist@backup && \
-          mount -t zfs rpool/persist@backup ${cfg.snapshotMountPath}
+          zfs destroy ${config.mySystem.impermanence.zfsPool}/persist@backup || true && \
+          zfs snapshot ${config.mySystem.impermanence.zfsPool}/persist@backup && \
+          mount -t zfs ${config.mySystem.impermanence.zfsPool}/persist@backup ${cfg.snapshotMountPath}
         '';
       };
     };

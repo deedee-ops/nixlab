@@ -38,7 +38,6 @@ in
           zfs rollback -r rpool@${cfg.rootBlankSnapshotName}
         ''
       );
-      # zfs.forceImportAll = cfg.zfsPool == "tank";
     };
 
     environment.persistence."${cfg.persistPath}" = {
@@ -54,7 +53,6 @@ in
 
     fileSystems."${cfg.persistPath}" = {
       device = "${cfg.zfsPool}/persist";
-      # device = "rpool/persist";
       fsType = "zfs";
       neededForBoot = true;
     };
