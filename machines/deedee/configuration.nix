@@ -45,12 +45,15 @@ _: rec {
       enable = true;
       hostId = "d732cc87";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/sda" ];
+      systemDiskDevs = [ "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
         };
+      };
+      tankDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
+      tankDatasets = {
         vms = {
           type = "zfs_fs";
           options.mountpoint = "none";
@@ -61,6 +64,7 @@ _: rec {
     impermanence = {
       enable = true;
       persistPath = "/persist";
+      zfsPool = "tank";
     };
 
     mounts = [
@@ -75,7 +79,7 @@ _: rec {
       enable = true;
       firewallEnable = false;
       hostname = "deedee";
-      mainInterface = "enp5s0";
+      mainInterface = "enp87s0";
     };
 
     nix = {

@@ -32,6 +32,17 @@ in
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
       };
+      hostKeys = lib.optionals config.mySystem.impermanence.enable [
+        {
+          type = "ed25519";
+          path = "${config.mySystem.impermanence.persistPath}/etc/ssh/ssh_host_ed25519_key";
+        }
+        {
+          type = "rsa";
+          bits = 4096;
+          path = "${config.mySystem.impermanence.persistPath}/etc/ssh/ssh_host_rsa_key";
+        }
+      ];
     };
 
     sops.age.sshKeyPaths = lib.optionals config.mySystem.impermanence.enable [
@@ -52,9 +63,5 @@ in
         };
       };
     }) cfg.authorizedKeys;
-
-    environment.persistence."${config.mySystem.impermanence.persistPath}" =
-      lib.mkIf config.mySystem.impermanence.enable
-        { directories = [ "/etc/ssh" ]; };
   };
 }

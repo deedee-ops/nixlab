@@ -3,7 +3,7 @@ rec {
   flakePart = {
     nixosConfigurations.deedee = lib.mkNixosConfig {
       system = "x86_64-linux";
-      hardwareModules = [ ../../modules/hardware/incus.nix ];
+      hardwareModules = [ ../../modules/hardware/ms-01.nix ];
       profileModules = [
         ./configuration.nix
       ];

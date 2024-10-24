@@ -229,18 +229,20 @@ in
               postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool@${config.mySystem.impermanence.rootBlankSnapshotName}$' || zfs snapshot rpool@${config.mySystem.impermanence.rootBlankSnapshotName}";
               datasets =
                 cfg.systemDatasets
-                // lib.optionalAttrs config.mySystem.impermanence.enable {
-                  persist = {
-                    type = "zfs_fs";
-                    mountpoint = "${config.mySystem.impermanence.persistPath}";
+                // lib.optionalAttrs
+                  (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "rpool")
+                  {
+                    persist = {
+                      type = "zfs_fs";
+                      mountpoint = "${config.mySystem.impermanence.persistPath}";
+                    };
                   };
-                };
             };
           }
           // lib.optionalAttrs (builtins.length cfg.tankDiskDevs > 0) {
             tank = {
               type = "zpool";
-              mode = {
+              mode = lib.mkIf (builtins.length cfg.tankDiskDevs > 1) {
                 topology = {
                   type = "topology";
                   vdev = [
@@ -267,7 +269,16 @@ in
               };
 
               mountpoint = "/tank";
-              datasets = cfg.tankDatasets;
+              datasets =
+                cfg.tankDatasets
+                // lib.optionalAttrs
+                  (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "tank")
+                  {
+                    persist = {
+                      type = "zfs_fs";
+                      mountpoint = "${config.mySystem.impermanence.persistPath}";
+                    };
+                  };
             };
           };
       };

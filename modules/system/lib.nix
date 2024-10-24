@@ -41,6 +41,7 @@
         };
       } cfg)
       // {
+        dependsOn = [ "network-prepare" ] ++ (cfg.dependsOn or [ ]);
         extraOptions =
           [
             "--read-only"

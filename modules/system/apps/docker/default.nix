@@ -112,7 +112,7 @@ in
     users.users."${config.mySystem.primaryUser}".extraGroups = [ "docker" ];
     networking.firewall.interfaces."docker0".allowedUDPPorts = [ 53 ];
 
-    systemd.services.docker-network =
+    systemd.services.docker-network-prepare =
       let
         dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
       in
@@ -125,7 +125,6 @@ in
           Type = "oneshot";
           User = "root";
         };
-        after = [ "docker.service" ];
       };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =

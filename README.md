@@ -24,8 +24,6 @@ nix run .#bootstrap <machine name> [machine IP]
 - `machine name` is a machine identificator, one from the `./machines`
 - `machine ip` is optional, if not provided, it will be picked up from `./machines/<machine>/default.nix`
 
-After successful bootstrap, enter the machine (either via web ui or `incus console`) and set password for `primaryUser` (it is disabled by default).
-
 ## Deploy machine
 
 ```bash

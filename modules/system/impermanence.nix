@@ -13,6 +13,14 @@ in
       type = lib.types.str;
       default = "/persist";
     };
+    zfsPool = lib.mkOption {
+      type = lib.types.enum [
+        "rpool"
+        "tank"
+      ];
+      default = "rpool";
+      description = "Pool where persist volume dataset should be configured.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -23,12 +31,15 @@ in
       }
     ];
 
-    # bind a initrd command to rollback to blank root after boot
-    boot.initrd.postResumeCommands = lib.mkAfter (
-      lib.optionalString (config.mySystem.filesystem == "zfs") ''
-        zfs rollback -r rpool@${cfg.rootBlankSnapshotName}
-      ''
-    );
+    boot = {
+      # bind a initrd command to rollback to blank root after boot
+      initrd.postResumeCommands = lib.mkAfter (
+        lib.optionalString (config.mySystem.filesystem == "zfs") ''
+          zfs rollback -r rpool@${cfg.rootBlankSnapshotName}
+        ''
+      );
+      # zfs.forceImportAll = cfg.zfsPool == "tank";
+    };
 
     environment.persistence."${cfg.persistPath}" = {
       hideMounts = true;
@@ -42,7 +53,8 @@ in
     };
 
     fileSystems."${cfg.persistPath}" = {
-      device = "rpool/persist";
+      device = "${cfg.zfsPool}/persist";
+      # device = "rpool/persist";
       fsType = "zfs";
       neededForBoot = true;
     };
