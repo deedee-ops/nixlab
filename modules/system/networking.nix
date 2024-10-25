@@ -14,16 +14,31 @@ in
       type = lib.types.str;
       description = "Main interface which will receive default routing";
     };
+    fallbackDNS = lib.mkOption {
+      type = lib.types.nullOr (lib.types.listOf lib.types.str);
+      default = [
+        "9.9.9.9"
+        "149.112.112.10"
+      ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
     networking = {
       hostName = cfg.hostname;
       dhcpcd.enable = false;
-      firewall.enable = cfg.firewallEnable;
       enableIPv6 = false;
+      firewall.enable = cfg.firewallEnable;
+      resolvconf.enable = false;
       useDHCP = false;
       useHostResolvConf = false;
+    };
+
+    services = {
+      resolved = {
+        enable = true;
+        fallbackDns = cfg.fallbackDNS;
+      };
     };
 
     systemd.network = {

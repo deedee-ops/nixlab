@@ -45,7 +45,7 @@ in
         theme = if config.stylix.polarity == "either" then "auto" else "${config.stylix.polarity}";
 
         dns = {
-          bind_hosts = [ "0.0.0.0" ];
+          bind_hosts = [ "BINDHOST" ];
           port = 53;
           protection_enabled = true;
           filtering_enabled = true;
@@ -201,16 +201,14 @@ in
         HASH="$(cat ${
           config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
         } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
+        MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev enp87s0 | grep -Po 'inet \K[\d.]+')"
         ${lib.getExe pkgs.gnused} -i"" "s,ADGUARDPASS,'$HASH',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
+        ${lib.getExe pkgs.gnused} -i"" "s,BINDHOST,'$MAINIP',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
       '';
       serviceConfig.User = cfg.user;
       serviceConfig.Group = "services";
     };
 
-    services = {
-      resolved.enable = false;
-
-      nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://localhost:${builtins.toString config.services.adguardhome.port}";
-    };
+    services.nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://localhost:${builtins.toString config.services.adguardhome.port}";
   };
 }
