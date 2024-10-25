@@ -31,7 +31,13 @@ in
         PermitRootLogin = cfg.permitRootLogin;
         PasswordAuthentication = false;
         KbdInteractiveAuthentication = false;
+
+        # Automatically remove stale sockets
+        StreamLocalBindUnlink = "yes";
+        # Allow forwarding ports to everywhere
+        GatewayPorts = "clientspecified";
       };
+
       hostKeys = lib.optionals config.mySystem.impermanence.enable [
         {
           type = "ed25519";
@@ -52,8 +58,9 @@ in
     programs.ssh.startAgent = true;
 
     # pass ssh-agent socket when using sudo
-    security.sudo.extraConfig = ''
+    security.sudo.extraConfig = lib.mkAfter ''
       Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
+      Defaults lecture="never"
     '';
 
     users.users = builtins.mapAttrs (_: value: {

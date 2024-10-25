@@ -12,6 +12,7 @@ _: rec {
   };
 
   mySystem = rec {
+    purpose = "Homelab";
     filesystem = "zfs";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";

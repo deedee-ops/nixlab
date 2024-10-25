@@ -37,7 +37,7 @@
       (lib.recursiveUpdate {
         autoStart = true;
         environment = {
-          TZ = "Europe/Warsaw";
+          TZ = config.mySystem.time.timeZone;
         };
       } cfg)
       // {

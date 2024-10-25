@@ -54,6 +54,12 @@ in
       example = "users/bob/password";
     };
 
+    purpose = lib.mkOption {
+      type = lib.types.str;
+      description = "Purpose of the given machine, to be displayed in motd.";
+      example = "NAS Server";
+    };
+
     rootDomain = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;
@@ -74,12 +80,6 @@ in
       default = "catppuccin-mocha";
     };
 
-    timezone = lib.mkOption {
-      type = lib.types.str;
-      description = "Timezone for all services.";
-      default = "Europe/Warsaw";
-    };
-
     wallpaper = lib.mkOption {
       # type = lib.types.nullOr lib.types.path;
       type = lib.types.coercedTo lib.types.package toString lib.types.path;
@@ -92,6 +92,15 @@ in
     programs.nix-index-database.comma.enable = true;
 
     users.groups.services = { };
+
+    services.zfs = lib.mkIf (config.mySystem.filesystem == "zfs") {
+      autoScrub.enable = true;
+      trim.enable = true;
+      zed.settings = lib.mkIf config.mySystem.alerts.pushover.enable {
+        ZED_PUSHOVER_TOKEN = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_API_KEY)";
+        ZED_PUSHOVER_USER = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_USER_KEY)";
+      };
+    };
 
     stylix = rec {
       enable = true;
