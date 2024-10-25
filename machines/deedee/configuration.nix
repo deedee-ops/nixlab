@@ -139,6 +139,7 @@ _: rec {
     maddy.enable = true;
     lldap.enable = true;
     vaultwarden.enable = true;
+    wakapi.enable = true;
   };
 
   myApps = {
