@@ -5,6 +5,7 @@ _: {
     ./firefoxsync
     ./lldap
     ./maddy
+    ./piped
     ./redlib
     ./vaultwarden
     ./wakapi

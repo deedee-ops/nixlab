@@ -107,10 +107,14 @@
     mkContainer =
       {
         cfg,
-        opts ? {
-          allowPublic = false;
-        },
+        opts ? { },
       }:
+      let
+        args = {
+          allowPublic = false;
+          disableReadOnly = false;
+        } // opts;
+      in
       (lib.recursiveUpdate {
         autoStart = true;
         environment = {
@@ -120,15 +124,15 @@
       // {
         dependsOn = [ "network-prepare" ] ++ (cfg.dependsOn or [ ]);
         extraOptions =
-          [
-            "--read-only"
+          (lib.optionals (!args.disableReadOnly) [ "--read-only" ])
+          ++ [
             "--cap-drop=all"
             "--security-opt=no-new-privileges"
             "--network=${config.mySystemApps.docker.network.private.name}"
             "--add-host=host.docker.internal:${config.mySystemApps.docker.network.private.hostIP}"
           ]
           ++ (cfg.extraOptions or [ ])
-          ++ lib.optionals opts.allowPublic [ "--network=${config.mySystemApps.docker.network.public.name}" ];
+          ++ lib.optionals args.allowPublic [ "--network=${config.mySystemApps.docker.network.public.name}" ];
       };
 
     mkContainerSecretsSops =

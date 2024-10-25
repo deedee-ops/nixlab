@@ -146,6 +146,7 @@ _: rec {
     firefoxsync.enable = true;
     lldap.enable = true;
     maddy.enable = true;
+    piped.enable = true;
     redlib.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
