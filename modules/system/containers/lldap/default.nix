@@ -73,7 +73,7 @@ in
           LLDAP_SMTP_OPTIONS__ENABLE_PASSWORD_RESET = "true";
           LLDAP_SMTP_OPTIONS__FROM = config.mySystem.notificationSender;
           LLDAP_SMTP_OPTIONS__PORT = "25";
-          LLDAP_SMTP_OPTIONS__SERVER = "host.docker.internal";
+          LLDAP_SMTP_OPTIONS__SERVER = "maddy";
           LLDAP_SMTP_OPTIONS__SMTP_ENCRYPTION = "NONE";
         } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {

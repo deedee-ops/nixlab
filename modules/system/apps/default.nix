@@ -5,7 +5,6 @@ _: {
     ./adguardhome
     ./docker
     ./letsencrypt
-    ./maddy
     ./nginx
     ./postgresql
     ./redis

@@ -117,11 +117,6 @@ _: rec {
       ];
     };
 
-    maddy = {
-      enable = true;
-      envFileSopsSecret = "system/apps/maddy/envfile";
-    };
-
     nginx = {
       inherit (mySystem) rootDomain;
 
@@ -141,6 +136,7 @@ _: rec {
 
     # containers
     authelia.enable = true;
+    maddy.enable = true;
     lldap.enable = true;
     vaultwarden.enable = true;
   };

@@ -62,7 +62,7 @@ in
           SHOW_PASSWORD_HINT = "false";
           SIGNUPS_ALLOWED = "false";
           SMTP_FROM = config.mySystem.notificationSender;
-          SMTP_HOST = "host.docker.internal";
+          SMTP_HOST = "maddy";
           SMTP_PORT = "25";
           SMTP_SECURITY = "off";
         } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
