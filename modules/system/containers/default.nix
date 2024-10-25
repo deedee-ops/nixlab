@@ -6,5 +6,6 @@ _: {
     ./maddy
     ./vaultwarden
     ./wakapi
+    ./whoogle
   ];
 }

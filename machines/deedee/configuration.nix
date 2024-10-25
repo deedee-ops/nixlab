@@ -147,6 +147,7 @@ _: rec {
     lldap.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
+    whoogle.enable = true;
   };
 
   myApps = {
