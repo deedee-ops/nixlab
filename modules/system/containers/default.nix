@@ -4,6 +4,7 @@ _: {
     ./coredns
     ./lldap
     ./maddy
+    ./redlib
     ./vaultwarden
     ./wakapi
     ./whoogle

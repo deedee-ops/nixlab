@@ -145,6 +145,7 @@ _: rec {
     coredns.enable = true;
     maddy.enable = true;
     lldap.enable = true;
+    redlib.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
     whoogle.enable = true;
