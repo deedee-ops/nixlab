@@ -36,7 +36,7 @@ in
 
     services = {
       resolved = {
-        enable = true;
+        enable = lib.mkDefault true;
         fallbackDns = cfg.fallbackDNS;
       };
     };

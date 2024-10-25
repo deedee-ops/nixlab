@@ -53,28 +53,32 @@ let
     printf "$BOLD  * %-20s$ENDCOLOR %s\n" "Memory" "$MEMORY"
     printf "$BOLD  * %-20s$ENDCOLOR %s\n" "System uptime" "$upDays days $upHours hours $upMins minutes $upSecs seconds"
     printf "\n"
-    if ! type "$zpool" &> /dev/null; then
-      printf "$BOLD Zpool status: $ENDCOLOR\n"
-      zpool status -x | sed -e 's/^/  /'
-    fi
-    if ! type "$zpool" &> /dev/null; then
-      printf "$BOLD Zpool usage: $ENDCOLOR\n"
-      zpool list -Ho name,cap,size | awk '{ printf("%-10s%+3s used out of %+5s\n", $1, $2, $3); }' | sed -e 's/^/  /'
-    fi
-    printf "\n"
-    printf "$BOLDService status$ENDCOLOR\n"
-
-    while IFS= read -r line; do
-      if echo "$line" | grep -q 'failed'; then
-        service_name=$(echo $line | awk '{print $2;}' | sed 's/docker-//g')
-        printf "$RED• $ENDCOLOR%-50s $RED[failed]$ENDCOLOR\n" "$service_name"
-      elif echo "$line" | grep -q 'running'; then
-        service_name=$(echo $line | awk '{print $1;}' | sed 's/docker-//g')
-        printf "$GREEN• $ENDCOLOR%-50s $GREEN[active]$ENDCOLOR\n" "$service_name"
-      else
-        echo "service status unknown"
+    ${lib.optionalString (config.mySystem.filesystem == "zfs") ''
+      if ! type "$zpool" &> /dev/null; then
+        printf "$BOLD Zpool status: $ENDCOLOR\n"
+        zpool status -x | sed -e 's/^/  /'
       fi
-    done <<< "$service_status"
+      if ! type "$zpool" &> /dev/null; then
+        printf "$BOLD Zpool usage: $ENDCOLOR\n"
+        zpool list -Ho name,cap,size | awk '{ printf("%-10s%+3s used out of %+5s\n", $1, $2, $3); }' | sed -e 's/^/  /'
+      fi
+      printf "\n"
+    ''}
+    if [ -n "$service_status" ]; then
+      printf "$BOLDService status$ENDCOLOR\n"
+
+      while IFS= read -r line; do
+        if echo "$line" | grep -q 'failed'; then
+          service_name=$(echo $line | awk '{print $2;}' | sed 's/docker-//g')
+          printf "$RED• $ENDCOLOR%-50s $RED[failed]$ENDCOLOR\n" "$service_name"
+        elif echo "$line" | grep -q 'running'; then
+          service_name=$(echo $line | awk '{print $1;}' | sed 's/docker-//g')
+          printf "$GREEN• $ENDCOLOR%-50s $GREEN[active]$ENDCOLOR\n" "$service_name"
+        else
+          echo "service status unknown"
+        fi
+      done <<< "$service_status"
+    fi
   '';
   cfg = config.mySystem.motd;
 in

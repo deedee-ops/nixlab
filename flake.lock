@@ -132,11 +132,11 @@
     },
     "ephemeral-machines": {
       "locked": {
-        "lastModified": 1729783194,
-        "narHash": "sha256-EvDoRI0ZVUMLhTQQ2fJ41+nSD13qAeFxL0bY5tTKltg=",
+        "lastModified": 1729882068,
+        "narHash": "sha256-J5u5tnYzh8Q32vmCzdfyIlt9Z2NVRBqIJUPjwd7EVv4=",
         "owner": "deedee-ops",
         "repo": "nix-machines",
-        "rev": "dcebda321f7982b5580e2d140ddfdfa2b010f15e",
+        "rev": "e009681d9f89ae6d2b4ebf7cc410ec4339b37eb7",
         "type": "github"
       },
       "original": {

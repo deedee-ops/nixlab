@@ -11,9 +11,7 @@ let
 in
 {
   options.mySystemApps.coredns = {
-    enable = lib.mkEnableOption "coredns container" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "coredns container";
   };
 
   config = lib.mkIf cfg.enable {

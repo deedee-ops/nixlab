@@ -136,6 +136,7 @@ _: rec {
 
     # containers
     authelia.enable = true;
+    coredns.enable = true;
     maddy.enable = true;
     lldap.enable = true;
     vaultwarden.enable = true;
