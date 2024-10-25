@@ -16,6 +16,9 @@ in
 {
   options.mySystemApps.lldap = {
     enable = lib.mkEnableOption "lldap container";
+    backup = lib.mkEnableOption "postgresql backup" // {
+      default = true;
+    };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
@@ -32,6 +35,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for lldap are disabled!") ];
+
     sops.secrets = svc.mkContainerSecretsSops {
       inherit (cfg) sopsSecretPrefix;
       inherit secretEnvs;
@@ -78,6 +83,9 @@ in
       };
     };
 
-    services.nginx.virtualHosts.lldap = svc.mkNginxVHost "lldap" "http://lldap.docker:17170";
+    services = {
+      nginx.virtualHosts.lldap = svc.mkNginxVHost "lldap" "http://lldap.docker:17170";
+      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "lldap" ]; };
+    };
   };
 }

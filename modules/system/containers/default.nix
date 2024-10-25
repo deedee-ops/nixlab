@@ -3,5 +3,6 @@ _: {
     ./authelia
     ./coredns
     ./lldap
+    ./vaultwarden
   ];
 }

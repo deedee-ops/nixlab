@@ -67,6 +67,15 @@ in
           cache_optimistic = true;
         };
 
+        filtering = {
+          rewrites = [
+            {
+              domain = "*.${config.mySystem.rootDomain}";
+              answer = "BINDHOST";
+            }
+          ];
+        };
+
         filters =
           let
             urls = [
@@ -209,6 +218,6 @@ in
       serviceConfig.Group = "services";
     };
 
-    services.nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://localhost:${builtins.toString config.services.adguardhome.port}";
+    services.nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://127.0.0.1:${builtins.toString config.services.adguardhome.port}";
   };
 }

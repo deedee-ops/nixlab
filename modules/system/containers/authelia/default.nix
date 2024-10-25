@@ -29,6 +29,9 @@ in
 {
   options.mySystemApps.authelia = {
     enable = lib.mkEnableOption "authelia container";
+    backup = lib.mkEnableOption "postgresql backup" // {
+      default = true;
+    };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
@@ -37,6 +40,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for authelia are disabled!") ];
+
     sops.secrets = svc.mkContainerSecretsSops {
       inherit (cfg) sopsSecretPrefix;
       inherit secretEnvs;
@@ -81,5 +86,7 @@ in
     };
 
     services.nginx.virtualHosts.authelia = svc.mkNginxVHost "authelia" "http://authelia.docker:9091";
+
+    services.postgresqlBackup = lib.mkIf cfg.backup { databases = [ "authelia" ]; };
   };
 }

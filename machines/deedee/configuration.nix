@@ -110,6 +110,7 @@ _: rec {
 
     letsencrypt = {
       enable = true;
+      useProduction = true;
       domains = [
         mySystem.rootDomain
         "*.${mySystem.rootDomain}"
@@ -139,15 +140,9 @@ _: rec {
     };
 
     # containers
-    authelia = {
-      enable = true;
-      sopsSecretPrefix = "system/apps/authelia/env";
-    };
-
-    lldap = {
-      enable = true;
-      sopsSecretPrefix = "system/apps/lldap/env";
-    };
+    authelia.enable = true;
+    lldap.enable = true;
+    vaultwarden.enable = true;
   };
 
   myApps = {
