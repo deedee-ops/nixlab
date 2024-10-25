@@ -60,6 +60,8 @@
           {
             allowOther = true;
             directories = [
+              ".cache"
+              ".local"
               "Downloads"
               "Pictures"
               "Projects"

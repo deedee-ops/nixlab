@@ -16,12 +16,21 @@ in
         description = "Location for local backups.";
       };
     };
-    remote = {
-      enable = lib.mkEnableOption "local backups";
-      repositoryFileSopsSecret = lib.mkOption {
-        type = lib.types.str;
-        description = "Sops secret name containing remote restic repository url.";
-      };
+    remotes = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "Remote repository alias for restic.";
+            };
+            repositoryFileSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing remote restic repository url.";
+            };
+          };
+        }
+      );
     };
     snapshotMountPath = lib.mkOption {
       type = lib.types.str;
@@ -34,7 +43,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.local.enable || cfg.remote.enable) {
+  config = lib.mkIf (cfg.local.enable || (builtins.length cfg.remotes > 0)) {
     assertions = [
       {
         assertion = config.mySystem.filesystem == "zfs";
@@ -44,13 +53,19 @@ in
 
     warnings = [
       (lib.mkIf (!cfg.local.enable) "WARNING: Local backups are disabled!")
-      (lib.mkIf (!cfg.remote.enable) "WARNING: Remote backups are disabled!")
+      (lib.mkIf (builtins.length cfg.remotes == 0) "WARNING: Remote backups are disabled!")
     ];
 
-    sops.secrets = {
-      "${cfg.passFileSopsSecret}" = { };
-      "${cfg.remote.repositoryFileSopsSecret}" = { };
-    };
+    sops.secrets =
+      {
+        "${cfg.passFileSopsSecret}" = { };
+      }
+      // builtins.listToAttrs (
+        builtins.map (remote: {
+          name = remote.repositoryFileSopsSecret;
+          value = { };
+        }) cfg.remotes
+      );
 
     # ref: https://cyounkins.medium.com/correct-backups-require-filesystem-snapshots-23062e2e7a15
     systemd = {

@@ -25,4 +25,5 @@ require("lazy").setup("plugins", {
   install = {
     colorscheme = { "catppuccin" },
   },
+  lockfile = vim.fn.stdpath("data") .. "/lazy-lock.json",
 })

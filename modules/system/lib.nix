@@ -211,23 +211,26 @@
           repository = "${config.mySystem.backup.local.location}/${name}";
         };
 
-        # remote backup
-        "${name}-remote" = lib.mkIf config.mySystem.backup.remote.enable {
-          inherit
-            pruneOpts
-            timerConfig
-            initialize
-            backupPrepareCommand
-            passwordFile
-            ;
+      }
+      // builtins.listToAttrs (
+        # remote backups
+        builtins.map (remote: {
+          name = "${name}-remote-${remote.name}";
+          value = {
+            inherit
+              pruneOpts
+              timerConfig
+              initialize
+              backupPrepareCommand
+              passwordFile
+              ;
 
-          paths = includePaths;
-          exclude = excludePaths;
-          repositoryFile =
-            config.sops.secrets."${config.mySystem.backup.remote.repositoryFileSopsSecret}".path;
-        };
-      };
-
+            paths = includePaths;
+            exclude = excludePaths;
+            repositoryFile = config.sops.secrets."${remote.repositoryFileSopsSecret}".path;
+          };
+        }) config.mySystem.backup.remotes
+      );
     importYAML =
       file:
       builtins.fromJSON (

@@ -35,10 +35,16 @@ _: rec {
         enable = true;
         location = "/mnt/backup";
       };
-      remote = {
-        enable = true;
-        repositoryFileSopsSecret = "backups/restic/remoterepo";
-      };
+      remotes = [
+        {
+          name = "borgbase-eu";
+          repositoryFileSopsSecret = "backups/restic/repo-borgbase-eu";
+        }
+        {
+          name = "borgbase-us";
+          repositoryFileSopsSecret = "backups/restic/repo-borgbase-us";
+        }
+      ];
       passFileSopsSecret = "backups/restic/password";
     };
 
