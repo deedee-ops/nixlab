@@ -143,8 +143,9 @@ _: rec {
     # containers
     authelia.enable = true;
     coredns.enable = true;
-    maddy.enable = true;
+    firefoxsync.enable = true;
     lldap.enable = true;
+    maddy.enable = true;
     redlib.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;

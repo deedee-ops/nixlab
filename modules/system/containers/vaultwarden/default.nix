@@ -15,7 +15,7 @@ in
 {
   options.mySystemApps.vaultwarden = {
     enable = lib.mkEnableOption "vaultwarden container";
-    backup = lib.mkEnableOption "postgresql backup" // {
+    backup = lib.mkEnableOption "postgresql and data backup" // {
       default = true;
     };
     dataDir = lib.mkOption {
