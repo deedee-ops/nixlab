@@ -85,7 +85,11 @@ in
       };
     };
 
-    services.nginx.virtualHosts.authelia = svc.mkNginxVHost "authelia" "http://authelia.docker:9091";
+    services.nginx.virtualHosts.authelia = svc.mkNginxVHost {
+      host = "authelia";
+      proxyPass = "http://authelia.docker:9091";
+      useAuthelia = false;
+    };
 
     services.postgresqlBackup = lib.mkIf cfg.backup { databases = [ "authelia" ]; };
   };

@@ -84,7 +84,11 @@ in
     };
 
     services = {
-      nginx.virtualHosts.lldap = svc.mkNginxVHost "lldap" "http://lldap.docker:17170";
+      nginx.virtualHosts.lldap = svc.mkNginxVHost {
+        host = "lldap";
+        proxyPass = "http://lldap.docker:17170";
+        useAuthelia = false;
+      };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "lldap" ]; };
     };
   };

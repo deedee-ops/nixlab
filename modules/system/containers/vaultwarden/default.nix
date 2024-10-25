@@ -76,7 +76,11 @@ in
     };
 
     services = {
-      nginx.virtualHosts.vaultwarden = svc.mkNginxVHost "vaultwarden" "http://vaultwarden.docker:3000";
+      nginx.virtualHosts.vaultwarden = svc.mkNginxVHost {
+        host = "vaultwarden";
+        proxyPass = "http://vaultwarden.docker:3000";
+        useAuthelia = false;
+      };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "vaultwarden" ]; };
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {

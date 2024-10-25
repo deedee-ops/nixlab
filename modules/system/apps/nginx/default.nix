@@ -70,7 +70,14 @@ in
         more_set_headers "Referrer-Policy: origin-when-cross-origin";
       '';
 
-      virtualHosts = builtins.mapAttrs (name: value: svc.mkNginxVHost name value) cfg.extraVHosts;
+      virtualHosts = builtins.mapAttrs (
+        name: value:
+        svc.mkNginxVHost {
+          host = name;
+          proxyPass = value;
+          useAuthelia = false;
+        }
+      ) cfg.extraVHosts;
     };
 
     mySystemApps.letsencrypt.certsGroup = config.services.nginx.group;

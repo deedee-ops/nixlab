@@ -218,6 +218,9 @@ in
       serviceConfig.Group = "services";
     };
 
-    services.nginx.virtualHosts.adguard = svc.mkNginxVHost "adguard" "http://127.0.0.1:${builtins.toString config.services.adguardhome.port}";
+    services.nginx.virtualHosts.adguard = svc.mkNginxVHost {
+      host = "adguard";
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.adguardhome.port}";
+    };
   };
 }
