@@ -148,6 +148,7 @@ _: rec {
     maddy.enable = true;
     piped.enable = true;
     redlib.enable = true;
+    syncthing.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
     whoogle.enable = true;

@@ -51,6 +51,7 @@ in
     virtualisation.oci-containers.containers.vaultwarden = svc.mkContainer {
       cfg = {
         image = "ghcr.io/dani-garcia/vaultwarden:1.32.2@sha256:c07f5319d20bdbd58a19d7d779a1e97159ce25cb95572baa947c70f58589937c";
+        user = "65000:65000";
         environment = {
           DATA_FOLDER = "/config";
           DISABLE_ICON_DOWNLOAD = "true";
@@ -88,6 +89,13 @@ in
           paths = [ cfg.dataDir ];
         }
       );
+    };
+
+    systemd.services.docker-vaultwarden = {
+      preStart = lib.mkAfter ''
+        mkdir -p "${cfg.dataDir}/config"
+        chown -R 65000:65000 "${cfg.dataDir}/config"
+      '';
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =

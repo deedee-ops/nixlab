@@ -7,6 +7,7 @@ _: {
     ./maddy
     ./piped
     ./redlib
+    ./syncthing
     ./vaultwarden
     ./wakapi
     ./whoogle
