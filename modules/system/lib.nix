@@ -12,22 +12,29 @@
         proxyPass,
         useAuthelia ? true,
         autheliaIgnorePaths ? [ ],
+        customCSP ? null,
       }:
       let
         # proxy_pass needs to be passed as variable, otherwise resolver won't work as expected
-        baseConfig = ''
-          set $host_to_pass ${proxyPass};
-          proxy_pass $host_to_pass;
+        baseConfig =
+          ''
+            set $host_to_pass ${proxyPass};
+            proxy_pass $host_to_pass;
 
-          proxy_set_header Host $host;
-          proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header X-Forwarded-Host $http_host;
-          proxy_set_header X-Forwarded-URI $request_uri;
-          proxy_set_header X-Forwarded-Ssl on;
-          proxy_set_header X-Forwarded-For $remote_addr;
-          proxy_set_header X-Real-IP $remote_addr;
-        '';
+            proxy_set_header Host $host;
+            proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-URI $request_uri;
+            proxy_set_header X-Forwarded-Ssl on;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Real-IP $remote_addr;
+          ''
+          + (lib.optionalString (customCSP != null) ''
+            more_set_headers "Content-Security-Policy: ${
+              lib.trim (builtins.replaceStrings [ "\n" ] [ " " ] customCSP)
+            }";
+          '');
       in
       {
         extraConfig =

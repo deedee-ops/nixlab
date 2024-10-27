@@ -75,6 +75,12 @@ in
       nginx.virtualHosts.miniflux = svc.mkNginxVHost {
         host = "miniflux";
         proxyPass = "http://miniflux.docker:3000";
+        customCSP = ''
+          default-src 'self' 'unsafe-inline' data: blob: wss: *.${config.mySystem.rootDomain};
+          img-src 'self' data: https:;
+          media-src 'self' https:;
+          object-src 'none';
+        '';
       };
       nginx.virtualHosts.miniflux-api = svc.mkNginxVHost {
         host = "miniflux-api";

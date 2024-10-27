@@ -78,6 +78,12 @@ in
         host = "paperless";
         proxyPass = "http://paperless-ngx.docker:8000";
         autheliaIgnorePaths = [ "/api" ];
+        customCSP = ''
+          default-src 'self' 'unsafe-inline' data: blob: wss:;
+          img-src 'self' data: *.${config.mySystem.rootDomain};
+          manifest-src 'self' *.${config.mySystem.rootDomain};
+          object-src 'self';
+        '';
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "paperless-ngx" ]; };
       restic.backups = lib.mkIf cfg.backup (
