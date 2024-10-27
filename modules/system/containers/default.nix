@@ -2,6 +2,7 @@ _: {
   imports = [
     ./authelia
     ./coredns
+    ./firefly-iii
     ./firefoxsync
     ./lldap
     ./maddy

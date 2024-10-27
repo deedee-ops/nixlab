@@ -144,6 +144,7 @@ _: rec {
     authelia.enable = true;
     coredns.enable = true;
     firefoxsync.enable = true;
+    firefly-iii.enable = true;
     lldap.enable = true;
     maddy.enable = true;
     paperless-ngx.enable = true;
