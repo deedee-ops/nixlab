@@ -153,6 +153,7 @@ _: rec {
     firefly-iii.enable = true;
     lldap.enable = true;
     maddy.enable = true;
+    mail-archive.enable = true;
     miniflux.enable = true;
     navidrome = {
       enable = true;

@@ -94,7 +94,7 @@ in
     systemd.services.docker-vaultwarden = {
       preStart = lib.mkAfter ''
         mkdir -p "${cfg.dataDir}/config"
-        chown -R 65000:65000 "${cfg.dataDir}/config"
+        chown 65000:65000 "${cfg.dataDir}/config"
       '';
     };
 

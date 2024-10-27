@@ -61,7 +61,7 @@ in
     systemd.services.docker-navidrome = {
       preStart = lib.mkAfter ''
         mkdir -p "${cfg.dataDir}/config"
-        chown -R 65000:65000 "${cfg.dataDir}/config"
+        chown 65000:65000 "${cfg.dataDir}/config"
       '';
     };
 

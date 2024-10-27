@@ -77,9 +77,6 @@ in
         # Prevent injection of code in other mime types (XSS Attacks)
         more_set_headers "X-Content-Type-Options: nosniff";
 
-        # Disable embedding as a frame
-        more_set_headers "X-Frame-Options: DENY";
-
         # Minimize information leaked to other domains
         more_set_headers "Referrer-Policy: origin-when-cross-origin";
       '';

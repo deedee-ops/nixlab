@@ -6,6 +6,7 @@ _: {
     ./firefoxsync
     ./lldap
     ./maddy
+    ./mail-archive
     ./miniflux
     ./navidrome
     ./paperless-ngx

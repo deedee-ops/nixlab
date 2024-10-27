@@ -103,7 +103,7 @@ in
     systemd.services.docker-paperless-ngx = {
       preStart = lib.mkAfter ''
         mkdir -p "${cfg.dataDir}/config" "${cfg.dataDir}/data/consume" "${cfg.dataDir}/data/media"
-        chown -R 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+        chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
       '';
     };
 

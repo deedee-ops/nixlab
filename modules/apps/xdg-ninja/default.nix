@@ -64,6 +64,9 @@ in
         # NPM
         NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
 
+        # Postgres
+        PSQL_HISTORY = "${config.xdg.dataHome}/psql_history";
+
         # Python
         PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
         PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
