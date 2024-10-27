@@ -1,0 +1,42 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":dependencyDashboard",
+    ":disableRateLimiting",
+    "docker:enableMajor",
+    "docker:pinDigests",
+    ":automergeDigest",
+    ":automergePatch",
+    ":timezone(Europe/Warsaw)",
+    "github>deedee-ops/nixlab//.github/renovate/autoMerge.json5",
+    "github>deedee-ops/nixlab//.github/renovate/commitMessage.json5",
+    "github>deedee-ops/nixlab//.github/renovate/labels.json5",
+    "github>deedee-ops/nixlab//.github/renovate/semanticCommits.json5"
+  ],
+  "gitAuthor": "robodexo2000 <150604236+robodexo2000[bot]@users.noreply.github.com>",
+  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
+  "suppressNotifications": ["prEditedNotification", "prIgnoreNotification"],
+  "commitBodyTable": true,
+  "rebaseWhen": "auto",
+
+  "nix": {
+    "enabled": "true",
+  },
+
+  "lockFileMaintenance": {
+    "enabled": "true",
+    "automerge": "true",
+    "schedule": [ "before 4am on Sunday" ],
+  },
+
+  "regexManagers": [
+    {
+      fileMatch: ["^modules/.*\\.nix$"],
+      matchStrings: [
+        'image *= *"(?<depName>.*?):(?<currentValue>.*?)(@(?<currentDigest>sha256:[a-f0-9]+))?"',
+      ],
+      datasourceTemplate: "docker",
+    }
+  ]
+}
