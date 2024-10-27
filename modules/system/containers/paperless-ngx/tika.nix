@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.tika = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/tika:2.9.2@sha256:b56d5a88ea693adfc605b8772adb47fce5fba1fec21da8fefcc9678b7734bae0";
+        image = "ghcr.io/deedee-ops/tika:3.0.0@sha256:ca20827c852caa53607275e8626f5da46781708ebb30b78aad468ad23167cc39";
       };
     };
   };
