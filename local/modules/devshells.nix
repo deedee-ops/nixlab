@@ -3,6 +3,7 @@ _: {
     {
       config,
       pkgs,
+      lib,
       inputs',
       ...
     }:
@@ -24,6 +25,8 @@ _: {
 
         shellHook = ''
           ${config.pre-commit.installationScript}
+
+          ${lib.getExe pkgs.git} pull origin master:master --rebase
         '';
       };
     };

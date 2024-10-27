@@ -147,6 +147,7 @@ _: rec {
     firefly-iii.enable = true;
     lldap.enable = true;
     maddy.enable = true;
+    miniflux.enable = true;
     paperless-ngx.enable = true;
     piped.enable = true;
     redlib.enable = true;

@@ -6,6 +6,7 @@ _: {
     ./firefoxsync
     ./lldap
     ./maddy
+    ./miniflux
     ./paperless-ngx
     ./piped
     ./redlib

@@ -42,6 +42,7 @@ in
         volumes = [ "/run/piped/config.properties:/app/config.properties:ro" ];
       };
       opts = {
+        # proxying to youtube
         allowPublic = true;
         disableReadOnly = true;
       };
