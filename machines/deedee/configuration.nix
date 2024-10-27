@@ -11,7 +11,7 @@ _: rec {
     };
   };
 
-  mySystem = rec {
+  mySystem = {
     purpose = "Homelab";
     filesystem = "zfs";
     primaryUser = "ajgon";
@@ -77,8 +77,14 @@ _: rec {
     mounts = [
       {
         type = "nfs";
-        src = "${nasIP}:/volume2/backup/deedee";
-        dest = backup.local.location;
+        src = "${mySystem.nasIP}:/volume2/backup/deedee";
+        dest = mySystem.backup.local.location;
+      }
+      {
+        type = "nfs";
+        src = "${mySystem.nasIP}:/volume1/media/music";
+        dest = mySystemApps.navidrome.musicPath;
+        opts = "ro";
       }
     ];
 
@@ -148,6 +154,10 @@ _: rec {
     lldap.enable = true;
     maddy.enable = true;
     miniflux.enable = true;
+    navidrome = {
+      enable = true;
+      musicPath = "/mnt/music";
+    };
     paperless-ngx.enable = true;
     piped.enable = true;
     redlib.enable = true;

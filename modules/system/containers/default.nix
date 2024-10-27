@@ -7,6 +7,7 @@ _: {
     ./lldap
     ./maddy
     ./miniflux
+    ./navidrome
     ./paperless-ngx
     ./piped
     ./redlib

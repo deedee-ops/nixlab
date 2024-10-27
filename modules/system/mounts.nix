@@ -24,6 +24,12 @@ in
             type = lib.types.str;
             description = "Mount desctination.";
           };
+          opts = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            description = "Extra mount options";
+            example = "ro";
+            default = null;
+          };
         };
       }
     );
@@ -37,6 +43,7 @@ in
     {
       environment.systemPackages = lib.optionals withNFS [ pkgs.nfs-utils ];
       services.rpcbind.enable = withNFS;
+      boot.kernelModules = lib.optionals withNFS [ "nfs" ];
 
       systemd.mounts = builtins.map (
         mount:
@@ -46,7 +53,7 @@ in
             what = mount.src;
             where = mount.dest;
             mountConfig = {
-              Options = "noatime";
+              Options = "noatime" + (lib.optionalString (mount.opts != null) ",${mount.opts}");
             };
           }
         else
