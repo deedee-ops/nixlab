@@ -41,6 +41,12 @@ in
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for authelia are disabled!") ];
+    assertions = [
+      {
+        assertion = config.mySystemApps.lldap.enable;
+        message = "To use authelia, lldap container needs to be enabled.";
+      }
+    ];
 
     sops.secrets = svc.mkContainerSecretsSops {
       inherit (cfg) sopsSecretPrefix;

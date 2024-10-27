@@ -15,6 +15,12 @@ in
 {
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for paperless-ngx are disabled!") ];
+    assertions = [
+      {
+        assertion = config.mySystemApps.tika.enable;
+        message = "To use paperless-ngx, tika container needs to be enabled.";
+      }
+    ];
 
     sops.secrets = svc.mkContainerSecretsSops {
       inherit (cfg) sopsSecretPrefix;

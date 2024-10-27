@@ -5,9 +5,13 @@
   ...
 }:
 let
-  cfg = config.mySystemApps.paperless-ngx;
+  cfg = config.mySystemApps.tika;
 in
 {
+  options.mySystemApps.tika = {
+    enable = lib.mkEnableOption "tika container";
+  };
+
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.tika = svc.mkContainer {
       cfg = {

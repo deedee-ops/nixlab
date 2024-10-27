@@ -162,6 +162,7 @@ _: rec {
     piped.enable = true;
     redlib.enable = true;
     syncthing.enable = true;
+    tika.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
     whoogle.enable = true;

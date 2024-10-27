@@ -3,7 +3,6 @@
   imports = [
     ./gotenberg.nix
     ./paperless-ngx.nix
-    ./tika.nix
   ];
 
   options.mySystemApps.paperless-ngx = {

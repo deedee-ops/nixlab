@@ -12,6 +12,7 @@ _: {
     ./piped
     ./redlib
     ./syncthing
+    ./tika
     ./vaultwarden
     ./wakapi
     ./whoogle
