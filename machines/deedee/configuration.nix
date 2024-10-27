@@ -146,6 +146,7 @@ _: rec {
     firefoxsync.enable = true;
     lldap.enable = true;
     maddy.enable = true;
+    paperless-ngx.enable = true;
     piped.enable = true;
     redlib.enable = true;
     syncthing.enable = true;

@@ -25,10 +25,26 @@ in
       default = "system/apps/syncthing/env";
     };
     extraPaths = lib.mkOption {
-      type = lib.type.attrsOf lib.types.str;
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            dest = lib.mkOption {
+              type = lib.types.str;
+              description = "Target path to be mounted.";
+            };
+            readOnly = lib.mkOption {
+              type = lib.types.bool;
+              description = "Mount read only.";
+              default = false;
+            };
+          };
+        }
+      );
       description = ''
         Extra paths to be mounted for syncthing. These paths WILL NOT be backed up.
-        For example: `{ "my-nas" => "/mnt/nas" };` would bindmount `/mnt/nas` to `{dataDir}/external/my-nas`.
+        Optionally they can be set to be mounted read only.
+        For example: `{ "my-nas" = { dest = "/mnt/nas"; readOnly = true; };`
+        would bindmount `/mnt/nas` to `{dataDir}/external/my-nas` as read only.
       '';
       example = {
         "my-nas" = "/mnt/nas";
@@ -53,6 +69,7 @@ in
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.dataDir}/data:/data"
+          "${cfg.dataDir}/external:/external"
         ];
         ports = [ "22000:22000" ];
       };
@@ -82,17 +99,26 @@ in
       preStart = lib.mkAfter ''
         mkdir -p "${cfg.dataDir}/config"
         mkdir -p "${cfg.dataDir}/data"
+        mkdir -p "${cfg.dataDir}/external"
         if [ ! -e "${cfg.dataDir}/config/config.xml" ]; then
           sed "s,@@SYNCTHING_API_KEY@@,$(cat ${
             config.sops.secrets."${cfg.sopsSecretPrefix}/SYNCTHING_API_KEY".path
           }),g" ${./config.xml} > ${cfg.dataDir}/config/config.xml
         fi
-        chown -R 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+        chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data" "${cfg.dataDir}/external"
       '';
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    fileSystems = lib.mapAttrs' (name: value: {
+      name = "${cfg.dataDir}/external/${name}";
+      value = {
+        device = value.dest;
+        options = [ ("bind" + (lib.optionalString value.readOnly ",ro")) ];
+      };
+    }) cfg.extraPaths;
   };
 }
