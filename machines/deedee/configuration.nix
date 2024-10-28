@@ -34,18 +34,22 @@ _: rec {
       local = {
         enable = true;
         location = "/mnt/backup";
+        passFileSopsSecret = "backups/restic/local/password";
       };
       remotes = [
         {
           name = "borgbase-eu";
-          repositoryFileSopsSecret = "backups/restic/repo-borgbase-eu";
+          location = "rest:https://pyif3th7.repo.borgbase.com";
+          envFileSopsSecret = "backups/restic/repo-borgbase-eu/env";
+          passFileSopsSecret = "backups/restic/repo-borgbase-eu/password";
         }
         {
           name = "borgbase-us";
-          repositoryFileSopsSecret = "backups/restic/repo-borgbase-us";
+          location = "rest:https://p51to40o.repo.borgbase.com";
+          envFileSopsSecret = "backups/restic/repo-borgbase-us/env";
+          passFileSopsSecret = "backups/restic/repo-borgbase-us/password";
         }
       ];
-      passFileSopsSecret = "backups/restic/password";
     };
 
     disks = {
