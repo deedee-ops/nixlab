@@ -220,8 +220,10 @@ in
     services.nginx.virtualHosts.adguard = {
       useACMEHost = "wildcard.${config.mySystem.rootDomain}";
       serverName = "adguard.${config.mySystem.rootDomain}";
+      forceSSL = true;
       locations = {
         "/" = {
+          proxyWebsockets = true;
           extraConfig = ''
             set $host_to_pass http://127.0.0.1:${builtins.toString config.services.adguardhome.port};
             proxy_pass $host_to_pass;
