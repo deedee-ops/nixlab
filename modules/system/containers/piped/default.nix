@@ -4,6 +4,7 @@
     ./backend.nix
     ./frontend.nix
     ./proxy.nix
+    ./update-feeds.nix
   ];
 
   options.mySystemApps.piped = {
