@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.piped-proxy = svc.mkContainer {
       cfg = {
-        image = "docker.io/1337kavin/piped-proxy:latest@sha256:368260081828f8418302cb247fe21477cec1e5c14d997a79b0628322e0f91a89";
+        image = "docker.io/1337kavin/piped-proxy:latest@sha256:79188dcc4489cf3cd6fc7ce8722c346d9167f1c2dbf970805d9971f3d17b3403";
         environment = {
           UDS = "1";
         };
