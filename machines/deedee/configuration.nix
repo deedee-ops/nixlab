@@ -149,6 +149,10 @@ _: rec {
       enable = true;
       passFileSopsSecret = "system/apps/redis/password";
     };
+    rustdesk = {
+      enable = true;
+      relayIP = "relay.${mySystem.rootDomain}";
+    };
 
     # containers
     authelia.enable = true;

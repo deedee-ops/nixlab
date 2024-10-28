@@ -8,6 +8,7 @@ _: {
     ./nginx
     ./postgresql
     ./redis
+    ./rustdesk
     ./squid
   ];
 }
