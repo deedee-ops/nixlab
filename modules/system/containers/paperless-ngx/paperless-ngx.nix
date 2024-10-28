@@ -91,7 +91,7 @@ in
           object-src 'self';
         '';
       };
-      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "paperless-ngx" ]; };
+      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "paperless" ]; };
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {
           name = "paperless-ngx";

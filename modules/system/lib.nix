@@ -201,7 +201,6 @@
           #
           ${lib.getExe pkgs.restic} unlock --remove-all || true
         '';
-        passwordFile = config.sops.secrets."${config.mySystem.backup.passFileSopsSecret}".path;
 
         # Move the path to the zfs snapshot path
         includePaths = map (path: "${config.mySystem.backup.snapshotMountPath}/${path}") paths;
@@ -214,11 +213,11 @@
             timerConfig
             initialize
             backupPrepareCommand
-            passwordFile
             ;
 
           paths = includePaths;
           exclude = excludePaths;
+          passwordFile = config.sops.secrets."${config.mySystem.backup.local.passFileSopsSecret}".path;
           repository = "${config.mySystem.backup.local.location}/${name}";
         };
 
@@ -233,12 +232,13 @@
               timerConfig
               initialize
               backupPrepareCommand
-              passwordFile
               ;
 
             paths = includePaths;
             exclude = excludePaths;
-            repositoryFile = config.sops.secrets."${remote.repositoryFileSopsSecret}".path;
+            passwordFile = config.sops.secrets."${remote.passFileSopsSecret}".path;
+            repository = "${remote.location}/${name}";
+            environmentFile = config.sops.secrets."${remote.envFileSopsSecret}".path;
           };
         }) config.mySystem.backup.remotes
       );

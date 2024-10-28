@@ -15,6 +15,10 @@ in
         type = lib.types.str;
         description = "Location for local backups.";
       };
+      passFileSopsSecret = lib.mkOption {
+        type = lib.types.str;
+        description = "Sops secret name containing local restic backups password.";
+      };
     };
     remotes = lib.mkOption {
       type = lib.types.listOf (
@@ -24,9 +28,17 @@ in
               type = lib.types.str;
               description = "Remote repository alias for restic.";
             };
-            repositoryFileSopsSecret = lib.mkOption {
+            location = lib.mkOption {
               type = lib.types.str;
-              description = "Sops secret name containing remote restic repository url.";
+              description = "Location for remote backups.";
+            };
+            envFileSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing remote restic repository envs.";
+            };
+            passFileSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing remote restic backups password.";
             };
           };
         }
@@ -36,10 +48,6 @@ in
       type = lib.types.str;
       description = "Location for snapshot mount.";
       default = "/mnt/backup-snapshot";
-    };
-    passFileSopsSecret = lib.mkOption {
-      type = lib.types.str;
-      description = "Sops secret name containing restic backups password.";
     };
   };
 
@@ -58,11 +66,17 @@ in
 
     sops.secrets =
       {
-        "${cfg.passFileSopsSecret}" = { };
+        "${cfg.local.passFileSopsSecret}" = { };
       }
       // builtins.listToAttrs (
         builtins.map (remote: {
-          name = remote.repositoryFileSopsSecret;
+          name = remote.passFileSopsSecret;
+          value = { };
+        }) cfg.remotes
+      )
+      // builtins.listToAttrs (
+        builtins.map (remote: {
+          name = remote.envFileSopsSecret;
           value = { };
         }) cfg.remotes
       );

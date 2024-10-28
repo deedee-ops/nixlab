@@ -28,6 +28,7 @@ in
         extraOptions = [
           "--cap-add=CAP_CHOWN"
           "--cap-add=CAP_FSETID"
+          "--cap-add=CAP_KILL"
           "--cap-add=CAP_SETGID"
           "--cap-add=CAP_SETUID"
           "--cap-add=CAP_SYS_CHROOT"

@@ -93,7 +93,7 @@ in
         host = "firefly";
         proxyPass = "http://firefly-iii.docker:8080";
       };
-      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "firefly-iii" ]; };
+      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "firefly" ]; };
     };
 
     systemd = {
