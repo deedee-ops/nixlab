@@ -13,6 +13,7 @@ _: {
     ./navidrome
     ./paperless-ngx
     ./piped
+    ./qbittorrent
     ./redlib
     ./syncthing
     ./tika

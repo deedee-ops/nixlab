@@ -60,7 +60,7 @@ in
       inherit (cfg) sopsSecretPrefix;
       inherit secretEnvs;
 
-      containerName = "piped-api";
+      containerName = "syncthing";
     };
 
     virtualisation.oci-containers.containers.syncthing = svc.mkContainer {

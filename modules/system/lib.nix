@@ -120,6 +120,7 @@
         args = {
           allowPublic = false;
           disableReadOnly = false;
+          routeThroughVPN = false;
         } // opts;
       in
       (lib.recursiveUpdate {
@@ -129,17 +130,26 @@
         };
       } cfg)
       // {
-        dependsOn = [ "network-prepare" ] ++ (cfg.dependsOn or [ ]);
+        dependsOn = [
+          "network-prepare"
+        ] ++ (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
         extraOptions =
           (lib.optionals (!args.disableReadOnly) [ "--read-only" ])
           ++ [
             "--cap-drop=all"
             "--security-opt=no-new-privileges"
-            "--network=${config.mySystemApps.docker.network.private.name}"
-            "--add-host=host.docker.internal:${config.mySystemApps.docker.network.private.hostIP}"
           ]
           ++ (cfg.extraOptions or [ ])
-          ++ lib.optionals args.allowPublic [ "--network=${config.mySystemApps.docker.network.public.name}" ];
+          ++ lib.optionals (!args.routeThroughVPN) [
+            # /etc/hosts mapping conflicts with container network mode
+            "--add-host=host.docker.internal:${config.mySystemApps.docker.network.private.hostIP}"
+
+            "--network=${config.mySystemApps.docker.network.private.name}"
+          ]
+          ++ lib.optionals (args.allowPublic && !args.routeThroughVPN) [
+            "--network=${config.mySystemApps.docker.network.public.name}"
+          ]
+          ++ lib.optionals args.routeThroughVPN [ "--network=container:gluetun" ];
       };
 
     mkContainerSecretsSops =

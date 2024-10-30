@@ -7,6 +7,9 @@
 let
   cfg = config.mySystemApps.gluetun;
   forwardedPort = builtins.toString cfg.forwardedPort;
+  extraPortsMap = builtins.map (
+    port: "${builtins.toString port}:${builtins.toString port}"
+  ) cfg.extraPorts;
   secretEnvs = [
     "WIREGUARD_ADDRESSES"
     "WIREGUARD_PRESHARED_KEY"
@@ -22,6 +25,14 @@ in
     forwardedPort = lib.mkOption {
       type = lib.types.port;
       description = "VPN forwarded port.";
+    };
+    extraPorts = lib.mkOption {
+      type = lib.types.listOf lib.types.port;
+      description = ''
+        Extra ports exposed from the gluetun container,
+        which can be used to expose ports from other containers connected to gluetun network.
+      '';
+      default = [ ];
     };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
@@ -57,7 +68,7 @@ in
             inherit secretEnvs;
             suffix = "_SECRETFILE";
           };
-        ports = [ "${forwardedPort}:${forwardedPort}" ];
+        ports = [ "${forwardedPort}:${forwardedPort}" ] ++ extraPortsMap;
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;
