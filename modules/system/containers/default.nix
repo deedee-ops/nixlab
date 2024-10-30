@@ -5,6 +5,7 @@ _: {
     ./firefly-iii
     ./firefoxsync
     ./forgejo
+    ./gluetun
     ./lldap
     ./maddy
     ./mail-archive

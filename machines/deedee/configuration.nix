@@ -160,6 +160,10 @@ _: rec {
     firefoxsync.enable = true;
     firefly-iii.enable = true;
     forgejo.enable = true;
+    gluetun = {
+      enable = true;
+      forwardedPort = 17307;
+    };
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
