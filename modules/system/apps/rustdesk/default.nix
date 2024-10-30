@@ -15,7 +15,7 @@ in
       default = true;
     };
     relayIP = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       description = "Relay IP advertised to the clients.";
     };
   };

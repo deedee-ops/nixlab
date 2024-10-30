@@ -159,6 +159,7 @@ _: rec {
     coredns.enable = true;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
+    forgejo.enable = true;
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;

@@ -4,6 +4,7 @@ _: {
     ./coredns
     ./firefly-iii
     ./firefoxsync
+    ./forgejo
     ./lldap
     ./maddy
     ./mail-archive
