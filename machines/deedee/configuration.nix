@@ -189,6 +189,7 @@ _: rec {
       enable = true;
       mediaPath = "/mnt/media";
     };
+    recyclarr.enable = true;
     redlib.enable = true;
     sonarr = {
       enable = true;

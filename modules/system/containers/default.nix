@@ -17,6 +17,7 @@ _: {
     ./prowlarr
     ./qbittorrent
     ./radarr
+    ./recyclarr
     ./redlib
     ./sonarr
     ./syncthing
