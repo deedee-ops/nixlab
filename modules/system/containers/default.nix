@@ -4,6 +4,7 @@ _: {
     ./coredns
     ./firefly-iii
     ./firefoxsync
+    ./flaresolverr
     ./forgejo
     ./gluetun
     ./lldap

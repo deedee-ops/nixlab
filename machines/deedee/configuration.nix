@@ -164,6 +164,7 @@ _: rec {
     coredns.enable = true;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
+    flaresolverr.enable = true;
     forgejo.enable = true;
     gluetun = {
       enable = true;
