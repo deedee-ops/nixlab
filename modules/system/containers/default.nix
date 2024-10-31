@@ -16,6 +16,7 @@ _: {
     ./piped
     ./prowlarr
     ./qbittorrent
+    ./radarr
     ./redlib
     ./syncthing
     ./tika

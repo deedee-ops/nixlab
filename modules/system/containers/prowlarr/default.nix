@@ -14,7 +14,7 @@ in
 {
   options.mySystemApps.prowlarr = {
     enable = lib.mkEnableOption "prowlarr container";
-    backup = lib.mkEnableOption "postgresql and data backup" // {
+    backup = lib.mkEnableOption "postgresql backup" // {
       default = true;
     };
     sopsSecretPrefix = lib.mkOption {

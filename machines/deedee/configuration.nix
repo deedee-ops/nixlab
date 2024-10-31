@@ -92,8 +92,8 @@ _: rec {
       }
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume1/media/torrents";
-        dest = mySystemApps.qbittorrent.downloadsPath;
+        src = "${mySystem.nasIP}:/volume1/media";
+        dest = mySystemApps.radarr.mediaPath;
       }
     ];
 
@@ -184,6 +184,10 @@ _: rec {
     qbittorrent = {
       enable = true;
       downloadsPath = "/mnt/media/torrents";
+    };
+    radarr = {
+      enable = true;
+      mediaPath = "/mnt/media";
     };
     redlib.enable = true;
     syncthing.enable = true;
