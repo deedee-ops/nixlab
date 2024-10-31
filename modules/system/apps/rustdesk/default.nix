@@ -46,6 +46,8 @@ in
       postStart = lib.mkAfter ''
         while [ ! -e /var/lib/rustdesk/id_ed25519 ]; do sleep 0.5; done
         chown -R rustdesk:rustdesk "${dataDir}"
+        [ -e "${dataDir}/id_ed25519" ] && cp "${dataDir}/id_ed25519" /var/lib/rustdesk
+        [ -e "${dataDir}/id_ed25519.pub" ] && cp "${dataDir}/id_ed25519.pub" /var/lib/rustdesk
         cp -r /var/lib/rustdesk/* "${dataDir}"
       '';
       preStop = lib.mkAfter ''
