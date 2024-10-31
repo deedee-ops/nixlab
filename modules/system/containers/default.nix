@@ -18,6 +18,7 @@ _: {
     ./qbittorrent
     ./radarr
     ./redlib
+    ./sonarr
     ./syncthing
     ./tika
     ./vaultwarden

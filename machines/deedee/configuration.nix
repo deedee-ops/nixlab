@@ -190,6 +190,10 @@ _: rec {
       mediaPath = "/mnt/media";
     };
     redlib.enable = true;
+    sonarr = {
+      enable = true;
+      mediaPath = "/mnt/media";
+    };
     syncthing.enable = true;
     tika.enable = true;
     vaultwarden.enable = true;
