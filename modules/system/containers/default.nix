@@ -1,6 +1,7 @@
 _: {
   imports = [
     ./authelia
+    ./bazarr
     ./coredns
     ./firefly-iii
     ./firefoxsync

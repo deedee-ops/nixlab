@@ -161,6 +161,10 @@ _: rec {
 
     # containers
     authelia.enable = true;
+    bazarr = {
+      enable = true;
+      videoPath = "/mnt/media/video";
+    };
     coredns.enable = true;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
