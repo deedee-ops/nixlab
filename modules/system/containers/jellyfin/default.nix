@@ -1,0 +1,107 @@
+{
+  config,
+  lib,
+  pkgs,
+  svc,
+  ...
+}:
+let
+  cfg = config.mySystemApps.jellyfin;
+in
+{
+  options.mySystemApps.jellyfin = {
+    enable = lib.mkEnableOption "jellyfin container";
+    backup = lib.mkEnableOption "data backup" // {
+      default = true;
+    };
+    dataDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Path to directory containing data.";
+      default = "/var/lib/jellyfin";
+    };
+    videoPath = lib.mkOption {
+      type = lib.types.str;
+      description = "Path to directory containing movies and tv shows.";
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for jellyfin are disabled!") ];
+
+    virtualisation.oci-containers.containers.jellyfin = svc.mkContainer {
+      cfg = {
+        image = "ghcr.io/deedee-ops/jellyfin:10.10.0@sha256:ff066c8f56f971d6e6ba7ac864c649bcb774e5c6ca860fccd475cab1c0623a68";
+        environment = {
+          DOTNET_SYSTEM_IO_DISABLEFILELOCKING = "true";
+        };
+        ports = [ "8096:8096" ];
+        volumes = [
+          "${cfg.dataDir}/config:/config"
+          "/var/cache/jellyfin/transcode:/transcode"
+          "/var/cache/jellyfin/internal-ip:/secrets/JELLYFIN_PublishedServerUrl:ro" # hack to dynamically pass current machine IP to env
+          "${cfg.videoPath}:/data/video"
+        ];
+        extraOptions = [ "--device=/dev/dri" ];
+      };
+      opts = {
+        # for fetching metadata
+        allowPublic = true;
+      };
+    };
+
+    mySystemApps.authelia.oidcClients = [
+      {
+        client_id = "jellyfin";
+        client_name = "Jellyfin";
+        client_secret = "$pbkdf2-sha512$310000$McvlFsYvH5nWq19jqAzQZQ$ced4oGa2gBlsHR6ZxkqyQt63oLMmoedCJHA/7K/42HiDWdp3Yo2M5DjnkG2uB69OQRtgfh2qeOMrUrd8APyrMA"; # unencrypted version in SOPS
+        consent_mode = "implicit";
+        public = false;
+        authorization_policy = "two_factor";
+        require_pkce = true;
+        pkce_challenge_method = "S256";
+        redirect_uris = [ "https://jellyfin.${config.mySystem.rootDomain}/sso/OID/redirect/authelia" ];
+        scopes = [
+          "openid"
+          "profile"
+          "groups"
+        ];
+        userinfo_signed_response_alg = "none";
+        token_endpoint_auth_method = "client_secret_post";
+      }
+    ];
+
+    services = {
+      nginx.virtualHosts.jellyfin = svc.mkNginxVHost {
+        host = "jellyfin";
+        proxyPass = "http://jellyfin.docker:8096";
+        useAuthelia = false;
+        customCSP = ''
+          default-src 'self' 'unsafe-inline' data: blob: wss:;
+          img-src 'self' data: https://repo.jellyfin.org https://raw.githubusercontent.com;
+          object-src 'none';
+          style-src 'self' 'unsafe-inline' data: blob: *.${config.mySystem.rootDomain};
+        '';
+      };
+      restic.backups = lib.mkIf cfg.backup (
+        svc.mkRestic {
+          name = "jellyfin";
+          paths = [ cfg.dataDir ];
+        }
+      );
+    };
+
+    systemd.services.docker-jellyfin = {
+      path = [ pkgs.iproute2 ];
+      preStart = lib.mkAfter ''
+        mkdir -p "${cfg.dataDir}/config" /var/cache/jellyfin
+        chown 65000:65000 "${cfg.dataDir}/config" /var/cache/jellyfin
+        ip -f inet addr show ${config.mySystem.networking.mainInterface} | grep -Po 'inet \K[\d.]+' > "/var/cache/jellyfin/internal-ip"
+        chown 65000:65000 "/var/cache/jellyfin/internal-ip"
+      '';
+    };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ cfg.dataDir ]; };
+  };
+}
