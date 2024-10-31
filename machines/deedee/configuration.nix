@@ -180,6 +180,7 @@ _: rec {
     };
     paperless-ngx.enable = true;
     piped.enable = true;
+    prowlarr.enable = true;
     qbittorrent = {
       enable = true;
       downloadsPath = "/mnt/media/torrents";

@@ -14,6 +14,7 @@ _: {
     ./navidrome
     ./paperless-ngx
     ./piped
+    ./prowlarr
     ./qbittorrent
     ./redlib
     ./syncthing
