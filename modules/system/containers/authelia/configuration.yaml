@@ -133,15 +133,10 @@ identity_providers:
     minimum_parameter_entropy: 8
     cors:
       allowed_origins_from_client_redirect_uris: true
-    clients:
-      - client_id: dummy
-        # dummy secret to silence validator
-        client_secret: "$pbkdf2-sha512$310000$Ba.BvSfTLFe13NgdaYAuzQ$8hXUp.8taU1rQ314hWbd9ku..inwUSMhhLnLYJDkkdSL1FXi5rIO7aErr91d7kvp4BLReZWmBFe.8Cg6zsEwLg"
+    clients: []
     # yamllint disable
     jwks:
-# {{=<% %>=}}
-      - key: {{ secret "/secrets/AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY" | mindent 10 "|" | msquote }}
-# <%={{ }}=%>
+      - key: "@@AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY@@"
     # yamllint enable
     lifespans:
       access_token: 1h

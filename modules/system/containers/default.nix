@@ -8,6 +8,7 @@ _: {
     ./flaresolverr
     ./forgejo
     ./gluetun
+    ./jellyfin
     ./lldap
     ./maddy
     ./mail-archive

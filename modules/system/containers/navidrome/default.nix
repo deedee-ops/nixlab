@@ -49,6 +49,13 @@ in
       nginx.virtualHosts.navidrome = svc.mkNginxVHost {
         host = "navidrome";
         proxyPass = "http://navidrome.docker:3000";
+        customCSP = ''
+          default-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline'
+          data: mediastream: blob: wss: https://*.${config.mySystem.rootDomain};
+          object-src 'none';
+          img-src 'self' data: blob: https:;
+          media-src 'self' data: blob: https:;
+        '';
       };
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {

@@ -1,4 +1,10 @@
-_: rec {
+_:
+let
+  mediaPath = "/mnt/media";
+  videoPath = "${mediaPath}/video";
+  torrentsPath = "${mediaPath}/torrents";
+in
+rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
     age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
@@ -162,8 +168,8 @@ _: rec {
     # containers
     authelia.enable = true;
     bazarr = {
+      inherit videoPath;
       enable = true;
-      videoPath = "/mnt/media/video";
     };
     coredns.enable = true;
     firefoxsync.enable = true;
@@ -173,6 +179,10 @@ _: rec {
     gluetun = {
       enable = true;
       forwardedPort = 17307;
+    };
+    jellyfin = {
+      inherit videoPath;
+      enable = true;
     };
     lldap.enable = true;
     maddy.enable = true;
@@ -187,17 +197,17 @@ _: rec {
     prowlarr.enable = true;
     qbittorrent = {
       enable = true;
-      downloadsPath = "/mnt/media/torrents";
+      downloadsPath = torrentsPath;
     };
     radarr = {
+      inherit mediaPath;
       enable = true;
-      mediaPath = "/mnt/media";
     };
     recyclarr.enable = true;
     redlib.enable = true;
     sonarr = {
+      inherit mediaPath;
       enable = true;
-      mediaPath = "/mnt/media";
     };
     syncthing.enable = true;
     tika.enable = true;

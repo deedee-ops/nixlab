@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   svc,
   ...
 }:
@@ -14,17 +15,32 @@ let
     "AUTHELIA_STORAGE_ENCRYPTION_KEY"
     "AUTHELIA_STORAGE_POSTGRES_PASSWORD"
   ];
-  configuration = svc.templateFile {
-    name = "configuration.yaml";
-    src = ./configuration.yaml;
+  configuration = pkgs.writeText "configuration.yaml" (
+    builtins.toJSON (
+      lib.recursiveUpdate
+        (svc.importYAML (
+          svc.templateFile {
+            name = "configuration.yaml";
+            src = ./configuration.yaml;
 
-    vars = {
-      LLDAP_LDAP_BASE_DN = config.mySystemApps.lldap.baseDN;
-      LLDAP_LDAP_USER_DN = config.mySystemApps.lldap.userDN;
-      NOTIFICATION_SENDER = config.mySystem.notificationSender;
-      ROOT_DOMAIN = config.mySystem.rootDomain;
-    };
-  };
+            vars = {
+              LLDAP_LDAP_BASE_DN = config.mySystemApps.lldap.baseDN;
+              LLDAP_LDAP_USER_DN = config.mySystemApps.lldap.userDN;
+              NOTIFICATION_SENDER = config.mySystem.notificationSender;
+              ROOT_DOMAIN = config.mySystem.rootDomain;
+            };
+          }
+        ))
+        {
+          identity_providers = {
+            oidc = {
+              clients = cfg.oidcClients;
+            };
+          };
+        }
+
+    )
+  );
 in
 {
   options.mySystemApps.authelia = {
@@ -36,6 +52,24 @@ in
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
       default = "system/apps/authelia/env";
+    };
+    oidcClients = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      description = "Extra OIDC clients configuration.";
+      default = [
+        {
+          client_id = "dummy";
+          # dummy secret to silence validator
+          client_secret = "$pbkdf2-sha512$310000$Ba.BvSfTLFe13NgdaYAuzQ$8hXUp.8taU1rQ314hWbd9ku..inwUSMhhLnLYJDkkdSL1FXi5rIO7aErr91d7kvp4BLReZWmBFe.8Cg6zsEwLg";
+        }
+      ];
+      example = [
+        {
+          client_id = "example";
+          client_name = "Example";
+          client_secret = "Encrypted client secret";
+        }
+      ];
     };
   };
 
@@ -80,7 +114,7 @@ in
             inherit secretEnvs;
           }
           ++ [
-            "${configuration}:/config/configuration.yaml:ro"
+            "/run/authelia/configuration.yaml:/config/configuration.yaml:ro"
             "${
               config.sops.secrets."${config.mySystemApps.lldap.sopsSecretPrefix}/LLDAP_LDAP_USER_PASS".path
             }:/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD:ro"
@@ -89,6 +123,15 @@ in
             }:/secrets/AUTHELIA_SESSION_REDIS_PASSWORD:ro"
           ];
       };
+    };
+
+    systemd.services.docker-authelia = {
+      preStart = lib.mkAfter ''
+        mkdir -p /run/authelia
+        sed "s,@@AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY@@,$(cat ${
+          config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY".path
+        } | tr '\n' '#' | sed 's@#@\\\\n@g'),g" ${configuration} > /run/authelia/configuration.yaml
+      '';
     };
 
     services.nginx.virtualHosts.authelia = svc.mkNginxVHost {
