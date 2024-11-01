@@ -1,8 +1,10 @@
 _:
 let
   mediaPath = "/mnt/media";
-  videoPath = "${mediaPath}/video";
+  audiobooksPath = "${mediaPath}/audiobooks";
+  podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
+  videoPath = "${mediaPath}/video";
 in
 rec {
   sops = {
@@ -166,6 +168,10 @@ rec {
     };
 
     # containers
+    audiobookshelf = {
+      inherit audiobooksPath podcastsPath;
+      enable = true;
+    };
     authelia.enable = true;
     bazarr = {
       inherit videoPath;
