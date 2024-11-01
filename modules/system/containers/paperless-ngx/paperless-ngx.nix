@@ -7,6 +7,7 @@
 let
   cfg = config.mySystemApps.paperless-ngx;
   secretEnvs = [
+    "HOMEPAGE_API_KEY"
     "PAPERLESS_DBPASS"
     "PAPERLESS_REDIS"
     "PAPERLESS_SECRET_KEY"
@@ -111,13 +112,32 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
-    mySystemApps.syncthing.extraPaths = {
-      "paperless-ngx/consume" = {
-        dest = "${cfg.dataDir}/data/consume";
+    mySystemApps = {
+      syncthing.extraPaths = {
+        "paperless-ngx/consume" = {
+          dest = "${cfg.dataDir}/data/consume";
+        };
+        "paperless-ngx/documents" = {
+          dest = "${cfg.dataDir}/data/media/documents/archive";
+          readOnly = true;
+        };
       };
-      "paperless-ngx/documents" = {
-        dest = "${cfg.dataDir}/data/media/documents/archive";
-        readOnly = true;
+
+      homepage = {
+        services.Apps.Paperless-NGX = svc.mkHomepage "paperless-ngx" // {
+          href = "https://paperless.${config.mySystem.rootDomain}";
+          description = "Documents OCR and archive";
+          widget = {
+            type = "paperlessngx";
+            url = "http://paperless-ngx:8000";
+            key = "@@PAPERLESSNGX_API_KEY@@";
+            fields = [
+              "inbox"
+              "total"
+            ];
+          };
+        };
+        secrets.PAPERLESSNGX_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
       };
     };
   };

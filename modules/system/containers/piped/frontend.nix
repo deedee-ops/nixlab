@@ -36,5 +36,13 @@ in
         useAuthelia = false;
       };
     };
+
+    mySystemApps.homepage = {
+      services.Apps.Piped = svc.mkHomepage "piped" // {
+        container = "piped-api";
+        icon = "https://cdn.jsdelivr.net/gh/TeamPiped/Piped/public/img/icons/logo.svg";
+        description = "Private YouTube proxy";
+      };
+    };
   };
 }

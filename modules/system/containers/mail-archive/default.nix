@@ -46,5 +46,13 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Apps."Mail Archive" = svc.mkHomepage "mail" // {
+        description = "Mail archive browser.";
+        container = "mail-archive-dovecot";
+        icon = "roundcube.svg";
+      };
+    };
   };
 }

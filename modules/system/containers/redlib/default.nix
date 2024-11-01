@@ -62,5 +62,12 @@ in
         useAuthelia = false;
       };
     };
+
+    mySystemApps.homepage = {
+      services.Apps.Redlib = svc.mkHomepage "redlib" // {
+        icon = "https://cdn.jsdelivr.net/gh/redlib-org/redlib@main/static/logo.svg";
+        description = "Private Reddit proxy";
+      };
+    };
   };
 }

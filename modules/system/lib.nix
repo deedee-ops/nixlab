@@ -6,6 +6,12 @@
 }:
 {
   _module.args.svc = {
+    mkHomepage = name: {
+      icon = "${name}.svg";
+      href = "https://${name}.${config.mySystem.rootDomain}";
+      server = "deedee";
+      container = name;
+    };
     mkNginxVHost =
       {
         host,
@@ -130,9 +136,7 @@
         };
       } cfg)
       // {
-        dependsOn = [
-          "network-prepare"
-        ] ++ (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
+        dependsOn = (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
         extraOptions =
           (lib.optionals (!args.disableReadOnly) [ "--read-only" ])
           ++ [

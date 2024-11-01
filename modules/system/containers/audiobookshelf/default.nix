@@ -27,10 +27,17 @@ in
       type = lib.types.str;
       description = "Path to directory containing podcasts.";
     };
+    sopsSecretPrefix = lib.mkOption {
+      type = lib.types.str;
+      description = "Prefix for sops secret, under which all ENVs will be appended.";
+      default = "system/apps/audiobookshelf/env";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for audiobookshelf are disabled!") ];
+
+    sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY" = { };
 
     virtualisation.oci-containers.containers.audiobookshelf = svc.mkContainer {
       cfg = {
@@ -112,5 +119,24 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Audiobookshelf = svc.mkHomepage "audiobookshelf" // {
+        description = "Podcasts and audiobooks manager";
+        widget = {
+          type = "audiobookshelf";
+          url = "http://audiobookshelf:3000";
+          key = "@@AUDIOBOOKSHELF_API_KEY@@";
+          fields = [
+            "books"
+            "booksDuration"
+            "podcasts"
+            "podcastsDuration"
+          ];
+        };
+      };
+      secrets.AUDIOBOOKSHELF_API_KEY =
+        config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
+    };
   };
 }

@@ -1,0 +1,298 @@
+/*
+* Taken and inspired by: https://old.reddit.com/r/selfhosted/comments/1gfl70m/my_personal_dashboard_made_with_homepage_config/
+*/
+
+/*==================================
+  ROOT VARIABLES
+==================================*/
+:root {
+  /* Color palette for consistent theming */
+  --color-border: #4d4e5e;
+  --color-tab-border: #4a4a54;
+  --color-tab-hover: #AC2747;
+  --color-background-primary: #11141d;
+  --color-background-hover: #08081c;
+  --color-block: #222432;
+  --color-block-hover: #2d2d4a;
+  --color-bookmark-icon: #1f233c;
+
+  /* Gradient definition for animated borders */
+  --gradient-border: linear-gradient(90deg, #F75050, #6C033D, #F75050);
+
+  /* Consistent spacing scale */
+  --spacing-xs: 5px;
+  --spacing-sm: 8px;
+  --spacing-md: 10px;
+  --spacing-lg: 30px;
+  --spacing-xl: 40px;
+
+  /* Border properties for consistent styling */
+  --border-width: 2px;
+  --border-radius: .375rem;
+  --border-radius-sm: .275rem;
+
+  /* Animation timings for consistent motion */
+  --animation-duration: 3s;
+  --transition-duration: 0.3s;
+
+  /* Layout measurements */
+  --logo-size: 66px;
+
+  /* Tab-specific styling variables */
+  --tab-border-width: 2px;
+  --tab-border-radius: .375rem;
+  --tab-backdrop-filter: blur(1px);
+}
+
+/*==================================
+  TAB STYLES
+==================================*/
+/* Container for all tabs */
+#myTab {
+  padding: var(--spacing-xs);
+  background: none;
+  backdrop-filter: none;
+  display: flex;
+  justify-content: flex-start;
+  gap: var(--spacing-xl);
+}
+
+/* Individual tab styling */
+button[id$='-tab'] {
+  border-width: var(--tab-border-width);
+  border-radius: var(--tab-border-radius);
+  border-color: var(--color-tab-border);
+  backdrop-filter: var(--tab-backdrop-filter);
+  padding: 1px;
+  margin: 1px;
+  border-spacing: 0;
+  transition: border-color var(--transition-duration) ease;
+}
+
+/* Tab hover effect */
+button[id$='-tab']:hover {
+  border-color: var(--color-tab-hover);
+}
+
+/*==================================
+  HEADING STYLES
+==================================*/
+/* Apply Merriweather font to the greeting */
+.information-widget-logo + .information-widget-greeting span {
+  font-weight: 700 !important;
+}
+
+/* Logo size and positioning */
+.information-widget-logo img {
+  width: var(--logo-size) !important;
+  height: var(--logo-size) !important;
+  max-width: none;
+  max-height: none;
+  margin-left: var(--spacing-lg);
+}
+
+/*==================================
+  SERVICE CARD STYLES
+==================================*/
+/* Base service card container */
+.service-card {
+  position: relative;
+  padding: 0;
+  margin: 0;
+  border-radius: var(--border-radius);
+  background: transparent;
+  border: var(--border-width) solid var(--color-border);
+  overflow: visible;
+}
+
+/* Background color for service data blocks */
+.bg-theme-200\/50,
+.flex-1.service-block {
+  background-color: var(--color-block) !important;
+  transition: background-color var(--transition-duration) ease;
+}
+
+/* Change block colors on service card hover */
+.service-card:hover [class*="bg-theme-200/50"],
+.service-card:hover .flex-1.service-block {
+  background-color: var(--color-block-hover) !important;
+}
+
+/* Animated border gradient effect */
+.service-card::before {
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--border-width));
+  background: var(--gradient-border);
+  z-index: -2;
+  border-radius: var(--border-radius);
+  background-size: 200% 100%;
+  animation: wave var(--animation-duration) linear infinite;
+  opacity: 0;
+  transition: opacity var(--transition-duration) ease;
+}
+
+/* Show animated border on hover */
+.service-card:hover::before {
+  opacity: 1;
+}
+
+/* Animation keyframes for border gradient */
+@keyframes wave {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* Inner card background effect */
+.service-card::after {
+  content: '';
+  position: absolute;
+  inset: var(--border-width);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-sm);
+  z-index: -1;
+  transition: background-color var(--transition-duration) ease;
+}
+
+/* Change background color on hover */
+.service-card:hover::after {
+  background: var(--color-background-hover);
+}
+
+/* Hide default border on hover */
+.service-card:hover {
+  border-color: transparent;
+}
+
+/*==================================
+  BOOKMARK SECTION STYLES
+==================================*/
+/* Bookmark section container */
+.flex.flex-col.mt-3.bookmark-list {
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md) var(--spacing-sm) 0 var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+/* Bookmark icon background */
+.bookmark-icon {
+  background-color: var(--color-bookmark-icon) !important;
+}
+
+/*==================================
+  LAYOUT GROUP STYLES - HOMEPAGE
+==================================*/
+/* Homepage layout container with calculations */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="HOME-tab"])) #layout-groups {
+  --gap: var(--spacing-md);
+  --cols-4: calc(25% - (var(--gap) * 3 / 4));
+  --cols-5: calc(20% - (var(--gap) * 4 / 5));
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap) !important;
+}
+/* First four services - 25% width each */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="HOME-tab"])) #layout-groups > .services-group:nth-child(-n+4) {
+  flex: 1 1 var(--cols-4) !important;
+  max-width: var(--cols-4) !important;
+}
+/* Services 5-9 - 20% width each */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="HOME-tab"])) #layout-groups > .services-group:nth-child(n+5):nth-child(-n+9) {
+  flex: 1 1 var(--cols-5) !important;
+  max-width: var(--cols-5) !important;
+}
+/* Hide services after the ninth one */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="HOME-tab"])) #layout-groups > .services-group:nth-child(n+10) {
+  display: none !important;
+}
+
+/*==================================
+  LAYOUT GROUP STYLES - STAT
+==================================*/
+/* Media layout container with calculations */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="STAT-tab"])) #layout-groups {
+  --gap: var(--spacing-md);
+  --cols-2: calc(50% - (var(--gap) / 2));
+  --cols-3: calc(33.33% - (var(--gap) * 2 / 3));
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap) !important;
+}
+/* First 6 services - 33.33% width each */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="STAT-tab"])) #layout-groups > .services-group:nth-child(-n+6) {
+  flex: 1 1 var(--cols-3) !important;
+  max-width: var(--cols-3) !important;
+}
+/* Services 7-8 - 50% width each */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="STAT-tab"])) #layout-groups > .services-group:nth-child(n+7):nth-child(-n+8) {
+  flex: 1 1 var(--cols-2) !important;
+  max-width: var(--cols-2) !important;
+}
+/* Service 9 - 100% width */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="STAT-tab"])) #layout-groups > .services-group:nth-child(9) {
+  flex: 1 1 100% !important;
+  max-width: 100% !important;
+}
+/* Hide services after the ninth one */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="STAT-tab"])) #layout-groups > .services-group:nth-child(n+10) {
+  display: none !important;
+}
+
+/*==================================
+  LAYOUT GROUP STYLES - DEPS
+==================================*/
+/* DEPS layout container with calculations */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="DEPS-tab"])) #layout-groups {
+  --gap: var(--spacing-md);
+  --cols-6: calc(16.667% - (var(--gap) * 5 / 6));
+  --cols-1: 100%;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap) !important;
+}
+
+/* First row: Six services - 16.667% width each */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="DEPS-tab"])) #layout-groups > .services-group:nth-child(-n+6) {
+  flex: 1 1 var(--cols-6) !important;
+  max-width: var(--cols-6) !important;
+}
+
+/* Second row: Single service - 100% width */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="DEPS-tab"])) #layout-groups > .services-group:nth-child(7) {
+  flex: 1 1 var(--cols-1) !important;
+  max-width: var(--cols-1) !important;
+}
+
+/* Hide services after the seventh one */
+:is([id="inner_wrapper"]:has(#tabs [aria-selected="true"][id="DEPS-tab"])) #layout-groups > .services-group:nth-child(n+8) {
+  display: none !important;
+}
+
+/*==================================
+  TEXT STYLES
+==================================*/
+/* Small text styling with pre-line whitespace */
+.text-sm {
+  white-space: pre-line;
+  text-align: center;
+  font-size: 1em;
+
+  &::first-line {
+    margin-bottom: var(--spacing-xs);
+  }
+}
+
+/* Hide elements with _hidden prefix */
+[data-name^="_hidden"] .service-title,
+.bookmark-group .bookmark-group-name {
+  display: none;
+}
+
+/* Hide footer completely */
+#footer {
+  display: none;
+}

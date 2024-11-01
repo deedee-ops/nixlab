@@ -50,5 +50,12 @@ in
         useAuthelia = false;
       };
     };
+
+    mySystemApps.homepage = {
+      services.Apps.Whoogle = svc.mkHomepage "whoogle" // {
+        icon = "whoogle.png";
+        description = "Google Proxy and Anonymizer";
+      };
+    };
   };
 }

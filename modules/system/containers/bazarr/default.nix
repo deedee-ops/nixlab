@@ -89,5 +89,21 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Bazarr = svc.mkHomepage "bazarr" // {
+        description = "Subtitles downloader and autosync";
+        widget = {
+          type = "bazarr";
+          url = "http://bazarr:6767";
+          key = "@@BAZARR_API_KEY@@";
+          fields = [
+            "missingMovies"
+            "missingEpisodes"
+          ];
+        };
+      };
+      secrets.BAZARR_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/BAZARR__API_KEY".path;
+    };
   };
 }

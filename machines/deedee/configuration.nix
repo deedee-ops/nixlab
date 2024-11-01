@@ -186,6 +186,13 @@ rec {
       enable = true;
       forwardedPort = 17307;
     };
+    homepage = {
+      enable = true;
+      greeting = "ajgon.casa";
+      disks = {
+        DATA = "/";
+      };
+    };
     jellyfin = {
       inherit videoPath;
       enable = true;

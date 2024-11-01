@@ -1,0 +1,45 @@
+---
+- greeting:
+    text_size: 4xl
+    text: "@@GREETING@@"
+
+- resources:
+    expanded: false
+    cpu: true
+    cputemp: true
+    memory: true
+    refresh: 1000
+
+- greeting:
+    text_size: 4xl
+    text: —
+
+# @@DISKS_CONFIG@@
+
+- greeting:
+    text_size: 4xl
+    text: —
+
+- resources:
+    expanded: false
+    uptime: true
+    refresh: 1000
+
+- search:
+    provider: "@@SEARCH_PROVIDER@@"
+    url: "@@SEARCH_URL@@"
+    focus: true
+    showSearchSuggestions: false
+    target: _parent
+
+- datetime:
+    text_size: md
+    format:
+      dateStyle: long
+      hour12: false
+
+- datetime:
+    text_size: 4xl
+    format:
+      timeStyle: short
+      hour12: false

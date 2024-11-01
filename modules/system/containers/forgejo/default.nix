@@ -119,5 +119,12 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Apps.Forgejo = svc.mkHomepage "forgejo" // {
+        href = "https://git.${config.mySystem.rootDomain}";
+        description = "Git repositories";
+      };
+    };
   };
 }

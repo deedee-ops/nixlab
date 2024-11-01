@@ -75,5 +75,11 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Navidrome = svc.mkHomepage "navidrome" // {
+        description = "Music collection manager and player";
+      };
+    };
   };
 }

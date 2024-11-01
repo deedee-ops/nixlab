@@ -108,5 +108,22 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Sonarr = svc.mkHomepage "sonarr" // {
+        description = "TV Shows management";
+        widget = {
+          type = "sonarr";
+          url = "http://sonarr:8989";
+          key = "@@SONARR_API_KEY@@";
+          fields = [
+            "wanted"
+            "series"
+            "queued"
+          ];
+        };
+      };
+      secrets.SONARR_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/SONARR__AUTH__APIKEY".path;
+    };
   };
 }

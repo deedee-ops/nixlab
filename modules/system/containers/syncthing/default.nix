@@ -120,5 +120,11 @@ in
         options = [ ("bind" + (lib.optionalString value.readOnly ",ro")) ];
       };
     }) cfg.extraPaths;
+
+    mySystemApps.homepage = {
+      services.Apps.Syncthing = svc.mkHomepage "syncthing" // {
+        description = "Continuous File Synchronization";
+      };
+    };
   };
 }

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  svc,
   pkgs,
   ...
 }:
@@ -81,11 +82,41 @@ in
         };
       };
     };
+    startDockerSockProxy = lib.mkOption {
+      type = lib.types.bool;
+      description = "Start read-only proxy with minimal permissions, for docker.sock, to avoid mounting it directly in containers.";
+      default = false;
+      example = true;
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = (!cfg.rootless) && cfg.startDockerSockProxy;
+        message = "docker.sock proxy is currently only supported in root mode";
+      }
+    ];
+
     virtualisation = {
-      oci-containers.backend = "docker";
+      oci-containers = {
+        backend = "docker";
+        containers.socket-proxy = lib.mkIf cfg.startDockerSockProxy (
+          svc.mkContainer {
+            cfg = {
+              image = "ghcr.io/tecnativa/docker-socket-proxy:0.3@sha256:2f92c6e85a1199b3403c99d7439695898a162c69689b11130450ffadb352f0a0";
+              environment = {
+                CONTAINERS = "1";
+                POST = "0";
+              };
+              volumes = [ "/var/run/docker.sock:/var/run/docker.sock:ro" ]; # in rootless mode, socket lives under /run/<user id>/....
+            };
+            opts = {
+              disableReadOnly = true;
+            };
+          }
+        );
+      };
 
       docker = {
         enable = true;

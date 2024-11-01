@@ -107,5 +107,23 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Radarr = svc.mkHomepage "radarr" // {
+        description = "Movies management";
+        widget = {
+          type = "radarr";
+          url = "http://radarr:7878";
+          key = "@@RADARR_API_KEY@@";
+          fields = [
+            "wanted"
+            "movies"
+            "queued"
+            "missing"
+          ];
+        };
+      };
+      secrets.RADARR_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/RADARR__AUTH__APIKEY".path;
+    };
   };
 }

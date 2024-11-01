@@ -9,6 +9,7 @@ _: {
     ./flaresolverr
     ./forgejo
     ./gluetun
+    ./homepage
     ./jellyfin
     ./lldap
     ./maddy

@@ -9,6 +9,7 @@ let
   secretEnvs = [
     "ADMIN_PASSWORD"
     "ADMIN_USERNAME"
+    "HOMEPAGE_API_KEY"
     "MINIFLUX__POSTGRES_PASSWORD"
   ];
 in
@@ -88,6 +89,22 @@ in
         useAuthelia = false;
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "miniflux" ]; };
+    };
+
+    mySystemApps.homepage = {
+      services.Apps.Miniflux = svc.mkHomepage "miniflux" // {
+        description = "RSS Reader";
+        widget = {
+          type = "miniflux";
+          url = "http://miniflux:3000";
+          key = "@@MINIFLUX_API_KEY@@";
+          fields = [
+            "unread"
+            "read"
+          ];
+        };
+      };
+      secrets.MINIFLUX_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
     };
   };
 }

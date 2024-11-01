@@ -91,5 +91,12 @@ in
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "lldap" ]; };
     };
+
+    mySystemApps.homepage = {
+      services.Apps.LLDAP = svc.mkHomepage "lldap" // {
+        icon = "badge.png";
+        description = "LDAP server";
+      };
+    };
   };
 }

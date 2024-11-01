@@ -23,10 +23,17 @@ in
       type = lib.types.str;
       description = "Path to directory containing movies and tv shows.";
     };
+    sopsSecretPrefix = lib.mkOption {
+      type = lib.types.str;
+      description = "Prefix for sops secret, under which all ENVs will be appended.";
+      default = "system/apps/jellyfin/env";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for jellyfin are disabled!") ];
+
+    sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY" = { };
 
     virtualisation.oci-containers.containers.jellyfin = svc.mkContainer {
       cfg = {
@@ -103,5 +110,26 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.Jellyfin = svc.mkHomepage "jellyfin" // {
+        description = "Multimedia streaming library";
+        widget = {
+          type = "jellyfin";
+          url = "http://jellyfin:8096";
+          key = "@@JELLYFIN_API_KEY@@";
+          enableBlocks = true;
+          enableNowPlaying = false;
+          enableUser = false;
+          showEpisodeNumber = true;
+          expandOneStreamToTwoRows = false;
+          fields = [
+            "movies"
+            "series"
+          ];
+        };
+      };
+      secrets.JELLYFIN_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
+    };
   };
 }

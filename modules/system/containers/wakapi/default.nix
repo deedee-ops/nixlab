@@ -94,5 +94,12 @@ in
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "wakapi" ]; };
     };
+
+    mySystemApps.homepage = {
+      services.Apps.Wakapi = svc.mkHomepage "wakapi" // {
+        icon = "wakapi.png";
+        description = "Coding time tracker";
+      };
+    };
   };
 }

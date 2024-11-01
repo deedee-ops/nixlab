@@ -80,5 +80,25 @@ in
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "prowlarr" ]; };
     };
+
+    mySystemApps.homepage = {
+      services.Media.Prowlarr = svc.mkHomepage "prowlarr" // {
+        description = "Torrent tracker management";
+        widget = {
+          type = "prowlarr";
+          url = "http://prowlarr:9696";
+          key = "@@PROWLARR_API_KEY@@";
+          fields = [
+            "numberOfGrabs"
+            "numberOfFailGrabs"
+            "numberOfQueries"
+            "numberOfFailQueries"
+          ];
+        };
+      };
+      secrets.PROWLARR_API_KEY =
+        config.sops.secrets."${cfg.sopsSecretPrefix}/PROWLARR__AUTH__APIKEY".path;
+    };
+
   };
 }

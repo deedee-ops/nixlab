@@ -22,6 +22,11 @@ in
       type = lib.types.str;
       description = "Path to directory containing downloads.";
     };
+    sopsSecretPrefix = lib.mkOption {
+      type = lib.types.str;
+      description = "Prefix for sops secret, under which all ENVs will be appended.";
+      default = "system/apps/qbittorrent/env";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -32,6 +37,11 @@ in
         message = "To use qbittorrent, gluetun container needs to be enabled.";
       }
     ];
+
+    sops.secrets = {
+      "${cfg.sopsSecretPrefix}/WEBUI_USERNAME" = { };
+      "${cfg.sopsSecretPrefix}/WEBUI_PASSWORD" = { };
+    };
 
     mySystemApps.gluetun.extraPorts = [ 8080 ];
 
@@ -75,5 +85,28 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Media.qBittorrent = svc.mkHomepage "qbittorrent" // {
+        href = "https://torrents.${config.mySystem.rootDomain}";
+        description = "Torrent downloader";
+        widget = {
+          type = "qbittorrent";
+          url = "http://gluetun:8080";
+          username = "@@QBITTORRENT_USERNAME@@";
+          password = "@@QBITTORRENT_PASSWORD@@";
+          fields = [
+            "leech"
+            "download"
+            "seed"
+            "upload"
+          ];
+        };
+      };
+      secrets = {
+        QBITTORRENT_USERNAME = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_USERNAME".path;
+        QBITTORRENT_PASSWORD = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_PASSWORD".path;
+      };
+    };
   };
 }
