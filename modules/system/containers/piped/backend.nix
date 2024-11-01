@@ -38,7 +38,7 @@ in
 
     virtualisation.oci-containers.containers.piped-api = svc.mkContainer {
       cfg = {
-        image = "docker.io/1337kavin/piped:latest@sha256:c4f9bf5a90eed2cf5bf317c2ac412c15ff9e5c96c50c9ae40631c842d97d7be4";
+        image = "ghcr.io/deedee-ops/piped:latest@sha256:c4f9bf5a90eed2cf5bf317c2ac412c15ff9e5c96c50c9ae40631c842d97d7be4";
         volumes = [ "/run/piped/config.properties:/app/config.properties:ro" ];
       };
       opts = {
