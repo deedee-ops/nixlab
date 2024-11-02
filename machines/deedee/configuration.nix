@@ -2,6 +2,7 @@ _:
 let
   mediaPath = "/mnt/media";
   audiobooksPath = "${mediaPath}/audiobooks";
+  photosPath = "${mediaPath}/photos";
   podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
@@ -192,6 +193,11 @@ rec {
       disks = {
         DATA = "/";
       };
+    };
+    immich = {
+      inherit photosPath;
+      enable = true;
+      dataPath = "/mnt/media/immich";
     };
     jellyfin = {
       inherit videoPath;

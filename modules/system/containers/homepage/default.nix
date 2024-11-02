@@ -40,7 +40,7 @@ in
           };
           Media = {
             style = "row";
-            columns = 4;
+            columns = 5;
           };
         };
       };
@@ -88,9 +88,6 @@ in
         dependsOn = [ "socket-proxy" ];
         user = "1000:1000";
         image = "ghcr.io/gethomepage/homepage:v0.9.11@sha256:d41dca72f3a68d2c675eb232a448104af200096f05e2610ffbfdb16bc7f71410";
-        environment = {
-          LOG_LEVEL = "debug";
-        };
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/app/config,tmpfs-mode=1777"
@@ -105,6 +102,7 @@ in
         ];
       };
       opts = {
+        allowPublic = true;
         disableReadOnly = true;
       };
     };

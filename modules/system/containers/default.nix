@@ -10,6 +10,7 @@ _: {
     ./forgejo
     ./gluetun
     ./homepage
+    ./immich
     ./jellyfin
     ./lldap
     ./maddy

@@ -11,6 +11,7 @@
     ":timezone(Europe/Warsaw)",
     "github>deedee-ops/nixlab//.github/renovate/autoMerge.json5",
     "github>deedee-ops/nixlab//.github/renovate/commitMessage.json5",
+    "github>deedee-ops/nixlab//.github/renovate/groups.json5",
     "github>deedee-ops/nixlab//.github/renovate/labels.json5",
     "github>deedee-ops/nixlab//.github/renovate/semanticCommits.json5",
   ],
