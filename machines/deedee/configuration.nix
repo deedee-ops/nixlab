@@ -81,6 +81,8 @@ rec {
       };
     };
 
+    healthcheck.enable = true;
+
     impermanence = {
       enable = true;
       persistPath = "/persist";

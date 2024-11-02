@@ -7,6 +7,7 @@ _: {
     ./auto-upgrade.nix
     ./backup.nix
     ./disks.nix
+    ./healthcheck.nix
     ./home-manager.nix
     ./impermanence.nix
     ./locales.nix
