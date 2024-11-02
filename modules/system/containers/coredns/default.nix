@@ -24,7 +24,7 @@ in
         ];
         volumes = [ "${corefile}:/etc/coredns/Corefile:ro" ];
 
-        extraOptions = [ "--cap-add=NET_BIND_SERVICE" ];
+        extraOptions = [ "--cap-add=CAP_NET_BIND_SERVICE" ];
 
         # using 5353 may break mDNS
         ports = [ "5533:53/udp" ];

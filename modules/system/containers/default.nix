@@ -29,6 +29,7 @@ _: {
     ./tika
     ./vaultwarden
     ./wakapi
+    ./wg-easy
     ./whoogle
   ];
 }

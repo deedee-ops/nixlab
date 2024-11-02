@@ -74,7 +74,7 @@ in
           inherit secretEnvs;
         };
         extraOptions = [
-          "--cap-add=NET_ADMIN"
+          "--cap-add=CAP_NET_ADMIN"
           "--device=/dev/net/tun"
         ];
       };

@@ -46,7 +46,7 @@ in
           }
           ++ [ "${./maddy.conf}:/config/maddy.conf" ];
 
-        extraOptions = [ "--cap-add=NET_BIND_SERVICE" ];
+        extraOptions = [ "--cap-add=CAP_NET_BIND_SERVICE" ];
       };
       opts = {
         # to connect to external email provider

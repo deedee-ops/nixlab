@@ -21,7 +21,7 @@ in
           "--cap-add=CAP_CHOWN"
           "--cap-add=CAP_SETUID"
           "--cap-add=CAP_SETGID"
-          "--cap-add=NET_BIND_SERVICE"
+          "--cap-add=CAP_NET_BIND_SERVICE"
         ];
       };
       opts = {

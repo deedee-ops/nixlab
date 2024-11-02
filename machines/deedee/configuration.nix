@@ -232,6 +232,16 @@ rec {
     tika.enable = true;
     vaultwarden.enable = true;
     wakapi.enable = true;
+    wg-easy = {
+      enable = true;
+      allowedCIDRs = [
+        "10.100.0.0/16"
+        "10.250.1.0/24"
+      ];
+      advertisedDNSServer = "10.100.20.1";
+      externalHost = "homelab.${mySystem.rootDomain}";
+      wireguardPort = 53201;
+    };
     whoogle.enable = true;
   };
 
