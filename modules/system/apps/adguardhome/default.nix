@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  svc,
   ...
 }:
 let
@@ -239,6 +240,27 @@ in
           '';
         };
       };
+    };
+
+    mySystemApps.homepage = {
+      services.Apps.AdGuardHome = svc.mkHomepage "adguard" // {
+        icon = "adguard-home.svg";
+        container = null;
+        description = "Adguard filtering DNS";
+        widget = {
+          type = "adguard";
+          url = "http://host.docker.internal:${builtins.toString config.services.adguardhome.port}";
+          username = "admin";
+          password = "@@ADGUARD_PASSWORD@@";
+          fields = [
+            "queries"
+            "blocked"
+            "filtered"
+            "latency"
+          ];
+        };
+      };
+      secrets.ADGUARD_PASSWORD = config.sops.secrets."${cfg.adminPasswordSopsSecret}".path;
     };
   };
 }
