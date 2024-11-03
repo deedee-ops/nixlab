@@ -4,6 +4,9 @@
 
 ```bash
 nix run .#build-base-vm
+
+# or if you don't want to clone repo
+nix run github:deedee-ops/nixlab#build-base-vm
 ```
 
 This will build and import `nixos/base/vm` image to incus.
