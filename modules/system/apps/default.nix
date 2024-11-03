@@ -6,6 +6,7 @@ _: {
     ./docker
     ./letsencrypt
     ./nginx
+    ./openconnect
     ./postgresql
     ./redis
     ./rustdesk
