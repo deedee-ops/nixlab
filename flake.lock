@@ -130,21 +130,6 @@
         "type": "github"
       }
     },
-    "ephemeral-machines": {
-      "locked": {
-        "lastModified": 1729882068,
-        "narHash": "sha256-J5u5tnYzh8Q32vmCzdfyIlt9Z2NVRBqIJUPjwd7EVv4=",
-        "owner": "deedee-ops",
-        "repo": "nix-machines",
-        "rev": "e009681d9f89ae6d2b4ebf7cc410ec4339b37eb7",
-        "type": "github"
-      },
-      "original": {
-        "owner": "deedee-ops",
-        "repo": "nix-machines",
-        "type": "github"
-      }
-    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -723,7 +708,6 @@
       "inputs": {
         "deploy-rs": "deploy-rs",
         "disko": "disko",
-        "ephemeral-machines": "ephemeral-machines",
         "flake-parts": "flake-parts",
         "git-hooks": "git-hooks",
         "home-manager": "home-manager",

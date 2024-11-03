@@ -100,7 +100,7 @@ in
     systemd.services.docker-jellyfin = {
       path = [ pkgs.iproute2 ];
       preStart = lib.mkAfter ''
-        mkdir -p "${cfg.dataDir}/config" /var/cache/jellyfin
+        mkdir -p "${cfg.dataDir}/config" /var/cache/jellyfin/transcode
         chown 65000:65000 "${cfg.dataDir}/config" /var/cache/jellyfin /var/cache/jellyfin/transcode
         ip -f inet addr show ${config.mySystem.networking.mainInterface} | grep -Po 'inet \K[\d.]+' > "/var/cache/jellyfin/internal-ip"
         chown 65000:65000 "/var/cache/jellyfin/internal-ip"

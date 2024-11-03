@@ -59,10 +59,6 @@
       url = "github:ajgon/stylix/feat/kubecolor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    ephemeral-machines = {
-      url = "github:deedee-ops/nix-machines";
-    };
   };
 
   outputs =
