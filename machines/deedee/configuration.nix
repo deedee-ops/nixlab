@@ -113,6 +113,7 @@ rec {
       firewallEnable = false;
       hostname = "deedee";
       mainInterface = "enp87s0";
+      bridgeMainInterface = true;
     };
 
     nix = {

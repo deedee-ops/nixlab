@@ -210,7 +210,7 @@ in
         HASH="$(cat ${
           config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
         } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
-        MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev enp87s0 | grep -Po 'inet \K[\d.]+')"
+        MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev ${config.mySystem.networking.rootInterface} | grep -Po 'inet \K[\d.]+')"
         ${lib.getExe pkgs.gnused} -i"" "s,ADGUARDPASS,'$HASH',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
         ${lib.getExe pkgs.gnused} -i"" "s,BINDHOST,'$MAINIP',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
       '';

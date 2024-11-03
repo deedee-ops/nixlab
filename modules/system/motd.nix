@@ -90,7 +90,7 @@ in
     networkInterfaces = lib.mkOption {
       description = "Network interfaces to monitor";
       type = lib.types.listOf lib.types.str;
-      default = [ config.mySystem.networking.mainInterface ];
+      default = [ config.mySystem.networking.rootInterface ];
     };
 
   };
