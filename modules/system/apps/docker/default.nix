@@ -93,7 +93,7 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = (!cfg.rootless) && cfg.startDockerSockProxy;
+        assertion = (!cfg.rootless) || (!cfg.startDockerSockProxy);
         message = "docker.sock proxy is currently only supported in root mode";
       }
     ];

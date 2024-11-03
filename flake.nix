@@ -79,5 +79,14 @@
         ./local
         ./machines
       ];
+    }
+    // {
+      nixlab = {
+        system = ./modules/system;
+        hardware = {
+          incus = ./modules/hardware/incus.nix;
+          ms-01 = ./modules/hardware/ms-01.nix;
+        };
+      };
     };
 }

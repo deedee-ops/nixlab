@@ -43,6 +43,7 @@ in
           };
         }
       );
+      default = [ ];
     };
     snapshotMountPath = lib.mkOption {
       type = lib.types.str;
