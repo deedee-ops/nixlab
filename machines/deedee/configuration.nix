@@ -141,6 +141,23 @@ rec {
       rootless = false;
     };
 
+    incus = {
+      enable = true;
+      enableUI = true;
+      initializeBaseNixOSVM = true;
+      defaultStoragePool = {
+        config = {
+          source = "tank/vms";
+        };
+        driver = "zfs";
+      };
+      defaultNIC = {
+        nictype = "bridged";
+        parent = "br0";
+        type = "nic";
+      };
+    };
+
     letsencrypt = {
       enable = true;
       useProduction = true;

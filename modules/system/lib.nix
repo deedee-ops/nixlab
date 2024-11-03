@@ -19,6 +19,7 @@
         useAuthelia ? true,
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
+        extraConfig ? "",
       }:
       let
         # proxy_pass needs to be passed as variable, otherwise resolver won't work as expected
@@ -40,7 +41,8 @@
             more_set_headers "Content-Security-Policy: ${
               lib.trim (builtins.replaceStrings [ "\n" ] [ " " ] customCSP)
             }";
-          '');
+          '')
+          + extraConfig;
       in
       {
         extraConfig =

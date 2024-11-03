@@ -4,6 +4,7 @@ _: {
 
     ./adguardhome
     ./docker
+    ./incus
     ./letsencrypt
     ./nginx
     ./openconnect
