@@ -218,28 +218,10 @@ in
       serviceConfig.Group = "services";
     };
 
-    services.nginx.virtualHosts.adguard = {
-      useACMEHost = "wildcard.${config.mySystem.rootDomain}";
-      serverName = "adguard.${config.mySystem.rootDomain}";
-      forceSSL = true;
-      locations = {
-        "/" = {
-          proxyWebsockets = true;
-          extraConfig = ''
-            set $host_to_pass http://127.0.0.1:${builtins.toString config.services.adguardhome.port};
-            proxy_pass $host_to_pass;
-
-            proxy_set_header Host $host;
-            proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Host $http_host;
-            proxy_set_header X-Forwarded-URI $request_uri;
-            proxy_set_header X-Forwarded-Ssl on;
-            proxy_set_header X-Forwarded-For $remote_addr;
-            proxy_set_header X-Real-IP $remote_addr;
-          '';
-        };
-      };
+    services.nginx.virtualHosts.adguard = svc.mkNginxVHost {
+      host = "adguard";
+      proxyPass = "http://127.0.0.1:${builtins.toString config.services.adguardhome.port}";
+      useAuthelia = config.mySystemApps.authelia.enable;
     };
 
     mySystemApps.homepage = {
