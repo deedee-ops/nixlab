@@ -6,6 +6,9 @@ let
   podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
+
+  gwIP = "192.168.100.1";
+  omadaIP = "10.100.1.1";
 in
 rec {
   sops = {
@@ -172,9 +175,14 @@ rec {
 
       enable = true;
       extraVHosts = {
-        s3 = "http://${mySystem.nasIP}:9000";
         minio = "http://${mySystem.nasIP}:9001";
         nas = "http://${mySystem.nasIP}:5000";
+        s3 = "http://${mySystem.nasIP}:9000";
+
+        omada = "https://${omadaIP}";
+      };
+      extraRedirects = {
+        gw = "http://${gwIP}";
       };
     };
 

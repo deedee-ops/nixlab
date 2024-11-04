@@ -31,6 +31,14 @@ in
         "myhost" = "http://service.somewhere:1234";
       };
     };
+    extraRedirects = lib.mkOption {
+      type = lib.types.attrs;
+      description = "Extra redirects to be configured.";
+      default = { };
+      example = {
+        "myhost" = "http://service.somewhere:1234";
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -85,14 +93,27 @@ in
         worker_connections 4096;
       '';
 
-      virtualHosts = builtins.mapAttrs (
-        name: value:
-        svc.mkNginxVHost {
-          host = name;
-          proxyPass = value;
-          useAuthelia = false;
-        }
-      ) cfg.extraVHosts;
+      virtualHosts =
+        lib.recursiveUpdate
+          (builtins.mapAttrs (
+            name: value:
+            svc.mkNginxVHost {
+              host = name;
+              proxyPass = value;
+              useAuthelia = false;
+            }
+          ) cfg.extraVHosts)
+          (
+            builtins.mapAttrs (name: value: {
+              useACMEHost = "wildcard.${config.mySystem.rootDomain}";
+              serverName = "${name}.${config.mySystem.rootDomain}";
+              forceSSL = true;
+              # globalRedirect is borked, and forces https on redirected host host as well, which me not always be the case
+              locations."/".extraConfig = ''
+                return 301 ${value}$request_uri;
+              '';
+            }) cfg.extraRedirects
+          );
     };
 
     mySystemApps.letsencrypt.certsGroup = config.services.nginx.group;
