@@ -115,8 +115,14 @@ rec {
       enable = true;
       firewallEnable = true;
       hostname = "deedee";
-      mainInterface = "enp87s0";
-      bridgeMainInterface = true;
+      mainInterface = {
+        name = "enp87s0";
+        bridge = true;
+        DNS = [
+          "9.9.9.9"
+          "149.112.112.10"
+        ];
+      };
     };
 
     nix = {
