@@ -21,12 +21,14 @@ _: {
         buildInputs = [
           pkgs.nh
           pkgs.openssl
+          pkgs.opentofu
         ];
 
         shellHook = ''
           ${config.pre-commit.installationScript}
 
           ${lib.getExe pkgs.git} pull origin master:master --rebase
+          [ ! -f opentofu/terraform.tfvars ] || sh -c 'cd opentofu && ${pkgs.opentofu}/bin/tofu init -backend-config=<(grep '^#' terraform.tfvars | sed "s@^# *@@g") -upgrade'
         '';
       };
     };
