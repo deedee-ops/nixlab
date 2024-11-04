@@ -22,6 +22,7 @@ in
     services.redis.servers."" = {
       enable = true;
       bind = null;
+      openFirewall = true;
       requirePassFile = config.sops.secrets."${cfg.passFileSopsSecret}".path;
     };
 

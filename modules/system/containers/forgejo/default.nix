@@ -120,6 +120,8 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
+    networking.firewall.allowedTCPPorts = [ 2222 ];
+
     mySystemApps.homepage = {
       services.Apps.Forgejo = svc.mkHomepage "forgejo" // {
         href = "https://git.${config.mySystem.rootDomain}";

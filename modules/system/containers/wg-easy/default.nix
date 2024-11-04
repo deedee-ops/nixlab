@@ -96,6 +96,8 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
+    networking.firewall.allowedUDPPorts = [ cfg.wireguardPort ];
+
     mySystemApps.homepage = {
       services.Apps.wg-easy = svc.mkHomepage "wg-easy" // {
         href = "https://wg.${config.mySystem.rootDomain}";

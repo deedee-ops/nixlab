@@ -111,6 +111,8 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
+    networking.firewall.allowedTCPPorts = [ 8096 ];
+
     mySystemApps.homepage = {
       services.Media.Jellyfin = svc.mkHomepage "jellyfin" // {
         description = "Multimedia streaming library";

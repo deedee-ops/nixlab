@@ -121,6 +121,9 @@ in
       };
     }) cfg.extraPaths;
 
+    networking.firewall.allowedTCPPorts = [ 22000 ];
+    networking.firewall.allowedUDPPorts = [ 22000 ];
+
     mySystemApps.homepage = {
       services.Apps.Syncthing = svc.mkHomepage "syncthing" // {
         description = "Continuous File Synchronization";

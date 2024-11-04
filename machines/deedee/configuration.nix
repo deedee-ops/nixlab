@@ -110,7 +110,7 @@ rec {
 
     networking = {
       enable = true;
-      firewallEnable = false;
+      firewallEnable = true;
       hostname = "deedee";
       mainInterface = "enp87s0";
       bridgeMainInterface = true;

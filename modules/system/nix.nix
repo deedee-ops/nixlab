@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
   cfg = config.mySystem.nix;
+  allowedUsers = [
+    "root"
+    "@wheel"
+    config.mySystem.primaryUser
+  ];
 in
 {
   options.mySystem.nix = {
@@ -32,6 +37,8 @@ in
       '';
 
       settings = {
+        allowed-users = allowedUsers;
+
         experimental-features = [
           "nix-command"
           "flakes"
@@ -51,11 +58,7 @@ in
         connect-timeout = 25;
         warn-dirty = false;
 
-        trusted-users = [
-          "root"
-          "@wheel"
-          config.mySystem.primaryUser
-        ];
+        trusted-users = allowedUsers;
 
         use-xdg-base-directories = true;
       };

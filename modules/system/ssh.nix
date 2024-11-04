@@ -27,6 +27,7 @@ in
     services.openssh = {
       enable = true;
       startWhenNeeded = false;
+      openFirewall = true;
       settings = {
         PermitRootLogin = cfg.permitRootLogin;
         PasswordAuthentication = false;
@@ -58,10 +59,13 @@ in
     programs.ssh.startAgent = true;
 
     # pass ssh-agent socket when using sudo
-    security.sudo.extraConfig = lib.mkAfter ''
-      Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
-      Defaults lecture="never"
-    '';
+    security.sudo = {
+      execWheelOnly = true;
+      extraConfig = lib.mkAfter ''
+        Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
+        Defaults lecture="never"
+      '';
+    };
 
     users.users = builtins.mapAttrs (_: value: {
       openssh = {

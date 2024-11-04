@@ -83,5 +83,8 @@ in
         disableReadOnly = true;
       };
     };
+
+    networking.firewall.allowedTCPPorts = [ cfg.forwardedPort ];
+    networking.firewall.allowedUDPPorts = [ cfg.forwardedPort ];
   };
 }

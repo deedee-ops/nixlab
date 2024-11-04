@@ -48,6 +48,7 @@ in
       dhcpcd.enable = false;
       enableIPv6 = false;
       firewall.enable = cfg.firewallEnable;
+      nftables.enable = cfg.firewallEnable;
       resolvconf.enable = false;
       useDHCP = false;
       useHostResolvConf = false;
