@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.firefoxsync = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/firefoxsync:1.9.1@sha256:ef3e08625e4191e321a7f0ab6e7b10f69af0d304ae1d4c78242ce23fa4f8d1dc";
+        image = "ghcr.io/deedee-ops/firefoxsync:1.9.1@sha256:d0e0cc94d30048aa464b4d4f3cf89328d413183ce1c791ca577037eae5c65fed";
         environment = {
           FIREFOXSYNC__PUBLIC_URL = "https://firefoxsync.${config.mySystem.rootDomain}";
         }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
