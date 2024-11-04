@@ -37,12 +37,15 @@
             statix.enable = true;
             nixfmt-rfc-style.enable = true;
 
+            check-json.enable = true;
             lua-ls.enable = true;
             shellcheck = {
               enable = true;
               excludes = [ ".*\.zsh" ];
             };
             stylua.enable = true;
+            terraform-format.enable = true;
+            tflint.enable = true;
             yamllint.enable = true;
 
             actionlint.enable = true;
