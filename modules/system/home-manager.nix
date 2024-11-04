@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  nixConfig,
   ...
 }:
 let
@@ -30,7 +31,7 @@ in
         inherit inputs;
 
         lib = inputs.nixpkgs.lib.extend (
-          _: _: inputs.home-manager.lib // (import ../../lib { inherit inputs; })
+          _: _: inputs.home-manager.lib // (import ../../lib { inherit inputs nixConfig; })
         );
       };
 
@@ -43,6 +44,8 @@ in
 
           ../apps/default.nix
         ] ++ cfg.extraImports;
+
+        nix.settings = nixConfig;
 
         home = {
           username = "${config.mySystem.primaryUser}";

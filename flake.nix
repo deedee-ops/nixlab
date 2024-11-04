@@ -1,5 +1,23 @@
-{
+rec {
   description = "Description for the project";
+
+  nixConfig = {
+    extra-substituters = [
+      "https://cache.garnix.io"
+      "https://cache.lix.systems"
+      "https://deploy-rs.cachix.org"
+      "https://nix-community.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
+      "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+    ];
+    builders-use-substitutes = true;
+    connect-timeout = 25;
+    warn-dirty = false;
+  };
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -65,7 +83,11 @@
     inputs@{ flake-parts, ... }:
     let
       # https://nixos.zulipchat.com/#narrow/stream/419910-flake-parts/topic/Overriding.20.60lib.60.20in.20flake-parts
-      specialArgs.lib = inputs.nixpkgs.lib.extend (_: _: (import ./lib { inherit inputs; }));
+      specialArgs = {
+        inherit nixConfig;
+
+        lib = inputs.nixpkgs.lib.extend (_: _: (import ./lib { inherit inputs nixConfig; }));
+      };
     in
     flake-parts.lib.mkFlake { inherit inputs specialArgs; } {
       systems = [

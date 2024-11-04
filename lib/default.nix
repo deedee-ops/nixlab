@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, nixConfig, ... }:
 let
   inherit (inputs.nixpkgs) lib;
 in
@@ -24,7 +24,7 @@ in
       inherit system;
       modules = baseModules ++ hardwareModules ++ profileModules;
       specialArgs = {
-        inherit inputs;
+        inherit inputs nixConfig;
       };
     };
 
