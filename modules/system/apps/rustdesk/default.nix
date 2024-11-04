@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   svc,
   ...
 }:
@@ -14,9 +15,9 @@ in
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
-    relayIP = lib.mkOption {
+    relayHost = lib.mkOption {
       type = lib.types.str;
-      description = "Relay IP advertised to the clients.";
+      description = "Relay Host advertised to the clients.";
     };
   };
 
@@ -25,7 +26,7 @@ in
 
     services = {
       rustdesk-server = {
-        inherit (cfg) relayIP;
+        signal.relayHosts = [ cfg.relayHost ];
 
         enable = true;
         openFirewall = true;
@@ -43,11 +44,18 @@ in
       serviceConfig = {
         ReadWritePaths = "${dataDir}";
       };
+      path = [
+        pkgs.diffutils
+        pkgs.procps
+      ];
       postStart = lib.mkAfter ''
         while [ ! -e /var/lib/rustdesk/id_ed25519 ]; do sleep 0.5; done
         chown -R rustdesk:rustdesk "${dataDir}"
-        [ -e "${dataDir}/id_ed25519" ] && cp "${dataDir}/id_ed25519" /var/lib/rustdesk
-        [ -e "${dataDir}/id_ed25519.pub" ] && cp "${dataDir}/id_ed25519.pub" /var/lib/rustdesk
+        if ! diff "${dataDir}/id_ed25519" /var/lib/rustdesk/id_ed25519; then
+          [ -e "${dataDir}/id_ed25519" ] && cp "${dataDir}/id_ed25519" /var/lib/rustdesk
+          [ -e "${dataDir}/id_ed25519.pub" ] && cp "${dataDir}/id_ed25519.pub" /var/lib/rustdesk
+          pkill -f 'rustdesk.*hbbr'
+        fi
         cp -r /var/lib/rustdesk/* "${dataDir}"
       '';
       preStop = lib.mkAfter ''

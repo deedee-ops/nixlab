@@ -193,7 +193,7 @@ rec {
     };
     rustdesk = {
       enable = true;
-      relayIP = "relay.${mySystem.rootDomain}";
+      relayHost = "relay.${mySystem.rootDomain}";
     };
 
     # containers
