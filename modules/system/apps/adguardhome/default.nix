@@ -224,6 +224,8 @@ in
       useAuthelia = config.mySystemApps.authelia.enable;
     };
 
+    networking.firewall.allowedUDPPorts = [ 53 ];
+
     mySystemApps.homepage = {
       services.Apps.AdGuardHome = svc.mkHomepage "adguard" // {
         icon = "adguard-home.svg";

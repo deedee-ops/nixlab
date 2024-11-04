@@ -145,6 +145,8 @@ rec {
       adminPasswordSopsSecret = "credentials/services/admin";
     };
 
+    ddclient.enable = true;
+
     docker = {
       enable = true;
       rootless = false;

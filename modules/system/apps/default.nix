@@ -3,6 +3,7 @@ _: {
     ./core.nix
 
     ./adguardhome
+    ./ddclient
     ./docker
     ./incus
     ./letsencrypt
