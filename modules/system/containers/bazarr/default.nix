@@ -46,7 +46,7 @@ in
 
     virtualisation.oci-containers.containers.bazarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/bazarr:1.4.5@sha256:c44c68d995c92cd17fb2debb2b0cbd41582b84137d0afacd6bcd427367b2a359";
+        image = "ghcr.io/deedee-ops/bazarr:1.4.5@sha256:2670c12c31d885c71e87967ffc82aa27d8bb97a13bb95d4900483b6c3614ce39";
         environment = {
           BAZARR__ANALYTICS_ENABLED = "false";
         }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
