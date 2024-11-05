@@ -21,5 +21,6 @@ _: {
     # GUI apps
     ./alacritty
     ./firefox
+    ./mpv
   ];
 }

@@ -7,10 +7,12 @@
     pre-commit = {
       check.enable = true;
 
-      settings = {
+      settings = rec {
         excludes = [
           ".direnv"
           "secrets.tar.gz.enc"
+          "\\.glsl$"
+          "mpv.*\\.hook$"
         ];
 
         hooks =
