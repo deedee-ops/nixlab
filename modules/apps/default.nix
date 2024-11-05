@@ -23,6 +23,7 @@ _: {
 
     ./alacritty
     ./awesome
+    ./caffeine
     ./dunst
     ./firefox
     ./mpv
