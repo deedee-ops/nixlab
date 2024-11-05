@@ -22,6 +22,7 @@ _: {
     ./xorg
 
     ./alacritty
+    ./dunst
     ./firefox
     ./mpv
     ./syncthing
