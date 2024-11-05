@@ -26,6 +26,7 @@ _: {
     ./dunst
     ./firefox
     ./mpv
+    ./redshift
     ./syncthing
     ./thunderbird
   ];
