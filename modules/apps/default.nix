@@ -31,5 +31,6 @@ _: {
     ./rofi
     ./syncthing
     ./thunderbird
+    ./zathura
   ];
 }
