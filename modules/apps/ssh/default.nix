@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.ssh;
+  cfg = config.myHomeApps.ssh;
 in
 {
-  options.myApps.ssh = {
+  options.myHomeApps.ssh = {
     enable = lib.mkEnableOption "ssh" // {
       default = true;
     };

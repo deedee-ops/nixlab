@@ -281,7 +281,7 @@ rec {
     whoogle.enable = true;
   };
 
-  myApps = {
+  myHomeApps = {
     gnupg.enable = false;
     ssh.enable = false;
     wakatime.enable = false;

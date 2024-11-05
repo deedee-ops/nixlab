@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.myApps.fzf;
+  cfg = config.myHomeApps.fzf;
 in
 {
-  options.myApps.fzf = {
+  options.myHomeApps.fzf = {
     enable = lib.mkEnableOption "fzf" // {
       default = true;
     };

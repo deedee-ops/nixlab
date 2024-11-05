@@ -6,10 +6,10 @@
   ...
 }:
 let
-  cfg = config.myApps.btop;
+  cfg = config.myHomeApps.btop;
 in
 {
-  options.myApps.btop = {
+  options.myHomeApps.btop = {
     enable = lib.mkEnableOption "btop" // {
       default = true;
     };

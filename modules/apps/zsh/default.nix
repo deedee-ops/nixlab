@@ -5,13 +5,13 @@
   ...
 }:
 let
-  cfg = config.myApps.zsh;
+  cfg = config.myHomeApps.zsh;
   shellInitExtra =
     (builtins.concatStringsSep "\n" (
-      builtins.map (f: builtins.readFile f) config.myApps.shellInitScriptFiles
+      builtins.map (f: builtins.readFile f) config.myHomeApps.shellInitScriptFiles
     ))
     + "\n"
-    + (builtins.concatStringsSep "\n" config.myApps.shellInitScriptContents);
+    + (builtins.concatStringsSep "\n" config.myHomeApps.shellInitScriptContents);
 
   myFunctions = pkgs.stdenvNoCC.mkDerivation rec {
     name = "zsh-functions-${version}";
@@ -26,7 +26,7 @@ let
   };
 in
 {
-  options.myApps.zsh = {
+  options.myHomeApps.zsh = {
     enable = lib.mkEnableOption "zsh" // {
       default = true;
     };

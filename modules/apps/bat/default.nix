@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.myApps.bat;
+  cfg = config.myHomeApps.bat;
 in
 {
-  options.myApps.bat = {
+  options.myHomeApps.bat = {
     enable = lib.mkEnableOption "bat" // {
       default = true;
     };

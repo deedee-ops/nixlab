@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.neovim;
+  cfg = config.myHomeApps.neovim;
 in
 {
-  options.myApps.neovim = {
+  options.myHomeApps.neovim = {
     enable = lib.mkEnableOption "neovim" // {
       default = true;
     };

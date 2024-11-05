@@ -9,7 +9,7 @@ let
   cfg = config.mySystem.home-manager;
 in
 {
-  options.myApps = lib.mkOption {
+  options.myHomeApps = lib.mkOption {
     type = lib.types.attrs;
     default = { };
     description = "Apps configuration which will be passed down to home manager";
@@ -36,7 +36,7 @@ in
       };
 
       users."${config.mySystem.primaryUser}" = {
-        inherit (config) myApps;
+        inherit (config) myHomeApps;
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile

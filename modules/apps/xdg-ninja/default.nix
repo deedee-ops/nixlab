@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.xdg-ninja;
+  cfg = config.myHomeApps.xdg-ninja;
 in
 {
-  options.myApps.xdg-ninja = {
+  options.myHomeApps.xdg-ninja = {
     enable = lib.mkEnableOption "xdg-ninja" // {
       default = true;
     };

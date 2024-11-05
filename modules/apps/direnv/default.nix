@@ -3,10 +3,10 @@
 , ...
 }:
 let
-  cfg = config.myApps.direnv;
+  cfg = config.myHomeApps.direnv;
 in
 {
-  options.myApps.direnv = {
+  options.myHomeApps.direnv = {
     enable = lib.mkEnableOption "direnv" // { default = true; };
   };
 

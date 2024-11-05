@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.kubernetes;
+  cfg = config.myHomeApps.kubernetes;
 in
 {
-  options.myApps.kubernetes = {
+  options.myHomeApps.kubernetes = {
     enable = lib.mkEnableOption "kubernetes apps";
     kubeconfigPath = lib.mkOption {
       type = lib.types.nullOr lib.types.str;

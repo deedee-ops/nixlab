@@ -4,10 +4,10 @@
   ...
 }:
 let
-  cfg = config.myApps.git;
+  cfg = config.myHomeApps.git;
 in
 {
-  options.myApps.git = {
+  options.myHomeApps.git = {
     enable = lib.mkEnableOption "git" // {
       default = true;
     };

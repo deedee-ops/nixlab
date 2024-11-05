@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.gnupg;
+  cfg = config.myHomeApps.gnupg;
 in
 {
-  options.myApps.gnupg = {
+  options.myHomeApps.gnupg = {
     enable = lib.mkEnableOption "gnupg" // {
       default = true;
     };
@@ -44,7 +44,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    myApps.shellInitScriptContents = builtins.map (key: ''
+    myHomeApps.shellInitScriptContents = builtins.map (key: ''
       ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
     '') cfg.privateKeys;
 

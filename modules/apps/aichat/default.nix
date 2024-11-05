@@ -5,10 +5,10 @@
   ...
 }:
 let
-  cfg = config.myApps.aichat;
+  cfg = config.myHomeApps.aichat;
 in
 {
-  options.myApps.aichat = {
+  options.myHomeApps.aichat = {
     enable = lib.mkEnableOption "aichat";
     openAIapiKeyPath = lib.mkOption {
       type = lib.types.str;
@@ -22,7 +22,7 @@ in
     ];
     home.shellAliases.ai = "aichat";
 
-    myApps.shellInitScriptContents = [
+    myHomeApps.shellInitScriptContents = [
       ''
         export OPENAI_API_KEY="$(cat ${cfg.openAIapiKeyPath} | tr -d '\n')"
         _aichat_zsh() {

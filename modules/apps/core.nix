@@ -7,7 +7,7 @@
 }:
 
 {
-  options.myApps = {
+  options.myHomeApps = {
     appendHome = lib.mkOption {
       type = lib.types.attrs;
       default = { };
@@ -53,7 +53,7 @@
         pkgs.jq
         pkgs.pwgen
         pkgs.silver-searcher
-      ] ++ config.myApps.extraPackages;
+      ] ++ config.myHomeApps.extraPackages;
 
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}" =
         lib.mkIf osConfig.mySystem.impermanence.enable
@@ -67,6 +67,6 @@
               "Projects"
             ];
           };
-    } config.myApps.appendHome;
+    } config.myHomeApps.appendHome;
   };
 }

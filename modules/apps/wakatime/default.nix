@@ -1,9 +1,9 @@
 { config, lib, ... }:
 let
-  cfg = config.myApps.wakatime;
+  cfg = config.myHomeApps.wakatime;
 in
 {
-  options.myApps.wakatime = {
+  options.myHomeApps.wakatime = {
     enable = lib.mkEnableOption "wakatime" // {
       default = true;
     };
