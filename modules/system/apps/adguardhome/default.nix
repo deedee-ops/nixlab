@@ -15,6 +15,14 @@ in
       type = lib.types.str;
       default = "adguardhome";
     };
+    customMappings = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      description = "Custom domain mappings to targets.";
+      example = {
+        "mydomain.example.com" = "192.168.1.2";
+      };
+      default = { };
+    };
     adminPasswordSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing admin password.";
@@ -68,12 +76,17 @@ in
         };
 
         filtering = {
-          rewrites = [
-            {
-              domain = "*.${config.mySystem.rootDomain}";
-              answer = "BINDHOST";
-            }
-          ];
+          rewrites =
+            [
+              {
+                domain = "*.${config.mySystem.rootDomain}";
+                answer = "BINDHOST";
+              }
+            ]
+            ++ (builtins.map (domain: {
+              inherit domain;
+              answer = builtins.getAttr domain cfg.customMappings;
+            }) (builtins.attrNames cfg.customMappings));
         };
 
         filters =

@@ -23,6 +23,7 @@ in
         envFileSopsSecret = lib.mkOption {
           type = lib.types.str;
           description = "Sops secret name containing pushover credentials envs.";
+          default = "alerts/pushover/env";
         };
       };
     };

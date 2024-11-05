@@ -6,10 +6,10 @@
   ...
 }:
 let
-  cfg = config.myHomeApps.autorandr;
+  cfg = config.myHomeApps.xorg.autorandr;
 in
 {
-  options.myHomeApps.autorandr = {
+  options.myHomeApps.xorg.autorandr = {
     profile = lib.mkOption {
       type = lib.types.nullOr lib.types.attrs;
       default = null;

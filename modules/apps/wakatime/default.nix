@@ -8,9 +8,10 @@ in
       default = true;
     };
     wakapi = {
-      apiKeyPath = lib.mkOption {
+      apiKeySopsSecret = lib.mkOption {
         type = lib.types.str;
-        description = "Path to file containing wakapi api key";
+        description = "Sops secret name containing wakapi API key.";
+        default = "home/apps/wakapi/api_key";
       };
       url = lib.mkOption {
         type = lib.types.str;
@@ -20,6 +21,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."${cfg.wakapi.apiKeySopsSecret}" = { };
+
     home.sessionVariables = {
       WAKATIME_HOME = "${config.xdg.configHome}/wakatime";
     };
@@ -33,7 +36,7 @@ in
           guess_language = false
           offline = true
 
-          api_key_vault_cmd = cat ${cfg.wakapi.apiKeyPath}
+          api_key_vault_cmd = cat ${config.sops.secrets."${cfg.wakapi.apiKeySopsSecret}".path}
           api_url = ${cfg.wakapi.url}/api
 
           hide_file_names = false

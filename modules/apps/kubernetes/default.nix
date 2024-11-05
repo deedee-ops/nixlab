@@ -10,14 +10,16 @@ in
 {
   options.myHomeApps.kubernetes = {
     enable = lib.mkEnableOption "kubernetes apps";
-    kubeconfigPath = lib.mkOption {
+    kubeconfigSopsSecret = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
-      default = null;
-      description = "Path to kubeconfig file. It will be symlinked to ~/.config/kube/config.";
+      description = "Sops secret name containing kubeconfig.";
+      default = null; # "home/apps/kubernetes/kubeconfig";
     };
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets = lib.mkIf (cfg.kubeconfigSopsSecret != null) { "${cfg.kubeconfigSopsSecret}" = { }; };
+
     stylix.targets.k9s.enable = true;
     stylix.targets.kubecolor.enable = true;
 
@@ -34,10 +36,12 @@ in
             run ${pkgs.krew}/bin/krew update
           '';
         }
-        // lib.optionalAttrs (cfg.kubeconfigPath != null) {
+        // lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) {
           # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
           init-kubeconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            run ln -s "${cfg.kubeconfigPath}" "${config.xdg.configHome}/kube/config" || true
+            run ln -s "${
+              config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
+            }" "${config.xdg.configHome}/kube/config" || true
           '';
 
         };

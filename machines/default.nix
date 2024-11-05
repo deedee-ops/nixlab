@@ -6,7 +6,10 @@
   ...
 }:
 {
-  imports = [ ./deedee ];
+  imports = [
+    ./deedee
+    ./piecyk
+  ];
 
   options = {
     flakePart = {

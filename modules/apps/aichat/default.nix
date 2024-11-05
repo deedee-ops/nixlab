@@ -10,13 +10,16 @@ in
 {
   options.myHomeApps.aichat = {
     enable = lib.mkEnableOption "aichat";
-    openAIapiKeyPath = lib.mkOption {
+    apiKeySopsSecret = lib.mkOption {
       type = lib.types.str;
-      description = "ChatGPT/OpenAI API Key path.";
+      description = "Sops secret name containing ChatGPT/OpenAI API key.";
+      default = "home/apps/openai/api_key";
     };
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."${cfg.apiKeySopsSecret}" = { };
+
     home.packages = [
       pkgs.aichat
     ];
@@ -24,7 +27,7 @@ in
 
     myHomeApps.shellInitScriptContents = [
       ''
-        export OPENAI_API_KEY="$(cat ${cfg.openAIapiKeyPath} | tr -d '\n')"
+        export OPENAI_API_KEY="$(cat ${config.sops.secrets."${cfg.apiKeySopsSecret}".path} | tr -d '\n')"
         _aichat_zsh() {
             if [[ -n "$BUFFER" ]]; then
                 local _old=$BUFFER

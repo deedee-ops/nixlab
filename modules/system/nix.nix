@@ -17,6 +17,7 @@ in
     enableGC = lib.mkEnableOption "nix GC" // {
       default = true;
     };
+    useBetaCache = lib.mkEnableOption "beta cache";
   };
 
   config = {
@@ -34,6 +35,10 @@ in
           "nix-command"
           "flakes"
         ];
+
+        substituters = lib.mkIf cfg.useBetaCache (
+          lib.mkForce [ "https://aseipp-nix-cache.global.ssl.fastly.net" ]
+        );
 
         trusted-users = allowedUsers;
 

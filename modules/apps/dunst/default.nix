@@ -21,7 +21,7 @@ in
       enable = true;
 
       settings = {
-        experiments = {
+        experimental = {
           per_monitor_dpi = "no";
         };
 
@@ -38,7 +38,7 @@ in
           class = "Dunst";
           follow = "mouse";
           force_xinerama = false;
-          format = "<b>%s</b>\n%b";
+          format = "<b>%s</b>\\n%b";
           hide_duplicate_count = false;
           history_length = 50;
           horizontal_padding = 10;

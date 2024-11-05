@@ -181,7 +181,7 @@ in
       type = lib.types.submodule {
         options = {
           enable = lib.mkEnableOption "whoogle search";
-          url = {
+          url = lib.mkOption {
             type = lib.types.str;
             description = "Whoogle search URL (without path).";
           };

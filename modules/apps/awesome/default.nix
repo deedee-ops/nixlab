@@ -58,7 +58,7 @@ in
             #!${lib.getExe' pkgs.coreutils-full "env"} ${lib.getExe pkgs.bash}
 
             run() {
-              if ! ${lib.getExe' pkgs.procps "pgrep"} -f "$(basename "$1")"; then
+              if ! ${lib.getExe' pkgs.procps "pgrep"} -f "/nix/store/.*/$(basename "$1")"; then
                 "$@" &
               fi
             }
@@ -74,6 +74,7 @@ in
             local _M = {
               autorandrPath = "${lib.getExe pkgs.autorandr}",
               scrotPath = "${lib.getExe pkgs.scrot}",
+              slopPath = "${lib.getExe pkgs.slop}",
               xkillPath = "${lib.getExe pkgs.xorg.xkill}",
 
             	modkey = "${cfg.modKey}",
@@ -88,24 +89,25 @@ in
         # sound
         "awesome/scripts/volume.sh" = {
           executable = true;
-          source =
-            if osConfig.myHardware.sound.enable then
-              pkgs.writeShellScriptBin "volume.sh" (
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "volume.sh" (
+              if osConfig.myHardware.sound.enable then
                 ''
                   bin_wpctl = "${lib.getExe' pkgs.wireplumber "wpctl"}"
                 ''
                 + builtins.readFile ./scripts/volume.sh
-              )
-            else
-              pkgs.writeText "volume.sh" ''
-                # placeholder
-              '';
+              else
+                "# placeholder"
+            )
+          );
         };
 
         # dunst
-        "awesome/scripts/dunst-sound.sh" = lib.mkIf cfg.useDunst {
+        "awesome/scripts/dunst-widget.sh" = lib.mkIf cfg.useDunst {
           executable = true;
-          source = pkgs.writeShellScriptBin "dunst-sound.sh" (builtins.readFile ./scripts/dunst-sound.sh);
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "dunst-widget.sh" (builtins.readFile ./scripts/dunst-widget.sh)
+          );
         };
       };
       dataFile = {

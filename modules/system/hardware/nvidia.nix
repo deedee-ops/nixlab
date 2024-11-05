@@ -18,10 +18,9 @@ in
 
   config = lib.mkIf cfg.enable {
     hardware = {
-      opengl = {
+      graphics = {
         enable = true;
-        driSupport = true;
-        driSupport32Bit = true;
+        enable32Bit = true;
       };
 
       nvidia = {
@@ -49,34 +48,32 @@ in
       '';
     };
 
-    nixpkgs.config.allowUnfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) [
-        "cuda-merged"
-        "cuda_cccl"
-        "cuda_cudart"
-        "cuda_cuobjdump"
-        "cuda_cupti"
-        "cuda_cuxxfilt"
-        "cuda_gdb"
-        "cuda_nvcc"
-        "cuda_nvdisasm"
-        "cuda_nvml_dev"
-        "cuda_nvprune"
-        "cuda_nvrtc"
-        "cuda_nvtx"
-        "cuda_profiler_api"
-        "cuda_sanitizer_api"
-        "libcublas"
-        "libcufft"
-        "libcurand"
-        "libcusolver"
-        "libcusparse"
-        "libnpp"
-        "libnvjitlink"
+    mySystem.allowUnfree = [
+      "cuda-merged"
+      "cuda_cccl"
+      "cuda_cudart"
+      "cuda_cuobjdump"
+      "cuda_cupti"
+      "cuda_cuxxfilt"
+      "cuda_gdb"
+      "cuda_nvcc"
+      "cuda_nvdisasm"
+      "cuda_nvml_dev"
+      "cuda_nvprune"
+      "cuda_nvrtc"
+      "cuda_nvtx"
+      "cuda_profiler_api"
+      "cuda_sanitizer_api"
+      "libcublas"
+      "libcufft"
+      "libcurand"
+      "libcusolver"
+      "libcusparse"
+      "libnpp"
+      "libnvjitlink"
 
-        "nvidia-settings"
-        "nvidia-x11"
-      ];
+      "nvidia-settings"
+      "nvidia-x11"
+    ];
   };
 }

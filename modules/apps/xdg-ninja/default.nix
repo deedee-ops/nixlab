@@ -46,6 +46,9 @@ in
         AWS_SHARED_CREDENTIALS_FILE = "${config.xdg.configHome}/aws/credentials";
         AWS_CONFIG_FILE = "${config.xdg.configHome}/aws/config";
 
+        # nvidia
+        CUDA_CACHE_PATH = "${config.xdg.cacheHome}/nv";
+
         # Docker
         DOCKER_CONFIG = "${config.xdg.configHome}/docker";
 

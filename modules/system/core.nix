@@ -15,6 +15,11 @@ let
 in
 {
   options.mySystem = {
+    allowUnfree = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of allowed unfree packages.";
+      default = [ ];
+    };
     filesystem = lib.mkOption {
       type = lib.types.enum [
         "ext4"
@@ -101,6 +106,9 @@ in
         ZED_PUSHOVER_USER = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_USER_KEY)";
       };
     };
+
+    nixpkgs.config.allowUnfreePredicate =
+      pkg: builtins.elem (lib.getName pkg) config.mySystem.allowUnfree;
 
     stylix = rec {
       enable = true;

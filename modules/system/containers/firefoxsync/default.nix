@@ -53,6 +53,10 @@ in
           inherit secretEnvs;
         };
       };
+      opts = {
+        # contacting with firefox servers to authorize
+        allowPublic = true;
+      };
     };
 
     services = {

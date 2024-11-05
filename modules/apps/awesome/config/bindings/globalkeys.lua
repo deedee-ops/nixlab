@@ -61,7 +61,7 @@ local globalkeys = gears.table.join(
     awful.util.spawn(
       [[sh -c ']]
         .. RC.vars.scrotPath
-        .. [[ -a "$(slop -f "%x,%y,%w,%h")" -f "]]
+        .. [[ -a "$(]] ..RC.vars.slopPath .. [[ -f "%x,%y,%w,%h")" -f "]]
         .. home
         .. [[/Pictures/Screenshots/%Y-%m-%d-%H%M%S_\$wx\$h_scrot.png"']]
     )

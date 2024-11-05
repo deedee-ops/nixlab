@@ -15,6 +15,16 @@ in
     enableGpgAgent = lib.mkEnableOption "gpg-agent" // {
       default = true;
     };
+    appendOptions = lib.mkOption {
+      type = lib.types.attrs;
+      default = { };
+      description = "Extra settings to gpg.";
+    };
+    enableYubikey = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Configures gpg-agent and gpg to support yubikey stored private keys.";
+    };
     pinentryPackage = lib.mkOption {
       type = lib.types.package;
       default = pkgs.pinentry;
@@ -40,6 +50,7 @@ in
           };
         }
       );
+      default = [ ];
     };
   };
 
@@ -48,7 +59,15 @@ in
       ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
     '') cfg.privateKeys;
 
-    home.shellAliases.gpgkill = "${lib.getExe' pkgs.gnupg "gpgconf"} --kill gpg-agent";
+    home = {
+      activation.gpg = lib.mkIf cfg.enableYubikey (
+        lib.hm.dag.entryAfter [ "sopsNix" ] ''
+          export GNUPGHOME="${config.xdg.dataHome}/gnupg"
+          run ${pkgs.gnupg}/bin/gpg-connect-agent "scd serialno" "learn --force" /bye
+        ''
+      );
+      shellAliases.gpgkill = "${lib.getExe' pkgs.gnupg "gpgconf"} --kill gpg-agent";
+    };
 
     programs.gpg = {
       enable = true;
@@ -61,6 +80,8 @@ in
         source = src;
         trust = "ultimate";
       }) cfg.publicKeys;
+
+      settings = cfg.appendOptions;
     };
 
     services.gpg-agent = lib.mkIf cfg.enableGpgAgent {
@@ -68,6 +89,20 @@ in
 
       enable = true;
       enableScDaemon = true;
+    };
+
+    systemd.user.services.gnupg-create-socketdir = lib.mkIf cfg.enableYubikey {
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
+      Unit = {
+        Description = "Create GnuPG socket directory";
+      };
+      Service = {
+        Type = "oneshot";
+        Environment = [ "GNUPGHOME=${config.xdg.dataHome}/gnupg" ];
+        ExecStart = "${lib.getExe' pkgs.gnupg "gpgconf"} --create-socketdir";
+      };
     };
   };
 }

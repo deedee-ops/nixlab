@@ -38,25 +38,25 @@ local widget_volume = wibox.widget({
   widget = wibox.widget.textbox,
 })
 
-local _, volume_signal = awful.widget.watch(xdg_config_home .. "/awesome/scripts/pavolume.sh", 1, function(_, stdout)
+local _, volume_signal = awful.widget.watch(xdg_config_home .. "/awesome/scripts/volume.sh", 1, function(_, stdout)
   widget_volume.text = stdout
 end)
 
 widget_volume:buttons(gears.table.join(
   awful.button({}, 1, function()
-    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/pavolume.sh --toggle-output-mute", function() end)
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/volume.sh --toggle-output-mute", function() end)
     volume_signal:emit_signal("timeout")
   end),
   awful.button({}, 3, function()
-    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/pavolume.sh --toggle-input-mute", function() end)
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/volume.sh --toggle-input-mute", function() end)
     volume_signal:emit_signal("timeout")
   end),
   awful.button({}, 4, function()
-    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/pavolume.sh --up", function() end)
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/volume.sh --up", function() end)
     volume_signal:emit_signal("timeout")
   end),
   awful.button({}, 5, function()
-    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/pavolume.sh --down", function() end)
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/volume.sh --down", function() end)
     volume_signal:emit_signal("timeout")
   end)
 ))
@@ -71,7 +71,7 @@ local widget_notifications = wibox.widget({
 })
 
 local _, notifications_signal = awful.widget.watch(
-  xdg_config_home .. "/awesome/scripts/dunst-sound.sh show",
+  xdg_config_home .. "/awesome/scripts/dunst-widget.sh show",
   60,
   function(_, stdout)
     widget_notifications.text = stdout
@@ -80,7 +80,7 @@ local _, notifications_signal = awful.widget.watch(
 
 widget_notifications:buttons(gears.table.join(
   awful.button({}, 1, function()
-    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/dunst-sound.sh toggle", function() end)
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/dunst-widget.sh toggle", function() end)
     notifications_signal:emit_signal("timeout")
   end),
   awful.button({}, 3, function()

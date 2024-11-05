@@ -24,6 +24,10 @@ RC = {
 }
 RC.vars = require("main.user-variables")
 
+if RC.vars.useDunst then
+  package.loaded["naughty.dbus"] = {}
+end
+
 require("main.error-handling")
 require("main.layouts")
 require("main.signals")
@@ -37,7 +41,6 @@ require("bindings.clientbuttons")
 require("decorations.theme")
 require("decorations.wallpaper")
 require("decorations.wibar")
-require("decorations.notifications")
 
 -- Global Mouse and keyboard bindings
 root.keys(RC.globalkeys)
@@ -154,7 +157,7 @@ awful.rules.rules = {
       -- and the name shown there might not match defined rules here.
       name = {
         "Event Tester", -- xev.
-        "rofi - PIN", -- pinentry for rofi
+        "rofi - Passphrase:", -- pinentry for rofi
       },
       role = {
         "AlarmWindow", -- Thunderbird's calendar.
@@ -184,7 +187,11 @@ awful.rules.rules = {
   { rule = { class = "obsidian" }, properties = { screen = 2, tag = " 3 " } },
 
   -- class will cover also quick add, which will get stuck to the tag 3
-  { rule = { name = "Everdo" }, except = { name = "Everdo Quick Capture" }, properties = { screen = 2, tag = " 1 " } },
+  {
+    rule = { name = "Everdo" },
+    except = { name = "Everdo Quick Capture" },
+    properties = { screen = 2, tag = " 1 " },
+  },
 
   -- Set Firefox to always map on the tag named "2" on screen 1.
   -- { rule = { class = "Firefox" },

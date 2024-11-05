@@ -34,14 +34,6 @@
     nix.settings.use-xdg-base-directories = true;
 
     home = lib.attrsets.recursiveUpdate {
-      activation = {
-        dirs = ''
-          run mkdir -p ${config.home.homeDirectory}/Downloads || true
-          run mkdir -p ${config.home.homeDirectory}/Pictures/Screenshots || true
-          run mkdir -p ${config.home.homeDirectory}/Projects || true
-        '';
-      };
-
       keyboard = {
         layout = "pl";
         options = [ "caps:escape" ];
@@ -51,6 +43,7 @@
         pkgs.bzip2
         pkgs.dnsutils
         pkgs.jq
+        pkgs.nh
         pkgs.pwgen
         pkgs.silver-searcher
       ] ++ config.myHomeApps.extraPackages;

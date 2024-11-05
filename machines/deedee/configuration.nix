@@ -8,7 +8,9 @@ let
   videoPath = "${mediaPath}/video";
 
   gwIP = "192.168.100.1";
+  nasIP = "10.100.10.1";
   omadaIP = "10.100.1.1";
+  ownIP = "10.100.20.1";
 in
 rec {
   sops = {
@@ -24,20 +26,18 @@ rec {
   };
 
   mySystem = {
+    inherit nasIP;
+
     purpose = "Homelab";
     filesystem = "zfs";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     rootDomain = "rzegocki.dev";
-    nasIP = "10.100.10.1";
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
 
     alerts = {
-      pushover = {
-        enable = true;
-        envFileSopsSecret = "alerts/pushover/env";
-      };
+      pushover.enable = true;
     };
 
     autoUpgrade.enable = true;
@@ -88,6 +88,7 @@ rec {
 
     impermanence = {
       enable = true;
+      machineId = "bf52c8ab338949159f545637a879e23c";
       persistPath = "/persist";
       zfsPool = "tank";
     };
@@ -139,6 +140,10 @@ rec {
     adguardhome = {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
+      customMappings = {
+        "deedee.home.arpa" = ownIP;
+        "nas.home.arpa" = nasIP;
+      };
     };
 
     ddclient.enable = true;
@@ -270,7 +275,7 @@ rec {
         "10.100.0.0/16"
         "10.250.1.0/24"
       ];
-      advertisedDNSServer = "10.100.20.1";
+      advertisedDNSServer = ownIP;
       externalHost = "homelab.${mySystem.rootDomain}";
       wireguardPort = 53201;
     };

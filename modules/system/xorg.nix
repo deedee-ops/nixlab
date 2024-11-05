@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.mySystem.xorg;
 in
@@ -10,9 +15,10 @@ in
       description = "Window manager to use.";
       default = "awesome";
     };
-    sddmTheme = lib.mkOption {
+    sddmThemePackage = lib.mkOption {
       type = lib.types.package;
       description = "Theme package to use for SDDM.";
+      default = pkgs.catppuccin-sddm-corners;
     };
   };
 
@@ -20,7 +26,7 @@ in
     services = {
       displayManager.sddm = {
         enable = true;
-        theme = cfg.package.pname;
+        theme = cfg.sddmThemePackage.pname;
       };
 
       xserver = {
@@ -29,6 +35,10 @@ in
       };
     };
 
-    environment.systemPackages = [ cfg.package ];
+    environment.systemPackages = [
+      cfg.sddmThemePackage
+      # https://github.com/nix-community/home-manager/issues/3113
+      pkgs.dconf
+    ];
   };
 }
