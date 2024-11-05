@@ -125,10 +125,6 @@ rec {
       };
     };
 
-    nix = {
-      githubPrivateTokenSopsSecret = "credentials/github/access-token-nix-config";
-    };
-
     ssh = {
       enable = true;
       authorizedKeys = {
