@@ -107,6 +107,7 @@ in
       autoEnable = false;
       base16Scheme = "${pkgs.base16-schemes}/share/themes/${config.mySystem.theme}.yaml";
       polarity = (svc.importYAML base16Scheme).variant;
+      opacity.terminal = 0.95;
       image = config.mySystem.wallpaper;
 
       cursor = {

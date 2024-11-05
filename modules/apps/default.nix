@@ -4,6 +4,7 @@ _: {
     ./theme.nix
 
     ./aichat
+    ./alacritty
     ./bat
     ./btop
     ./direnv
