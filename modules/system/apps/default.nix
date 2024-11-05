@@ -9,6 +9,7 @@ _: {
     ./letsencrypt
     ./nginx
     ./openconnect
+    ./plymouth
     ./postgresql
     ./redis
     ./rustdesk
