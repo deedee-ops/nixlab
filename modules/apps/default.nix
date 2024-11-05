@@ -3,8 +3,8 @@ _: {
     ./core.nix
     ./theme.nix
 
+    # Terminal apps
     ./aichat
-    ./alacritty
     ./bat
     ./btop
     ./direnv
@@ -17,5 +17,9 @@ _: {
     ./wakatime
     ./xdg-ninja
     ./zsh
+
+    # GUI apps
+    ./alacritty
+    ./firefox
   ];
 }
