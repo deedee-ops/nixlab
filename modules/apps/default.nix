@@ -32,5 +32,6 @@ _: {
     ./syncthing
     ./thunderbird
     ./zathura
+    ./zoom
   ];
 }
