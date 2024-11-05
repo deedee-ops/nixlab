@@ -22,5 +22,6 @@ _: {
     ./alacritty
     ./firefox
     ./mpv
+    ./syncthing
   ];
 }
