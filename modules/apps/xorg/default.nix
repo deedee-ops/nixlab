@@ -13,6 +13,14 @@
     ./qt.nix
   ];
 
+  options.myHomeApps.xorg = {
+    terminal = lib.mkOption {
+      type = lib.types.package;
+      description = "Default terminal package.";
+      default = pkgs.alacritty;
+    };
+  };
+
   config = lib.mkIf osConfig.mySystem.xorg.enable {
     stylix.targets.xresources.enable = true;
 
@@ -25,6 +33,8 @@
         gtk.enable = true;
       };
     };
+
+    fonts.fontconfig.enable = true;
 
     xresources = {
       path = "${config.xdg.configHome}/X11/xresources";

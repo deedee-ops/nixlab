@@ -28,6 +28,7 @@ _: {
     ./firefox
     ./mpv
     ./redshift
+    ./rofi
     ./syncthing
     ./thunderbird
   ];

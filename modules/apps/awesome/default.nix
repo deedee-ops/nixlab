@@ -16,15 +16,15 @@ in
       description = "List of applications to run on awesome start.";
       default = [ ];
     };
+    extraConfig = lib.mkOption {
+      type = lib.types.lines;
+      description = "Extra configuration appended at the end of rc.lua.";
+      default = "";
+    };
     modKey = lib.mkOption {
       type = lib.types.str;
       description = "Mod key for awesome.";
       default = "Mod4";
-    };
-    terminal = lib.mkOption {
-      type = lib.types.package;
-      description = "Default terminal package.";
-      default = pkgs.alacritty;
     };
     useDunst = lib.mkOption {
       type = lib.types.bool;
@@ -37,8 +37,8 @@ in
     xsession.windowManager.awesome.enable = true;
     myHomeApps = {
       dunst.enable = cfg.useDunst;
-      # "${cfg.terminal.pname}".enable = true; -- causes infinite recursion
-      alacritty.enable = cfg.terminal.pname == "alacritty";
+      # "${config.myHomeApps.xorg.terminal.pname}".enable = true; # causes infinite recursion
+      alacritty.enable = config.myHomeApps.xorg.terminal.pname == "alacritty";
     };
 
     xdg = {
@@ -46,6 +46,10 @@ in
         awesome = {
           source = ./config;
           recursive = true;
+        };
+
+        "awesome/rc.lua" = {
+          text = (builtins.readFile ./rc.lua) + cfg.extraConfig;
         };
 
         "awesome/autorun.sh" = {
@@ -73,7 +77,7 @@ in
               xkillPath = "${lib.getExe pkgs.xorg.xkill}",
 
             	modkey = "${cfg.modKey}",
-            	terminal = "${lib.getExe cfg.terminal}",
+            	terminal = "${lib.getExe config.myHomeApps.xorg.terminal}",
               useDunst = ${if cfg.useDunst then "true" else "false"},
             }
 
