@@ -18,8 +18,10 @@ _: {
     ./ssh.nix
     ./time.nix
     ./user.nix
+    ./xorg.nix
 
     ./apps
     ./containers
+    ./hardware
   ];
 }
