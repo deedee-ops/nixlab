@@ -22,6 +22,7 @@ _: {
     ./xorg
 
     ./alacritty
+    ./awesome
     ./dunst
     ./firefox
     ./mpv

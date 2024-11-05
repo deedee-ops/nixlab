@@ -9,9 +9,7 @@ let
 in
 {
   options.myHomeApps.mpv = {
-    enable = lib.mkEnableOption "mpv" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "mpv";
   };
 
   config = lib.mkIf cfg.enable {

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -43,5 +44,7 @@ in
             ];
           };
         };
+
+    myHomeApps.awesome.autorun = [ "${lib.getExe' pkgs.blueman "blueman-applet"}" ];
   };
 }

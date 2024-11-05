@@ -10,9 +10,7 @@ let
 in
 {
   options.myHomeApps.alacritty = {
-    enable = lib.mkEnableOption "alacritty" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "alacritty";
   };
 
   config = lib.mkIf cfg.enable {

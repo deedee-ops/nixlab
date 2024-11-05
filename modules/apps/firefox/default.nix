@@ -162,9 +162,7 @@ let
 in
 {
   options.myHomeApps.firefox = {
-    enable = lib.mkEnableOption "firefox" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "firefox";
     extraConfig = lib.mkOption {
       type = lib.types.attrs;
       description = "Extra settings for about:config";

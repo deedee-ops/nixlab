@@ -41,23 +41,28 @@ let
 in
 {
   options.myHomeApps.thunderbird = {
-    enable = lib.mkEnableOption "thunderbird" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "thunderbird";
   };
 
-  config = lib.mkIf cfg.enable {
-    programs.thunderbird = {
-      enable = true;
+  config =
+    let
       package = pkgs.thunderbird-128.override (old: {
         extraPolicies = (old.extraPolicies or { }) // policies;
       });
 
-      profiles.default.isDefault = true;
-    };
+    in
+    lib.mkIf cfg.enable {
+      programs.thunderbird = {
+        inherit package;
 
-    home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-      lib.mkIf osConfig.mySystem.impermanence.enable
-        [ ".thunderbird" ];
-  };
+        enable = true;
+        profiles.default.isDefault = true;
+      };
+
+      home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
+        lib.mkIf osConfig.mySystem.impermanence.enable
+          [ ".thunderbird" ];
+
+      myHomeApps.awesome.autorun = [ "${lib.getExe package}" ];
+    };
 }

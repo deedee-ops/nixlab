@@ -9,9 +9,7 @@ let
 in
 {
   options.myHomeApps.dunst = {
-    enable = lib.mkEnableOption "dunst" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "dunst";
   };
 
   config = lib.mkIf cfg.enable {

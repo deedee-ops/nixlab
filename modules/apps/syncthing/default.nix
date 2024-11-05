@@ -1,6 +1,7 @@
 {
   config,
   osConfig,
+  pkgs,
   lib,
   ...
 }:
@@ -9,9 +10,7 @@ let
 in
 {
   options.myHomeApps.syncthing = {
-    enable = lib.mkEnableOption "syncthing" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "syncthing";
   };
 
   config = lib.mkIf cfg.enable {
@@ -20,5 +19,7 @@ in
     home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
       lib.mkIf osConfig.mySystem.impermanence.enable
         [ "Sync" ];
+
+    myHomeApps.awesome.autorun = [ "${lib.getExe' pkgs.syncthingtray-minimal "syncthingtray"} --wait" ];
   };
 }

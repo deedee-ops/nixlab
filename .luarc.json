@@ -1,5 +1,11 @@
 {
-    "diagnostics.globals": [
-        "vim"
-    ]
+  "diagnostics.globals": [
+    "RC",
+    "awesome",
+    "client",
+    "mouse",
+    "root",
+    "screen",
+    "vim"
+  ]
 }
