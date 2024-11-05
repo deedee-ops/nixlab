@@ -19,6 +19,8 @@ _: {
     ./zsh
 
     # GUI apps
+    ./xorg
+
     ./alacritty
     ./firefox
     ./mpv
