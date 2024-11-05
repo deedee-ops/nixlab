@@ -23,5 +23,6 @@ _: {
     ./firefox
     ./mpv
     ./syncthing
+    ./thunderbird
   ];
 }
