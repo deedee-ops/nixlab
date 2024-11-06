@@ -39,6 +39,7 @@ in
       dunst.enable = cfg.useDunst;
       # "${config.myHomeApps.xorg.terminal.pname}".enable = true; # causes infinite recursion
       alacritty.enable = config.myHomeApps.xorg.terminal.pname == "alacritty";
+      kitty.enable = config.myHomeApps.xorg.terminal.pname == "kitty";
     };
 
     xdg = {

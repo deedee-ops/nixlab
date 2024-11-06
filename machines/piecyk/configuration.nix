@@ -233,7 +233,7 @@ rec {
           };
         };
       };
-      terminal = pkgs.alacritty;
+      terminal = pkgs.kitty;
     };
     zathura.enable = true;
     zoom.enable = true;

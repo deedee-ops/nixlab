@@ -27,6 +27,7 @@ _: {
     ./discord
     ./dunst
     ./firefox
+    ./kitty
     ./mpv
     ./redshift
     ./rofi
