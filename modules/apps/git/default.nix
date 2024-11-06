@@ -67,7 +67,7 @@ in
             minus-style = "syntax ${base08-hex}";
             plus-emph-style = "bold syntax ${base0B-hex}";
             plus-style = "syntax ${base0B-hex}";
-            syntax-theme = "catppuccin-mocha";
+            syntax-theme = "base16-stylix";
           };
         };
       };

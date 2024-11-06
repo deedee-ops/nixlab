@@ -36,6 +36,10 @@
     };
 
     home = {
+      packages = [
+        pkgs.roboto
+      ];
+
       sessionVariables = {
         XCOMPOSECACHE = "${config.xdg.cacheHome}/X11/xcompose";
       };

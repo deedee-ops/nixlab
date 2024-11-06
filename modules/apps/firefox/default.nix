@@ -82,6 +82,7 @@ let
       # passwords
       "signon.autofillForms" = false;
       "signon.formlessCapture.enabled" = false;
+      "signon.rememberSignons" = false;
       "network.auth.subresource-http-auth-allow" = 1;
 
       # downloads

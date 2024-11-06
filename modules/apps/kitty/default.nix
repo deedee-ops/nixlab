@@ -15,6 +15,8 @@ in
   config = lib.mkIf cfg.enable {
     stylix.targets.kitty.enable = true;
 
+    home.shellAliases.ssh = "${lib.getExe' config.programs.kitty.package "kitten"} ssh";
+
     programs.kitty = {
       enable = true;
       shellIntegration = {
@@ -24,7 +26,6 @@ in
 
       environment = {
         LC_ALL = osConfig.i18n.defaultLocale;
-        TERM = "xterm-256color";
       };
 
       font.size = 12;

@@ -70,6 +70,10 @@ rec {
         name = "enp6s0";
         bridge = true;
       };
+      # ensure that homelab is available even if local DNS dies
+      extraHosts = ''
+        10.100.20.1 deedee.home.arpa
+      '';
     };
 
     ssh = {
@@ -116,6 +120,7 @@ rec {
           id = "igor@rzegocki.pl";
         }
       ];
+      rememberPasswordTime = 28800;
     };
     ssh = {
       appendOptions = {

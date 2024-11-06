@@ -291,8 +291,3 @@ button[id$='-tab']:hover {
 .bookmark-group .bookmark-group-name {
   display: none;
 }
-
-/* Hide footer completely */
-#footer {
-  display: none;
-}

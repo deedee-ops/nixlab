@@ -52,6 +52,12 @@ in
       );
       default = [ ];
     };
+    rememberPasswordTime = lib.mkOption {
+      type = lib.types.nullOr lib.types.int;
+      description = "Time in seconds, which password will be cached by gpg-agent (and not asked again).";
+      default = null;
+      example = 3600;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -89,6 +95,7 @@ in
 
       enable = true;
       enableScDaemon = true;
+      defaultCacheTtl = cfg.rememberPasswordTime;
     };
 
     systemd.user.services.gnupg-create-socketdir = lib.mkIf cfg.enableYubikey {

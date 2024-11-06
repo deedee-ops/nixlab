@@ -110,6 +110,14 @@ in
     nixpkgs.config.allowUnfreePredicate =
       pkg: builtins.elem (lib.getName pkg) config.mySystem.allowUnfree;
 
+    security.sudo = {
+      execWheelOnly = true;
+      extraConfig = lib.mkAfter ''
+        Defaults lecture="never"
+        Defaults env_keep += "TERM TERMINFO"
+      '';
+    };
+
     stylix = rec {
       enable = true;
       autoEnable = false;

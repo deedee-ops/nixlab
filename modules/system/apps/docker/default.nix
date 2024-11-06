@@ -61,6 +61,11 @@ in
                   description = "Subnet of the public (with internet) network user by containers.";
                   default = "172.31.0.0/16";
                 };
+                hostIP = lib.mkOption {
+                  type = lib.types.str;
+                  description = "IP under which the host is reachable for given network.";
+                  default = "172.31.0.1";
+                };
               };
             };
             default = {

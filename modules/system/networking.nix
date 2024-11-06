@@ -42,6 +42,11 @@ in
       description = "Custom systemd.network config. If not set, DHCP4 on default interface will be configured.";
       default = null;
     };
+    extraHosts = lib.mkOption {
+      type = lib.types.lines;
+      description = "Extra entries in /etc/hosts";
+      default = "";
+    };
 
     rootInterface = lib.mkOption {
       type = lib.types.str;
@@ -55,6 +60,8 @@ in
 
   config = lib.mkIf cfg.enable {
     networking = {
+      inherit (cfg) extraHosts;
+
       hostName = cfg.hostname;
       dhcpcd.enable = false;
       enableIPv6 = false;

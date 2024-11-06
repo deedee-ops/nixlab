@@ -63,7 +63,6 @@ in
       execWheelOnly = true;
       extraConfig = lib.mkAfter ''
         Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
-        Defaults lecture="never"
       '';
     };
 

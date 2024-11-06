@@ -46,6 +46,8 @@ in
       enable = true;
       package = pkgs.nginxStable.override { openssl = pkgs.libressl; };
 
+      clientMaxBodySize = "0"; # disable file upload limits
+
       recommendedBrotliSettings = true;
       recommendedGzipSettings = true;
       recommendedOptimisation = true;

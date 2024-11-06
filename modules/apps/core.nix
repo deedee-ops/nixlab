@@ -42,7 +42,9 @@
       packages = [
         pkgs.bzip2
         pkgs.dnsutils
+        pkgs.file
         pkgs.jq
+        pkgs.lsof
         pkgs.nh
         pkgs.pwgen
         pkgs.silver-searcher
