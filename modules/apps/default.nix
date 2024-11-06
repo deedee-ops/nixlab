@@ -35,6 +35,7 @@ _: {
     ./syncthing
     ./teams
     ./thunderbird
+    ./yazi
     ./zathura
     ./zoom
   ];

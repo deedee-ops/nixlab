@@ -17,7 +17,10 @@ in
 
     programs.kitty = {
       enable = true;
-      shellIntegration.enableZshIntegration = true;
+      shellIntegration = {
+        mode = "no-cursor";
+        enableZshIntegration = true;
+      };
 
       environment = {
         LC_ALL = osConfig.i18n.defaultLocale;
