@@ -26,14 +26,16 @@ rec {
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
-    allowUnfree = [
-      "discord"
-      "slack"
-    ];
 
     alerts = {
       pushover.enable = true;
     };
+
+    # @todo - somehow move it to proper modules?
+    allowUnfree = [
+      "discord"
+      "slack"
+    ];
 
     disks = {
       enable = true;
@@ -164,13 +166,12 @@ rec {
     awesome = {
       enable = true;
       autorun = [
-        (lib.getExe pkgs.discord)
         (lib.getExe pkgs.whatsie)
-        (lib.getExe pkgs.slack)
         (lib.getExe pkgs.telegram-desktop)
       ];
     };
     caffeine.enable = true;
+    discord.enable = true;
     firefox = {
       enable = true;
       startupPage = "https://www.rzegocki.dev/";
@@ -194,7 +195,9 @@ rec {
         base_url = "https://vaultwarden.rzegocki.dev/";
       };
     };
+    slack.enable = true;
     syncthing.enable = true;
+    teams.enable = true;
     thunderbird.enable = true;
     wakatime = {
       enable = true;
@@ -235,10 +238,6 @@ rec {
     zathura.enable = true;
     zoom.enable = true;
     zsh.promptColor = "magenta";
-
-    extraPackages = [
-      pkgs.slack # slack needs direct installation to register uri shortcuts for signing in
-    ];
   };
 
   system.stateVersion = "24.11";

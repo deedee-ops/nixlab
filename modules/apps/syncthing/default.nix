@@ -25,9 +25,12 @@ in
           fi
         '';
       };
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
+      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}" =
         lib.mkIf osConfig.mySystem.impermanence.enable
-          [ "Sync" ];
+          {
+            directories = [ "Sync" ];
+            files = [ ".config/syncthingtray.ini" ];
+          };
     };
 
     myHomeApps.awesome.autorun = [ "${lib.getExe' pkgs.syncthingtray-minimal "syncthingtray"} --wait" ];

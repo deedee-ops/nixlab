@@ -45,6 +45,6 @@ in
           };
         };
 
-    homeApps.awesome.autorun = [ "${lib.getExe' pkgs.blueman "blueman-applet"}" ];
+    homeApps.awesome.autorun = [ (lib.getExe' pkgs.blueman "blueman-applet") ];
   };
 }

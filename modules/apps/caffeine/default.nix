@@ -17,6 +17,6 @@ in
     # in awesome service runs too early and caffeine breaks
     services.caffeine.enable = osConfig.mySystem.xorg.windowManager != "awesome";
 
-    myHomeApps.awesome.autorun = [ "${lib.getExe pkgs.caffeine-ng}" ];
+    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.caffeine-ng) ];
   };
 }

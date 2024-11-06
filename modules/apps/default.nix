@@ -24,12 +24,15 @@ _: {
     ./alacritty
     ./awesome
     ./caffeine
+    ./discord
     ./dunst
     ./firefox
     ./mpv
     ./redshift
     ./rofi
+    ./slack
     ./syncthing
+    ./teams
     ./thunderbird
     ./zathura
     ./zoom

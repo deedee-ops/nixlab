@@ -63,6 +63,6 @@ in
         lib.mkIf osConfig.mySystem.impermanence.enable
           [ ".thunderbird" ];
 
-      myHomeApps.awesome.autorun = [ "${lib.getExe package}" ];
+      myHomeApps.awesome.autorun = [ (lib.getExe package) ];
     };
 }
