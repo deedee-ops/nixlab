@@ -35,6 +35,8 @@ rec {
     allowUnfree = [
       "discord"
       "slack"
+
+      "libsciter" # for rustdesk
     ];
 
     disks = {
@@ -243,6 +245,10 @@ rec {
     zathura.enable = true;
     zoom.enable = true;
     zsh.promptColor = "magenta";
+
+    extraPackages = [
+      pkgs.rustdesk
+    ];
   };
 
   system.stateVersion = "24.11";
