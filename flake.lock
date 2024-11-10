@@ -471,11 +471,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1731164513,
-        "narHash": "sha256-WnT6MpgrMKgqV2Rs+MfU88+KO+/njELPOtGoNhoX2oA=",
+        "lastModified": 1731182928,
+        "narHash": "sha256-HGB1lMqGjPWIWozrl5QyPgBkmabhiursawlvjs+B5zM=",
         "ref": "main",
-        "rev": "b967f1d5fe9d1bf58e6159e9b426c5b341489397",
-        "revCount": 16460,
+        "rev": "efb04754be4248a2249836d352b5bebec6904d1d",
+        "revCount": 16471,
         "type": "git",
         "url": "https://git.lix.systems/lix-project/lix"
       },
@@ -643,11 +643,11 @@
     },
     "nixpkgs-stable": {
       "locked": {
-        "lastModified": 1731193378,
-        "narHash": "sha256-/yvAbVL2P4ZRwlF4cFwvVJpROaVC6BnDwg5cJjgCAAc=",
+        "lastModified": 1731198796,
+        "narHash": "sha256-gMsC4eKJDckOX/txSv4qPZprKuN/C3l5ETitcEk5DcI=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "e6ffd9960ec997aa9384fb0aa4180dc1b990b56b",
+        "rev": "e3d50903923ee05c9a6599772e9b3bfa5efdfb1e",
         "type": "github"
       },
       "original": {
