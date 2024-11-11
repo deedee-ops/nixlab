@@ -193,6 +193,22 @@
         env: "${config.sops.secrets."${sopsSecretPrefix}/${env}".path}:/secrets/${env}:ro"
       ) secretEnvs;
 
+    mkSecretEnvFile =
+      {
+        dest,
+        sopsSecretPrefix,
+        secretEnvs,
+      }:
+      ''
+        echo -n > ${dest}
+        chmod 600 ${dest}
+      ''
+      + builtins.concatStringsSep "\n" (
+        builtins.map (
+          env: "echo \"${env}=$(cat ${config.sops.secrets."${sopsSecretPrefix}/${env}".path})\" >> ${dest}"
+        ) secretEnvs
+      );
+
     mkRestic =
       {
         name,

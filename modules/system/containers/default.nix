@@ -18,6 +18,7 @@ _: {
     ./memos
     ./miniflux
     ./navidrome
+    ./outline
     ./paperless-ngx
     ./piped
     ./prowlarr
