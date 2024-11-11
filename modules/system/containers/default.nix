@@ -15,6 +15,7 @@ _: {
     ./lldap
     ./maddy
     ./mail-archive
+    ./memos
     ./miniflux
     ./navidrome
     ./paperless-ngx
