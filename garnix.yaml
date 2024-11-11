@@ -1,4 +1,6 @@
 ---
 builds:
   include:
+    - checks.*
+    - devShells.*
     - nixosConfigurations.*
