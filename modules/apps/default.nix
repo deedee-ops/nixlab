@@ -13,6 +13,7 @@ _: {
     ./gnupg
     ./kubernetes
     ./neovim
+    ./qrtools
     ./ssh
     ./wakatime
     ./xdg-ninja
