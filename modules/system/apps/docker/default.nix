@@ -126,6 +126,11 @@ in
       docker = {
         enable = true;
         daemon.settings = cfg.daemonSettings;
+        autoPrune = {
+          enable = true;
+          dates = "daily";
+          flags = [ "--all" ];
+        };
         rootless = {
           enable = cfg.rootless;
           daemon.settings = cfg.daemonSettings;
