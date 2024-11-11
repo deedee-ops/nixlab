@@ -34,6 +34,7 @@ rec {
     # @todo - somehow move it to proper modules?
     allowUnfree = [
       "discord"
+      "obsidian"
       "slack"
 
       "libsciter" # for rustdesk
@@ -193,6 +194,7 @@ rec {
       };
     };
     mpv.enable = true;
+    obsidian.enable = true;
     redshift = {
       enable = true;
       latitude = 50.061389;

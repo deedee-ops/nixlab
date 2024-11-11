@@ -30,6 +30,7 @@ _: {
     ./firefox
     ./kitty
     ./mpv
+    ./obsidian
     ./redshift
     ./rofi
     ./slack
