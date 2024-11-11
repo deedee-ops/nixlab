@@ -21,7 +21,7 @@ in
           [ ".config/Slack" ];
 
       packages = [
-        slackPkg # slack needs direct installation to register uri shortcuts for signing in
+        slackPkg # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry
       ];
     };
 
