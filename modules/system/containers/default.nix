@@ -9,6 +9,7 @@ _: {
     ./flaresolverr
     ./forgejo
     ./gluetun
+    ./gose
     ./homepage
     ./immich
     ./jellyfin
