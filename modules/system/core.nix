@@ -20,6 +20,7 @@ in
       description = "List of allowed unfree packages.";
       default = [ ];
     };
+
     filesystem = lib.mkOption {
       type = lib.types.enum [
         "ext4"
@@ -45,6 +46,12 @@ in
       type = lib.types.nullOr lib.types.str;
       default = null;
       description = "Email sender of all notification emails.";
+    };
+
+    openPorts = lib.mkOption {
+      type = lib.types.listOf lib.types.port;
+      description = "List of additionally opened ports on system.";
+      default = [ ];
     };
 
     primaryUser = lib.mkOption {
@@ -109,6 +116,9 @@ in
 
     nixpkgs.config.allowUnfreePredicate =
       pkg: builtins.elem (lib.getName pkg) config.mySystem.allowUnfree;
+
+    networking.firewall.allowedTCPPorts = config.mySystem.openPorts;
+    networking.firewall.allowedUDPPorts = config.mySystem.openPorts;
 
     security.sudo = {
       execWheelOnly = true;

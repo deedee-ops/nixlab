@@ -39,6 +39,9 @@ rec {
       "libsciter" # for rustdesk
     ];
 
+    # @todo - somehow move it to proper modules?
+    openPorts = [ 55555 ];
+
     disks = {
       enable = true;
       hostId = "bdd71660";
@@ -124,6 +127,7 @@ rec {
       ];
       rememberPasswordTime = 28800;
     };
+    qrtools.enable = true;
     ssh = {
       appendOptions = {
         matchBlocks = {
