@@ -30,9 +30,20 @@ in
 
       font.size = 12;
 
+      keybindings = {
+        "ctrl+equal" = "change_font_size all +1.0";
+        "ctrl+plus" = "change_font_size all +1.0";
+        "ctrl+kp_add" = "change_font_size all +1.0";
+        "ctrl+minus" = "change_font_size all -1.0";
+        "ctrl+kp_subtract" = "change_font_size all -1.0";
+        "ctrl+0" = "change_font_size all 0";
+      };
+
       settings = {
+        confirm_os_window_close = 0;
         copy_on_select = true;
         cursor_shape = "block";
+        disable_ligatures = "always";
         enable_audio_bell = false;
         update_check_interval = 0;
         window_padding_width = 6;
