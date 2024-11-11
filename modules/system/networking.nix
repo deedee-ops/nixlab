@@ -19,8 +19,13 @@ in
           };
           bridge = lib.mkOption {
             type = lib.types.bool;
-            description = "If enabled, the main interface will me managed via bridge (useful for configurations with VMs).";
+            description = "If enabled, the main interface will be managed via bridge (useful for configurations with VMs).";
             default = false;
+          };
+          bridgeMAC = lib.mkOption {
+            type = lib.types.nullOr lib.types.str;
+            description = "Force bridge MAC address instead of picking it up from main interface.";
+            default = null;
           };
           DNS = lib.mkOption {
             type = lib.types.nullOr (lib.types.listOf lib.types.str);
@@ -59,6 +64,16 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion =
+          (!cfg.mainInterface.bridge)
+          || (!config.mySystemApps.incus.enable)
+          || (cfg.mainInterface.bridgeMAC != null);
+        message = "Incus tends to break bridge MAC address, when in auto mode - thus when enabled, mySystem.macInterface.bridgeMAC is required.";
+      }
+    ];
+
     networking = {
       inherit (cfg) extraHosts;
 
@@ -88,18 +103,27 @@ in
           {
             enable = true;
             links = {
-              "0000-bridge-inherit-mac" = {
-                matchConfig.Type = "bridge";
-                linkConfig.MACAddressPolicy = "none";
-              };
+              "0000-bridge-inherit-mac" =
+                {
+                  matchConfig.Type = "bridge";
+                }
+                // (
+                  if cfg.mainInterface.bridgeMAC == null then
+                    { linkConfig.MACAddressPolicy = "none"; }
+                  else
+                    { linkConfig.MACAddress = cfg.mainInterface.bridgeMAC; }
+                );
             };
             netdevs = {
               "0001-uplink" = {
-                netdevConfig = {
-                  Kind = "bridge";
-                  Name = "br0";
-                  MACAddress = "none";
-                };
+                netdevConfig =
+                  {
+                    Kind = "bridge";
+                    Name = "br0";
+                  }
+                  // lib.optionalAttrs (cfg.mainInterface.bridgeMAC == null) {
+                    MACAddress = "none";
+                  };
                 bridgeConfig = {
                   # VLANFiltering = true;
                   STP = false;

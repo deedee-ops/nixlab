@@ -119,6 +119,7 @@ rec {
       mainInterface = {
         name = "enp87s0";
         bridge = true;
+        bridgeMAC = "02:00:0a:64:14:01";
         DNS = [
           "9.9.9.9"
           "149.112.112.10"
@@ -252,7 +253,7 @@ rec {
     piped.enable = true;
     prowlarr.enable = true;
     qbittorrent = {
-      enable = true;
+      enable = false;
       downloadsPath = torrentsPath;
     };
     radarr = {
