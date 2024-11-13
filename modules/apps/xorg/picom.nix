@@ -1,6 +1,6 @@
 { osConfig, lib, ... }:
 {
-  config = lib.mkIf osConfig.mySystem.xorg.enable {
+  config = lib.mkIf osConfig.mySystemApps.xorg.enable {
     services.picom = {
       enable = true;
 

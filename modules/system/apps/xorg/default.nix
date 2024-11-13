@@ -5,15 +5,19 @@
   ...
 }:
 let
-  cfg = config.mySystem.xorg;
+  cfg = config.mySystemApps.xorg;
 in
 {
-  options.mySystem.xorg = {
+  imports = [
+    ./kiosk.nix
+  ];
+
+  options.mySystemApps.xorg = {
     enable = lib.mkEnableOption "xorg";
+    autoLogin = lib.mkEnableOption "autologin for xorg";
     windowManager = lib.mkOption {
       type = lib.types.str;
       description = "Window manager to use.";
-      default = "awesome";
     };
     sddmThemePackage = lib.mkOption {
       type = lib.types.package;
@@ -24,9 +28,15 @@ in
 
   config = lib.mkIf cfg.enable {
     services = {
-      displayManager.sddm = {
-        enable = true;
-        theme = cfg.sddmThemePackage.pname;
+      displayManager = {
+        sddm = {
+          enable = true;
+          theme = cfg.sddmThemePackage.pname;
+        };
+        autoLogin = lib.mkIf cfg.autoLogin {
+          enable = true;
+          user = config.mySystem.primaryUser;
+        };
       };
 
       xserver = {

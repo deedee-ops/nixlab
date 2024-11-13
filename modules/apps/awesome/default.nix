@@ -33,7 +33,7 @@ in
     };
   };
 
-  config = lib.mkIf (osConfig.mySystem.xorg.windowManager == "awesome") {
+  config = lib.mkIf (osConfig.mySystemApps.xorg.windowManager == "awesome") {
     xsession.windowManager.awesome.enable = true;
     myHomeApps = {
       dunst.enable = cfg.useDunst;

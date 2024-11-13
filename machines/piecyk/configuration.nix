@@ -90,11 +90,6 @@ rec {
         ];
       };
     };
-
-    xorg = {
-      enable = true;
-      windowManager = "awesome";
-    };
   };
 
   mySystemApps = {
@@ -103,6 +98,11 @@ rec {
       rootless = true;
     };
     # plymouth.enable = true;
+
+    xorg = {
+      enable = true;
+      windowManager = "awesome";
+    };
   };
 
   myHomeApps = {

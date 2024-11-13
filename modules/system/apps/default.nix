@@ -14,5 +14,6 @@ _: {
     ./redis
     ./rustdesk
     ./squid
+    ./xorg
   ];
 }

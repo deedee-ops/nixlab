@@ -6,7 +6,7 @@
   ...
 }:
 {
-  config = lib.mkIf osConfig.mySystem.xorg.enable {
+  config = lib.mkIf osConfig.mySystemApps.xorg.enable {
     stylix.targets.gtk.enable = true;
 
     gtk = {

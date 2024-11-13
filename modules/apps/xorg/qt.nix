@@ -1,12 +1,11 @@
 {
-  config,
   osConfig,
   lib,
   pkgs,
   ...
 }:
 {
-  config = lib.mkIf osConfig.mySystem.xorg.enable {
+  config = lib.mkIf osConfig.mySystemApps.xorg.enable {
     qt = {
       enable = true;
       platformTheme.name = "qtct";

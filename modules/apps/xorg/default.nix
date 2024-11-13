@@ -21,7 +21,7 @@
     };
   };
 
-  config = lib.mkIf osConfig.mySystem.xorg.enable {
+  config = lib.mkIf osConfig.mySystemApps.xorg.enable {
     stylix.targets.xresources.enable = true;
 
     fonts.fontconfig.enable = true;

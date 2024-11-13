@@ -16,7 +16,7 @@ in
     };
   };
 
-  config = lib.mkIf (osConfig.mySystem.xorg.enable && cfg.profile != null) {
+  config = lib.mkIf (osConfig.mySystemApps.xorg.enable && cfg.profile != null) {
     programs.autorandr = {
       enable = true;
       profiles = {
