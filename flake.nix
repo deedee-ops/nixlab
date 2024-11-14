@@ -67,6 +67,9 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.nixos-stable.follows = "nixpkgs-stable";
     };
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware/master";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";

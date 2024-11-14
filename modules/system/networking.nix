@@ -85,6 +85,7 @@ in
       resolvconf.enable = false;
       useDHCP = false;
       useHostResolvConf = false;
+      interfaces."${cfg.mainInterface.name}".wakeOnLan.enable = true;
     };
 
     services = {

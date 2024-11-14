@@ -21,6 +21,13 @@ in
       default = [ ];
     };
 
+    extraModules = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Extra modules to load on boot.";
+      default = [ ];
+      example = [ "thunderbolt" ];
+    };
+
     filesystem = lib.mkOption {
       type = lib.types.enum [
         "ext4"
@@ -104,6 +111,8 @@ in
     programs.nix-index-database.comma.enable = true;
 
     users.groups.services = { };
+
+    boot.kernelModules = config.mySystem.extraModules;
 
     services.zfs = lib.mkIf (config.mySystem.filesystem == "zfs") {
       autoScrub.enable = true;

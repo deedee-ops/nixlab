@@ -79,6 +79,7 @@ rec {
       # ensure that homelab is available even if local DNS dies
       extraHosts = ''
         10.100.20.1 deedee.home.arpa
+        10.200.10.10 monkey.home.arpa
       '';
     };
 

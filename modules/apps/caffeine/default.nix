@@ -15,7 +15,7 @@ in
 
   config = lib.mkIf cfg.enable {
     # in awesome service runs too early and caffeine breaks
-    services.caffeine.enable = osConfig.mySystem.xorg.windowManager != "awesome";
+    services.caffeine.enable = osConfig.mySystemApps.xorg.windowManager != "awesome";
 
     myHomeApps.awesome.autorun = [ (lib.getExe pkgs.caffeine-ng) ];
   };

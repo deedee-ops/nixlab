@@ -25,6 +25,7 @@ _: {
     ./alacritty
     ./awesome
     ./caffeine
+    ./chiaki-ng
     ./discord
     ./dunst
     ./firefox

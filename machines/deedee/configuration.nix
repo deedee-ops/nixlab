@@ -8,6 +8,7 @@ let
   videoPath = "${mediaPath}/video";
 
   gwIP = "192.168.100.1";
+  monkeyIP = "10.200.10.10";
   nasIP = "10.100.10.1";
   omadaIP = "10.100.1.1";
   ownIP = "10.100.20.1";
@@ -143,6 +144,7 @@ rec {
       adminPasswordSopsSecret = "credentials/services/admin";
       customMappings = {
         "deedee.home.arpa" = ownIP;
+        "monkey.home.arpa" = monkeyIP;
         "nas.home.arpa" = nasIP;
       };
     };
