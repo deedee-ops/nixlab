@@ -16,8 +16,9 @@ in
     enable = lib.mkEnableOption "xorg";
     autoLogin = lib.mkEnableOption "autologin for xorg";
     windowManager = lib.mkOption {
-      type = lib.types.str;
+      type = lib.types.nullOr lib.types.str;
       description = "Window manager to use.";
+      default = null;
     };
     sddmThemePackage = lib.mkOption {
       type = lib.types.package;
@@ -39,10 +40,13 @@ in
         };
       };
 
-      xserver = {
-        enable = true;
-        windowManager."${cfg.windowManager}".enable = true;
-      };
+      xserver =
+        {
+          enable = true;
+        }
+        // lib.optionalAttrs (cfg.windowManager != null) {
+          windowManager."${cfg.windowManager}".enable = true;
+        };
     };
 
     environment.systemPackages = [
