@@ -13,6 +13,7 @@ let
     default_border none
     for_window [class=".*"] fullscreen
 
+    exec ${lib.getExe pkgs.xorg.xset} s off -dpms
     exec ${cfg.command}
   '';
 in
