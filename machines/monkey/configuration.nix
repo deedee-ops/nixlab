@@ -76,14 +76,20 @@ rec {
       kiosk = {
         enable = true;
         command = ''
-          ${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.chiaki-ng}; ${lib.getExe' pkgs.systemd "systemctl"} poweroff'
+          ${lib.getExe pkgs.bash} -c '$XDG_DATA_HOME/Chiaki/chiaki-start; ${lib.getExe' pkgs.systemd "systemctl"} poweroff'
         '';
       };
     };
   };
 
   myHomeApps = {
-    chiaki-ng.enable = true;
+    chiaki-ng = {
+      enable = true;
+      autoStream = {
+        enable = true;
+        subnet = "10.200.100.0/24";
+      };
+    };
     gnupg.enable = false;
     ssh.enable = false;
     wakatime.enable = false;
