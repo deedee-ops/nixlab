@@ -49,6 +49,10 @@ in
         };
     };
 
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ "/var/lib/sddm" ]; };
+
     environment.systemPackages = [
       cfg.sddmThemePackage
       # https://github.com/nix-community/home-manager/issues/3113

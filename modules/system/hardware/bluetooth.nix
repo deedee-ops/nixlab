@@ -84,6 +84,10 @@ in
     };
     homeApps.awesome.autorun = [ (lib.getExe' pkgs.blueman "blueman-applet") ];
 
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ "/var/lib/bluetooth" ]; };
+
     system.activationScripts = {
       bluez-autotrust = lib.concatStringsSep "\n" (
         builtins.map (trusted: "${lib.getExe' pkgs.bluez "bluetoothctl"} trust ${trusted}") cfg.trust
