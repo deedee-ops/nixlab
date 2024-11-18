@@ -19,6 +19,19 @@ rec {
     };
   };
 
+  myHardware = {
+    bluetooth = {
+      enable = true;
+      trust = [ "00:1B:66:C7:BA:81" ];
+    };
+    sound.enable = true;
+
+    nvidia = {
+      enable = true;
+      metamodes = "DP-2: 3840x2160_120 +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}, DP-0: 3840x2160_120 +3840+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On, AllowGSYNCCompatible=On}";
+    };
+  };
+
   mySystem = {
     purpose = "Main rig";
     filesystem = "zfs";
