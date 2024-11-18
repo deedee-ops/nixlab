@@ -48,6 +48,10 @@ in
         update_check_interval = 0;
         window_padding_width = 6;
       };
+
+      extraConfig = ''
+        mouse_map ctrl+left press ungrabbed mouse_selection rectangle
+      '';
     };
   };
 }
