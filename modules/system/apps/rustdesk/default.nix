@@ -54,7 +54,7 @@ in
         if ! diff "${dataDir}/id_ed25519" /var/lib/rustdesk/id_ed25519; then
           [ -e "${dataDir}/id_ed25519" ] && cp "${dataDir}/id_ed25519" /var/lib/rustdesk
           [ -e "${dataDir}/id_ed25519.pub" ] && cp "${dataDir}/id_ed25519.pub" /var/lib/rustdesk
-          pkill -f 'rustdesk.*hbbr'
+          pkill -f 'rustdesk.*hbb.?'
         fi
         cp -r /var/lib/rustdesk/* "${dataDir}"
       '';
