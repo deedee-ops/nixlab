@@ -114,6 +114,8 @@ in
 
     boot.kernelModules = config.mySystem.extraModules;
 
+    environment.enableAllTerminfo = true;
+
     services.zfs = lib.mkIf (config.mySystem.filesystem == "zfs") {
       autoScrub.enable = true;
       trim.enable = true;
