@@ -79,7 +79,9 @@ return {
           -- diagnostics.rubocop,
           -- formatting.rubocop,
 
-          diagnostics.actionlint, -- github actions
+          diagnostics.actionlint.with({
+            extra_args = { "-config-file", ".github/actionlint.yaml" },
+          }), -- github actions
           diagnostics.buf, -- protobuf
           diagnostics.cue_fmt, -- cue files
           diagnostics.deadnix, -- nix
