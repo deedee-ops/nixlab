@@ -34,10 +34,12 @@ _: {
     ./obsidian
     ./redshift
     ./rofi
+    ./rustdesk
     ./slack
     ./syncthing
     ./teams
     ./thunderbird
+    ./whatsie
     ./yazi
     ./zathura
     ./zoom

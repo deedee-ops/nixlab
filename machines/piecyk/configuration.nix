@@ -179,7 +179,6 @@ rec {
     awesome = {
       enable = true;
       autorun = [
-        (lib.getExe pkgs.whatsie)
         (lib.getExe pkgs.telegram-desktop)
       ];
     };
@@ -209,6 +208,7 @@ rec {
         base_url = "https://vaultwarden.rzegocki.dev/";
       };
     };
+    rustdesk.enable = true;
     slack.enable = true;
     syncthing.enable = true;
     teams.enable = true;
@@ -217,6 +217,7 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
     };
+    whatsie.enable = true;
     xorg = {
       autorandr = {
         profile = {
@@ -252,10 +253,6 @@ rec {
     zathura.enable = true;
     zoom.enable = true;
     zsh.promptColor = "magenta";
-
-    extraPackages = [
-      pkgs.rustdesk
-    ];
   };
 
   system.stateVersion = "24.11";
