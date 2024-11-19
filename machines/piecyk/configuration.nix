@@ -143,6 +143,7 @@ rec {
       rememberPasswordTime = 28800;
     };
     qrtools.enable = true;
+    speedcrunch.enable = true;
     ssh = {
       appendOptions = {
         matchBlocks = {

@@ -36,6 +36,7 @@ _: {
     ./rofi
     ./rustdesk
     ./slack
+    ./speedcrunch
     ./syncthing
     ./teams
     ./thunderbird

@@ -28,13 +28,13 @@ client.connect_signal("manage", function(c, context, hints)
 
     if c.width > targetWidth then
       c.width = targetWidth
-      c.x = (c.screen.geometry.width - c.width) * 0.5
     end
+    c.x = c.screen.geometry.x + (c.screen.geometry.width - c.width) * 0.5
 
     if c.height > targetHeight then
       c.height = targetHeight
-      c.y = (c.screen.geometry.height - c.height) * 0.5
     end
+    c.y = c.screen.geometry.y + (c.screen.geometry.height - c.height) * 0.5
 
     c.geometrySet = true
   end
