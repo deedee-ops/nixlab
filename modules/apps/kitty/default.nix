@@ -46,11 +46,17 @@ in
         disable_ligatures = "always";
         enable_audio_bell = false;
         update_check_interval = 0;
+        underline_hyperlinks = "never";
         window_padding_width = 6;
       };
 
       extraConfig = ''
+        # ctrl+click for block selection
         mouse_map ctrl+left press ungrabbed mouse_selection rectangle
+
+        # ctrl+click on links
+        mouse_map left click ungrabbed mouse_handle_click prompt
+        mouse_map ctrl+left click ungrabbed mouse_handle_click link
       '';
     };
   };
