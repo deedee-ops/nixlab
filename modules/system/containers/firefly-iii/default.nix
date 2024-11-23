@@ -46,7 +46,7 @@ in
 
     virtualisation.oci-containers.containers.firefly-iii = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/firefly-iii:6.1.23@sha256:b8fa7f6951ae43efca438fc7243d700e58f10915db1eaddf402a71565d5ffb3a";
+        image = "ghcr.io/deedee-ops/firefly-iii:6.1.24@sha256:f9bac1deedb3a41221b3593de4c56e37374128adc217034eb954f5a808dc15bf";
         environment = {
           APP_URL = "https://firefly.${config.mySystem.rootDomain}";
           AUTHENTICATION_GUARD = "remote_user_guard";
