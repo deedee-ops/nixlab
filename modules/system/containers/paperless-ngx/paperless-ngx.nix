@@ -58,7 +58,7 @@ in
           PAPERLESS_ENABLE_HTTP_REMOTE_USER = "true";
           PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME = "HTTP_REMOTE_USER";
           PAPERLESS_OCR_LANGUAGE = "eng+pol";
-          PAPERLESS_OCR_USER_ARGS = "{\"invalidate_digital_signatures\" = true}";
+          PAPERLESS_OCR_USER_ARGS = "{\"invalidate_digital_signatures\": true}";
           PAPERLESS_PORT = "8000";
           PAPERLESS_TASK_WORKERS = "2";
           PAPERLESS_TIKA_ENABLED = "1";
