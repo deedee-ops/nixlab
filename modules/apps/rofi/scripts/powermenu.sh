@@ -7,9 +7,13 @@
 #
 
 ROFI_CMD="${rofi_cmd:-rofi}"
+CONVERT_CMD="${convert_cmd:-convert}"
+SCROT_CMD="${scrot_cmd:-scrot}"
+SED_CMD="${sed_cmd:-sed}"
+UPTIME_CMD="${uptime_cmd:-uptime}"
 
 # CMDs
-uptime="$(uptime -p | sed -e 's/up //g')"
+uptime="$("${UPTIME_CMD}" | "${SED_CMD}" -E 's/.*up *(.*), *[0-9]+ *user.*/\1/')"
 
 # Options
 shutdown=''
@@ -23,11 +27,11 @@ no=''
 XDG_CONFIG_HOME="${XDG_CONFIG_HOME:=${HOME}/.config}"
 
 rm -rf /tmp/powermenu.jpg
-scrot -M 0 /tmp/powermenu.jpg
-convert -scale 10% -blur 0x2.5 -resize 1000% /tmp/powermenu.jpg /tmp/powermenu.jpg
+${SCROT_CMD} -M 0 /tmp/powermenu.jpg
+${CONVERT_CMD} -scale 10% -blur 0x2.5 -modulate 50 -resize 1000% /tmp/powermenu.jpg /tmp/powermenu.jpg
 
 # Rofi CMD
-rofi_cmd() {
+rofi_run() {
 	${ROFI_CMD} -dmenu \
     -m 1 \
 		-p "Goodbye ${USER}" \
@@ -51,7 +55,7 @@ confirm_exit() {
 
 # Pass variables to rofi dmenu
 run_rofi() {
-	echo -e "$lock\n$suspend\n$logout\n$reboot\n$shutdown" | rofi_cmd
+	echo -e "$lock\n$suspend\n$logout\n$reboot\n$shutdown" | rofi_run
 }
 
 # Execute Command

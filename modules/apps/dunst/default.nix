@@ -89,7 +89,7 @@ in
       "dunst/play-sound.sh" = {
         executable = true;
         text = ''
-          #!${lib.getExe' pkgs.coreutils-full "env"} ${lib.getExe pkgs.bash}
+          #!${lib.getExe' pkgs.coreutils "env"} ${lib.getExe pkgs.bash}
           if [ ! -f /tmp/.dunst-mute ]; then
             ${lib.getExe' pkgs.pipewire "pw-play"} ${config.xdg.configHome}/dunst/pop.mp3
           fi

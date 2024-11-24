@@ -56,7 +56,7 @@ in
         "awesome/autorun.sh" = {
           executable = true;
           text = ''
-            #!${lib.getExe' pkgs.coreutils-full "env"} ${lib.getExe pkgs.bash}
+            #!${lib.getExe' pkgs.coreutils "env"} ${lib.getExe pkgs.bash}
 
             run() {
               if ! ${lib.getExe' pkgs.procps "pgrep"} -f "/nix/store/.*/$(basename "$1")"; then

@@ -172,7 +172,11 @@ in
           source = lib.getExe (
             pkgs.writeShellScriptBin "rofi-powermenu.sh" (
               ''
+                convert_cmd="${lib.getExe' pkgs.imagemagick "convert"}"
                 rofi_cmd="${lib.getExe rofiPackage}"
+                scrot_cmd="${lib.getExe pkgs.scrot}"
+                sed_cmd="${lib.getExe pkgs.gnused}"
+                uptime_cmd="${lib.getExe' pkgs.coreutils "uptime"}"
               ''
               + builtins.readFile ./scripts/powermenu.sh
             )
