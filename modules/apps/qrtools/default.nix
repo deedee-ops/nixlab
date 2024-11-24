@@ -24,5 +24,7 @@ in
       qrrecv = "${lib.getExe pkgs.qrcp} -i ${osConfig.mySystem.networking.rootInterface} -p ${builtins.toString cfg.qrcpPort} receive";
       qr = "${lib.getExe pkgs.qrencode}";
     };
+
+    myHomeApps.openPorts = [ cfg.qrcpPort ];
   };
 }

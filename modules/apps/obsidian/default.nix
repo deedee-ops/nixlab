@@ -27,6 +27,9 @@ in
       ];
     };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.obsidian) ];
+    myHomeApps = {
+      awesome.autorun = [ (lib.getExe pkgs.obsidian) ];
+      allowUnfree = [ "obsidian" ];
+    };
   };
 }

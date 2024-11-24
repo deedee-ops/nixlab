@@ -44,18 +44,6 @@ rec {
       pushover.enable = true;
     };
 
-    # @todo - somehow move it to proper modules?
-    allowUnfree = [
-      "discord"
-      "obsidian"
-      "slack"
-
-      "libsciter" # for rustdesk
-    ];
-
-    # @todo - somehow move it to proper modules?
-    openPorts = [ 55555 ];
-
     disks = {
       enable = true;
       hostId = "bdd71660";

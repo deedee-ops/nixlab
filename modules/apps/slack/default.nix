@@ -25,6 +25,9 @@ in
       ];
     };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe slackPkg) ];
+    myHomeApps = {
+      awesome.autorun = [ (lib.getExe slackPkg) ];
+      allowUnfree = [ "slack" ];
+    };
   };
 }

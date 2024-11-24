@@ -22,6 +22,9 @@ in
       packages = [
         pkgs.rustdesk # for quicklaunch entry
       ];
+
     };
+
+    myHomeApps.allowUnfree = [ "libsciter" ];
   };
 }

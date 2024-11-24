@@ -24,6 +24,9 @@ in
       ];
     };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.discord) ];
+    myHomeApps = {
+      awesome.autorun = [ (lib.getExe pkgs.discord) ];
+      allowUnfree = [ "discord" ];
+    };
   };
 }

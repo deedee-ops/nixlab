@@ -8,6 +8,11 @@
 
 {
   options.myHomeApps = {
+    allowUnfree = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of allowed unfree packages.";
+      default = [ ];
+    };
     appendHome = lib.mkOption {
       type = lib.types.attrs;
       default = { };
@@ -17,6 +22,11 @@
       type = lib.types.listOf lib.types.package;
       default = [ ];
       description = "Exrtra packages to install.";
+    };
+    openPorts = lib.mkOption {
+      type = lib.types.listOf lib.types.port;
+      description = "List of additionally opened ports on system.";
+      default = [ ];
     };
     shellInitScriptFiles = lib.mkOption {
       type = lib.types.listOf lib.types.path;
