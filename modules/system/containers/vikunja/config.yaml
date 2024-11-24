@@ -1,0 +1,13 @@
+---
+# https://vikunja.io/docs/config-options#2-auth.openid-providers
+auth:
+  openid:
+    enabled: true
+    redirecturl: https://vikunja.rzegocki.dev/auth/openid/
+    providers:
+      authelia:
+        name: Authelia
+        scope: openid profile email
+        authurl: https://authelia.rzegocki.dev
+        clientid: vikunja
+        clientsecret: dummy

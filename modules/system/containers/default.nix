@@ -31,6 +31,7 @@ _: {
     ./syncthing
     ./tika
     ./vaultwarden
+    ./vikunja
     ./wakapi
     ./wg-easy
     ./whoogle

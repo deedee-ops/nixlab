@@ -272,6 +272,7 @@ rec {
     syncthing.enable = true;
     tika.enable = true;
     vaultwarden.enable = true;
+    vikunja.enable = false;
     wakapi.enable = true;
     wg-easy = {
       enable = true;
