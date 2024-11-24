@@ -52,10 +52,6 @@ in
       ];
     };
 
-    sops.age.sshKeyPaths = lib.optionals config.mySystem.impermanence.enable [
-      "${config.mySystem.impermanence.persistPath}/etc/ssh/ssh_host_ed25519_key"
-    ];
-
     programs.ssh.startAgent = true;
 
     # pass ssh-agent socket when using sudo

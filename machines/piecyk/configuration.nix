@@ -142,6 +142,7 @@ rec {
       ];
       rememberPasswordTime = 28800;
     };
+    mitmproxy.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;
     ssh = {

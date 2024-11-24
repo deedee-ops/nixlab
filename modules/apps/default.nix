@@ -12,6 +12,7 @@ _: {
     ./git
     ./gnupg
     ./kubernetes
+    ./mitmproxy
     ./neovim
     ./qrtools
     ./ssh

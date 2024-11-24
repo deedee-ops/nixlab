@@ -16,7 +16,7 @@ in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
-    age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+    age.sshKeyPaths = [ "/persist/etc/ssh/ssh_host_ed25519_key" ];
     secrets = {
       "credentials/services/admin" = {
         mode = "0440";
