@@ -63,10 +63,10 @@ in
             line-numbers-plus-style = "bold ${base0B-hex}";
             line-numbers-right-style = "${base04-hex}";
             line-numbers-zero-style = "${base04-hex}";
-            minus-emph-style = "bold syntax ${base08-hex}";
-            minus-style = "syntax ${base08-hex}";
-            plus-emph-style = "bold syntax ${base0B-hex}";
-            plus-style = "syntax ${base0B-hex}";
+            minus-emph-style = "bold syntax #53394c";
+            minus-style = "syntax #35293b";
+            plus-emph-style = "bold syntax #40504b";
+            plus-style = "syntax #2c333a";
             syntax-theme = "base16-stylix";
           };
         };
