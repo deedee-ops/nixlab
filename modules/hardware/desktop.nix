@@ -20,4 +20,11 @@ _: {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
   };
+
+  myHardware = {
+    openrgb = {
+      enable = true;
+      profile = ./openrgb/desktop.orp;
+    };
+  };
 }
