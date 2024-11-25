@@ -16,6 +16,9 @@ rec {
       "credentials/ssh/private_key" = {
         owner = mySystem.primaryUser;
       };
+      "home/apps/ssh/extraconfig" = {
+        owner = mySystem.primaryUser;
+      };
     };
   };
 
@@ -135,6 +138,9 @@ rec {
     speedcrunch.enable = true;
     ssh = {
       appendOptions = {
+        includes = [
+          config.sops.secrets."home/apps/ssh/extraconfig".path
+        ];
         matchBlocks = {
           # private
           deedee = {

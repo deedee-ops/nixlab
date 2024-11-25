@@ -6,7 +6,7 @@
 }:
 let
   motd = pkgs.writeShellScriptBin "motd" ''
-    #! /usr/bin/env bash
+    [ -n "$DISABLE_MOTD" ] && exit 0
     source /etc/os-release
     service_status=$(systemctl list-units --type=service | grep docker-)
     RED="\e[31m"

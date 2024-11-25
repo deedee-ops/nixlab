@@ -159,9 +159,10 @@ in
           executable = true;
           source = lib.getExe (
             pkgs.writeShellScriptBin "rofi-ssh.sh" ''
-              host=$(cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
+              host=$(cat "$HOME/.ssh/config" | grep Include | awk '{print $2}' | xargs cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | sort | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
 
               if [ -n "$host" ]; then
+                export DISABLE_MOTD=1
                 ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "${lib.getExe pkgs.openssh} $host"
               fi
             ''
