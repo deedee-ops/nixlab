@@ -27,6 +27,7 @@
     fonts.fontconfig.enable = true;
 
     xsession.enable = true;
+    xdg.mimeApps.enable = true;
 
     xresources = {
       path = "${config.xdg.configHome}/X11/xresources";

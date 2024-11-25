@@ -159,7 +159,8 @@ let
     // lib.optionalAttrs (cfg.startupPage != null) {
       "browser.startup.page" = 1;
       "browser.startup.homepage" = cfg.startupPage;
-    };
+    }
+    // cfg.extraConfig;
 in
 {
   options.myHomeApps.firefox = {
@@ -167,6 +168,7 @@ in
     extraConfig = lib.mkOption {
       type = lib.types.attrs;
       description = "Extra settings for about:config";
+      default = { };
     };
     startupPage = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
