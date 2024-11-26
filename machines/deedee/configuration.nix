@@ -284,6 +284,21 @@ rec {
       wireguardPort = 53201;
     };
     whoogle.enable = true;
+    zigbee2mqtt = {
+      enable = true;
+      serials = {
+        topfloor = {
+          port = "/dev/ttyUSB0";
+          disable_led = false;
+          baudrate = 115200;
+        };
+        # bottomfloor = {
+        #   port = "tcp://<ip>:6638";
+        #   baudrate = 115200;
+        #   adapter = "ezsp";
+        # };
+      };
+    };
   };
 
   myHomeApps = {

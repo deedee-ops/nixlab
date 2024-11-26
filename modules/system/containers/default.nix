@@ -35,5 +35,6 @@ _: {
     ./wakapi
     ./wg-easy
     ./whoogle
+    ./zigbee2mqtt
   ];
 }
