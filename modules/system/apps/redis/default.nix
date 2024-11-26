@@ -8,6 +8,7 @@ in
     passFileSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing master password.";
+      default = "system/apps/redis/password";
     };
   };
 

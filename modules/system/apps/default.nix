@@ -7,6 +7,7 @@ _: {
     ./docker
     ./incus
     ./letsencrypt
+    ./mosquitto
     ./nginx
     ./openconnect
     ./plymouth

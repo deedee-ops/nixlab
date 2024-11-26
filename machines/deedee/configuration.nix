@@ -182,6 +182,8 @@ rec {
       ];
     };
 
+    mosquitto.enable = true;
+
     nginx = {
       inherit (mySystem) rootDomain;
 
@@ -199,10 +201,7 @@ rec {
     };
 
     postgresql.enable = true;
-    redis = {
-      enable = true;
-      passFileSopsSecret = "system/apps/redis/password";
-    };
+    redis.enable = true;
     rustdesk = {
       enable = true;
       relayHost = "relay.${mySystem.rootDomain}";
