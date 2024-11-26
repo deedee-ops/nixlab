@@ -43,6 +43,10 @@ in
           "${cfg.musicPath}:/data:ro"
         ];
       };
+      opts = {
+        # online radios
+        allowPublic = true;
+      };
     };
 
     services = {
