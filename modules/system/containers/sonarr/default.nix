@@ -53,7 +53,7 @@ in
 
     virtualisation.oci-containers.containers.sonarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/sonarr-devel:4.0.11.2688@sha256:3d2f35e0c1b3c924e81926ae73b222e975a81753a8289416d5c4473a6c2a3890";
+        image = "ghcr.io/deedee-ops/sonarr-devel:4.0.11.2697@sha256:b253aeeae39261dee1addd2bcaff695eab127ac8602d33c7fa4664e1e2401213";
         environment = {
           SONARR__APP__INSTANCENAME = "Sonarr";
           SONARR__APP__THEME = "dark";
