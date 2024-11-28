@@ -60,7 +60,7 @@ in
     programs = {
       kubecolor = {
         enable = true;
-        overrideKubectl = true;
+        enableAlias = true;
       };
 
       krewfile = {
