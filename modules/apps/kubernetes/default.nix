@@ -18,7 +18,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = lib.mkIf (cfg.kubeconfigSopsSecret != null) { "${cfg.kubeconfigSopsSecret}" = { }; };
+    sops.secrets = lib.mkIf (cfg.kubeconfigSopsSecret != null) {
+      "${cfg.kubeconfigSopsSecret}" = {
+        mode = "0600";
+      };
+    };
 
     stylix.targets.k9s.enable = true;
     stylix.targets.kubecolor.enable = true;
@@ -38,10 +42,10 @@ in
         }
         // lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) {
           # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
-          init-kubeconfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            run ln -s "${
+          init-kubeconfig = lib.hm.dag.entryAfter [ "sopsNix" ] ''
+            run ln -sf "${
               config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
-            }" "${config.xdg.configHome}/kube/config" || true
+            }" "${config.xdg.configHome}/kube/config"
           '';
 
         };
