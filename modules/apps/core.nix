@@ -44,6 +44,8 @@
     nix.settings.use-xdg-base-directories = true;
 
     home = lib.attrsets.recursiveUpdate {
+      preferXdgDirectories = true;
+
       keyboard = {
         layout = "pl";
         options = [ "caps:escape" ];
