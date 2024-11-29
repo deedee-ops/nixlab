@@ -48,7 +48,7 @@ in
           line-numbers = true;
           features = "catppuccin-mocha";
           catppuccin-mocha = {
-            blame-palette = "${base00-hex} ${base01-hex} #${base00-hex} ${base02-hex} ${base03-hex}";
+            blame-palette = "${base00-hex} ${base01-hex} ${base00-hex} ${base02-hex} ${base03-hex}";
             commit-decoration-style = "box ul";
             dark = true;
             file-decoration-style = "${base05-hex}";
