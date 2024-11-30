@@ -255,7 +255,7 @@ rec {
     piped.enable = true;
     prowlarr.enable = true;
     qbittorrent = {
-      enable = false;
+      enable = true;
       downloadsPath = torrentsPath;
     };
     radarr = {

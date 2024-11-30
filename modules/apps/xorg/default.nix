@@ -39,6 +39,7 @@
     home = {
       packages = [
         pkgs.roboto
+        pkgs.xclip # pbcopy and pbpaste
       ];
 
       sessionVariables = {
