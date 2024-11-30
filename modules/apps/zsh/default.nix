@@ -11,7 +11,7 @@ let
       builtins.map (f: builtins.readFile f) config.myHomeApps.shellInitScriptFiles
     ))
     + "\n"
-    + (builtins.concatStringsSep "\n" config.myHomeApps.shellInitScriptContents);
+    + config.myHomeApps.shellInitScriptContents;
 
   myFunctions = pkgs.stdenvNoCC.mkDerivation rec {
     name = "zsh-functions-${version}";

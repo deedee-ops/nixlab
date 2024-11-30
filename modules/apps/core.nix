@@ -34,9 +34,9 @@
       default = [ ];
     };
     shellInitScriptContents = lib.mkOption {
-      type = lib.types.listOf lib.types.str;
+      type = lib.types.lines;
       description = "Extra script bodies invoked on shell initialization.";
-      default = [ ];
+      default = "";
     };
   };
 

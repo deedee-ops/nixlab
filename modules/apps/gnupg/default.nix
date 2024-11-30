@@ -61,9 +61,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    myHomeApps.shellInitScriptContents = builtins.map (key: ''
-      ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
-    '') cfg.privateKeys;
+    myHomeApps.shellInitScriptContents = builtins.concatStringsSep "\n" (
+      builtins.map (key: ''
+        ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
+      '') cfg.privateKeys
+    );
 
     home = {
       activation.gpg = lib.mkIf cfg.enableYubikey (

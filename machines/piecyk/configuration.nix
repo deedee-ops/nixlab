@@ -111,6 +111,18 @@ rec {
   };
 
   myHomeApps = {
+    shellInitScriptFiles = [
+      (lib.getExe (
+        pkgs.writeShellScriptBin "pdf.sh" (
+          ''
+            magick_cmd="${lib.getExe pkgs.imagemagick}"
+            gs_cmd="${lib.getExe pkgs.ghostscript_headless}"
+          ''
+          + builtins.readFile ./scripts/pdf.sh
+        )
+      ))
+    ];
+
     aichat.enable = true;
     git = {
       appendOptions = {
