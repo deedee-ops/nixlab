@@ -22,7 +22,7 @@ in
     home.shellAliases = {
       qrsend = "${lib.getExe pkgs.qrcp} -i ${osConfig.mySystem.networking.rootInterface} -p ${builtins.toString cfg.qrcpPort} send";
       qrrecv = "${lib.getExe pkgs.qrcp} -i ${osConfig.mySystem.networking.rootInterface} -p ${builtins.toString cfg.qrcpPort} receive";
-      qr = "${lib.getExe pkgs.qrencode}";
+      qr = "${lib.getExe pkgs.qrencode} -t ANSI256UTF8";
     };
 
     myHomeApps.openPorts = [ cfg.qrcpPort ];
