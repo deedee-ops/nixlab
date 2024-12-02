@@ -79,5 +79,16 @@ in
         };
       };
     };
+
+    system.activationScripts = lib.mkIf (builtins.length config.sops.age.sshKeyPaths > 0) {
+      fix-sops-for-home-manager = {
+        deps = [ "users" ];
+        text = builtins.concatStringsSep "\n" (
+          builtins.map (
+            keyfile: "chown ${config.mySystem.primaryUser} ${keyfile}"
+          ) config.sops.age.sshKeyPaths
+        );
+      };
+    };
   };
 }
