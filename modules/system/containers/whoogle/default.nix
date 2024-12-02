@@ -31,6 +31,7 @@ in
           WHOOGLE_CONFIG_URL = "https://whoogle.${config.mySystem.rootDomain}";
           WHOOGLE_TOR_SERVICE = "0";
           WHOOGLE_CONFIG_TOR = "0";
+          WHOOGLE_SHOW_FAVICONS = "0";
         };
         extraOptions = [
           "--mount"
