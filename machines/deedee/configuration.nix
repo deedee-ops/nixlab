@@ -246,7 +246,6 @@ rec {
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
-    memos.enable = true;
     miniflux.enable = true;
     navidrome = {
       enable = true;
