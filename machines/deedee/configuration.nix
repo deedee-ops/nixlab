@@ -218,6 +218,7 @@ rec {
       enable = true;
     };
     coredns.enable = true;
+    echo-server.enable = false;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
     flaresolverr.enable = true;

@@ -4,6 +4,7 @@ _: {
     ./authelia
     ./bazarr
     ./coredns
+    ./echo-server
     ./firefly-iii
     ./firefoxsync
     ./flaresolverr
