@@ -5,14 +5,6 @@
   svc,
   ...
 }:
-let
-  nerdfonts = pkgs.nerdfonts.override {
-    fonts = [
-      "FiraMono"
-      "JetBrainsMono"
-    ];
-  };
-in
 {
   options.mySystem = {
     allowUnfree = lib.mkOption {
@@ -171,7 +163,7 @@ in
         };
 
         monospace = {
-          package = nerdfonts;
+          package = pkgs.nerd-fonts.jetbrains-mono;
           name = "JetBrainsMono Nerd Font Mono";
         };
 
