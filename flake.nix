@@ -40,8 +40,7 @@ rec {
       inputs.nixpkgs-stable.follows = "nixpkgs-stable";
     };
     home-manager = {
-      # url = "github:nix-community/home-manager";
-      url = "github:ajgon/home-manager/feat/kubecolor";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence = {

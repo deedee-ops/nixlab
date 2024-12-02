@@ -391,16 +391,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1733081709,
-        "narHash": "sha256-OV33TZY6M0FSjhjJbF55qCq4jVVG2ROAiTV5f5vC3dU=",
-        "owner": "ajgon",
+        "lastModified": 1733085484,
+        "narHash": "sha256-dVmNuUajnU18oHzBQWZm1BQtANCHaqNuxTHZQ+GN0r8=",
+        "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "863273505016a1e88e4ffaec48d1b767104c5652",
+        "rev": "c1fee8d4a60b89cae12b288ba9dbc608ff298163",
         "type": "github"
       },
       "original": {
-        "owner": "ajgon",
-        "ref": "feat/kubecolor",
+        "owner": "nix-community",
         "repo": "home-manager",
         "type": "github"
       }
