@@ -84,14 +84,40 @@ rec {
       enable = true;
       firewallEnable = true;
       hostname = "meemee";
-      mainInterface = {
-        name = "enp1s0";
-        bridge = true;
-        bridgeMAC = "02:00:0a:64:14:02";
-        DNS = [
-          "9.9.9.9"
-          "149.112.112.10"
-        ];
+      customNetworking = {
+        enable = true;
+        networks."10-internal" = {
+          matchConfig.MACAddress = "70:b5:e8:7c:e3:f6";
+          networkConfig = {
+            DNS = [
+              "9.9.9.9"
+              "149.112.112.10"
+            ];
+
+            DHCP = "ipv4";
+            LinkLocalAddressing = "ipv4"; # disable ipv6
+          };
+          dhcpV4Config = {
+            UseDNS = false;
+          };
+          linkConfig.RequiredForOnline = "routable";
+        };
+        networks."20-usb" = {
+          matchConfig.MACAddress = "00:e0:4c:68:04:99";
+          networkConfig = {
+            DNS = [
+              "9.9.9.9"
+              "149.112.112.10"
+            ];
+
+            DHCP = "ipv4";
+            LinkLocalAddressing = "ipv4"; # disable ipv6
+          };
+          dhcpV4Config = {
+            UseDNS = false;
+          };
+          linkConfig.RequiredForOnline = "no";
+        };
       };
     };
 
