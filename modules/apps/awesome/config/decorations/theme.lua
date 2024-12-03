@@ -8,7 +8,10 @@ beautiful.init(themes_path .. "default/theme.lua")
 -- https://elv13.github.io/documentation/06-appearance.md.html
 --beautiful.font = "xft:JetBrainsMono Nerd Font Mono:style=Regular:size=10"
 beautiful.font = "JetBrainsMono Nerd Font Mono Regular 10"
-beautiful.useless_gap = dpi(6)
+
+if not RC.vars.singleScreen then
+  beautiful.useless_gap = dpi(5)
+end
 beautiful.border_width = dpi(1)
 
 beautiful.bg_normal = "#1e1e2e"

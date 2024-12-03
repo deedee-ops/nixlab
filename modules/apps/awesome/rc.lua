@@ -176,26 +176,14 @@ awful.rules.rules = {
     properties = { titlebars_enabled = true },
   },
 
-  { rule = { class = "discord" }, properties = { screen = 2, tag = " 0 " } },
-  { rule = { class = "WhatSie" }, properties = { screen = 2, tag = " 9 " } },
+  { rule = { class = "discord" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 0 " } },
+  { rule = { class = "WhatSie" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 9 " } },
+  { rule = { class = "TelegramDesktop" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 8 " } },
+  { rule = { class = "teams-pwa" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 7 " } },
 
-  { rule = { class = "Slack" }, properties = { screen = 2, tag = " 8 " } },
+  { rule = { class = "obsidian" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 6 " } },
+  { rule = { class = "thunderbird" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 5 " } },
 
-  { rule = { class = "TelegramDesktop" }, properties = { screen = 2, tag = " 7 " } },
-  { rule = { class = "teams-pwa" }, properties = { screen = 2, tag = " 6 " } },
-
-  { rule = { class = "thunderbird" }, properties = { screen = 2, tag = " 2 " } },
-  { rule = { class = "obsidian" }, properties = { screen = 2, tag = " 3 " } },
-
-  -- class will cover also quick add, which will get stuck to the tag 3
-  {
-    rule = { name = "Everdo" },
-    except = { name = "Everdo Quick Capture" },
-    properties = { screen = 2, tag = " 1 " },
-  },
-
-  -- Set Firefox to always map on the tag named "2" on screen 1.
-  -- { rule = { class = "Firefox" },
-  --   properties = { screen = 1, tag = "2" } },
+  { rule = { class = "Slack" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 4 " } },
 }
 -- }}}

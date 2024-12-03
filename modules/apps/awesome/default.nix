@@ -26,6 +26,11 @@ in
       description = "Mod key for awesome.";
       default = "Mod4";
     };
+    singleScreen = lib.mkOption {
+      type = lib.types.bool;
+      description = "Configure awesome for single screen instead of multi-monitor mode.";
+      default = false;
+    };
     useDunst = lib.mkOption {
       type = lib.types.bool;
       description = "Use dunst for notifications.";
@@ -81,6 +86,7 @@ in
             	modkey = "${cfg.modKey}",
             	terminal = "${lib.getExe config.myHomeApps.xorg.terminal}",
               useDunst = ${if cfg.useDunst then "true" else "false"},
+              singleScreen = ${if cfg.singleScreen then "true" else "false"},
             }
 
             return _M
