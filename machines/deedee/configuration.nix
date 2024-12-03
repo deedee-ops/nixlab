@@ -7,6 +7,7 @@ let
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
 
+  ownIP = "10.100.20.1";
   gwIP = "192.168.100.1";
   nasIP = "10.100.10.1";
   omadaIP = "10.100.1.1";
@@ -280,6 +281,16 @@ rec {
     vaultwarden.enable = true;
     vikunja.enable = false;
     wakapi.enable = true;
+    wg-easy = {
+      enable = true;
+      allowedCIDRs = [
+        "10.100.0.0/16"
+        "10.250.1.0/24"
+      ];
+      advertisedDNSServer = ownIP;
+      externalHost = "homelab.${mySystem.rootDomain}";
+      wireguardPort = 53201;
+    };
     whoogle.enable = true;
   };
 

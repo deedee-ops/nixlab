@@ -9,7 +9,7 @@
   "deedee.rzegocki.dev": "10.100.20.1",
   "home.rzegocki.dev": "10.100.20.2",
   "meemee.rzegocki.dev": "10.100.20.2",
-  "wg.rzegocki.dev": "10.100.20.2",
+  "wg.rzegocki.dev": "10.100.20.1",
   "zigbee2mqtt-bottomfloor.rzegocki.dev": "10.100.20.2",
   "zigbee2mqtt-topfloor.rzegocki.dev": "10.100.20.2"
 }
