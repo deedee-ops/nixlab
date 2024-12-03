@@ -67,6 +67,11 @@ rec {
       };
     };
 
+    # disable usb autosuspend for USB ethernet dongle
+    extraUdevRules = ''
+      ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8153", TEST=="power/control", ATTR{power/control}="on"
+    '';
+
     healthcheck.enable = true;
 
     impermanence = {
