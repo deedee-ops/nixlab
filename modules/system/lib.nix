@@ -16,7 +16,7 @@
       {
         host,
         proxyPass,
-        useAuthelia ? true,
+        useAuthelia ? config.mySystemApps.authelia.enable,
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
         extraConfig ? "",

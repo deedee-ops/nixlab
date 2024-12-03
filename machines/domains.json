@@ -1,0 +1,13 @@
+{
+  "deedee.home.arpa": "10.100.20.1",
+  "meemee.home.arpa": "10.100.20.2",
+  "nas.home.arpa": "10.100.10.1",
+  "monkey.home.arpa": "10.200.10.10",
+
+  "*.rzegocki.dev": "10.100.20.1",
+  "adguard-meemee.rzegocki.dev": "10.100.20.2",
+  "home.rzegocki.dev": "10.100.20.2",
+  "wg.rzegocki.dev": "10.100.20.2",
+  "zigbee2mqtt-bottomfloor.rzegocki.dev": "10.100.20.2",
+  "zigbee2mqtt-topfloor.rzegocki.dev": "10.100.20.2"
+}

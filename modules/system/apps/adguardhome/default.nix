@@ -27,8 +27,10 @@ in
       type = lib.types.str;
       description = "Sops secret name containing admin password.";
     };
-    addToHomepage = lib.mkEnableOption "adguard in homepage" // {
-      default = true;
+    subdomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Subdomain for ${config.mySystem.rootDomain}.";
+      default = "adguard";
     };
   };
 
@@ -82,17 +84,10 @@ in
           };
 
           filtering = {
-            rewrites =
-              [
-                {
-                  domain = "*.${config.mySystem.rootDomain}";
-                  answer = "BINDHOST";
-                }
-              ]
-              ++ (builtins.map (domain: {
-                inherit domain;
-                answer = builtins.getAttr domain cfg.customMappings;
-              }) (builtins.attrNames cfg.customMappings));
+            rewrites = builtins.map (domain: {
+              inherit domain;
+              answer = builtins.getAttr domain cfg.customMappings;
+            }) (builtins.attrNames cfg.customMappings);
           };
 
           filters =
@@ -225,29 +220,35 @@ in
       };
 
       systemd.services.adguardhome = {
+        # if you have issues with adguard not accepting the password,
+        # ensure that cfg.adminPasswordSopsSecret file on the remote machine is readable by services group!
         preStart = lib.mkAfter ''
           HASH="$(cat ${
             config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
           } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
           MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev ${config.mySystem.networking.rootInterface} | grep -Po 'inet \K[\d.]+')"
+          cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug-pre.yaml"
+          echo "$HASH" > "$STATE_DIRECTORY/hash"
           ${lib.getExe pkgs.gnused} -i"" "s,ADGUARDPASS,'$HASH',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
           ${lib.getExe pkgs.gnused} -i"" "s,BINDHOST,'$MAINIP',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
+
+          cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug.yaml"
         '';
         serviceConfig.User = cfg.user;
         serviceConfig.Group = "services";
       };
 
       services.nginx.virtualHosts.adguard = svc.mkNginxVHost {
-        host = "adguard";
+        host = cfg.subdomain;
         proxyPass = "http://${webUIIP}:${builtins.toString config.services.adguardhome.port}";
-        useAuthelia = config.mySystemApps.authelia.enable;
+        useAuthelia = false;
       };
 
       networking.firewall.allowedUDPPorts = [ 53 ];
       networking.firewall.allowedTCPPorts = [ 3000 ];
 
       mySystemApps.homepage = {
-        services.Apps.AdGuardHome = svc.mkHomepage "adguard" // {
+        services.Apps.AdGuardHome = svc.mkHomepage cfg.subdomain // {
           icon = "adguard-home.svg";
           container = null;
           description = "Adguard filtering DNS";

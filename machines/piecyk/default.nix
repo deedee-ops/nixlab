@@ -1,5 +1,5 @@
 { lib, ... }:
-rec {
+{
   flakePart = {
     nixosConfigurations.piecyk = lib.mkNixosConfig {
       system = "x86_64-linux";

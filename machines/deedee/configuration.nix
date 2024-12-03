@@ -8,10 +8,10 @@ let
   videoPath = "${mediaPath}/video";
 
   gwIP = "192.168.100.1";
-  monkeyIP = "10.200.10.10";
   nasIP = "10.100.10.1";
   omadaIP = "10.100.1.1";
-  ownIP = "10.100.20.1";
+
+  adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
 in
 rec {
   sops = {
@@ -142,11 +142,8 @@ rec {
     adguardhome = {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
-      customMappings = {
-        "deedee.home.arpa" = ownIP;
-        "monkey.home.arpa" = monkeyIP;
-        "nas.home.arpa" = nasIP;
-      };
+      customMappings = adguardCustomMappings;
+      subdomain = "adguard-deedee";
     };
 
     ddclient.enable = true;
@@ -181,8 +178,6 @@ rec {
         "*.${mySystem.rootDomain}"
       ];
     };
-
-    mosquitto.enable = true;
 
     nginx = {
       inherit (mySystem) rootDomain;
@@ -273,32 +268,7 @@ rec {
     vaultwarden.enable = true;
     vikunja.enable = false;
     wakapi.enable = true;
-    wg-easy = {
-      enable = true;
-      allowedCIDRs = [
-        "10.100.0.0/16"
-        "10.250.1.0/24"
-      ];
-      advertisedDNSServer = ownIP;
-      externalHost = "homelab.${mySystem.rootDomain}";
-      wireguardPort = 53201;
-    };
     whoogle.enable = true;
-    zigbee2mqtt = {
-      enable = true;
-      serials = {
-        topfloor = {
-          port = "/dev/ttyUSB0";
-          disable_led = false;
-          baudrate = 115200;
-        };
-        # bottomfloor = {
-        #   port = "tcp://<ip>:6638";
-        #   baudrate = 115200;
-        #   adapter = "ezsp";
-        # };
-      };
-    };
   };
 
   myHomeApps = {

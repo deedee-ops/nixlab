@@ -39,6 +39,7 @@ in
         }
       );
       description = "Map of users and their corresponding databases including password file.";
+      default = [ ];
       example = [
         {
           username = "user";
