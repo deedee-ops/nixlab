@@ -23,6 +23,8 @@ in
       type = lib.types.attrs;
       description = "Base settings for homepage";
       default = {
+        inherit (cfg) title;
+
         language = "en";
         theme = "dark";
         color = "zinc";
@@ -32,17 +34,27 @@ in
         hideVersion = true;
         disableCollapse = true;
         useEqualHeights = true;
-        base = "https://www.${config.mySystem.rootDomain}";
-        layout = {
-          Apps = {
-            style = "row";
-            columns = 4;
-          };
-          Media = {
-            style = "row";
-            columns = 5;
-          };
-        };
+        base = "https://${cfg.subdomain}.${config.mySystem.rootDomain}";
+        layout = [
+          {
+            Hosts = {
+              style = "row";
+              columns = 4;
+            };
+          }
+          {
+            Apps = {
+              style = "row";
+              columns = 4;
+            };
+          }
+          {
+            Media = {
+              style = "row";
+              columns = 5;
+            };
+          }
+        ];
       };
     };
     services = lib.mkOption {
@@ -57,6 +69,16 @@ in
         };
       };
     };
+    title = lib.mkOption {
+      type = lib.types.str;
+      description = "Title of the homepage.";
+      default = "homelab";
+    };
+    subdomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Subdomain for ${config.mySystem.rootDomain}.";
+      default = "www";
+    };
     secrets = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       description = "Key-value pair of secret alias and file containing the value. These will be replaced in services.yaml file.";
@@ -64,11 +86,6 @@ in
         { MY_SECRET_VAR = config.sops.secrets."MY_SECRET_VAR".path }
       '';
       default = { };
-    };
-    greeting = lib.mkOption {
-      type = lib.types.str;
-      description = "Title displayed in upper left corner.";
-      default = "homelab";
     };
     disks = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
@@ -109,7 +126,7 @@ in
 
     services = {
       nginx.virtualHosts.homepage = svc.mkNginxVHost {
-        host = "www";
+        host = cfg.subdomain;
         proxyPass = "http://homepage.docker:3000";
         customCSP = ''
           default-src 'self' 'unsafe-inline' data: blob: wss:;
@@ -126,7 +143,7 @@ in
           mkdir -p /run/homepage
           cp ${services} /run/homepage/services.yaml
           cp ${widgets} /run/homepage/widgets.yaml
-          sed -i"" 's,@@GREETING@@,${cfg.greeting},g' /run/homepage/widgets.yaml
+          sed -i"" 's,@@GREETING@@,${cfg.title},g' /run/homepage/widgets.yaml
         ''
         + (
           if config.mySystemApps.whoogle.enable then

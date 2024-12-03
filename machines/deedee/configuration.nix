@@ -192,6 +192,7 @@ rec {
       };
       extraRedirects = {
         gw = "http://${gwIP}";
+        www = "https://deedee.${mySystem.rootDomain}";
       };
     };
 
@@ -224,9 +225,20 @@ rec {
     };
     homepage = {
       enable = true;
-      greeting = "ajgon.casa";
+      title = "deedee";
       disks = {
         DATA = "/";
+      };
+      subdomain = "deedee";
+      services.Hosts = {
+        deedee = {
+          icon = "netboot.svg";
+          href = "https://deedee.${mySystem.rootDomain}";
+        };
+        meemee = {
+          icon = "netboot.svg";
+          href = "https://meemee.${mySystem.rootDomain}";
+        };
       };
     };
     immich = {

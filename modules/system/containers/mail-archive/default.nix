@@ -31,7 +31,7 @@ in
     };
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for mail-archive are disabled!") ];
 
     services = {

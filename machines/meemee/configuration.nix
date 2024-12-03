@@ -137,6 +137,24 @@ rec {
 
     # containers
     coredns.enable = true;
+    homepage = {
+      enable = true;
+      title = "meemee";
+      disks = {
+        DATA = "/";
+      };
+      subdomain = "meemee";
+      services.Hosts = {
+        deedee = {
+          icon = "netboot.svg";
+          href = "https://deedee.${mySystem.rootDomain}";
+        };
+        meemee = {
+          icon = "netboot.svg";
+          href = "https://meemee.${mySystem.rootDomain}";
+        };
+      };
+    };
     maddy.enable = true;
     wg-easy = {
       enable = true;
