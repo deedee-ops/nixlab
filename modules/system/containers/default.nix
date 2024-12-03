@@ -11,6 +11,7 @@ _: {
     ./forgejo
     ./gluetun
     ./gose
+    ./home-assistant
     ./homepage
     ./immich
     ./jellyfin

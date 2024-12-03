@@ -132,11 +132,9 @@ rec {
       enable = true;
     };
 
-    postgresql.enable = true;
-    redis.enable = true;
-
     # containers
     coredns.enable = true;
+    home-assistant.enable = true;
     homepage = {
       enable = true;
       title = "meemee";

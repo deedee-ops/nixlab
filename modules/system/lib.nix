@@ -37,11 +37,18 @@
             proxy_set_header X-Forwarded-For $remote_addr;
             proxy_set_header X-Real-IP $remote_addr;
           ''
-          + (lib.optionalString (customCSP != null) ''
-            more_set_headers "Content-Security-Policy: ${
-              lib.trim (builtins.replaceStrings [ "\n" ] [ " " ] customCSP)
-            }";
-          '')
+          + (lib.optionalString (customCSP != null) (
+            if customCSP == "disable" then
+              ''
+                more_clear_headers "Content-Security-Policy";
+              ''
+            else
+              ''
+                more_set_headers "Content-Security-Policy: ${
+                  lib.trim (builtins.replaceStrings [ "\n" ] [ " " ] customCSP)
+                }";
+              ''
+          ))
           + extraConfig;
       in
       {
