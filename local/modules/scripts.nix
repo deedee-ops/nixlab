@@ -18,6 +18,9 @@ _: {
         build-base-vm = pkgs.writeScriptBin "build-base-vm" (
           builtins.readFile ../scripts/bin/build-base-vm.sh
         );
+        disko-install = pkgs.writeScriptBin "disko-install" (
+          builtins.readFile ../scripts/bin/disko-install.sh
+        );
       };
 
       apps = {
@@ -28,6 +31,10 @@ _: {
         build-base-vm = {
           type = "app";
           program = "${packages.build-base-vm}/bin/build-base-vm";
+        };
+        disko-install = {
+          type = "app";
+          program = "${packages.disko-install}/bin/disko-install";
         };
       };
     };

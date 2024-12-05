@@ -32,3 +32,9 @@ nix run .#bootstrap <machine name> [machine IP]
 ```bash
 deploy .#<machine name>
 ```
+
+## Install on a machine locally
+
+```bash
+nix run github:deedee-ops/nixlab#disko-install <machine name> <disk name> <disk device>
+```
