@@ -6,6 +6,7 @@ in
   options.mySystem.networking = {
     enable = lib.mkEnableOption "system networking";
     firewallEnable = lib.mkEnableOption "firewall";
+    wifiSupport = lib.mkEnableOption "WiFi support";
     hostname = lib.mkOption {
       type = lib.types.str;
       description = "Machine hostname.";
@@ -86,6 +87,11 @@ in
       useDHCP = false;
       useHostResolvConf = false;
       interfaces."${cfg.mainInterface.name}".wakeOnLan.enable = true;
+
+      wireless = lib.mkIf cfg.wifiSupport {
+        enable = true;
+        userControlled.enable = true;
+      };
     };
 
     services = {

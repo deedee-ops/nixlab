@@ -17,6 +17,10 @@ creation_rules:
       - age:
           - *ajgon
           - *deedee
+  - path_regex: liadtop/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
   - path_regex: meemee/.*\.sops\.yaml$
     key_groups:
       - age:
