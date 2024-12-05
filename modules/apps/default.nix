@@ -40,6 +40,7 @@ _: {
     ./speedcrunch
     ./syncthing
     ./teams
+    ./telegram
     ./thunderbird
     ./whatsie
     ./yazi

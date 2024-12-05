@@ -200,9 +200,6 @@ rec {
     awesome = {
       enable = true;
       singleScreen = true;
-      autorun = [
-        (lib.getExe pkgs.telegram-desktop)
-      ];
     };
     caffeine.enable = true;
     discord.enable = true;
@@ -232,6 +229,7 @@ rec {
     };
     syncthing.enable = true;
     teams.enable = true;
+    telegram.enable = true;
     thunderbird.enable = true;
     wakatime = {
       enable = true;

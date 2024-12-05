@@ -52,7 +52,9 @@ in
               ((builtins.hasAttr "awesome" config.myHomeApps) && (builtins.hasAttr "awesome" config.homeApps))
               {
                 awesome = {
-                  autorun = config.myHomeApps.awesome.autorun ++ config.homeApps.awesome.autorun;
+                  autorun =
+                    (lib.optionals (builtins.hasAttr "autorun" config.myHomeApps.awesome) config.myHomeApps.awesome.autorun)
+                    ++ config.homeApps.awesome.autorun;
                 };
               }
           )
