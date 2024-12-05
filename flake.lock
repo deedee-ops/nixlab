@@ -668,16 +668,16 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1732837521,
-        "narHash": "sha256-jNRNr49UiuIwaarqijgdTR2qLPifxsVhlJrKzQ8XUIE=",
-        "owner": "NixOS",
+        "lastModified": 1733510283,
+        "narHash": "sha256-hoKHp6dV3+kpBwgwIXy4nZQCTBrkOIEAXtdOT97Hllo=",
+        "owner": "ajgon",
         "repo": "nixpkgs",
-        "rev": "970e93b9f82e2a0f3675757eb0bfc73297cc6370",
+        "rev": "15f0b7de4de529609414fe03d0e65bfb5d76af40",
         "type": "github"
       },
       "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
+        "owner": "ajgon",
+        "ref": "app/libinput-three-finger-drag",
         "repo": "nixpkgs",
         "type": "github"
       }

@@ -28,8 +28,6 @@ in
         LC_ALL = osConfig.i18n.defaultLocale;
       };
 
-      font.size = 12;
-
       keybindings = {
         "ctrl+equal" = "change_font_size all +1.0";
         "ctrl+plus" = "change_font_size all +1.0";

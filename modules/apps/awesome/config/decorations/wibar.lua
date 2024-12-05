@@ -31,6 +31,17 @@ local build_local_widget = function(widget, color)
   }
 end
 
+-- battery status
+local widget_battery = wibox.widget({
+  align = "center",
+  valign = "center",
+  widget = wibox.widget.textbox,
+})
+
+local _, battery_signal = awful.widget.watch(xdg_config_home .. "/awesome/scripts/battery.sh", 30, function(_, stdout)
+  widget_battery.text = stdout
+end)
+
 -- volume control
 local widget_volume = wibox.widget({
   align = "center",
@@ -41,6 +52,8 @@ local widget_volume = wibox.widget({
 local _, volume_signal = awful.widget.watch(xdg_config_home .. "/awesome/scripts/volume.sh", 1, function(_, stdout)
   widget_volume.text = stdout
 end)
+
+local mybattery = build_local_widget(widget_battery, "#a6e3a2")
 
 widget_volume:buttons(gears.table.join(
   awful.button({}, 1, function()
@@ -114,6 +127,9 @@ awful.screen.connect_for_each_screen(function(s)
 
   if RC.vars.useDunst then
     s.mytextnotifications = mynotifications
+  end
+  if RC.vars.showBattery then
+    s.mytextbattery = mybattery
   end
   s.mytextvolume = myvolume
   s.mytextclock = mytextclock

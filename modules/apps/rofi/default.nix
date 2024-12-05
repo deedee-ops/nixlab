@@ -42,8 +42,8 @@ in
           "${
             lib.getExe (
               pkgs.pinentry-rofi.overrideAttrs {
-                # guile 3.x breaks pinentry rofi for some reason...
-                buildInputs = [ pkgs.guile_2_2 ];
+                # guile 3.x sometimes works, sometimes breaks pinentry rofi for some reason...
+                # buildInputs = [ pkgs.guile_2_2 ];
               }
             )
           }" "$@" -- -theme ${config.xdg.configHome}/rofi/pinentry/config.rasi -normal-window

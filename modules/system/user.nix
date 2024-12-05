@@ -14,7 +14,9 @@ in
       isNormalUser = true;
       description = "${primaryUser}";
       extraGroups = [
+        "input"
         "networkmanager"
+        "video"
         "wheel"
       ];
       shell = pkgs.zsh;

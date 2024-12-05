@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.mySystem.networking;
 in
@@ -88,10 +93,7 @@ in
       useHostResolvConf = false;
       interfaces."${cfg.mainInterface.name}".wakeOnLan.enable = true;
 
-      wireless = lib.mkIf cfg.wifiSupport {
-        enable = true;
-        userControlled.enable = true;
-      };
+      networkmanager.enable = cfg.wifiSupport;
     };
 
     services = {
@@ -104,47 +106,64 @@ in
     mySystem.networking.rootInterface =
       if cfg.mainInterface.bridge then "br0" else cfg.mainInterface.name;
 
-    systemd.network =
-      if cfg.customNetworking == null then
-        if cfg.mainInterface.bridge then
-          {
-            enable = true;
-            links = {
-              "0000-bridge-inherit-mac" =
-                {
-                  matchConfig.Type = "bridge";
-                }
-                // (
-                  if cfg.mainInterface.bridgeMAC == null then
-                    { linkConfig.MACAddressPolicy = "none"; }
-                  else
-                    { linkConfig.MACAddress = cfg.mainInterface.bridgeMAC; }
-                );
-            };
-            netdevs = {
-              "0001-uplink" = {
-                netdevConfig =
+    systemd = lib.mkIf (!cfg.wifiSupport) {
+      network =
+        if cfg.customNetworking == null then
+          if cfg.mainInterface.bridge then
+            {
+              enable = true;
+              links = {
+                "0000-bridge-inherit-mac" =
                   {
-                    Kind = "bridge";
-                    Name = "br0";
+                    matchConfig.Type = "bridge";
                   }
-                  // lib.optionalAttrs (cfg.mainInterface.bridgeMAC == null) {
-                    MACAddress = "none";
+                  // (
+                    if cfg.mainInterface.bridgeMAC == null then
+                      { linkConfig.MACAddressPolicy = "none"; }
+                    else
+                      { linkConfig.MACAddress = cfg.mainInterface.bridgeMAC; }
+                  );
+              };
+              netdevs = {
+                "0001-uplink" = {
+                  netdevConfig =
+                    {
+                      Kind = "bridge";
+                      Name = "br0";
+                    }
+                    // lib.optionalAttrs (cfg.mainInterface.bridgeMAC == null) {
+                      MACAddress = "none";
+                    };
+                  bridgeConfig = {
+                    # VLANFiltering = true;
+                    STP = false;
                   };
-                bridgeConfig = {
-                  # VLANFiltering = true;
-                  STP = false;
                 };
               };
-            };
 
-            networks = {
-              "1002-add-main-to-br0" = {
-                matchConfig.Name = "${cfg.mainInterface.name}";
-                bridge = [ "br0" ];
+              networks = {
+                "1002-add-main-to-br0" = {
+                  matchConfig.Name = "${cfg.mainInterface.name}";
+                  bridge = [ "br0" ];
+                };
+                "1003-br0-up" = {
+                  matchConfig.Name = "br0";
+                  networkConfig = {
+                    inherit (cfg.mainInterface) DNS;
+
+                    DHCP = "ipv4";
+                    LinkLocalAddressing = "ipv4"; # disable ipv6
+                  };
+                  dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                  linkConfig.RequiredForOnline = "routable";
+                };
               };
-              "1003-br0-up" = {
-                matchConfig.Name = "br0";
+            }
+          else
+            {
+              enable = true;
+              networks."50-${cfg.mainInterface.name}" = {
+                matchConfig.Name = cfg.mainInterface.name;
                 networkConfig = {
                   inherit (cfg.mainInterface) DNS;
 
@@ -154,24 +173,15 @@ in
                 dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
                 linkConfig.RequiredForOnline = "routable";
               };
-            };
-          }
+            }
         else
-          {
-            enable = true;
-            networks."50-${cfg.mainInterface.name}" = {
-              matchConfig.Name = cfg.mainInterface.name;
-              networkConfig = {
-                inherit (cfg.mainInterface) DNS;
+          lib.recursiveUpdate cfg.customNetworking { enable = true; };
+    };
 
-                DHCP = "ipv4";
-                LinkLocalAddressing = "ipv4"; # disable ipv6
-              };
-              dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
-              linkConfig.RequiredForOnline = "routable";
-            };
-          }
-      else
-        lib.recursiveUpdate cfg.customNetworking { enable = true; };
+    environment.persistence."${config.mySystem.impermanence.persistPath}" = lib.mkIf (
+      config.mySystem.impermanence.enable && cfg.wifiSupport
+    ) { directories = [ "/etc/NetworkManager" ]; };
+
+    homeApps.awesome.autorun = lib.optionals cfg.wifiSupport [ (lib.getExe pkgs.networkmanagerapplet) ];
   };
 }

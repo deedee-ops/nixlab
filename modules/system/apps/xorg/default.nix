@@ -49,6 +49,11 @@ in
         };
     };
 
+    # allow members of video group to adjust backlights
+    services.udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="backlight", RUN+="${lib.getExe' pkgs.coreutils-full "chgrp"} video $sys$devpath/brightness", RUN+="${lib.getExe' pkgs.coreutils-full "chmod"} g+w $sys$devpath/brightness"
+    '';
+
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ "/var/lib/sddm" ]; };

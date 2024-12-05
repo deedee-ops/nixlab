@@ -16,11 +16,6 @@ let
         install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/owl-for-exchange/latest.xpi";
         installation_mode = "force_installed";
       };
-      "{a62ef8ec-5fdc-40c2-873c-223b8a6925cc}" = {
-        # Provider for google calendar
-        install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/provider-for-google-calendar/latest.xpi";
-        installation_mode = "force_installed";
-      };
       "tbkeys@addons.thunderbird.net" = {
         # tbkeys
         install_url = "https://github.com/wshanks/tbkeys/releases/latest/download/tbkeys.xpi";

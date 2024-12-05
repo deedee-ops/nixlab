@@ -25,9 +25,9 @@ configuration {
     element-padding:             3.056em 3.333em;
     element-border-radius:       100%;
 
-    prompt-font:                 "JetBrains Mono Nerd Font Bold Italic 64";
+    prompt-font:                 "JetBrains Mono Nerd Font Bold Italic 32";
     textbox-font:                "JetBrains Mono Nerd Font 16";
-    element-text-font:           "feather 64";
+    element-text-font:           "feather 32";
 
     background-window:           black/5%;
     background-normal:           white/5%;

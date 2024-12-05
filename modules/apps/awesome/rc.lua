@@ -100,6 +100,7 @@ awful.screen.connect_for_each_screen(function(s)
       s.mytextupdates,
       s.mytextvolume,
       s.mytextnotifications,
+      s.mytextbattery,
       wibox.widget({ markup = "|", widget = wibox.widget.textbox }),
       wibox.widget.systray(),
       wibox.widget({ markup = "| ", widget = wibox.widget.textbox }),

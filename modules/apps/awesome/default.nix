@@ -26,6 +26,11 @@ in
       description = "Mod key for awesome.";
       default = "Mod4";
     };
+    showBattery = lib.mkOption {
+      type = lib.types.bool;
+      description = "Show battery indicator.";
+      default = false;
+    };
     singleScreen = lib.mkOption {
       type = lib.types.bool;
       description = "Configure awesome for single screen instead of multi-monitor mode.";
@@ -85,12 +90,29 @@ in
 
             	modkey = "${cfg.modKey}",
             	terminal = "${lib.getExe config.myHomeApps.xorg.terminal}",
+              showBattery = ${if cfg.showBattery then "true" else "false"},
               useDunst = ${if cfg.useDunst then "true" else "false"},
               singleScreen = ${if cfg.singleScreen then "true" else "false"},
             }
 
             return _M
           '';
+        };
+
+        # battery
+        "awesome/scripts/battery.sh" = {
+          executable = true;
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "battery.sh" (builtins.readFile ./scripts/battery.sh)
+          );
+        };
+
+        # brightness
+        "awesome/scripts/brightness.sh" = {
+          executable = true;
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "brightness.sh" (builtins.readFile ./scripts/brightness.sh)
+          );
         };
 
         # sound

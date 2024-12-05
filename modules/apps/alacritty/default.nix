@@ -25,8 +25,6 @@ in
           TERM = "xterm-256color";
         };
 
-        font.size = 12;
-
         selection = {
           save_to_clipboard = true;
         };

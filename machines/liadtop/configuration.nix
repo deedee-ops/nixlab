@@ -92,7 +92,7 @@ rec {
   mySystemApps = {
     docker = {
       enable = true;
-      rootless = true;
+      rootless = false;
     };
     # plymouth.enable = true;
 
@@ -197,8 +197,12 @@ rec {
       };
     };
 
+    theme = {
+      terminalFontSize = 9;
+    };
     awesome = {
       enable = true;
+      showBattery = true;
       singleScreen = true;
     };
     caffeine.enable = true;
@@ -239,6 +243,7 @@ rec {
     xorg = {
       autorandr = { };
       terminal = pkgs.kitty;
+      trackpadSupport = true;
     };
     zathura.enable = true;
     zsh.promptColor = "magenta";

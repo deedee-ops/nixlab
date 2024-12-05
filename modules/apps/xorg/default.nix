@@ -5,6 +5,9 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.myHomeApps.xorg;
+in
 {
   imports = [
     ./autorandr.nix
@@ -19,6 +22,7 @@
       description = "Default terminal package.";
       default = pkgs.alacritty;
     };
+    trackpadSupport = lib.mkEnableOption "trackpad support";
   };
 
   config = lib.mkIf osConfig.mySystemApps.xorg.enable {
@@ -26,7 +30,15 @@
 
     fonts.fontconfig.enable = true;
 
-    xsession.enable = true;
+    xsession =
+      {
+        enable = true;
+      }
+      // lib.optionalAttrs cfg.trackpadSupport {
+        initExtra = ''
+          ${lib.getExe pkgs.libinput-three-finger-drag} &
+        '';
+      };
     xdg.mimeApps.enable = true;
 
     xresources = {
