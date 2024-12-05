@@ -46,8 +46,6 @@
               excludes = [ ".*\.zsh" ];
             };
             stylua.enable = true;
-            terraform-format.enable = true;
-            tflint.enable = true;
             yamllint.enable = true;
 
             actionlint.enable = true;

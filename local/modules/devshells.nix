@@ -11,6 +11,8 @@ _: {
       devShells.default = config.devShells.homelab;
 
       devShells.homelab = pkgs.mkShell {
+        SOPS_AGE_KEY_FILE = "/persist/etc/age/keys.txt";
+
         nativeBuildInputs = [
           config.pre-commit.settings.package
           inputs'.lix.packages.default
@@ -21,16 +23,12 @@ _: {
         buildInputs = [
           pkgs.nh
           pkgs.openssl
-          pkgs.opentofu
         ];
 
         shellHook = ''
           ${config.pre-commit.installationScript}
 
           ${lib.getExe pkgs.git} pull origin master:master --rebase
-          [ ! -f opentofu/terraform.tfvars ] || sh -c 'cd opentofu && ${pkgs.opentofu}/bin/tofu init -backend-config=<(grep '^#' terraform.tfvars | sed "s@^# *@@g") -upgrade'
-
-          export SOPS_AGE_KEY_FILE=/persist/etc/age/keys.txt
         '';
       };
     };
