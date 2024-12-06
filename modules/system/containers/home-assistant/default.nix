@@ -32,7 +32,7 @@ in
 
     virtualisation.oci-containers.containers.home-assistant = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/onedr0p/home-assistant:2024.12.0@sha256:5086e1dd11d3cfbb7f3c991645c1551be14ed778de649ae1c0a99d13bbbd4f37";
+        image = "ghcr.io/onedr0p/home-assistant:2024.12.1@sha256:9f01866a8ae1ba747a64be0ee1497a21c73679e27de008799e7c3fcd25e6a7cb";
         user = "65000:65000";
         environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
         volumes = [ "${cfg.dataDir}/config:/config" ];
