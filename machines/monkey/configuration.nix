@@ -87,7 +87,7 @@ rec {
       enable = true;
       autoStream = {
         enable = true;
-        subnet = "10.200.100.0/24";
+        consoleIP = "10.200.10.11";
       };
     };
     gnupg.enable = false;
