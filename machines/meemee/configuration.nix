@@ -103,7 +103,7 @@ rec {
               MACAddress = "none";
             };
             bridgeConfig = {
-              VLANFiltering = true;
+              # VLANFiltering = true; # when true, it breaks wireguard?
               STP = false;
             };
           };
@@ -157,9 +157,11 @@ rec {
               RequiredForOnline = "routable";
               MACAddress = "02:00:0a:64:14:02";
             };
+            dhcpV4Config.UseDNS = false;
             networkConfig = {
               LinkLocalAddressing = "no"; # disable fallback IPs
               DHCP = "ipv4";
+              DNS = [ "10.100.1.1" ];
             };
           };
           "1005-untrst0-up" = {
