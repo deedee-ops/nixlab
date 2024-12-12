@@ -78,6 +78,10 @@ in
                 "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
               ] ++ lib.optionals (lib.strings.hasPrefix "/dev" value.port) [ "--device=${value.port}" ];
             };
+            opts = {
+              # access remote coordinator
+              allowPublic = true;
+            };
           };
         }
       ) (builtins.attrNames cfg.serials)

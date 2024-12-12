@@ -1,6 +1,7 @@
 _:
 let
   ownIP = "10.100.20.2";
+  zigbeeBottomFloorIP = "10.210.10.10";
 
   adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
 in
@@ -265,18 +266,18 @@ rec {
       wireguardPort = 53201;
     };
     zigbee2mqtt = {
-      enable = false;
+      enable = true;
       serials = {
         topfloor = {
           port = "/dev/ttyUSB0";
           disable_led = false;
           baudrate = 115200;
         };
-        # bottomfloor = {
-        #   port = "tcp://<ip>:6638";
-        #   baudrate = 115200;
-        #   adapter = "ezsp";
-        # };
+        bottomfloor = {
+          port = "tcp://${zigbeeBottomFloorIP}:6638";
+          baudrate = 115200;
+          adapter = "ezsp";
+        };
       };
     };
   };
