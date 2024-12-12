@@ -20,7 +20,7 @@ rec {
   };
 
   inputs = {
-    nixpkgs.url = "github:ajgon/nixpkgs/app/libinput-three-finger-drag";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs";
 
     deploy-rs = {

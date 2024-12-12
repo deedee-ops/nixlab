@@ -16,11 +16,10 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable
-          [
-            ".config/obsidian"
-            "PKM"
-          ];
+        lib.mkIf osConfig.mySystem.impermanence.enable [
+          ".config/obsidian"
+          "PKM"
+        ];
 
       packages = [
         pkgs.obsidian # for quicklaunch entry

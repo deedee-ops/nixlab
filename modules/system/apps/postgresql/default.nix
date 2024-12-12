@@ -116,19 +116,17 @@ in
           DO $$
           DECLARE password TEXT;
           BEGIN
-          ${
-            builtins.concatStringsSep "\n" (
-              builtins.map (opt: ''
-                password := trim(both from replace(pg_read_file('${opt.passwordFile}'), E'\n', '''));
-                EXECUTE format('ALTER ROLE ${opt.username} WITH PASSWORD '''%s''';', password);
-                ${builtins.concatStringsSep "\n" (
-                  builtins.map (db: ''
-                    ALTER DATABASE "${db}" OWNER TO "${opt.username}";
-                  '') opt.databases
-                )}
-              '') cfg.userDatabases
-            )
-          }
+          ${builtins.concatStringsSep "\n" (
+            builtins.map (opt: ''
+              password := trim(both from replace(pg_read_file('${opt.passwordFile}'), E'\n', '''));
+              EXECUTE format('ALTER ROLE ${opt.username} WITH PASSWORD '''%s''';', password);
+              ${builtins.concatStringsSep "\n" (
+                builtins.map (db: ''
+                  ALTER DATABASE "${db}" OWNER TO "${opt.username}";
+                '') opt.databases
+              )}
+            '') cfg.userDatabases
+          )}
           END $$;
         EOF
       ''

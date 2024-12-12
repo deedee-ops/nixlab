@@ -36,7 +36,7 @@ in
       }
       // lib.optionalAttrs cfg.trackpadSupport {
         initExtra = ''
-          ${lib.getExe pkgs.libinput-three-finger-drag} &
+          ${lib.getExe (pkgs.callPackage ../../pkgs/libinput-three-finger-drag.nix { })} &
         '';
       };
     xdg.mimeApps.enable = true;

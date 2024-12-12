@@ -55,8 +55,7 @@ in
       };
 
       home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable
-          [ ".thunderbird" ];
+        lib.mkIf osConfig.mySystem.impermanence.enable [ ".thunderbird" ];
 
       myHomeApps.awesome.autorun = [ (lib.getExe package) ];
     };

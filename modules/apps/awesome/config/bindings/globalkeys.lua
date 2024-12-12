@@ -28,16 +28,16 @@ local globalkeys = gears.table.join(
     awful.util.spawn(xdg_config_home .. "/awesome/scripts/volume.sh --up")
   end, { description = "", group = "media" }),
   awful.key({}, "XF86MonBrightnessDown", function()
-  	awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --lcdDown")
+    awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --lcdDown")
   end, { description = "", group = "media" }),
   awful.key({}, "XF86MonBrightnessUp", function()
-  	awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --lcdUp")
+    awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --lcdUp")
   end, { description = "", group = "media" }),
   awful.key({}, "XF86KbdBrightnessDown", function()
-  	awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --kbdDown")
+    awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --kbdDown")
   end, { description = "", group = "media" }),
   awful.key({}, "XF86KbdBrightnessUp", function()
-  	awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --kbdUp")
+    awful.util.spawn(xdg_config_home .. "/awesome/scripts/brightness.sh --kbdUp")
   end, { description = "", group = "media" }),
   awful.key({}, "XF86Explorer", function()
     awful.util.spawn(

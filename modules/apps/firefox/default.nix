@@ -28,7 +28,8 @@ let
       "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false;
 
       # geolocation
-      "geo.provider.network.url" = "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%";
+      "geo.provider.network.url" =
+        "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%";
       "geo.provider.ms-windows-location" = false;
       "geo.provider.use_corelocation" = false;
       "geo.provider.use_gpsd" = false;
@@ -265,8 +266,7 @@ in
         };
 
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable
-          [ ".mozilla" ];
+        lib.mkIf osConfig.mySystem.impermanence.enable [ ".mozilla" ];
     };
 
     xdg.mimeApps = {
