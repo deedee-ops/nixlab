@@ -85,13 +85,106 @@ rec {
       firewallEnable = true;
       hostname = "meemee";
       mainInterface = {
-        name = "enp1s0";
-        bridge = true;
-        bridgeMAC = "02:00:0a:64:14:02";
-        DNS = [
-          "9.9.9.9"
-          "149.112.112.10"
-        ];
+        name = "trst0";
+      };
+      customNetworking = {
+        enable = true;
+        links = {
+          "0000-bridge-inherit-mac" = {
+            matchConfig.Type = "bridge";
+            linkConfig.MACAddressPolicy = "none";
+          };
+        };
+        netdevs = {
+          "0001-uplink" = {
+            netdevConfig = {
+              Kind = "bridge";
+              Name = "br0";
+              MACAddress = "none";
+            };
+            bridgeConfig = {
+              VLANFiltering = true;
+              STP = false;
+            };
+          };
+          "0002-trst0" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "trst0";
+            };
+            vlanConfig.Id = 100;
+          };
+          "0003-untrst0" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "untrst0";
+            };
+            vlanConfig.Id = 200;
+          };
+          "0004-iot0" = {
+            netdevConfig = {
+              Kind = "vlan";
+              Name = "iot0";
+            };
+            vlanConfig.Id = 210;
+          };
+        };
+        networks = {
+          "1002-add-main-to-br0" = {
+            matchConfig.Name = "enp1s0";
+            bridge = [ "br0" ];
+            bridgeVLANs = [
+              { VLAN = 100; }
+              { VLAN = 200; }
+              { VLAN = 210; }
+            ];
+          };
+          "1003-br0-up" = {
+            inherit (mySystem.networking.customNetworking.networks."1002-add-main-to-br0") bridgeVLANs;
+            matchConfig.Name = "br0";
+            vlan = [
+              "trst0"
+              "untrst0"
+              "iot0"
+            ];
+            networkConfig = {
+              LinkLocalAddressing = "no";
+            };
+          };
+          "1004-trst0-up" = {
+            matchConfig.Name = "trst0";
+            linkConfig = {
+              RequiredForOnline = "routable";
+              MACAddress = "02:00:0a:64:14:02";
+            };
+            networkConfig = {
+              LinkLocalAddressing = "no"; # disable fallback IPs
+              DHCP = "ipv4";
+            };
+          };
+          "1005-untrst0-up" = {
+            matchConfig.Name = "untrst0";
+            linkConfig = {
+              RequiredForOnline = "routable";
+              MACAddress = "02:00:0a:c8:14:02";
+            };
+            networkConfig = {
+              LinkLocalAddressing = "no"; # disable fallback IPs
+              DHCP = "ipv4";
+            };
+          };
+          "1005-iot0-up" = {
+            matchConfig.Name = "iot0";
+            linkConfig = {
+              RequiredForOnline = "routable";
+              MACAddress = "02:00:0a:d2:01:f0";
+            };
+            networkConfig = {
+              LinkLocalAddressing = "no"; # disable fallback IPs
+              DHCP = "ipv4";
+            };
+          };
+        };
       };
     };
 
