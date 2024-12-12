@@ -112,6 +112,9 @@ rec {
   };
 
   myHomeApps = {
+    extraPackages = [
+      (pkgs.callPackage ../../modules/pkgs/pter.nix { })
+    ];
     shellInitScriptFiles = [
       (lib.getExe (
         pkgs.writeShellScriptBin "pdf.sh" (
