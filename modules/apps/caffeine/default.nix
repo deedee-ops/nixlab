@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   lib,
   pkgs,
   ...
@@ -14,9 +13,22 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    # in awesome service runs too early and caffeine breaks
-    services.caffeine.enable = osConfig.mySystemApps.xorg.windowManager != "awesome";
+    systemd.user.services.caffeine = {
+      Unit = {
+        After = "graphical-session-pre.target";
+        Description = "caffeine";
+        PartOf = "graphical-session.target";
+      };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.caffeine-ng) ];
+      Install = {
+        WantedBy = [ "graphical-session.target" ];
+      };
+
+      Service = {
+        ExecStart = lib.getExe pkgs.caffeine-ng;
+        Restart = "on-failure";
+        RestartSec = 3;
+      };
+    };
   };
 }
