@@ -29,8 +29,9 @@
 
   # power
   services.logind = {
-    extraConfig = "HandlePowerKey=suspend";
     lidSwitch = "suspend";
+    powerKey = "suspend";
+    powerKeyLongPress = "poweroff";
   };
 
   # sound

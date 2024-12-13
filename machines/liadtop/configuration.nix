@@ -23,6 +23,10 @@ rec {
   };
 
   myHardware = {
+    battery = {
+      enable = true;
+      chargeUpperLimit = 80;
+    };
     bluetooth.enable = true;
     sound.enable = true;
   };
@@ -202,7 +206,6 @@ rec {
     };
     awesome = {
       enable = true;
-      showBattery = true;
       singleScreen = true;
     };
     caffeine.enable = true;

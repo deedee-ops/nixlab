@@ -13,6 +13,11 @@ in
     enable = lib.mkEnableOption "btop" // {
       default = true;
     };
+    showBattery = lib.mkOption {
+      type = lib.types.bool;
+      description = "Show battery indicator.";
+      default = false;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -39,9 +44,9 @@ in
         clock_format = "%X";
         base_10_sizes = false;
         background_update = true;
-        show_battery = true;
+        show_battery = cfg.showBattery;
         selected_battery = "Auto";
-        show_battery_watts = true;
+        show_battery_watts = cfg.showBattery;
         log_level = "WARNING";
 
         # cpu
