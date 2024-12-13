@@ -101,7 +101,7 @@ rec {
   mySystemApps = {
     docker = {
       enable = true;
-      rootless = true;
+      rootless = false;
     };
     # plymouth.enable = true;
 
