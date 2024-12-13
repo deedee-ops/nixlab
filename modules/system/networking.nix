@@ -182,6 +182,8 @@ in
       config.mySystem.impermanence.enable && cfg.wifiSupport
     ) { directories = [ "/etc/NetworkManager" ]; };
 
-    homeApps.awesome.autorun = lib.optionals cfg.wifiSupport [ (lib.getExe pkgs.networkmanagerapplet) ];
+    mySystemApps.xorg.userAutorun = lib.optionalAttrs cfg.wifiSupport {
+      nm-applet = lib.getExe pkgs.networkmanagerapplet;
+    };
   };
 }

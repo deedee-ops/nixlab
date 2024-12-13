@@ -59,7 +59,6 @@ in
     };
 
     services = {
-
       blueman.enable = true;
 
       pipewire.wireplumber.extraConfig.bluetoothEnhancements = lib.mkIf config.myHardware.sound.enable {
@@ -82,7 +81,8 @@ in
         SUBSYSTEM=="usb", ATTRS{idVendor}=="8087", ATTRS{idProduct}=="0aaa" RUN+="/bin/sh -c 'echo enabled > /sys$env{DEVPATH}/../power/wakeup;'
       '';
     };
-    homeApps.awesome.autorun = [ (lib.getExe' pkgs.blueman "blueman-applet") ];
+
+    mySystemApps.xorg.userAutorun.blueman-applet = lib.getExe' pkgs.blueman "blueman-applet";
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

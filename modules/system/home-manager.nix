@@ -16,13 +16,6 @@ in
       description = "Apps configuration which will be passed down to home manager";
     };
 
-    homeApps = lib.mkOption {
-      type = lib.types.attrs;
-      default = { };
-      description = "Extra home apps options used internally by system modules";
-      internal = true;
-    };
-
     mySystem.home-manager = {
       extraImports = lib.mkOption {
         type = lib.types.listOf lib.types.path;
@@ -45,20 +38,7 @@ in
       };
 
       users."${config.mySystem.primaryUser}" = {
-        myHomeApps = lib.recursiveUpdate config.myHomeApps (
-          lib.recursiveUpdate config.homeApps (
-            # absolutely disgusting hack
-            lib.optionalAttrs
-              ((builtins.hasAttr "awesome" config.myHomeApps) && (builtins.hasAttr "awesome" config.homeApps))
-              {
-                awesome = {
-                  autorun =
-                    (lib.optionals (builtins.hasAttr "autorun" config.myHomeApps.awesome) config.myHomeApps.awesome.autorun)
-                    ++ config.homeApps.awesome.autorun;
-                };
-              }
-          )
-        );
+        inherit (config) myHomeApps;
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile

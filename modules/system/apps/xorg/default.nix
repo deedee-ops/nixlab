@@ -25,6 +25,14 @@ in
       description = "Theme package to use for SDDM.";
       default = pkgs.catppuccin-sddm-corners;
     };
+    userAutorun = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      description = "List of applications to run when primary user starts X session.";
+      default = { };
+      example = lib.options.literalExpression ''
+        { bluetooth = (lib.getExe' pkgs.blueman "blueman-applet"); }
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -63,5 +71,28 @@ in
       # https://github.com/nix-community/home-manager/issues/3113
       pkgs.dconf
     ];
+
+    home-manager.users."${config.mySystem.primaryUser}".systemd.user.services = builtins.listToAttrs (
+      builtins.map (name: {
+        inherit name;
+        value = {
+          Unit = {
+            After = "graphical-session-pre.target";
+            Description = name;
+            PartOf = "graphical-session.target";
+          };
+
+          Install = {
+            WantedBy = [ "graphical-session.target" ];
+          };
+
+          Service = {
+            ExecStart = builtins.getAttr name cfg.userAutorun;
+            Restart = "on-failure";
+            RestartSec = 3;
+          };
+        };
+      }) (builtins.attrNames cfg.userAutorun)
+    );
   };
 }
