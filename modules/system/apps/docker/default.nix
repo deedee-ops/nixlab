@@ -117,7 +117,7 @@ in
               volumes = [ "/var/run/docker.sock:/var/run/docker.sock:ro" ]; # in rootless mode, socket lives under /run/<user id>/....
             };
             opts = {
-              disableReadOnly = true;
+              readOnlyRootFilesystem = false;
             };
           }
         );

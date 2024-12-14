@@ -134,7 +134,8 @@
       let
         args = {
           allowPublic = false;
-          disableReadOnly = false;
+          readOnlyRootFilesystem = true;
+          allowPrivilegeEscalation = false;
           routeThroughVPN = false;
         } // opts;
       in
@@ -147,11 +148,11 @@
       // {
         dependsOn = (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
         extraOptions =
-          (lib.optionals (!args.disableReadOnly) [ "--read-only" ])
+          (lib.optionals args.readOnlyRootFilesystem [ "--read-only" ])
           ++ [
             "--cap-drop=all"
-            "--security-opt=no-new-privileges"
           ]
+          ++ (lib.optionals (!args.allowPrivilegeEscalation) [ "--security-opt=no-new-privileges" ])
           ++ (cfg.extraOptions or [ ])
           ++ lib.optionals (!args.routeThroughVPN) [
             # /etc/hosts mapping conflicts with container network mode

@@ -30,33 +30,74 @@ in
 
     sops.secrets."${cfg.envFileSopsSecret}" = { };
 
-    virtualisation.oci-containers.containers.home-assistant = svc.mkContainer {
-      cfg = {
-        image = "ghcr.io/onedr0p/home-assistant:2024.12.3@sha256:09bcc0786ef5a57af1e0fff16bebfd6bd0b969d2a07e06127e12b41ab740a3b4";
-        user = "65000:65000";
-        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
-        volumes = [ "${cfg.dataDir}/config:/config" ];
-        extraOptions = [
-          "--mount"
-          "type=tmpfs,destination=/config/logs,tmpfs-mode=1777"
-          "--mount"
-          "type=tmpfs,destination=/config/tts,tmpfs-mode=1777"
-          "--mount"
-          "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
-        ];
+    virtualisation.oci-containers.containers = {
+      code-server = svc.mkContainer {
+        cfg = {
+          image = "ghcr.io/coder/code-server:4.95.3@sha256:6d74583d68179cbb6ddadc2518b450d2ac3eaec2d342474fe1941e03371cd2cf";
+          user = "65000:65000";
+          cmd = [
+            "--auth"
+            "none"
+            "--user-data-dir"
+            "/config/.vscode"
+            "--extensions-dir"
+            "/config/.vscode"
+            "--port"
+            "12321"
+            "/config"
+          ];
+          volumes = [ "${cfg.dataDir}/config:/config" ];
+          extraOptions = [
+            "--mount"
+            "type=tmpfs,destination=/home/coder,tmpfs-mode=1777"
+          ];
+        };
+        opts = {
+          # download extensions
+          allowPublic = true;
+          readOnlyRootFilesystem = false;
+          allowPrivilegeEscalation = true;
+        };
       };
-      opts = {
-        # for various APIs
-        allowPublic = true;
+      home-assistant = svc.mkContainer {
+        cfg = {
+          image = "ghcr.io/onedr0p/home-assistant:2024.12.3@sha256:09bcc0786ef5a57af1e0fff16bebfd6bd0b969d2a07e06127e12b41ab740a3b4";
+          user = "65000:65000";
+          environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
+          environment = {
+            HOME_ASSISTANT__HACS_INSTALL = "true";
+          };
+          volumes = [ "${cfg.dataDir}/config:/config" ];
+          extraOptions = [
+            "--mount"
+            "type=tmpfs,destination=/config/logs,tmpfs-mode=1777"
+            "--mount"
+            "type=tmpfs,destination=/config/tts,tmpfs-mode=1777"
+            "--mount"
+            "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
+          ];
+        };
+        opts = {
+          # for various APIs
+          allowPublic = true;
+        };
       };
     };
 
     services = {
-      nginx.virtualHosts.home-assistant = svc.mkNginxVHost {
-        host = "home";
-        proxyPass = "http://home-assistant.docker:8123";
-        useAuthelia = false;
-        customCSP = "disable";
+      nginx.virtualHosts = {
+        code-server = svc.mkNginxVHost {
+          host = "home-code";
+          proxyPass = "http://code-server.docker:12321";
+          useAuthelia = false;
+          customCSP = "disable";
+        };
+        home-assistant = svc.mkNginxVHost {
+          host = "home";
+          proxyPass = "http://home-assistant.docker:8123";
+          useAuthelia = false;
+          customCSP = "disable";
+        };
       };
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {
@@ -78,9 +119,16 @@ in
         { directories = [ cfg.dataDir ]; };
 
     mySystemApps.homepage = {
-      services.Apps.home-assistant = svc.mkHomepage "home-assistant" // {
-        href = "https://home.${config.mySystem.rootDomain}";
-        description = "Home automation.";
+      services.Apps = {
+        code-server = svc.mkHomepage "hass-code-server" // {
+          icon = "coder.svg";
+          href = "https://home-code.${config.mySystem.rootDomain}";
+          description = "Home automation configuration editor.";
+        };
+        home-assistant = svc.mkHomepage "home-assistant" // {
+          href = "https://home.${config.mySystem.rootDomain}";
+          description = "Home automation.";
+        };
       };
     };
   };

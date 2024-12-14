@@ -25,7 +25,7 @@ in
         ];
       };
       opts = {
-        disableReadOnly = true;
+        readOnlyRootFilesystem = false;
       };
     };
 

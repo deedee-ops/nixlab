@@ -23,7 +23,7 @@ in
       opts = {
         # for proxying requestes to solve CF captcha
         allowPublic = true;
-        disableReadOnly = true;
+        readOnlyRootFilesystem = false;
       };
     };
   };

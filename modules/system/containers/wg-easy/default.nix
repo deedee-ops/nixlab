@@ -75,7 +75,7 @@ in
       opts = {
         # to allow connections from outside
         allowPublic = true;
-        disableReadOnly = true;
+        readOnlyRootFilesystem = false;
       };
     };
 

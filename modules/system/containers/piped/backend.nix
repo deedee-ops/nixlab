@@ -44,7 +44,7 @@ in
       opts = {
         # proxying to youtube
         allowPublic = true;
-        disableReadOnly = true;
+        readOnlyRootFilesystem = false;
       };
     };
 

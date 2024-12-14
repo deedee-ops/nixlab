@@ -120,7 +120,7 @@ in
       };
       opts = {
         allowPublic = true;
-        disableReadOnly = true;
+        readOnlyRootFilesystem = false;
       };
     };
 
