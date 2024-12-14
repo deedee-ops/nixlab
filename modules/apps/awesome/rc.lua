@@ -153,6 +153,7 @@ awful.rules.rules = {
         "Wpa_gui",
         "veromix",
         "xtightvncviewer",
+        "io.github.alainm23.planify.quick-add",
       },
 
       -- Note that the name property shown in xprop might be set slightly after creation of the client
@@ -184,7 +185,12 @@ awful.rules.rules = {
 
   { rule = { class = "obsidian" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 6 " } },
   { rule = { class = "thunderbird" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 5 " } },
+  {
+    rule = { class = "io.github.alainm23.planify" },
+    except = { class = "io.github.alainm23.planify.quick-add" },
+    properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 4 " },
+  },
 
-  { rule = { class = "Slack" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 4 " } },
+  { rule = { class = "Slack" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 3 " } },
 }
 -- }}}

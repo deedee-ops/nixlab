@@ -221,6 +221,7 @@ rec {
     };
     mpv.enable = true;
     obsidian.enable = true;
+    planify.enable = true;
     redshift = {
       enable = true;
       latitude = 50.061389;

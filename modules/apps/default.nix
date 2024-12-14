@@ -33,6 +33,7 @@ _: {
     ./kitty
     ./mpv
     ./obsidian
+    ./planify
     ./redshift
     ./rofi
     ./rustdesk
