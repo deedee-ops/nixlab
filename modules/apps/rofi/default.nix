@@ -30,6 +30,11 @@ in
       };
       default = { };
     };
+    todoCommand = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      description = "Command to run, when adding todo task.";
+      default = null;
+    };
   };
 
   config =
@@ -139,6 +144,17 @@ in
             )
           end, { description = "password manager", group = "apps" }),
         '')
+        + (lib.optionalString (cfg.todoCommand != null) ''
+          awful.key({ RC.vars.modkey }, "e", function()
+            awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
+              .. xdg_config_home
+              .. "/rofi/todo/todo.sh "
+              .. "-theme "
+              .. xdg_config_home
+              .. "/rofi/todo/config.rasi"
+            )
+          end, { description = "password manager", group = "apps" }),
+        '')
         + ''
             awful.key({ RC.vars.modkey, "Shift" }, "e", function()
               awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
@@ -149,68 +165,81 @@ in
           root.keys(RC.globalkeys)
         '';
 
-      xdg.configFile = {
-        rofi = {
-          source = ./config;
-          recursive = true;
-        };
+      xdg.configFile =
+        {
+          rofi = {
+            source = ./config;
+            recursive = true;
+          };
 
-        "rofi/generic/ssh.sh" = {
-          executable = true;
-          source = lib.getExe (
-            pkgs.writeShellScriptBin "rofi-ssh.sh" ''
-              host=$(cat "$HOME/.ssh/config" | grep Include | awk '{print $2}' | xargs cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | sort | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
+          "rofi/generic/ssh.sh" = {
+            executable = true;
+            source = lib.getExe (
+              pkgs.writeShellScriptBin "rofi-ssh.sh" ''
+                host=$(cat "$HOME/.ssh/config" | grep Include | awk '{print $2}' | xargs cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | sort | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
 
-              if [ -n "$host" ]; then
-                export DISABLE_MOTD=1
-                ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "${lib.getExe pkgs.openssh} $host"
-              fi
-            ''
-          );
-        };
-        "rofi/powermenu/powermenu.sh" = {
-          executable = true;
-          source = lib.getExe (
-            pkgs.writeShellScriptBin "rofi-powermenu.sh" (
+                if [ -n "$host" ]; then
+                  export DISABLE_MOTD=1
+                  ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "${lib.getExe pkgs.openssh} $host"
+                fi
               ''
-                convert_cmd="${lib.getExe' pkgs.imagemagick "convert"}"
-                rofi_cmd="${lib.getExe rofiPackage}"
-                scrot_cmd="${lib.getExe pkgs.scrot}"
-                sed_cmd="${lib.getExe pkgs.gnused}"
-                uptime_cmd="${lib.getExe' pkgs.coreutils "uptime"}"
-              ''
-              + builtins.readFile ./scripts/powermenu.sh
-            )
-          );
-        };
-        "rofi/window/focus-window.sh" = {
-          executable = true;
-          source = pkgs.writeShellScriptBin "rofi-focus-window.sh" ''
-            echo "
-            for _, c in ipairs(client.get()) do
-              if c.window == $1 then
-                c:tags()[1]:view_only()
-                client.focus = c
-                c:raise()
+            );
+          };
+          "rofi/powermenu/powermenu.sh" = {
+            executable = true;
+            source = lib.getExe (
+              pkgs.writeShellScriptBin "rofi-powermenu.sh" (
+                ''
+                  convert_cmd="${lib.getExe' pkgs.imagemagick "convert"}"
+                  rofi_cmd="${lib.getExe rofiPackage}"
+                  scrot_cmd="${lib.getExe pkgs.scrot}"
+                  sed_cmd="${lib.getExe pkgs.gnused}"
+                  uptime_cmd="${lib.getExe' pkgs.coreutils "uptime"}"
+                ''
+                + builtins.readFile ./scripts/powermenu.sh
+              )
+            );
+          };
+          "rofi/window/focus-window.sh" = {
+            executable = true;
+            source = pkgs.writeShellScriptBin "rofi-focus-window.sh" ''
+              echo "
+              for _, c in ipairs(client.get()) do
+                if c.window == $1 then
+                  c:tags()[1]:view_only()
+                  client.focus = c
+                  c:raise()
+                end
               end
-            end
-            " | ${lib.getExe' pkgs.awesome "awesome-client"}
-          '';
+              " | ${lib.getExe' pkgs.awesome "awesome-client"}
+            '';
+          };
+          "greenclip.toml" = {
+            text = ''
+              [greenclip]
+                blacklisted_applications = []
+                enable_image_support = true
+                history_file = "${config.xdg.cacheHome}/greenclip/history"
+                image_cache_directory = "${config.xdg.cacheHome}/greenclip/image"
+                max_history_length = 500
+                max_selection_size_bytes = 0
+                static_history = []
+                trim_space_from_selection = true
+                use_primary_selection_as_input = false
+            '';
+          };
+        }
+        // lib.optionalAttrs (cfg.todoCommand != null) {
+          "rofi/todo/todo.sh" = {
+            executable = true;
+            source = lib.getExe (
+              pkgs.writeShellScriptBin "rofi-todo.sh" ''
+                if [ -n "$*" ]; then
+                  ${cfg.todoCommand} "$*" || ${lib.getExe' pkgs.libnotify "notify-send"} -u critical "Error adding TODO item"
+                fi
+              ''
+            );
+          };
         };
-        "greenclip.toml" = {
-          text = ''
-            [greenclip]
-              blacklisted_applications = []
-              enable_image_support = true
-              history_file = "${config.xdg.cacheHome}/greenclip/history"
-              image_cache_directory = "${config.xdg.cacheHome}/greenclip/image"
-              max_history_length = 500
-              max_selection_size_bytes = 0
-              static_history = []
-              trim_space_from_selection = true
-              use_primary_selection_as_input = false
-          '';
-        };
-      };
     };
 }

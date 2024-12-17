@@ -43,6 +43,7 @@ _: {
     ./teams
     ./telegram
     ./thunderbird
+    ./ticktick
     ./whatsie
     ./yazi
     ./zathura

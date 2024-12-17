@@ -43,7 +43,7 @@ in
       local home = os.getenv("HOME")
       local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
       local planifykeys = gears.table.join(
-        awful.key({ RC.vars.modkey }, "'", function()
+        awful.key({ RC.vars.modkey }, "e", function()
           awful.util.spawn("${lib.getExe planifyQuickAddPkg}")
         end, { description = "planify quick add", group = "apps" })
       )

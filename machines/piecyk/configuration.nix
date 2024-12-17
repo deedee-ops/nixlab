@@ -221,7 +221,6 @@ rec {
     };
     mpv.enable = true;
     obsidian.enable = true;
-    planify.enable = true;
     redshift = {
       enable = true;
       latitude = 50.061389;
@@ -241,6 +240,7 @@ rec {
     teams.enable = true;
     telegram.enable = true;
     thunderbird.enable = true;
+    ticktick.enable = true;
     wakatime = {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";

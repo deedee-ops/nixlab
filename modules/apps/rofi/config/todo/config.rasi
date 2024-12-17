@@ -1,0 +1,180 @@
+/**
+ *
+ * Author : Aditya Shakya (adi1090x)
+ * Github : @adi1090x
+ *
+ * Rofi Theme File
+ * Rofi Version: 1.7.3
+ **/
+
+/*****----- Configuration -----*****/
+configuration {
+  dpi:                        192;
+}
+
+/*****----- Global Properties -----*****/
+@import                          "../_shared/colors.rasi"
+@import                          "../_shared/fonts.rasi"
+
+* {
+    border-colour:               var(selected);
+    handle-colour:               var(selected);
+    background-colour:           var(background);
+    foreground-colour:           var(foreground);
+    alternate-background:        var(background-alt);
+    normal-background:           var(background);
+    normal-foreground:           var(foreground);
+    urgent-background:           var(urgent);
+    urgent-foreground:           var(background);
+    active-background:           var(active);
+    active-foreground:           var(background);
+    selected-normal-background:  var(selected);
+    selected-normal-foreground:  var(background);
+    selected-urgent-background:  var(active);
+    selected-urgent-foreground:  var(background);
+    selected-active-background:  var(urgent);
+    selected-active-foreground:  var(background);
+    alternate-normal-background: var(background);
+    alternate-normal-foreground: var(foreground);
+    alternate-urgent-background: var(urgent);
+    alternate-urgent-foreground: var(background);
+    alternate-active-background: var(active);
+    alternate-active-foreground: var(background);
+}
+
+/*****----- Main Window -----*****/
+window {
+    /* properties for window widget */
+    transparency:                "real";
+    location:                    center;
+    anchor:                      center;
+    fullscreen:                  false;
+    width:                       33.333em;
+    x-offset:                    0.0em;
+    y-offset:                    0.0em;
+
+    /* properties for all widgets */
+    enabled:                     true;
+    margin:                      0.0em;
+    padding:                     0.0em;
+    border:                      0.0em solid;
+    border-radius:               0.556em;
+    border-color:                @border-colour;
+    cursor:                      "default";
+    /* Backgroud Colors */
+    background-color:            @background-colour;
+    /* Backgroud Image */
+    //background-image:          url("/path/to/image.png", none);
+    /* Simple Linear Gradient */
+    //background-image:          linear-gradient(red, orange, pink, purple);
+    /* Directional Linear Gradient */
+    //background-image:          linear-gradient(to bottom, pink, yellow, magenta);
+    /* Angle Linear Gradient */
+    //background-image:          linear-gradient(45, cyan, purple, indigo);
+}
+
+/*****----- Main Box -----*****/
+mainbox {
+    enabled:                     true;
+    spacing:                     0.556em;
+    margin:                      0.0em;
+    padding:                     1.667em;
+    border:                      0.0em solid;
+    border-radius:               0.0em 0.0em 0.0em 0.0em;
+    border-color:                @border-colour;
+    background-color:            transparent;
+    children:                    [ "inputbar", "message" ];
+}
+
+/*****----- Inputbar -----*****/
+inputbar {
+    enabled:                     true;
+    spacing:                     0.556em;
+    margin:                      0.0em;
+    padding:                     0.0em;
+    border:                      0.0em solid;
+    border-radius:               0.0em;
+    border-color:                @border-colour;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+    children:                    [ "textbox-prompt-colon", "entry" ];
+}
+
+prompt {
+    enabled:                     true;
+    background-color:            inherit;
+    text-color:                  inherit;
+}
+textbox-prompt-colon {
+    enabled:                     true;
+    padding:                     0.278em 0.0em;
+    expand:                      false;
+    str:                         "";
+    background-color:            inherit;
+    text-color:                  inherit;
+}
+entry {
+    enabled:                     true;
+    padding:                     0.278em 0.0em;
+    background-color:            inherit;
+    text-color:                  inherit;
+    cursor:                      text;
+    placeholder:                 "New Task";
+    placeholder-color:           inherit;
+}
+num-filtered-rows {
+    enabled:                     false;
+}
+textbox-num-sep {
+    enabled:                     false;
+}
+num-rows {
+    enabled:                     false;
+}
+case-indicator {
+    enabled:                     false;
+}
+
+/*****----- Listview -----*****/
+listview {
+    enabled:                     false;
+}
+
+/*****----- Elements -----*****/
+element {
+    enabled:                     false;
+}
+
+/*****----- Message -----*****/
+message {
+    enabled:                     true;
+    margin:                      0.0em;
+    padding:                     0.0em;
+    border:                      0.0em solid;
+    border-radius:               0.0em 0.0em 0.0em 0.0em;
+    border-color:                @border-colour;
+    background-color:            transparent;
+    text-color:                  @foreground-colour;
+}
+textbox {
+    padding:                     0.444em 0.556em;
+    border:                      0.0em solid;
+    border-radius:               0.556em;
+    border-color:                @border-colour;
+    background-color:            @alternate-background;
+    text-color:                  @foreground-colour;
+    vertical-align:              0.5;
+    horizontal-align:            0.0;
+    highlight:                   none;
+    placeholder-color:           @foreground-colour;
+    blink:                       true;
+    markup:                      true;
+}
+error-message {
+    padding:                     0.556em;
+    border:                      0.111em solid;
+    border-radius:               0.556em;
+    border-color:                @border-colour;
+    background-color:            @background-colour;
+    text-color:                  @foreground-colour;
+}
