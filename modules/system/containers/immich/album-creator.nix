@@ -31,7 +31,7 @@ in
               -e ROOT_PATH=/external \
               -e SYNC_MODE=1 \
               -e UNATTENDED=1 \
-              -e TZ=Europe/Warsaw \
+              -e TZ=${config.mySystem.time.timeZone} \
               --mount type=tmpfs,destination=/tmp,tmpfs-mode=1777 \
               -v ${cfg.photosPath}:/external:ro \
               --read-only \

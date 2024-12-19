@@ -214,6 +214,13 @@ rec {
       enable = true;
     };
     coredns.enable = true;
+    davis = {
+      enable = true;
+      carddavEnable = true;
+      caldavEnable = false;
+      webdavEnable = false;
+      useAuthelia = true;
+    };
     echo-server.enable = false;
     firefoxsync.enable = true;
     firefly-iii.enable = true;

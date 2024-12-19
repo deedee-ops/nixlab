@@ -45,7 +45,7 @@ in
               --log-driver=journald \
               -e RADARR_API_KEY=$(cat ${config.sops.secrets."${cfg.radarrApiKeySopsSecret}".path}) \
               -e SONARR_API_KEY=$(cat ${config.sops.secrets."${cfg.sonarrApiKeySopsSecret}".path}) \
-              -e TZ=Europe/Warsaw \
+              -e TZ=${config.mySystem.time.timeZone} \
               -v ${./recyclarr.yml}:/config/recyclarr.yml:ro \
               --read-only \
               '--cap-drop=all' \

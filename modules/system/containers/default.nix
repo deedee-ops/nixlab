@@ -3,8 +3,10 @@ _: {
     ./audiobookshelf
     ./authelia
     ./bazarr
+    ./caddy
     ./coredns
     ./echo-server
+    ./davis
     ./firefly-iii
     ./firefoxsync
     ./flaresolverr
