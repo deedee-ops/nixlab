@@ -114,6 +114,16 @@
 
     environment.enableAllTerminfo = true;
 
+    # more file descriptors
+    security.pam.loginLimits = [
+      {
+        domain = "*";
+        item = "nofile";
+        type = "-";
+        value = "4096";
+      }
+    ];
+
     services = {
       udev.extraRules = config.mySystem.extraUdevRules;
 
