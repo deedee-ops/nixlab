@@ -61,7 +61,7 @@ in
       };
       home-assistant = svc.mkContainer {
         cfg = {
-          image = "ghcr.io/onedr0p/home-assistant:2024.12.4@sha256:7f197de44d6216db872b167d1bb090dcc1af040e165da1759d87500bfe234aaf";
+          image = "ghcr.io/onedr0p/home-assistant:2024.12.5@sha256:638e519c874a06389ce6f03e435dd80a6697e8692eac88b459775839410f3439";
           user = "65000:65000";
           environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
           environment = {
