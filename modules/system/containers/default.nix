@@ -37,6 +37,7 @@ _: {
     ./vaultwarden
     ./vikunja
     ./wakapi
+    ./wallos
     ./wg-easy
     ./whoogle
     ./zigbee2mqtt
