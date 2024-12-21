@@ -230,8 +230,8 @@ rec {
       enable = true;
       passwordManager = "bitwarden";
       bitwarden = {
-        email = "ajgon@rzegocki.dev";
-        base_url = "https://vaultwarden.rzegocki.dev/";
+        email = "bitwarden@ajgon.ovh";
+        base_url = "https://vault.bitwarden.eu/";
       };
     };
     rustdesk.enable = true;
