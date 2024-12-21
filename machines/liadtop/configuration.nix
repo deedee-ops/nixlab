@@ -246,6 +246,7 @@ rec {
     whatsie.enable = true;
     xorg = {
       autorandr = { };
+      mapRightCtrlToAltGr = true;
       terminal = pkgs.kitty;
       trackpadSupport = true;
     };
