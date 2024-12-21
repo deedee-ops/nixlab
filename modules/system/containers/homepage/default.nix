@@ -135,6 +135,13 @@ in
           img-src 'self' https://cdn.jsdelivr.net; object-src 'none';
         '';
       };
+
+      nginx.virtualHosts.default = {
+        default = true;
+        globalRedirect = "${cfg.subdomain}.${config.mySystem.rootDomain}";
+        forceSSL = true;
+        useACMEHost = "wildcard.${config.mySystem.rootDomain}";
+      };
     };
 
     systemd.services.docker-homepage = {
