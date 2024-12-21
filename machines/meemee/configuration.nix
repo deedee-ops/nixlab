@@ -1,5 +1,6 @@
 { config, ... }:
 let
+  nasIP = "10.100.10.1";
   ownIP = "10.100.20.2";
   zigbeeBottomFloorIP = "10.210.10.10";
 
@@ -19,6 +20,8 @@ rec {
   };
 
   mySystem = {
+    inherit nasIP;
+
     purpose = "Smart Home";
     filesystem = "zfs";
     primaryUser = "ajgon";
@@ -80,6 +83,14 @@ rec {
       machineId = "b14c15cd293ed31307c9ebb94c2b6dec";
       persistPath = "/persist";
     };
+
+    mounts = [
+      {
+        type = "nfs";
+        src = "${mySystem.nasIP}:/volume2/backup/meemee";
+        dest = mySystem.backup.local.location;
+      }
+    ];
 
     networking = {
       enable = true;
