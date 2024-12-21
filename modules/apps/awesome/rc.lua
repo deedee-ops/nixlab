@@ -161,6 +161,8 @@ awful.rules.rules = {
       name = {
         "Event Tester", -- xev.
         "rofi - Passphrase:", -- pinentry for rofi
+        "Micro-break",
+        "Rest break", -- workrave
       },
       role = {
         "AlarmWindow", -- Thunderbird's calendar.

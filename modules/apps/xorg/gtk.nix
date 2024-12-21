@@ -9,6 +9,11 @@
   config = lib.mkIf osConfig.mySystemApps.xorg.enable {
     stylix.targets.gtk.enable = true;
 
+    home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
+      lib.mkIf osConfig.mySystem.impermanence.enable [
+        ".config/dconf"
+      ];
+
     gtk = {
       gtk2 = {
         configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";

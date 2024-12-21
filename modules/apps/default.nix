@@ -45,6 +45,7 @@ _: {
     ./thunderbird
     ./ticktick
     ./whatsie
+    ./workrave
     ./yazi
     ./zathura
     ./zoom
