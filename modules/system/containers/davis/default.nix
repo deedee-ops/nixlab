@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   svc,
   ...
 }:
@@ -36,49 +35,24 @@ in
 
   config =
     let
-      image = "ghcr.io/tchapi/davis:5.0.2@sha256:02f9abdbd4f921b9a3ae27ff2df63ab171bbc27d01fb3ab7eb592ead367f8e06";
+      image = "ghcr.io/deedee-ops/davis:5.0.2@sha256:8cf7c2f7b1ce201f2ac1bddb6f7ab6ba82b6f749fc9a9e40896638a5c7eb4a2d";
     in
     lib.mkIf cfg.enable {
       warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for davis are disabled!") ];
 
       sops.secrets."${cfg.envFileSopsSecret}" = { };
 
-      mySystemApps.caddy = {
-        enable = true;
-        dependsOn = [ "davis" ];
-        vhosts."davis.${config.mySystem.rootDomain}" = ''
-          log
-          header -Server
-          header -X-Powered-By
-          redir /.well-known/carddav /dav/ 301
-          redir /.well-known/caldav /dav/ 301
-          root * /var/www/davis/public
-          encode zstd gzip
-          php_fastcgi davis:9000 {
-            trusted_proxies 172.16.0.0/12
-          }
-          file_server {
-            hide .git .gitignore
-          }
-        '';
-        mounts = [ "/var/cache/davis/web/public:/var/www/davis/public" ];
-      };
-
       virtualisation.oci-containers.containers.davis = svc.mkContainer {
         cfg = {
           inherit image;
 
-          user = "82:82";
           dependsOn = [ "lldap" ];
           environment = {
             ADMIN_AUTH_BYPASS = if cfg.useAuthelia then "true" else "false";
-            APP_ENV = "prod";
             APP_TIMEZONE = "${config.mySystem.time.timeZone}";
             AUTH_METHOD = "LDAP";
             CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
             CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
-            DATABASE_DRIVER = "sqlite";
-            DATABASE_URL = "sqlite:////config/davis-database.db";
             INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
             LDAP_AUTH_URL = "ldap://lldap:3890";
             LDAP_AUTH_USER_AUTOCREATE = "true";
@@ -88,15 +62,11 @@ in
             TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
             TRUSTED_PROXIES = "172.16.0.0/16";
             WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
-            WEBDAV_HOMES_DIR = "";
-            WEBDAV_PUBLIC_DIR = "/data";
-            WEBDAV_TMP_DIR = "/tmp/webdav";
           };
           environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
           volumes = [
             "${cfg.dataDir}/config:/config"
             "${cfg.dataDir}/data:/data"
-            "/var/cache/davis/web/public:/var/www/davis/public"
           ];
         };
       };
@@ -106,7 +76,7 @@ in
           inherit (cfg) useAuthelia;
 
           host = "davis";
-          proxyPass = "http://caddy.docker:8080";
+          proxyPass = "http://davis.docker:9000";
           autheliaIgnorePaths = [
             "/dav"
             "/.well-known"
@@ -121,17 +91,11 @@ in
       };
 
       systemd.services.docker-davis = {
-        preStart =
-          let
-            dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
-          in
-          lib.mkAfter ''
-            rm -rf /var/cache/davis/web || true
-            mkdir -p "${cfg.dataDir}/config" "${cfg.dataDir}/data" /var/cache/davis/web
-            chown 82:82 "${cfg.dataDir}/config" "${cfg.dataDir}/data" /var/cache/davis/web
-            ${dockerBin} run --rm -v /var/cache/davis/web:/web ${image} /bin/sh -c "cp -a /var/www/davis/public /web"
-            ${lib.getExe pkgs.gnused} -i 's@HEADER_X_FORWARDED_ALL@HEADER_X_FORWARDED_FOR@g' /var/cache/davis/web/public/index.php
-          '';
+        preStart = lib.mkAfter ''
+          rm -rf /var/cache/davis/web || true
+          mkdir -p "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+          chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+        '';
       };
 
       environment.persistence."${config.mySystem.impermanence.persistPath}" =
