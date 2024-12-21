@@ -38,7 +38,7 @@ in
 
     virtualisation.oci-containers.containers.gose = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/gose:latest@sha256:e2312775f37b9d4e66ca9bf886d91f7211a5a9d375f52fdebc30218c75238665";
+        image = "ghcr.io/deedee-ops/gose:latest@sha256:c404973d3eb9ef97cab9ec4f85f81b0d748f6f5cbf73f66e02e7a1b6fc974037";
         environment = {
           GOSE_BASE_URL = "https://files.${config.mySystem.rootDomain}";
           GOSE_ENDPOINT = cfg.s3Host;
