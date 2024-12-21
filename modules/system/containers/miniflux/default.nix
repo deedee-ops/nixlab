@@ -46,7 +46,7 @@ in
 
     virtualisation.oci-containers.containers.miniflux = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/miniflux:2.2.4@sha256:b5fc212ee384bb318374d5bab25a879f0003e8e1dce7ca85a61e1d929bf3a14d";
+        image = "ghcr.io/deedee-ops/miniflux:2.2.4@sha256:d6b89f2c104f1b7777b299678410de1f2675d30a733dcc2d312312f1d1ff4194";
         environment =
           {
             AUTH_PROXY_HEADER = "Remote-User";
