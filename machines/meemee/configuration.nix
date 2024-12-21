@@ -1,4 +1,4 @@
-_:
+{ config, ... }:
 let
   ownIP = "10.100.20.2";
   zigbeeBottomFloorIP = "10.210.10.10";
@@ -291,4 +291,22 @@ rec {
   };
 
   system.stateVersion = "24.11";
+
+  # @todo @hack HERE BE DRAGONS
+  # this temporary hack adds retries to all remote restic backup services, until I resolve the trunking issues
+  systemd.services = builtins.listToAttrs (
+    builtins.map (name: {
+      name = "restic-backups-${name}";
+      value = {
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = 30;
+        };
+        unitConfig = {
+          StartLimitInterval = 100;
+          StartLimitBurst = 3;
+        };
+      };
+    }) (builtins.attrNames config.services.restic.backups)
+  );
 }
