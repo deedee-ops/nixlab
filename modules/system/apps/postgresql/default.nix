@@ -87,7 +87,7 @@ in
             };
           }
           // lib.optionalAttrs cfg.enablePgVectoRs {
-            extraPlugins = ps: [ ps.pgvecto-rs ];
+            extensions = ps: [ ps.pgvecto-rs ];
             settings = {
               shared_preload_libraries = [ "vectors.so" ];
               search_path = "\"$user\", public, vectors";
