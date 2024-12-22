@@ -118,6 +118,12 @@ rec {
         )
       ))
     ];
+    extraPackages = [
+        (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
+          # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
+          salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
+        })
+    ];
 
     aichat.enable = true;
     git = {
