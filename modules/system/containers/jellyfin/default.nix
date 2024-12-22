@@ -48,7 +48,10 @@ in
           "/var/cache/jellyfin/internal-ip:/secrets/JELLYFIN_PublishedServerUrl:ro" # hack to dynamically pass current machine IP to env
           "${cfg.videoPath}:/data/video"
         ];
-        extraOptions = [ "--device=/dev/dri" ];
+        extraOptions = [
+          "--device=/dev/dri"
+          "--add-host=authelia.${config.mySystem.rootDomain}:${config.mySystemApps.docker.network.private.hostIP}"
+        ];
       };
       opts = {
         # for fetching metadata
