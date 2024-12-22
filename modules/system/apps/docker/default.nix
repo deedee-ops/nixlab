@@ -16,6 +16,7 @@ in
       default = { };
       description = "Extra settings for docker daemon";
     };
+    pruneAll = lib.mkEnableOption "add --all to periodic prune";
     rootless = lib.mkEnableOption "rootless docker" // {
       default = true;
     };
@@ -129,7 +130,7 @@ in
         autoPrune = {
           enable = true;
           dates = "daily";
-          flags = [ "--all" ];
+          flags = lib.optionals cfg.pruneAll [ "--all" ];
         };
         rootless = {
           enable = cfg.rootless;

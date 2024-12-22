@@ -97,6 +97,7 @@ rec {
     docker = {
       enable = true;
       rootless = false;
+      pruneAll = false;
     };
     # plymouth.enable = true;
 

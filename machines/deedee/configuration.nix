@@ -151,6 +151,7 @@ rec {
     docker = {
       enable = true;
       rootless = false;
+      pruneAll = true;
     };
 
     incus = {
