@@ -280,16 +280,16 @@ rec {
     zigbee2mqtt = {
       enable = true;
       extraConfigs = {
-        topfloor = {
-          advanced = {
-            transmit_power = 20;
-          };
-          serial = {
-            port = "/dev/ttyUSB0";
-            disable_led = false;
-            baudrate = 115200;
-          };
-        };
+        # topfloor = {
+        #   advanced = {
+        #     transmit_power = 20;
+        #   };
+        #   serial = {
+        #     port = "/dev/ttyUSB0";
+        #     disable_led = false;
+        #     baudrate = 115200;
+        #   };
+        # };
         bottomfloor = {
           serial = {
             port = "tcp://${zigbeeBottomFloorIP}:6638";
