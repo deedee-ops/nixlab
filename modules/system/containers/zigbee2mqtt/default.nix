@@ -24,25 +24,33 @@ in
       description = "Sops secret name containing zigbee2mqtt envs.";
       default = "system/apps/zigbee2mqtt/envfile";
     };
-    serials = lib.mkOption {
+    extraConfigs = lib.mkOption {
       type = lib.types.attrsOf lib.types.attrs;
       description = ''
-        List of zigbee coordinator serial devices.
+        List of multiple zigbee coordinator extra configuration stanzas.
         Because one zigbee2mqtt can support only one coordinator,
         this would effectively spawn multiple zigbee2mqtt instances.
-        The key will be URL and MQTT suffix. The value will be passed,
-        as `serial` configuration option.
+        The key will be URL and MQTT suffix. The value will be merged,
+        with the default config. At least, you need to add `serial`
+        stanza here.
       '';
       example = {
         coordinator1 = {
-          port = "/dev/ttyUSB0";
-          disable_led = false;
-          baudrate = 115200;
+          advanced = {
+            transmit_power = 20;
+          };
+          serial = {
+            port = "/dev/ttyUSB0";
+            disable_led = false;
+            baudrate = 115200;
+          };
         };
         coordinator2 = {
-          port = "tcp://192.168.1.1:6638";
-          baudrate = 115200;
-          adapter = "ezsp";
+          serial = {
+            port = "tcp://192.168.1.1:6638";
+            baudrate = 115200;
+            adapter = "ezsp";
+          };
         };
       };
     };
@@ -53,11 +61,13 @@ in
 
     sops.secrets."${cfg.envFileSopsSecret}" = { };
 
+    mySystemApps.mosquitto.enable = true;
+
     virtualisation.oci-containers.containers = builtins.listToAttrs (
       builtins.map (
         alias:
         let
-          value = builtins.getAttr alias cfg.serials;
+          value = builtins.getAttr alias cfg.extraConfigs;
         in
         {
           name = "zigbee2mqtt-${alias}";
@@ -74,9 +84,13 @@ in
                 "${cfg.dataDir}/${alias}/config:/config"
                 "/run/udev:/run/udev:ro"
               ];
-              extraOptions = [
-                "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
-              ] ++ lib.optionals (lib.strings.hasPrefix "/dev" value.port) [ "--device=${value.port}" ];
+              extraOptions =
+                [
+                  "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
+                ]
+                ++ lib.optionals (lib.strings.hasPrefix "/dev" value.serial.port) [
+                  "--device=${value.serial.port}"
+                ];
             };
             opts = {
               # access remote coordinator
@@ -84,7 +98,7 @@ in
             };
           };
         }
-      ) (builtins.attrNames cfg.serials)
+      ) (builtins.attrNames cfg.extraConfigs)
     );
 
     services = {
@@ -95,7 +109,7 @@ in
             host = "zigbee2mqtt-${alias}";
             proxyPass = "http://zigbee2mqtt-${alias}.docker:8080";
           };
-        }) (builtins.attrNames cfg.serials)
+        }) (builtins.attrNames cfg.extraConfigs)
       );
 
       restic.backups = lib.mkIf cfg.backup (
@@ -110,14 +124,14 @@ in
       builtins.map (
         alias:
         let
-          serial = builtins.getAttr alias cfg.serials;
           configuration = pkgs.writeText "configuration.yaml" (
             builtins.toJSON (
-              lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./configuration.json)) {
-                inherit serial;
-                mqtt.base_topic = "zigbee2mqtt_${alias}";
-                frontend.url = "https://zigbee2mqtt-${alias}.${config.mySystem.rootDomain}";
-              }
+              lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./configuration.json)) (
+                lib.recursiveUpdate {
+                  mqtt.base_topic = "zigbee2mqtt_${alias}";
+                  # frontend.url = "https://zigbee2mqtt-${alias}.${config.mySystem.rootDomain}";
+                } (builtins.getAttr alias cfg.extraConfigs)
+              )
             )
           );
         in
@@ -126,13 +140,13 @@ in
           value = {
             preStart = lib.mkAfter ''
               mkdir -p "${cfg.dataDir}/${alias}/config"
-              cp ${configuration} "${cfg.dataDir}/${alias}/config/configuration.yaml"
+              [ ! -f "${cfg.dataDir}/${alias}/config/configuration.yaml" ] && cp ${configuration} "${cfg.dataDir}/${alias}/config/configuration.yaml"
               chown 65000:65000 "${cfg.dataDir}/${alias}" "${cfg.dataDir}/${alias}/config" "${cfg.dataDir}/${alias}/config/configuration.yaml"
               chmod 640 "${cfg.dataDir}/${alias}/config/configuration.yaml"
             '';
           };
         }
-      ) (builtins.attrNames cfg.serials)
+      ) (builtins.attrNames cfg.extraConfigs)
     );
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
@@ -147,7 +161,7 @@ in
             icon = "zigbee2mqtt.svg";
             description = "Zigbee compatibility layer";
           };
-        }) (builtins.attrNames cfg.serials)
+        }) (builtins.attrNames cfg.extraConfigs)
       );
     };
   };

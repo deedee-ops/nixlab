@@ -71,8 +71,8 @@ rec {
       };
     };
 
-    # disable usb autosuspend for USB ethernet dongle
     extraUdevRules = ''
+      # disable usb autosuspend for USB ethernet dongle
       ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{idProduct}=="8153", TEST=="power/control", ATTR{power/control}="on"
     '';
 
@@ -279,16 +279,23 @@ rec {
     };
     zigbee2mqtt = {
       enable = true;
-      serials = {
+      extraConfigs = {
         topfloor = {
-          port = "/dev/ttyUSB0";
-          disable_led = false;
-          baudrate = 115200;
+          advanced = {
+            transmit_power = 20;
+          };
+          serial = {
+            port = "/dev/ttyUSB0";
+            disable_led = false;
+            baudrate = 115200;
+          };
         };
         bottomfloor = {
-          port = "tcp://${zigbeeBottomFloorIP}:6638";
-          baudrate = 115200;
-          adapter = "ezsp";
+          serial = {
+            port = "tcp://${zigbeeBottomFloorIP}:6638";
+            baudrate = 115200;
+            adapter = "ezsp";
+          };
         };
       };
     };
