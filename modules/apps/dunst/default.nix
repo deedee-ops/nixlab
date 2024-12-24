@@ -74,7 +74,6 @@ in
 
           # geometry
           width = "(300, 500)";
-          height = 175;
           origin = "top-right";
           notification_limit = 20;
           offset = "10x25";
