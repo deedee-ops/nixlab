@@ -18,6 +18,7 @@ in
     # stylix.targets.neovim.enable = true; # stylix is broken, even after disabling custom lua xdg
 
     home.packages = [
+      pkgs.nodejs # multiple LSPs
       pkgs.cargo # mason
       pkgs.deadnix # mason
       pkgs.go # mason
