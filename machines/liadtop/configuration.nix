@@ -120,11 +120,36 @@ rec {
       ))
     ];
     extraPackages = [
-        (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
-          # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
-          salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
-        })
+      (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
+        # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
+        salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
+      })
     ];
+
+    scripts =
+      let
+        homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
+      in
+      {
+        docwatcher = {
+          enable = true;
+          watchDir = "${homeDir}/Sync/docwatcher-costs";
+          googleDrive = {
+            enable = true;
+            path = "koszty";
+          };
+          mail.enable = false;
+          paperless = {
+            enable = true;
+            consumeDir = "${homeDir}/Sync/paperless-consume";
+          };
+          ssh = {
+            enable = true;
+            host = "nas";
+            targetDir = "/volume1/private/Memories/Private/Firma/%Y/%m/koszty";
+          };
+        };
+      };
 
     aichat.enable = true;
     git = {

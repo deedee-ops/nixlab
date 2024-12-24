@@ -2,6 +2,7 @@ _: {
   imports = [
     ./core.nix
     ./theme.nix
+    ./_scripts
 
     # Terminal apps
     ./aichat
