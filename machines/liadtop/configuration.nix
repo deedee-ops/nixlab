@@ -134,9 +134,9 @@ rec {
         docwatcher = {
           enable = true;
           watchDir = "${homeDir}/Sync/docwatcher-costs";
-          googleDrive = {
+          rclone = {
             enable = true;
-            path = "koszty";
+            target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
           };
           mail.enable = false;
           paperless = {
