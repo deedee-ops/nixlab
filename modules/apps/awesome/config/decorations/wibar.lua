@@ -42,6 +42,15 @@ local _, battery_signal = awful.widget.watch(xdg_config_home .. "/awesome/script
   widget_battery.text = stdout
 end)
 
+widget_battery:buttons(gears.table.join(
+  awful.button({}, 1, function()
+    awful.spawn.easy_async(xdg_config_home .. "/awesome/scripts/battery.sh --toggle-hibernate", function() end)
+    battery_signal:emit_signal("timeout")
+  end)
+))
+
+local mybattery = build_local_widget(widget_battery, "#a6e3a2")
+
 -- volume control
 local widget_volume = wibox.widget({
   align = "center",
@@ -52,8 +61,6 @@ local widget_volume = wibox.widget({
 local _, volume_signal = awful.widget.watch(xdg_config_home .. "/awesome/scripts/volume.sh", 1, function(_, stdout)
   widget_volume.text = stdout
 end)
-
-local mybattery = build_local_widget(widget_battery, "#a6e3a2")
 
 widget_volume:buttons(gears.table.join(
   awful.button({}, 1, function()

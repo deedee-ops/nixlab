@@ -4,6 +4,14 @@ device="$(echo /sys/class/power_supply/BAT*)"
 status="$(cat "${device}/status")"
 capacity="$(cat "${device}/capacity")"
 
+if [ "$1" = "--toggle-hibernate" ]; then
+  if [ -f /tmp/.battery-ignore ]; then
+    rm /tmp/.battery-ignore
+  else
+    touch /tmp/.battery-ignore
+  fi
+fi
+
 if [[ $status == "Discharging" ]]; then
   if [[ $capacity -lt 20 ]]; then
     icon=""
@@ -15,6 +23,9 @@ if [[ $status == "Discharging" ]]; then
     icon=""
   else
     icon=""
+  fi
+  if [ -f /tmp/.battery-ignore ]; then
+    icon="󱞜"
   fi
 else
   icon=""
