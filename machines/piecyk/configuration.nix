@@ -1,6 +1,5 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
@@ -113,17 +112,6 @@ rec {
   };
 
   myHomeApps = {
-    shellInitScriptFiles = [
-      (lib.getExe (
-        pkgs.writeShellScriptBin "pdf.sh" (
-          ''
-            magick_cmd="${lib.getExe pkgs.imagemagick}"
-            gs_cmd="${lib.getExe pkgs.ghostscript_headless}"
-          ''
-          + builtins.readFile ./scripts/pdf.sh
-        )
-      ))
-    ];
     extraPackages = [
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
@@ -154,6 +142,7 @@ rec {
             targetDir = "/volume1/private/Memories/Private/Firma/%Y/%m/koszty";
           };
         };
+        pdfhelpers.enable = true;
       };
 
     aichat.enable = true;
