@@ -25,7 +25,11 @@ rec {
   myHardware = {
     battery = {
       enable = true;
-      chargeUpperLimit = 80;
+      kernelModule = "asus-nb-wmi";
+      chargeLimit = {
+        top = 80;
+        bottom = 20;
+      };
     };
     bluetooth.enable = true;
     sound.enable = true;
@@ -46,7 +50,7 @@ rec {
     disks = {
       enable = true;
       hostId = "d453adff";
-      swapSize = "4G";
+      swapSize = "24G"; # For hibernation swap = 1.5 x RAM is recommended
       systemDiskDevs = [
         "/dev/disk/by-id/nvme-Micron_2400_MTFDKBA512QFM_234143E75C14"
       ];
