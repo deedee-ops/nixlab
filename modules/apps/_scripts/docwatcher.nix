@@ -15,26 +15,6 @@ in
       type = lib.types.str;
       description = "Directory to be watched for new documents.";
     };
-    googleDrive = lib.mkOption {
-      type = lib.types.submodule {
-        options = {
-          enable = lib.mkEnableOption "syncing to google drive";
-          path = lib.mkOption {
-            type = lib.types.str;
-            description = "Path on google drive";
-          };
-          rcloneConfigSopsSecret = lib.mkOption {
-            type = lib.types.str;
-            description = "Sops secret name containing rclone configuration.";
-            default = "home/scripts/docwatcher/rclone_config";
-          };
-        };
-      };
-      default = {
-        enable = false;
-      };
-      description = "Send watched documents to google drive.";
-    };
     mail = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -67,6 +47,27 @@ in
         enable = false;
       };
       description = "Send watched documents via email.";
+    };
+    rclone = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "syncing via rclone";
+          target = lib.mkOption {
+            type = lib.types.str;
+            description = "Rclone target with path";
+            example = "dropbox:my/path";
+          };
+          rcloneConfigSopsSecret = lib.mkOption {
+            type = lib.types.str;
+            description = "Sops secret name containing rclone configuration.";
+            default = "home/scripts/docwatcher/rclone_config";
+          };
+        };
+      };
+      default = {
+        enable = false;
+      };
+      description = "Send watched documents rclone destination.";
     };
     paperless = lib.mkOption {
       type = lib.types.submodule {
@@ -106,12 +107,12 @@ in
 
   config = lib.mkIf cfg.enable {
     sops.secrets = {
-      "${cfg.googleDrive.rcloneConfigSopsSecret}" = { };
+      "${cfg.rclone.rcloneConfigSopsSecret}" = { };
       "${cfg.mail.swaksConfigSopsSecret}" = { };
     };
 
     home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-      lib.mkIf osConfig.mySystem.impermanence.enable [
+      lib.mkIf (cfg.rclone.enable && osConfig.mySystem.impermanence.enable) [
         ".config/rclone"
       ];
 
@@ -128,8 +129,8 @@ in
       Service = {
         Environment =
           [
-            "GDRIVE_ENABLE=${if cfg.googleDrive.enable then "true" else "false"}"
             "MAIL_ENABLE=${if cfg.mail.enable then "true" else "false"}"
+            "RCLONE_ENABLE=${if cfg.rclone.enable then "true" else "false"}"
             "PAPERLESS_ENABLE=${if cfg.paperless.enable then "true" else "false"}"
             "SSH_ENABLE=${if cfg.ssh.enable then "true" else "false"}"
             "WATCH_DIR=${cfg.watchDir}"
@@ -144,8 +145,8 @@ in
               ]
             }:$PATH"
           ]
-          ++ (lib.optionals cfg.googleDrive.enable [
-            "GDRIVE_DIR=${cfg.googleDrive.path}"
+          ++ (lib.optionals cfg.rclone.enable [
+            "RCLONE_TARGET=${cfg.rclone.target}"
           ])
           ++ (lib.optionals cfg.mail.enable [
             "MAIL_FROM=\"${cfg.mail.from}\""
@@ -164,7 +165,7 @@ in
         ExecStartPre = lib.getExe (
           pkgs.writeShellScriptBin "rclone-pre" ''
             [ ! -f "${config.xdg.configHome}/rclone/rclone.conf" ] && cp ${
-              config.sops.secrets."${cfg.googleDrive.rcloneConfigSopsSecret}".path
+              config.sops.secrets."${cfg.rclone.rcloneConfigSopsSecret}".path
             } "${config.xdg.configHome}/rclone/rclone.conf"
             true
           ''

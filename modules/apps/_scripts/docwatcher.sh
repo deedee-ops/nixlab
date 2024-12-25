@@ -7,21 +7,10 @@ SCP_CMD="${scp_cmd:-scp}"
 SSH_CMD="${ssh_cmd:-ssh}"
 SWAKS_CMD="${swaks_cmd:-swaks}"
 
-GDRIVE_ENABLE="${GDRIVE_ENABLE:-false}"
 MAIL_ENABLE="${MAIL_ENABLE:-false}"
+RCLONE_ENABLE="${RCLONE_ENABLE:-false}"
 PAPERLESS_ENABLE="${PAPERLESS_ENABLE:-false}"
 SSH_ENABLE="${SSH_ENABLE:-false}"
-
-function handle_gdrive() {
-  if [ "$GDRIVE_ENABLE" != "true" ]; then
-    return
-  fi
-  if $RCLONE_CMD copy "$1" "gdrive:${GDRIVE_DIR}"; then
-    return
-  fi
-
-  $NOTIFYSEND_CMD -u critical "Sending \"$(basename "$1")\" to GDrive/${GDRIVE_DIR} failed. Forgot to run 'rclone config'?"
-}
 
 function handle_mail() {
   if [ "$MAIL_ENABLE" != "true" ]; then
@@ -39,6 +28,17 @@ function handle_paperless() {
     return
   fi
   cp -a "$1" "${PAPERLESS_CONSUME_DIR}/"
+}
+
+function handle_rclone() {
+  if [ "$RCLONE_ENABLE" != "true" ]; then
+    return
+  fi
+  if $RCLONE_CMD copy "$1" "${RCLONE_TARGET}"; then
+    return
+  fi
+
+  $NOTIFYSEND_CMD -u critical "Sending \"$(basename "$1")\" to ${RCLONE_TARGET} failed. Forgot to run 'rclone config'?"
 }
 
 function handle_ssh() {
@@ -60,9 +60,9 @@ while read -r event file; do
 
   pathfile="${WATCH_DIR}/${file}"
 
-  handle_gdrive "$pathfile"
   handle_mail "$pathfile"
   handle_paperless "$pathfile"
+  handle_rclone "$pathfile"
   handle_ssh "$pathfile"
   rm -rf "$pathfile"
 done
