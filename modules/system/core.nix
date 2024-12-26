@@ -124,18 +124,7 @@
       }
     ];
 
-    services = {
-      udev.extraRules = config.mySystem.extraUdevRules;
-
-      zfs = lib.mkIf (config.mySystem.filesystem == "zfs") {
-        autoScrub.enable = true;
-        trim.enable = true;
-        zed.settings = lib.mkIf config.mySystem.alerts.pushover.enable {
-          ZED_PUSHOVER_TOKEN = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_API_KEY)";
-          ZED_PUSHOVER_USER = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_USER_KEY)";
-        };
-      };
-    };
+    services.udev.extraRules = config.mySystem.extraUdevRules;
 
     nixpkgs.config.allowUnfreePredicate =
       pkg:

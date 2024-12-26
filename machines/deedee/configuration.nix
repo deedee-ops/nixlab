@@ -136,6 +136,10 @@ rec {
         ];
       };
     };
+
+    zfs.snapshots = {
+      "tank/webdav" = { };
+    };
   };
 
   mySystemApps = {
