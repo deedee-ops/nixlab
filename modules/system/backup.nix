@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  svc,
   pkgs,
   ...
 }:
@@ -50,6 +51,12 @@ in
       description = "Location for snapshot mount.";
       default = "/mnt/backup-snapshot";
     };
+    extraBackupDatasets = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Extra datasets to be backed up.";
+      default = [ ];
+      example = [ "tank/my-data" ];
+    };
   };
 
   config = lib.mkIf (cfg.local.enable || (builtins.length cfg.remotes > 0)) {
@@ -82,6 +89,14 @@ in
         }) cfg.remotes
       );
 
+    services.restic.backups = lib.mkIf (builtins.length cfg.extraBackupDatasets > 0) (
+      svc.mkRestic {
+        name = "_extra-datasets";
+        paths = [ ];
+        fullPaths = builtins.map (path: "/mnt/backup-extra/${path}") cfg.extraBackupDatasets;
+      }
+    );
+
     # ref: https://cyounkins.medium.com/correct-backups-require-filesystem-snapshots-23062e2e7a15
     systemd = {
       timers.backup-snapshot = {
@@ -99,13 +114,22 @@ in
           pkgs.busybox
         ];
         serviceConfig.Type = "simple";
-        script = ''
-          mkdir -p ${cfg.snapshotMountPath} && \
-          umount ${cfg.snapshotMountPath} || true && \
-          zfs destroy ${config.mySystem.impermanence.zfsPool}/persist@backup || true && \
-          zfs snapshot ${config.mySystem.impermanence.zfsPool}/persist@backup && \
-          mount -t zfs ${config.mySystem.impermanence.zfsPool}/persist@backup ${cfg.snapshotMountPath}
-        '';
+        script =
+          ''
+            mkdir -p ${cfg.snapshotMountPath} && \
+            umount ${cfg.snapshotMountPath} || true && \
+            zfs destroy ${config.mySystem.impermanence.zfsPool}/persist@backup || true && \
+            zfs snapshot ${config.mySystem.impermanence.zfsPool}/persist@backup && \
+            mount -t zfs ${config.mySystem.impermanence.zfsPool}/persist@backup ${cfg.snapshotMountPath}
+          ''
+          + builtins.concatStringsSep "\n" (
+            builtins.map (dataset: ''
+              mkdir -p /mnt/backup-extra/${dataset}
+              zfs destroy ${dataset}@backup || true && \
+              zfs snapshot ${dataset}@backup && \
+              mount -t zfs ${dataset}@backup /mnt/backup-extra/${dataset}
+            '') cfg.extraBackupDatasets
+          );
       };
     };
   };
