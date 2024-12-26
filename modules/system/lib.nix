@@ -221,6 +221,7 @@
       {
         name,
         paths,
+        fullPaths ? [ ],
         excludePaths ? [ ],
       }:
       let
@@ -243,7 +244,8 @@
         '';
 
         # Move the path to the zfs snapshot path
-        includePaths = map (path: "${config.mySystem.backup.snapshotMountPath}/${path}") paths;
+        includePaths =
+          (map (path: "${config.mySystem.backup.snapshotMountPath}/${path}") paths) ++ fullPaths;
       in
       {
         # local backup

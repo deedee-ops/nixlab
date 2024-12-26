@@ -28,7 +28,10 @@ in
     };
     webdavDir = lib.mkOption {
       type = lib.types.str;
-      description = "Path to directory containing webdav files.";
+      description = ''
+        Path to directory containing webdav files.
+        IMPERMANENCE FOR THIS DIR IS NOT ENABLED UNLESS IT'S A SUBDIR OF `cfg.dataDir`.
+      '';
       default = "${cfg.dataDir}/data";
     };
     envFileSopsSecret = lib.mkOption {
@@ -91,10 +94,21 @@ in
         restic.backups = lib.mkIf cfg.backup (
           svc.mkRestic {
             name = "davis";
-            paths = [ cfg.dataDir ];
+            paths = [
+              cfg.dataDir
+            ] ++ lib.optionals (lib.strings.hasPrefix cfg.dataDir cfg.webdavDir) [ cfg.webdavDir ];
           }
         );
       };
+
+      mySystem.backup.extraBackupDatasets = lib.optionals (config.mySystem.filesystem == "zfs") [
+        (
+          if lib.strings.hasPrefix "/" cfg.webdavDir then
+            builtins.substring 1 100000 cfg.webdavDir
+          else
+            cfg.webdavDir
+        )
+      ];
 
       systemd.services.docker-davis = {
         preStart = lib.mkAfter ''
