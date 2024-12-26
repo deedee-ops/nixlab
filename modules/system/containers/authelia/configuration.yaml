@@ -94,7 +94,7 @@ session:
   same_site: 'lax'
   expiration: 18h
   inactivity: 4h
-  remember_me: 1M
+  remember_me: 10y
   cookies:
     - domain: "{{ROOT_DOMAIN}}"
       authelia_url: "https://authelia.{{ROOT_DOMAIN}}"
