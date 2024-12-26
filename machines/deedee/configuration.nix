@@ -78,6 +78,9 @@ rec {
       };
       tankDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
       tankDatasets = {
+        webdav = {
+          type = "zfs_fs";
+        };
         vms = {
           type = "zfs_fs";
           options.mountpoint = "none";
@@ -223,7 +226,8 @@ rec {
       enable = true;
       carddavEnable = true;
       caldavEnable = false;
-      webdavEnable = false;
+      webdavEnable = true;
+      webdavDir = "/tank/webdav";
       useAuthelia = true;
     };
     echo-server.enable = false;
