@@ -7,7 +7,12 @@
 }:
 {
   config = lib.mkIf osConfig.mySystemApps.xorg.enable {
-    stylix.targets.gtk.enable = true;
+    stylix.targets.gtk = {
+      enable = true;
+      extraCss = ''
+        window.background { border-radius: 0; }
+      '';
+    };
 
     home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
       lib.mkIf osConfig.mySystem.impermanence.enable [

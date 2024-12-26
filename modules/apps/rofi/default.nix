@@ -180,7 +180,8 @@ in
 
                 if [ -n "$host" ]; then
                   export DISABLE_MOTD=1
-                  ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "${lib.getExe pkgs.openssh} $host"
+                  # true && ... - it's a hack to invoke SSH command properly on ghostty
+                  ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "true && ${lib.getExe pkgs.openssh} $host"
                 fi
               ''
             );
