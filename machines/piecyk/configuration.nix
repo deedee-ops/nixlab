@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   ...
@@ -300,7 +301,7 @@ rec {
           };
         };
       };
-      terminal = pkgs.kitty;
+      terminal = inputs.ghostty.packages.x86_64-linux.default;
     };
     zathura.enable = true;
     zsh.promptColor = "magenta";

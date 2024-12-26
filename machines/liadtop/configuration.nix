@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   pkgs,
   ...
@@ -272,7 +273,7 @@ rec {
     xorg = {
       autorandr = { };
       mapRightCtrlToAltGr = true;
-      terminal = pkgs.kitty;
+      terminal = inputs.ghostty.packages.x86_64-linux.default;
       trackpadSupport = true;
     };
     zathura.enable = true;

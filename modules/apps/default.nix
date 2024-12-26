@@ -31,6 +31,7 @@ _: {
     ./discord
     ./dunst
     ./firefox
+    ./ghostty
     ./kitty
     ./mpv
     ./obsidian
