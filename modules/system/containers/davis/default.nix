@@ -26,6 +26,11 @@ in
       description = "Path to directory containing data.";
       default = "/var/lib/davis";
     };
+    webdavDir = lib.mkOption {
+      type = lib.types.str;
+      description = "Path to directory containing webdav files.";
+      default = "${cfg.dataDir}/data";
+    };
     envFileSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing redlib envs.";
@@ -62,11 +67,12 @@ in
             TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
             TRUSTED_PROXIES = "172.16.0.0/16";
             WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
+            WEBDAV_HOMES_DIR = "/webdav";
           };
           environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
           volumes = [
             "${cfg.dataDir}/config:/config"
-            "${cfg.dataDir}/data:/data"
+            "${cfg.webdavDir}:/webdav"
           ];
         };
       };
@@ -93,8 +99,9 @@ in
       systemd.services.docker-davis = {
         preStart = lib.mkAfter ''
           rm -rf /var/cache/davis/web || true
-          mkdir -p "${cfg.dataDir}/config" "${cfg.dataDir}/data"
-          chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+          mkdir -p "${cfg.dataDir}/config"
+          [ ! -d "${cfg.webdavDir}"] && mkdir -p "${cfg.webdavDir}"
+          chown 65000:65000 "${cfg.dataDir}/config" "${cfg.webdavDir}"
         '';
       };
 
