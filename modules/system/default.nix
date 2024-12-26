@@ -19,6 +19,7 @@ _: {
     ./ssh.nix
     ./time.nix
     ./user.nix
+    ./zfs.nix
 
     ./apps
     ./containers
