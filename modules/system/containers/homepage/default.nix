@@ -104,7 +104,7 @@ in
       cfg = {
         dependsOn = [ "socket-proxy" ];
         user = "1000:1000";
-        image = "ghcr.io/gethomepage/homepage:v0.10.4@sha256:bf16a9f04a09d96714f723d800888033e9b19039ef546478322bb7ba93791187";
+        image = "ghcr.io/gethomepage/homepage:v0.10.5@sha256:e11966baac52469ca510dee04281713e8d66bd58f9e3ac9d224f0caf536851b4";
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/app/config,tmpfs-mode=1777"
