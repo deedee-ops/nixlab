@@ -53,7 +53,7 @@ in
 
     virtualisation.oci-containers.containers.gluetun = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/qdm12/gluetun:latest@sha256:05c23bc1738d0618985e24c3c5e5170b8c534fd8b959e359bd8c29d5c1662604";
+        image = "ghcr.io/qdm12/gluetun:latest@sha256:62e76d60e4220950558215647049c2b9ef0fc64272b80f9012562555b140bf84";
         environment =
           {
             DOT = "off";
