@@ -37,7 +37,7 @@ in
 
   config = lib.mkIf (config.mySystem.filesystem == "zfs") {
     services = {
-      sanoid = {
+      sanoid = lib.mkIf (builtins.length (builtins.attrNames cfg.snapshots) > 0) {
         enable = true;
         interval = "hourly";
         datasets = builtins.listToAttrs (
