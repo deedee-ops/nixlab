@@ -40,6 +40,9 @@ in
   config = lib.mkIf cfg.enable {
     services.udev.extraRules =
       let
+        # on ZFS filesystems hibernate is disabled, for very good reasons (damaging pools)
+        sleepAction = if config.mySystem.filesystem == "zfs" then "suspend" else "hibernate";
+
         batteryLowScript = pkgs.writeShellScriptBin "battery-low.sh" ''
           PATH="${
             lib.makeBinPath [
@@ -61,18 +64,20 @@ in
             user=$(who | grep '('$display')' | awk '{print $1}' | head -n 1)
             uid=$(id -u $user)
 
-            if [ ! -f /tmp/.battery-will-hibernate ] && [ "$(cat /sys/class/power_supply/BAT?/capacity)" -lt ${builtins.toString (cfg.chargeLimit.bottom + 5)} ]; then
-              /run/wrappers/bin/sudo -u "$user" DISPLAY="$display" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" notify-send -u critical "Battery level low, will hibernate soon."
-              touch /tmp/.battery-will-hibernate
+            if [ ! -f /tmp/.battery-will-sleep ] && [ "$(cat /sys/class/power_supply/BAT?/capacity)" -lt ${
+              builtins.toString (cfg.chargeLimit.bottom + 5)
+            } ]; then
+              /run/wrappers/bin/sudo -u "$user" DISPLAY="$display" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" notify-send -u critical "Battery level low, will ${sleepAction} soon."
+              touch /tmp/.battery-will-sleep
             fi
 
             if [ "$(cat /sys/class/power_supply/BAT?/capacity)" -lt ${builtins.toString cfg.chargeLimit.bottom} ]; then
-              if ! systemctl hibernate; then
-                sudo -u "$user" DISPLAY="$display" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" notify-send -u critical "Battery below ${builtins.toString cfg.chargeLimit.bottom}% but failed to hibernate"
+              if ! systemctl ${sleepAction}; then
+                sudo -u "$user" DISPLAY="$display" DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$uid/bus" notify-send -u critical "Battery below ${builtins.toString cfg.chargeLimit.bottom}% but failed to ${sleepAction}"
               fi
             fi
           else
-            rm -f /tmp/.battery-will-hibernate
+            rm -f /tmp/.battery-will-sleep
           fi
 
         '';
