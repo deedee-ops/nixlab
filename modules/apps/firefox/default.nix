@@ -99,6 +99,10 @@ let
       "privacy.userContext.enabled" = true;
       "privacy.userContext.ui.enabled" = true;
 
+      # translations
+      "browser.translations.enable" = false;
+      "browser.translations.automaticallyPopup" = false;
+
       # UI
       "browser.uiCustomization.state" = builtins.toJSON {
         placements = {
