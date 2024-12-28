@@ -125,6 +125,7 @@ rec {
         homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
       in
       {
+        backupverify.enable = true;
         docwatcher = {
           enable = true;
           watchDir = "${homeDir}/Sync/docwatcher-costs";
