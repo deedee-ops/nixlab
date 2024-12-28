@@ -192,9 +192,7 @@ rec {
 
       enable = true;
       extraVHosts = {
-        minio = "http://${mySystem.nasIP}:9001";
         nas = "http://${mySystem.nasIP}:5000";
-        s3 = "http://${mySystem.nasIP}:9000";
 
         omada = "https://${omadaIP}";
       };
