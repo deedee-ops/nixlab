@@ -41,6 +41,24 @@ in
         };
       };
     };
+    secondaryInterface = lib.mkOption {
+      type = lib.types.nullOr (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "Main interface which will receive default routing";
+            };
+            DNS = lib.mkOption {
+              type = lib.types.nullOr (lib.types.listOf lib.types.str);
+              description = "If enabled, the DNS servers of main interface will be overriden manually, instead of using the DHCP provided ones.";
+              default = null;
+            };
+          };
+        }
+      );
+      default = null;
+    };
     fallbackDNS = lib.mkOption {
       type = lib.types.nullOr (lib.types.listOf lib.types.str);
       default = [
@@ -78,6 +96,10 @@ in
           || (cfg.mainInterface.bridgeMAC != null);
         message = "Incus tends to break bridge MAC address, when in auto mode - thus when enabled, mySystem.macInterface.bridgeMAC is required.";
       }
+      {
+        assertion = cfg.secondaryInterface == null || cfg.customNetworking == null;
+        message = "secondaryInterface is ignored, when customNetworking is set";
+      }
     ];
 
     networking = {
@@ -86,7 +108,11 @@ in
       hostName = cfg.hostname;
       dhcpcd.enable = false;
       enableIPv6 = false;
-      firewall.enable = cfg.firewallEnable;
+      firewall = {
+        enable = cfg.firewallEnable;
+        checkReversePath =
+          if cfg.secondaryInterface == null && cfg.customNetworking == null then "strict" else "loose";
+      };
       nftables.enable = cfg.firewallEnable;
       resolvconf.enable = false;
       useDHCP = false;
@@ -162,17 +188,33 @@ in
           else
             {
               enable = true;
-              networks."50-${cfg.mainInterface.name}" = {
-                matchConfig.Name = cfg.mainInterface.name;
-                networkConfig = {
-                  inherit (cfg.mainInterface) DNS;
+              networks =
+                {
+                  "50-${cfg.mainInterface.name}" = {
+                    matchConfig.Name = cfg.mainInterface.name;
+                    networkConfig = {
+                      inherit (cfg.mainInterface) DNS;
 
-                  DHCP = "ipv4";
-                  LinkLocalAddressing = "ipv4"; # disable ipv6
+                      DHCP = "ipv4";
+                      LinkLocalAddressing = "ipv4"; # disable ipv6
+                    };
+                    dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                    linkConfig.RequiredForOnline = "routable";
+                  };
+                }
+                // lib.optionalAttrs (cfg.secondaryInterface != null) {
+                  "55-${cfg.secondaryInterface.name}" = {
+                    matchConfig.Name = cfg.secondaryInterface.name;
+                    networkConfig = {
+                      inherit (cfg.secondaryInterface) DNS;
+
+                      DHCP = "ipv4";
+                      LinkLocalAddressing = "ipv4"; # disable ipv6
+                    };
+                    dhcpV4Config = lib.mkIf (cfg.secondaryInterface.DNS != null) { UseDNS = false; };
+                    linkConfig.RequiredForOnline = "carrier";
+                  };
                 };
-                dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
-                linkConfig.RequiredForOnline = "routable";
-              };
             }
         else
           lib.recursiveUpdate cfg.customNetworking { enable = true; };

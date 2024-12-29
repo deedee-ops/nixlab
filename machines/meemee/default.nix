@@ -5,7 +5,7 @@ rec {
       osConfig = self.nixosConfigurations.meemee.config;
 
       system = "x86_64-linux";
-      hardwareModules = [ ../../modules/hardware/wyse-5070.nix ];
+      hardwareModules = [ ../../modules/hardware/vm-amd.nix ];
       profileModules = [
         ./configuration.nix
       ];

@@ -1,10 +1,9 @@
-{ config, ... }:
+_:
 let
+  adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
   nasIP = "10.100.10.1";
   ownIP = "10.100.20.2";
   zigbeeBottomFloorIP = "10.210.10.10";
-
-  adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
 in
 rec {
   sops = {
@@ -62,7 +61,7 @@ rec {
       enable = true;
       hostId = "bec09da4";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/disk/by-id/ata-SK_hynix_SC300_M.2_2280_128GB_FJ62N588512203251" ];
+      systemDiskDevs = [ "/dev/sda" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
@@ -97,108 +96,18 @@ rec {
       firewallEnable = true;
       hostname = "meemee";
       mainInterface = {
-        name = "trst0";
+        name = "enp3s0";
+        DNS = [
+          "9.9.9.9"
+          "149.112.112.10"
+        ];
       };
-      customNetworking = {
-        enable = true;
-        links = {
-          "0000-bridge-inherit-mac" = {
-            matchConfig.Type = "bridge";
-            linkConfig.MACAddressPolicy = "none";
-          };
-        };
-        netdevs = {
-          "0001-uplink" = {
-            netdevConfig = {
-              Kind = "bridge";
-              Name = "br0";
-              MACAddress = "none";
-            };
-            bridgeConfig = {
-              # VLANFiltering = true; # when true, it breaks wireguard?
-              STP = false;
-            };
-          };
-          "0002-trst0" = {
-            netdevConfig = {
-              Kind = "vlan";
-              Name = "trst0";
-            };
-            vlanConfig.Id = 100;
-          };
-          "0003-untrst0" = {
-            netdevConfig = {
-              Kind = "vlan";
-              Name = "untrst0";
-            };
-            vlanConfig.Id = 200;
-          };
-          "0004-iot0" = {
-            netdevConfig = {
-              Kind = "vlan";
-              Name = "iot0";
-            };
-            vlanConfig.Id = 210;
-          };
-        };
-        networks = {
-          "1002-add-main-to-br0" = {
-            matchConfig.Name = "enp1s0";
-            bridge = [ "br0" ];
-            bridgeVLANs = [
-              { VLAN = 100; }
-              { VLAN = 200; }
-              { VLAN = 210; }
-            ];
-          };
-          "1003-br0-up" = {
-            inherit (mySystem.networking.customNetworking.networks."1002-add-main-to-br0") bridgeVLANs;
-            matchConfig.Name = "br0";
-            vlan = [
-              "trst0"
-              "untrst0"
-              "iot0"
-            ];
-            networkConfig = {
-              LinkLocalAddressing = "no";
-            };
-          };
-          "1004-trst0-up" = {
-            matchConfig.Name = "trst0";
-            linkConfig = {
-              RequiredForOnline = "routable";
-              MACAddress = "02:00:0a:64:14:02";
-            };
-            dhcpV4Config.UseDNS = false;
-            networkConfig = {
-              LinkLocalAddressing = "no"; # disable fallback IPs
-              DHCP = "ipv4";
-              DNS = [ "10.100.1.1" ];
-            };
-          };
-          "1005-untrst0-up" = {
-            matchConfig.Name = "untrst0";
-            linkConfig = {
-              RequiredForOnline = "routable";
-              MACAddress = "02:00:0a:c8:14:02";
-            };
-            networkConfig = {
-              LinkLocalAddressing = "no"; # disable fallback IPs
-              DHCP = "ipv4";
-            };
-          };
-          "1005-iot0-up" = {
-            matchConfig.Name = "iot0";
-            linkConfig = {
-              RequiredForOnline = "routable";
-              MACAddress = "02:00:0a:d2:01:f0";
-            };
-            networkConfig = {
-              LinkLocalAddressing = "no"; # disable fallback IPs
-              DHCP = "ipv4";
-            };
-          };
-        };
+      secondaryInterface = {
+        name = "enp4s0";
+        DNS = [
+          "9.9.9.9"
+          "149.112.112.10"
+        ];
       };
     };
 
@@ -310,22 +219,4 @@ rec {
   };
 
   system.stateVersion = "24.11";
-
-  # @todo @hack HERE BE DRAGONS
-  # this temporary hack adds retries to all remote restic backup services, until I resolve the trunking issues
-  systemd.services = builtins.listToAttrs (
-    builtins.map (name: {
-      name = "restic-backups-${name}";
-      value = {
-        serviceConfig = {
-          Restart = "on-failure";
-          RestartSec = 30;
-        };
-        unitConfig = {
-          StartLimitInterval = 100;
-          StartLimitBurst = 3;
-        };
-      };
-    }) (builtins.attrNames config.services.restic.backups)
-  );
 }
