@@ -126,13 +126,6 @@
 
     services.udev.extraRules = config.mySystem.extraUdevRules;
 
-    nixpkgs.config.allowUnfreePredicate =
-      pkg:
-      builtins.elem (lib.getName pkg) (
-        config.mySystem.allowUnfree
-        ++ config.home-manager.users."${config.mySystem.primaryUser}".myHomeApps.allowUnfree
-      );
-
     networking.firewall.allowedTCPPorts =
       config.home-manager.users."${config.mySystem.primaryUser}".myHomeApps.openPorts;
     networking.firewall.allowedUDPPorts =

@@ -1,7 +1,9 @@
-{ lib, ... }:
+{ self, lib, ... }:
 rec {
   flakePart = {
     nixosConfigurations.meemee = lib.mkNixosConfig {
+      osConfig = self.nixosConfigurations.meemee.config;
+
       system = "x86_64-linux";
       hardwareModules = [ ../../modules/hardware/wyse-5070.nix ];
       profileModules = [
