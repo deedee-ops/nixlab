@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   osConfig,
   lib,
@@ -52,6 +53,8 @@
       };
 
       packages = [
+        inputs.ghostty.packages.x86_64-linux.default.terminfo
+
         pkgs.bzip2
         pkgs.dnsutils
         pkgs.file

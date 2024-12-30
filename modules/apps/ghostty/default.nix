@@ -30,7 +30,6 @@ in
       # inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
       #   zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
       # })
-      inputs.ghostty.packages.x86_64-linux.default.terminfo
     ];
 
     programs.zsh = {
