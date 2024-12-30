@@ -25,12 +25,22 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      inputs.ghostty.packages.x86_64-linux.ghostty
+      inputs.ghostty.packages.x86_64-linux.default
       # do it when https://github.com/ghostty-org/ghostty/pull/3934 gets merged
       # inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
       #   zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
       # })
+      inputs.ghostty.packages.x86_64-linux.default.terminfo
     ];
+
+    programs.zsh = {
+      initExtra = ''
+        if [[ "$TERM" == "xterm-ghostty" ]] && [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
+          unalias sudo 2> /dev/null
+          source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
+        fi
+      '';
+    };
 
     xdg.configFile = {
       "ghostty/config".text = toGhosttyConfig {
