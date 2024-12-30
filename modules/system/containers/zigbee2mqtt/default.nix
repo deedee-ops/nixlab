@@ -24,32 +24,54 @@ in
       description = "Sops secret name containing zigbee2mqtt envs.";
       default = "system/apps/zigbee2mqtt/envfile";
     };
-    extraConfigs = lib.mkOption {
-      type = lib.types.attrsOf lib.types.attrs;
+    coordinators = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            envFileSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing given instance envs.";
+            };
+            config = lib.mkOption {
+              type = lib.types.attrs;
+              description = ''
+                Configuration options, whill will be merged directly to instance
+                configuration file.
+              '';
+            };
+          };
+        }
+      );
       description = ''
-        List of multiple zigbee coordinator extra configuration stanzas.
+        List of multiple zigbee coordinator configuration stanzas.
         Because one zigbee2mqtt can support only one coordinator,
         this would effectively spawn multiple zigbee2mqtt instances.
-        The key will be URL and MQTT suffix. The value will be merged,
+        The key will be URL and MQTT suffix. The value.config will be merged,
         with the default config. At least, you need to add `serial`
         stanza here.
       '';
       example = {
         coordinator1 = {
-          advanced = {
-            transmit_power = 20;
-          };
-          serial = {
-            port = "/dev/ttyUSB0";
-            disable_led = false;
-            baudrate = 115200;
+          envFileSopsSecret = "system/apps/zigbee2mqtt/coordinator1/envfile";
+          config = {
+            advanced = {
+              transmit_power = 20;
+            };
+            serial = {
+              port = "/dev/ttyUSB0";
+              disable_led = false;
+              baudrate = 115200;
+            };
           };
         };
         coordinator2 = {
-          serial = {
-            port = "tcp://192.168.1.1:6638";
-            baudrate = 115200;
-            adapter = "ezsp";
+          envFileSopsSecret = "system/apps/zigbee2mqtt/coordinator1/envfile";
+          config = {
+            serial = {
+              port = "tcp://192.168.1.1:6638";
+              baudrate = 115200;
+              adapter = "ezsp";
+            };
           };
         };
       };
@@ -59,7 +81,12 @@ in
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for zigbee2mqtt are disabled!") ];
 
-    sops.secrets."${cfg.envFileSopsSecret}" = { };
+    sops.secrets = builtins.listToAttrs (
+      builtins.map (alias: {
+        name = (builtins.getAttr alias cfg.coordinators).envFileSopsSecret;
+        value = { };
+      }) (builtins.attrNames cfg.coordinators)
+    );
 
     mySystemApps.mosquitto.enable = true;
 
@@ -67,7 +94,7 @@ in
       builtins.map (
         alias:
         let
-          value = builtins.getAttr alias cfg.extraConfigs;
+          coordinator = builtins.getAttr alias cfg.coordinators;
         in
         {
           name = "zigbee2mqtt-${alias}";
@@ -79,7 +106,7 @@ in
                 ZIGBEE2MQTT_CONFIG_MQTT_USER = "mq";
                 ZIGBEE2MQTT_DATA = "/config";
               };
-              environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
+              environmentFiles = [ config.sops.secrets."${coordinator.envFileSopsSecret}".path ];
               volumes = [
                 "${cfg.dataDir}/${alias}/config:/config"
                 "/run/udev:/run/udev:ro"
@@ -88,8 +115,8 @@ in
                 [
                   "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
                 ]
-                ++ lib.optionals (lib.strings.hasPrefix "/dev" value.serial.port) [
-                  "--device=${value.serial.port}"
+                ++ lib.optionals (lib.strings.hasPrefix "/dev" coordinator.config.serial.port) [
+                  "--device=${coordinator.config.serial.port}"
                 ];
             };
             opts = {
@@ -98,7 +125,7 @@ in
             };
           };
         }
-      ) (builtins.attrNames cfg.extraConfigs)
+      ) (builtins.attrNames cfg.coordinators)
     );
 
     services = {
@@ -109,7 +136,7 @@ in
             host = "zigbee2mqtt-${alias}";
             proxyPass = "http://zigbee2mqtt-${alias}.docker:8080";
           };
-        }) (builtins.attrNames cfg.extraConfigs)
+        }) (builtins.attrNames cfg.coordinators)
       );
 
       restic.backups = lib.mkIf cfg.backup (
@@ -130,7 +157,7 @@ in
                 lib.recursiveUpdate {
                   mqtt.base_topic = "zigbee2mqtt_${alias}";
                   # frontend.url = "https://zigbee2mqtt-${alias}.${config.mySystem.rootDomain}";
-                } (builtins.getAttr alias cfg.extraConfigs)
+                } (builtins.getAttr alias cfg.coordinators).config
               )
             )
           );
@@ -146,7 +173,7 @@ in
             '';
           };
         }
-      ) (builtins.attrNames cfg.extraConfigs)
+      ) (builtins.attrNames cfg.coordinators)
     );
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
@@ -161,7 +188,7 @@ in
             icon = "zigbee2mqtt.svg";
             description = "Zigbee compatibility layer";
           };
-        }) (builtins.attrNames cfg.extraConfigs)
+        }) (builtins.attrNames cfg.coordinators)
       );
     };
   };

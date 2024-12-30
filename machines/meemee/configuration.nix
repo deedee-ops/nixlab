@@ -3,7 +3,6 @@ let
   adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
   nasIP = "10.100.10.1";
   ownIP = "10.100.20.2";
-  zigbeeBottomFloorIP = "10.210.10.10";
 in
 rec {
   sops = {
@@ -188,22 +187,31 @@ rec {
     };
     zigbee2mqtt = {
       enable = true;
-      extraConfigs = {
-        # topfloor = {
-        #   advanced = {
-        #     transmit_power = 20;
-        #   };
-        #   serial = {
-        #     port = "/dev/ttyUSB0";
-        #     disable_led = false;
-        #     baudrate = 115200;
-        #   };
-        # };
+      coordinators = {
+        topfloor = {
+          envFileSopsSecret = "system/apps/zigbee2mqtt/topfloor/envfile";
+          config = {
+            advanced = {
+              transmit_power = 20;
+            };
+            serial = {
+              port = "/dev/serial/by-id/usb-SMLIGHT_SMLIGHT_SLZB-06M_149444ac1ca6ed118ab2e8a32981d5c7-if00-port0";
+              baudrate = 115200;
+              adapter = "ember";
+            };
+          };
+        };
         bottomfloor = {
-          serial = {
-            port = "tcp://${zigbeeBottomFloorIP}:6638";
-            baudrate = 115200;
-            adapter = "ezsp";
+          envFileSopsSecret = "system/apps/zigbee2mqtt/bottomfloor/envfile";
+          config = {
+            advanced = {
+              transmit_power = 20;
+            };
+            serial = {
+              port = "tcp://10.210.10.10:6638";
+              baudrate = 115200;
+              adapter = "ember";
+            };
           };
         };
       };
