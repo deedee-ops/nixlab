@@ -161,8 +161,10 @@ awful.rules.rules = {
       name = {
         "Event Tester", -- xev.
         "rofi - Passphrase:", -- pinentry for rofi
-        "Micro-break",
+        "Micro-break", -- workrave
         "Rest break", -- workrave
+        "teams.microsoft.com is sharing a window.", -- teams
+        "teams.microsoft.com is sharing your screen.", -- teams
       },
       role = {
         "AlarmWindow", -- Thunderbird's calendar.
