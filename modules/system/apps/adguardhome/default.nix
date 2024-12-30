@@ -201,6 +201,14 @@ in
                   name = "(suplement) Polskie Filtry Anty-Adblockowe";
                   url = "https://raw.githubusercontent.com/olegwukr/polish-privacy-filters/master/anti-adblock-suplement-adguard.txt";
                 }
+                {
+                  name = "OCSP Responder Blocklist";
+                  url = "https://raw.githubusercontent.com/ScottHelme/revocation-endpoints/refs/heads/master/ocsp.txt";
+                }
+                {
+                  name = "CRL Server Blocklist";
+                  url = "https://raw.githubusercontent.com/ScottHelme/revocation-endpoints/refs/heads/master/crl.txt";
+                }
               ];
 
               buildList = id: url: {
