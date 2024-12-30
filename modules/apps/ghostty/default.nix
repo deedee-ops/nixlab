@@ -25,7 +25,11 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      inputs.ghostty.packages.x86_64-linux.default
+      inputs.ghostty.packages.x86_64-linux.ghostty
+      # do it when https://github.com/ghostty-org/ghostty/pull/3934 gets merged
+      # inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
+      #   zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
+      # })
     ];
 
     xdg.configFile = {
@@ -51,6 +55,8 @@ in
         ]; # disable ligatures
         window-padding-x = 6;
         window-padding-y = 6;
+
+        auto-update = "off";
       };
     };
   };
