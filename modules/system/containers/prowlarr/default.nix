@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.prowlarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/prowlarr-devel:1.29.1.4903@sha256:3ef9165a75cb17663f75d1bdb19957f59c552a2e8dd0e2773831dbd4a7081f38";
+        image = "ghcr.io/deedee-ops/prowlarr-devel:1.29.1.4903@sha256:0d17453522c8b24a74f766b75ce53318fe9c1b58050a0a949f5a80d27aa08ffa";
         environment = {
           PROWLARR__APP__INSTANCENAME = "Prowlarr";
           PROWLARR__APP__THEME = "dark";
