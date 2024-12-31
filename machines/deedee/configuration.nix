@@ -105,6 +105,12 @@ rec {
       }
       {
         type = "nfs";
+        src = "${mySystem.nasIP}:/volume1/retro/retrom";
+        dest = mySystemApps.retrom.romsPath;
+        opts = "ro";
+      }
+      {
+        type = "nfs";
         src = "${mySystem.nasIP}:/volume1/media/music";
         dest = mySystemApps.navidrome.musicPath;
         opts = "ro";
@@ -285,6 +291,10 @@ rec {
     };
     recyclarr.enable = true;
     redlib.enable = true;
+    retrom = {
+      enable = true;
+      romsPath = "/mnt/retro";
+    };
     sonarr = {
       inherit mediaPath;
       enable = true;

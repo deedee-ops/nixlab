@@ -1,0 +1,16 @@
+{
+  "connection": {
+    "port": 5101,
+    "dbUrl": "@@DATABASE_URL@@"
+  },
+  "contentDirectories": [
+    {
+      "path": "/roms",
+      "storageType": "MultiFileGame"
+    }
+  ],
+  "igdb": {
+    "clientSecret": "@@IGDB_CLIENT_SECRET@@",
+    "clientId": "@@IGDB_CLIENT_ID@@"
+  }
+}

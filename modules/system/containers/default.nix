@@ -31,6 +31,7 @@ _: {
     ./radarr
     ./recyclarr
     ./redlib
+    ./retrom
     ./sonarr
     ./syncthing
     ./tika
