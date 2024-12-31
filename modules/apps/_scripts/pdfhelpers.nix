@@ -17,6 +17,7 @@ in
       (pkgs.writeShellScriptBin "rasterizePDF" ''
         PATH="${
           lib.makeBinPath [
+            pkgs.coreutils-full
             pkgs.ghostscript_headless
             pkgs.imagemagick
           ]
@@ -31,6 +32,7 @@ in
       (pkgs.writeShellScriptBin "convertImagesToPDF" ''
         PATH="${
           lib.makeBinPath [
+            pkgs.coreutils-full
             pkgs.ghostscript_headless
             pkgs.imagemagick
           ]
