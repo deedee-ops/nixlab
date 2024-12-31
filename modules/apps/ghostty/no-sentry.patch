@@ -1,0 +1,108 @@
+diff --git a/build.zig b/build.zig
+index c9ab5dd8f7..918fcc8a0c 100644
+--- a/build.zig
++++ b/build.zig
+@@ -152,6 +152,17 @@ pub fn build(b: *std.Build) !void {
+         }
+     };
+ 
++    config.sentry = b.option(
++        bool,
++        "sentry",
++        "Build with Sentry crash reporting. Default for macOS is true, false for any other system.",
++    ) orelse sentry: {
++        switch (target.result.os.tag) {
++            .macos, .ios => break :sentry true,
++            else => break :sentry false,
++        }
++    };
++
+     const pie = b.option(
+         bool,
+         "pie",
+@@ -1239,13 +1250,17 @@ fn addDeps(
+     }
+ 
+     // Sentry
+-    const sentry_dep = b.dependency("sentry", .{
+-        .target = target,
+-        .optimize = optimize,
+-        .backend = .breakpad,
+-    });
+-    step.root_module.addImport("sentry", sentry_dep.module("sentry"));
+-    if (target.result.os.tag != .windows) {
++    if (config.sentry) sentry: {
++        if (target.result.os.tag == .windows) break :sentry;
++
++        const sentry_dep = b.dependency("sentry", .{
++            .target = target,
++            .optimize = optimize,
++            .backend = .breakpad,
++        });
++
++        step.root_module.addImport("sentry", sentry_dep.module("sentry"));
++
+         // Sentry
+         step.linkLibrary(sentry_dep.artifact("sentry"));
+         try static_libs.append(sentry_dep.artifact("sentry").getEmittedBin());
+diff --git a/src/build_config.zig b/src/build_config.zig
+index 35c4295640..c706151441 100644
+--- a/src/build_config.zig
++++ b/src/build_config.zig
+@@ -23,6 +23,7 @@ pub const BuildConfig = struct {
+     flatpak: bool = false,
+     adwaita: bool = false,
+     x11: bool = false,
++    sentry: bool = true,
+     app_runtime: apprt.Runtime = .none,
+     renderer: rendererpkg.Impl = .opengl,
+     font_backend: font.Backend = .freetype,
+@@ -43,6 +44,7 @@ pub const BuildConfig = struct {
+         step.addOption(bool, "flatpak", self.flatpak);
+         step.addOption(bool, "adwaita", self.adwaita);
+         step.addOption(bool, "x11", self.x11);
++        step.addOption(bool, "sentry", self.sentry);
+         step.addOption(apprt.Runtime, "app_runtime", self.app_runtime);
+         step.addOption(font.Backend, "font_backend", self.font_backend);
+         step.addOption(rendererpkg.Impl, "renderer", self.renderer);
+diff --git a/src/crash/sentry.zig b/src/crash/sentry.zig
+index 25e6e60b39..0854c0f336 100644
+--- a/src/crash/sentry.zig
++++ b/src/crash/sentry.zig
+@@ -3,7 +3,8 @@ const assert = std.debug.assert;
+ const Allocator = std.mem.Allocator;
+ const builtin = @import("builtin");
+ const build_config = @import("../build_config.zig");
+-const sentry = @import("sentry");
++const build_options = @import("build_options");
++const sentry = if (build_options.sentry) @import("sentry");
+ const internal_os = @import("../os/main.zig");
+ const crash = @import("main.zig");
+ const state = &@import("../global.zig").state;
+@@ -47,6 +48,8 @@ pub threadlocal var thread_state: ?ThreadState = null;
+ /// It is up to the user to grab the logs and manually send them to us
+ /// (or they own Sentry instance) if they want to.
+ pub fn init(gpa: Allocator) !void {
++    if (comptime !build_options.sentry) return;
++
+     // Not supported on Windows currently, doesn't build.
+     if (comptime builtin.os.tag == .windows) return;
+ 
+@@ -76,6 +79,8 @@ pub fn init(gpa: Allocator) !void {
+ }
+ 
+ fn initThread(gpa: Allocator) !void {
++    if (comptime !build_options.sentry) return;
++
+     var arena = std.heap.ArenaAllocator.init(gpa);
+     defer arena.deinit();
+     const alloc = arena.allocator();
+@@ -125,6 +130,8 @@ fn initThread(gpa: Allocator) !void {
+ /// Process-wide deinitialization of our Sentry client. This ensures all
+ /// our data is flushed.
+ pub fn deinit() void {
++    if (comptime !build_options.sentry) return;
++
+     if (comptime builtin.os.tag == .windows) return;
+ 
+     // If we're still initializing then wait for init to finish. This

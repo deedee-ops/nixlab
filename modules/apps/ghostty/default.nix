@@ -25,11 +25,12 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      inputs.ghostty.packages.x86_64-linux.default
-      # do it when https://github.com/ghostty-org/ghostty/pull/3934 gets merged
-      # inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
-      #   zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
-      # })
+      (inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
+        patches = [
+          ./no-sentry.patch
+        ];
+        zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
+      }))
     ];
 
     programs.zsh = {
