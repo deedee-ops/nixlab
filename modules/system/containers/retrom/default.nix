@@ -56,6 +56,7 @@ in
     virtualisation.oci-containers.containers.retrom = svc.mkContainer {
       cfg = {
         image = "ghcr.io/jmberesford/retrom-service:retrom-v0.4.10@sha256:bb25ac36d8b36a3eaf74aec48cd5facf69bb6bcd1dbaeb007a3374c26cff2392";
+        ports = [ "5101:5101" ];
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.romsPath}:/roms"
@@ -105,6 +106,8 @@ in
         chown 1505:1505 "${cfg.dataDir}/config" "${cfg.dataDir}/config/config.json"
       '';
     };
+
+    networking.firewall.allowedTCPPorts = [ 5101 ];
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

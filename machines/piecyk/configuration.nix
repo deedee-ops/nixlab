@@ -308,5 +308,9 @@ rec {
     zsh.promptColor = "magenta";
   };
 
+  myRetro = {
+    retrom.enable = true;
+  };
+
   system.stateVersion = "24.11";
 }

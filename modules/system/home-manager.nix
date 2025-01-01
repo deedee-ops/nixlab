@@ -15,6 +15,11 @@ in
       default = { };
       description = "Apps configuration which will be passed down to home manager";
     };
+    myRetro = lib.mkOption {
+      type = lib.types.attrs;
+      default = { };
+      description = "Retro games and emulators configuration which will be passed down to home manager";
+    };
 
     mySystem.home-manager = {
       extraImports = lib.mkOption {
@@ -38,7 +43,7 @@ in
       };
 
       users."${config.mySystem.primaryUser}" = {
-        inherit (config) myHomeApps;
+        inherit (config) myHomeApps myRetro;
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile
@@ -46,6 +51,7 @@ in
           inputs.sops-nix.homeManagerModules.sops
 
           ../apps
+          ../retro
         ] ++ cfg.extraImports;
 
         nix.settings = nixConfig;
