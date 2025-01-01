@@ -4,6 +4,7 @@ _: {
 
     ./retrom
 
+    ./ms-dos
     ./nintendo64
   ];
 }

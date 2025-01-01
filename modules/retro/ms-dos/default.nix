@@ -7,21 +7,21 @@
 let
   inherit (config.myRetro) core;
 
-  cfg = config.myRetro.nintendo64;
+  cfg = config.myRetro.ms-dos;
 in
 {
   imports = [
-    ./simple64
+    ./dosbox-x
   ];
 
-  options.myRetro.nintendo64 = {
-    enable = lib.mkEnableOption "Nintendo 64" // {
+  options.myRetro.ms-dos = {
+    enable = lib.mkEnableOption "MS-DOS" // {
       default = config.myRetro.retrom.enable;
     };
     package = lib.mkOption {
       type = lib.types.package;
-      description = "Package of Nintendo 64 emulator.";
-      default = pkgs.simple64;
+      description = "Package of MS-DOS emulator.";
+      default = pkgs.dosbox-x;
     };
     saveStatePath = lib.mkOption {
       type = lib.types.path;
