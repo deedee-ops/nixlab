@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
+in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
@@ -120,32 +123,28 @@ rec {
       })
     ];
 
-    scripts =
-      let
-        homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
-      in
-      {
-        backupverify.enable = true;
-        docwatcher = {
+    scripts = {
+      backupverify.enable = true;
+      docwatcher = {
+        enable = true;
+        watchDir = "${homeDir}/Sync/docwatcher-costs";
+        rclone = {
           enable = true;
-          watchDir = "${homeDir}/Sync/docwatcher-costs";
-          rclone = {
-            enable = true;
-            target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
-          };
-          mail.enable = false;
-          paperless = {
-            enable = true;
-            consumeDir = "${homeDir}/Sync/paperless-consume";
-          };
-          ssh = {
-            enable = true;
-            host = "nas";
-            targetDir = "/volume1/private/Memories/Private/Firma/%Y/%m/koszty";
-          };
+          target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
         };
-        pdfhelpers.enable = true;
+        mail.enable = false;
+        paperless = {
+          enable = true;
+          consumeDir = "${homeDir}/Sync/paperless-consume";
+        };
+        ssh = {
+          enable = true;
+          host = "nas";
+          targetDir = "/volume1/private/Memories/Private/Firma/%Y/%m/koszty";
+        };
       };
+      pdfhelpers.enable = true;
+    };
 
     aichat.enable = true;
     git = {
@@ -309,6 +308,11 @@ rec {
   };
 
   myRetro = {
+    core = {
+      savesDir = "${homeDir}/Sync/retrosaves";
+      screenWidth = 3840;
+      screenHeight = 2160;
+    };
     retrom.enable = true;
   };
 

@@ -3,5 +3,7 @@ _: {
     ./core.nix
 
     ./retrom
+
+    ./nintendo64
   ];
 }
