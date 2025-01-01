@@ -101,8 +101,8 @@ rustPlatform.buildRustPackage rec {
 
   doCheck = false;
 
-  prePatch = ''
-    [ ! -f "${cargoRoot}/Cargo.lock" ] && cp Cargo.lock ${cargoRoot}
+  postUnpack = ''
+    [ ! -f "source/${cargoRoot}/Cargo.lock" ] && cp source/Cargo.lock source/${cargoRoot}
   '';
 
   preBuild = ''
