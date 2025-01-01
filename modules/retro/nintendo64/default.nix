@@ -32,7 +32,40 @@ in
     ];
 
     xdg.configFile =
+      let
+        gamepad =
+          if core.gamepad == "dualsense" then
+            "0:Sony Interactive Entertainment DualSense Wireless Controller"
+          else
+            "Auto";
+        profile = if core.gamepad == "none" then "Auto" else core.gamepad;
+      in
       (lib.optionalAttrs (cfg.package.pname == "simple64") {
+        "mupen64plus/input-profiles.ini".source = ./input-profiles.ini;
+        "mupen64plus/input-settings.ini".text = ''
+          [General]
+          version=2
+
+          [Controller1]
+          Gamepad=${gamepad}
+          Pak=Memory
+          Profile=${profile}
+
+          [Controller2]
+          Gamepad=Auto
+          Pak=Memory
+          Profile=Auto
+
+          [Controller3]
+          Gamepad=Auto
+          Pak=Memory
+          Profile=Auto
+
+          [Controller4]
+          Gamepad=Auto
+          Pak=Memory
+          Profile=Auto
+        '';
         "mupen64plus/mupen64plus.cfg".text = ''
           [Core]
           Version = 1,010000

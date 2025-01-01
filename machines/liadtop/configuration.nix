@@ -281,6 +281,7 @@ rec {
 
   myRetro = {
     core = {
+      gamepad = "dualsense";
       savesDir = "${homeDir}/Sync/retrosaves";
       screenWidth = 2560;
       screenHeight = 1600;
