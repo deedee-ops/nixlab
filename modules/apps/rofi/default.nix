@@ -110,60 +110,63 @@ in
         };
       };
 
-      myHomeApps.awesome.extraConfig =
-        ''
-          local home = os.getenv("HOME")
-          local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
-          local rofikeys = gears.table.join(
-            awful.key({ RC.vars.modkey }, "space", function()
-              awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
-            end, { description = "command runner", group = "apps" }),
-            awful.key({ RC.vars.modkey }, "Tab", function()
-              awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
-                .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
-                "-kb-accept-alt 'Return,KP_Enter'")
-            end, { description = "window switcher", group = "apps" }),
-            awful.key({ RC.vars.modkey, "Shift" }, "s", function()
-              awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
-            end, { description = "ssh shell", group = "apps" }),
-            awful.key({ RC.vars.modkey, "Shift" }, "v", function()
+      myHomeApps.awesome = {
+        floatingClients.name = [ "rofi - Passphrase:" ];
+        extraConfig =
+          ''
+            local home = os.getenv("HOME")
+            local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+            local rofikeys = gears.table.join(
+              awful.key({ RC.vars.modkey }, "space", function()
+                awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
+              end, { description = "command runner", group = "apps" }),
+              awful.key({ RC.vars.modkey }, "Tab", function()
+                awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
+                  .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
+                  "-kb-accept-alt 'Return,KP_Enter'")
+              end, { description = "window switcher", group = "apps" }),
+              awful.key({ RC.vars.modkey, "Shift" }, "s", function()
+                awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
+              end, { description = "ssh shell", group = "apps" }),
+              awful.key({ RC.vars.modkey, "Shift" }, "v", function()
+                awful.util.spawn(
+                  "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
+                    .. xdg_config_home
+                    .. "/rofi/generic/config.rasi"
+                )
+              end, { description = "clipboard menu", group = "apps" }),
+          ''
+          + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
+            awful.key({ RC.vars.modkey, "Shift" }, "p", function()
               awful.util.spawn(
-                "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
+                "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -theme "
                   .. xdg_config_home
-                  .. "/rofi/generic/config.rasi"
+                  .. '/rofi/generic/config.rasi" --prompt="󱉼" '
+                  .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
               )
-            end, { description = "clipboard menu", group = "apps" }),
-        ''
-        + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
-          awful.key({ RC.vars.modkey, "Shift" }, "p", function()
-            awful.util.spawn(
-              "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -theme "
+            end, { description = "password manager", group = "apps" }),
+          '')
+          + (lib.optionalString (cfg.todoCommand != null) ''
+            awful.key({ RC.vars.modkey }, "e", function()
+              awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
                 .. xdg_config_home
-                .. '/rofi/generic/config.rasi" --prompt="󱉼" '
-                .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
+                .. "/rofi/todo/todo.sh "
+                .. "-theme "
+                .. xdg_config_home
+                .. "/rofi/todo/config.rasi"
+              )
+            end, { description = "password manager", group = "apps" }),
+          '')
+          + ''
+              awful.key({ RC.vars.modkey, "Shift" }, "e", function()
+                awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
+              end, { description = "shutdown menu", group = "apps" })
             )
-          end, { description = "password manager", group = "apps" }),
-        '')
-        + (lib.optionalString (cfg.todoCommand != null) ''
-          awful.key({ RC.vars.modkey }, "e", function()
-            awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
-              .. xdg_config_home
-              .. "/rofi/todo/todo.sh "
-              .. "-theme "
-              .. xdg_config_home
-              .. "/rofi/todo/config.rasi"
-            )
-          end, { description = "password manager", group = "apps" }),
-        '')
-        + ''
-            awful.key({ RC.vars.modkey, "Shift" }, "e", function()
-              awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
-            end, { description = "shutdown menu", group = "apps" })
-          )
 
-          RC.globalkeys = gears.table.join(RC.globalkeys, rofikeys)
-          root.keys(RC.globalkeys)
-        '';
+            RC.globalkeys = gears.table.join(RC.globalkeys, rofikeys)
+            root.keys(RC.globalkeys)
+          '';
+      };
 
       xdg.configFile =
         {

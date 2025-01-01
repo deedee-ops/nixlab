@@ -19,6 +19,19 @@ in
       ];
     };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.telegram-desktop) ];
+    myHomeApps.awesome = {
+      autorun = [ (lib.getExe pkgs.telegram-desktop) ];
+      awfulRules = [
+        {
+          rule = {
+            class = "TelegramDesktop";
+          };
+          properties = {
+            screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+            tag = " 8 ";
+          };
+        }
+      ];
+    };
   };
 }

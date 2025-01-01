@@ -25,7 +25,20 @@ in
     };
 
     myHomeApps = {
-      awesome.autorun = [ (lib.getExe slackPkg) ];
+      awesome = {
+        autorun = [ (lib.getExe slackPkg) ];
+        awfulRules = [
+          {
+            rule = {
+              class = "Slack";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = " 4 ";
+            };
+          }
+        ];
+      };
       allowUnfree = [ "slack" ];
     };
   };

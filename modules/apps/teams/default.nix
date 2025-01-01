@@ -19,7 +19,24 @@ in
       '';
     in
     lib.mkIf cfg.enable {
-      myHomeApps.awesome.autorun = [ (lib.getExe teamsPkg) ];
+      myHomeApps.awesome = {
+        autorun = [ (lib.getExe teamsPkg) ];
+        awfulRules = [
+          {
+            rule = {
+              class = "teams-pwa";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = " 7 ";
+            };
+          }
+        ];
+        floatingClients.name = [
+          "teams.microsoft.com is sharing a window."
+          "teams.microsoft.com is sharing your screen."
+        ];
+      };
 
       xdg = {
         dataFile = {

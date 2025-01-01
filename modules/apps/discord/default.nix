@@ -24,7 +24,20 @@ in
     };
 
     myHomeApps = {
-      awesome.autorun = [ (lib.getExe pkgs.discord) ];
+      awesome = {
+        autorun = [ (lib.getExe pkgs.discord) ];
+        awfulRules = [
+          {
+            rule = {
+              class = "discord";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = " 0 ";
+            };
+          }
+        ];
+      };
       allowUnfree = [ "discord" ];
     };
   };

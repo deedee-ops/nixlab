@@ -57,6 +57,23 @@ in
       home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
         lib.mkIf osConfig.mySystem.impermanence.enable [ ".thunderbird" ];
 
-      myHomeApps.awesome.autorun = [ (lib.getExe package) ];
+      myHomeApps.awesome = {
+        autorun = [ (lib.getExe package) ];
+        awfulRules = [
+          {
+            rule = {
+              class = "thunderbird";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = " 5 ";
+            };
+          }
+        ];
+        floatingClients.role = [
+          "AlarmWindow"
+          "ConfigManager"
+        ];
+      };
     };
 }

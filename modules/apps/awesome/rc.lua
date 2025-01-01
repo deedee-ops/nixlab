@@ -113,7 +113,7 @@ end)
 
 -- {{{ Rules
 -- Rules to apply to new clients (through the "manage" signal).
-awful.rules.rules = {
+awful.rules.rules = gears.table.join({
   -- All clients will match this rule.
   {
     rule = {},
@@ -136,42 +136,10 @@ awful.rules.rules = {
   -- Floating clients.
   {
     rule_any = {
-      instance = {
-        "DTA", -- Firefox addon DownThemAll.
-        "copyq", -- Includes session name in class.
-        "pinentry",
-      },
-      class = {
-        "Arandr",
-        "Blueman-manager",
-        "Gpick",
-        "Kruler",
-        "MessageWin", -- kalarm.
-        "SpeedCrunch",
-        "Sxiv",
-        "Tor Browser", -- Needs a fixed window size to avoid fingerprinting by screen size.
-        "Wpa_gui",
-        "veromix",
-        "xtightvncviewer",
-        "io.github.alainm23.planify.quick-add",
-      },
-
-      -- Note that the name property shown in xprop might be set slightly after creation of the client
-      -- and the name shown there might not match defined rules here.
-      name = {
-        "Event Tester", -- xev.
-        "rofi - Passphrase:", -- pinentry for rofi
-        "Micro-break", -- workrave
-        "Rest break", -- workrave
-        "teams.microsoft.com is sharing a window.", -- teams
-        "teams.microsoft.com is sharing your screen.", -- teams
-      },
-      role = {
-        "AlarmWindow", -- Thunderbird's calendar.
-        "ConfigManager", -- Thunderbird's about:config.
-        -- @todo this breaks PWAs
-        -- "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
-      },
+      instance = RC.vars.floatingInstance,
+      class = RC.vars.floatingClass,
+      name = RC.vars.floatingName,
+      role = RC.vars.floatingRole,
     },
     properties = { floating = true },
   },
@@ -181,24 +149,6 @@ awful.rules.rules = {
     rule_any = { type = { "dialog" } },
     properties = { titlebars_enabled = true },
   },
+}, RC.vars.extraAwfulRules)
 
-  { rule = { class = "discord" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 0 " } },
-  { rule = { class = "WhatSie" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 9 " } },
-  { rule = { class = "TelegramDesktop" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 8 " } },
-  { rule = { class = "teams-pwa" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 7 " } },
-
-  { rule = { class = "obsidian" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 6 " } },
-  { rule = { class = "thunderbird" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 5 " } },
-  {
-    rule = { class = "ticktick" },
-    properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = (RC.vars.singleScreen and " 4 " or " 1 ") },
-  },
-  {
-    rule = { class = "io.github.alainm23.planify" },
-    except = { class = "io.github.alainm23.planify.quick-add" },
-    properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = (RC.vars.singleScreen and " 4 " or " 1 ") },
-  },
-
-  { rule = { class = "Slack" }, properties = { screen = (RC.vars.singleScreen and 1 or 2), tag = " 4 " } },
-}
 -- }}}

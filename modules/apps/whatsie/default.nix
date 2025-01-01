@@ -19,7 +19,20 @@ in
       ];
     };
 
-    myHomeApps.awesome.autorun = [ (lib.getExe pkgs.whatsie) ];
+    myHomeApps.awesome = {
+      autorun = [ (lib.getExe pkgs.whatsie) ];
+      awfulRules = [
+        {
+          rule = {
+            class = "WhatSie";
+          };
+          properties = {
+            screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+            tag = " 9 ";
+          };
+        }
+      ];
+    };
 
     xdg.configFile."org.keshavnrj.ubuntu/WhatSie.conf".source = ./whatsie.conf;
   };

@@ -14,7 +14,13 @@ in
 
   config = lib.mkIf cfg.enable {
     myHomeApps = {
-      awesome.autorun = [ (lib.getExe pkgs.workrave) ];
+      awesome = {
+        autorun = [ (lib.getExe pkgs.workrave) ];
+        floatingClients.name = [
+          "Micro-break"
+          "Rest break"
+        ];
+      };
     };
   };
 }

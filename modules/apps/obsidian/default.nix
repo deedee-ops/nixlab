@@ -27,7 +27,20 @@ in
     };
 
     myHomeApps = {
-      awesome.autorun = [ (lib.getExe pkgs.obsidian) ];
+      awesome = {
+        autorun = [ (lib.getExe pkgs.obsidian) ];
+        awfulRules = [
+          {
+            rule = {
+              class = "obsidian";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = " 6 ";
+            };
+          }
+        ];
+      };
       allowUnfree = [ "obsidian" ];
     };
   };

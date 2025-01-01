@@ -39,18 +39,35 @@ in
       planifyQuickAddPkg
     ];
 
-    myHomeApps.awesome.extraConfig = ''
-      local home = os.getenv("HOME")
-      local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
-      local planifykeys = gears.table.join(
-        awful.key({ RC.vars.modkey }, "e", function()
-          awful.util.spawn("${lib.getExe planifyQuickAddPkg}")
-        end, { description = "planify quick add", group = "apps" })
-      )
+    myHomeApps.awesome = {
+      awfulRules = [
+        {
+          rule = {
+            class = "io.github.alainm23.planify";
+          };
+          except = {
+            class = "io.github.alainm23.planify.quick-add";
+          };
+          properties = {
+            screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+            tag = if config.myHomeApps.awesome.singleScreen then " 4 " else " 1 ";
+          };
+        }
+      ];
+      floatingClients.class = [ "io.github.alainm23.planify.quick-add" ];
+      extraConfig = ''
+        local home = os.getenv("HOME")
+        local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+        local planifykeys = gears.table.join(
+          awful.key({ RC.vars.modkey }, "e", function()
+            awful.util.spawn("${lib.getExe planifyQuickAddPkg}")
+          end, { description = "planify quick add", group = "apps" })
+        )
 
-      RC.globalkeys = gears.table.join(RC.globalkeys, planifykeys)
-      root.keys(RC.globalkeys)
-    '';
+        RC.globalkeys = gears.table.join(RC.globalkeys, planifykeys)
+        root.keys(RC.globalkeys)
+      '';
+    };
 
     myHomeApps.awesome.autorun = [ (lib.getExe planifyPkg) ];
   };

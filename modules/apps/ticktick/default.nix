@@ -53,7 +53,20 @@ in
     };
 
     myHomeApps = {
-      awesome.autorun = [ (lib.getExe' pkgs.ticktick "ticktick") ];
+      awesome = {
+        autorun = [ (lib.getExe' pkgs.ticktick "ticktick") ];
+        awfulRules = [
+          {
+            rule = {
+              class = "ticktick";
+            };
+            properties = {
+              screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
+              tag = if config.myHomeApps.awesome.singleScreen then " 4 " else " 1 ";
+            };
+          }
+        ];
+      };
       allowUnfree = [ "ticktick" ];
       rofi.todoCommand = lib.getExe ticktask;
     };

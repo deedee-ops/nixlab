@@ -16,10 +16,53 @@ in
       description = "List of applications to run on awesome start.";
       default = [ ];
     };
+    awfulRules = lib.mkOption {
+      type = lib.types.listOf lib.types.attrs;
+      description = "Extra awful rules.";
+      default = [ ];
+      example = [
+        {
+          rule = {
+            class = "my-window";
+          };
+          properties = {
+            screen = 1;
+            tag = " 3 ";
+          };
+        }
+      ];
+    };
     extraConfig = lib.mkOption {
       type = lib.types.lines;
       description = "Extra configuration appended at the end of rc.lua.";
       default = "";
+    };
+    floatingClients = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          instance = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Floating windows by instance.";
+            default = [ ];
+          };
+          class = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Floating windows by class.";
+            default = [ ];
+          };
+          name = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Floating windows by name.";
+            default = [ ];
+          };
+          role = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "Floating windows by role.";
+            default = [ ];
+          };
+        };
+      };
+      default = { };
     };
     modKey = lib.mkOption {
       type = lib.types.str;
@@ -94,6 +137,39 @@ in
               showBattery = ${if cfg.showBattery then "true" else "false"},
               useDunst = ${if cfg.useDunst then "true" else "false"},
               singleScreen = ${if cfg.singleScreen then "true" else "false"},
+
+              floatingInstance = { ${
+                builtins.concatStringsSep "," (
+                  builtins.map (item: "\"${item}\"") (
+                    [
+                      "copyq"
+                      "pinentry"
+                    ]
+                    ++ cfg.floatingClients.instance
+                  )
+                )
+              } },
+              floatingClass = { ${
+                builtins.concatStringsSep "," (
+                  builtins.map (item: "\"${item}\"") (
+                    [
+                      "Arandr"
+                      "Blueman-manager"
+                    ]
+                    ++ cfg.floatingClients.class
+                  )
+                )
+              } },
+              floatingName = { ${
+                builtins.concatStringsSep "," (
+                  builtins.map (item: "\"${item}\"") ([ "Event Tester" ] ++ cfg.floatingClients.name)
+                )
+              } },
+              floatingRole = { ${
+                builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.floatingClients.role)
+              } },
+
+              extraAwfulRules = ${lib.generators.toLua { } cfg.awfulRules},
             }
 
             return _M
