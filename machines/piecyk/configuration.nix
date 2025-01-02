@@ -257,7 +257,6 @@ rec {
       };
     };
     rustdesk.enable = true;
-    slack.enable = true;
     syncthing.enable = true;
     teams.enable = true;
     telegram.enable = true;
