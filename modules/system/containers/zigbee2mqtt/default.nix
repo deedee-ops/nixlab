@@ -100,7 +100,7 @@ in
           name = "zigbee2mqtt-${alias}";
           value = svc.mkContainer {
             cfg = {
-              image = "ghcr.io/koenkk/zigbee2mqtt:1.42.0@sha256:2dc89a4b6c798566d7f496ca3fcd795093be97555e9de8b9a3b5beaba49ecfb7";
+              image = "ghcr.io/koenkk/zigbee2mqtt:2.0.0@sha256:5a59800ab5dbf7399b0023066dedddcb90f918ea9270d8af850c588fdc673e86";
               user = "65000:65000";
               environment = {
                 ZIGBEE2MQTT_CONFIG_MQTT_USER = "mq";
@@ -114,6 +114,7 @@ in
               extraOptions =
                 [
                   "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
+                  "--cap-add=CAP_NET_BIND_SERVICE"
                 ]
                 ++ lib.optionals (lib.strings.hasPrefix "/dev" coordinator.config.serial.port) [
                   "--device=${coordinator.config.serial.port}"
