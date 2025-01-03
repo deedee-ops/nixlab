@@ -59,6 +59,14 @@
               package = pkgs.gitleaks;
               entry = "${lib.getExe pkgs.gitleaks} protect --verbose --redact --staged";
             };
+
+            zizmor = {
+              enable = true;
+              name = "zizmor";
+              package = pkgs.zizmor;
+              entry = "${lib.getExe pkgs.zizmor}";
+              files = ".github/workflows/.+\.yaml";
+            };
           };
       };
     };

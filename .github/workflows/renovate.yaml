@@ -62,12 +62,16 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           token: "${{ steps.app-token.outputs.token }}"
+          persist-credentials: false
 
       - name: Override Default Config
         shell: bash
         run: |
-          echo "RENOVATE_DRY_RUN=${{ github.event.inputs.dryRun || env.WORKFLOW_RENOVATE_DRY_RUN }}" >> "${GITHUB_ENV}"
-          echo "LOG_LEVEL=${{ github.event.inputs.logLevel || env.WORKFLOW_RENOVATE_LOG_LEVEL }}" >> "${GITHUB_ENV}"
+          echo "RENOVATE_DRY_RUN=${RENOVATE_DRY_RUN}" >> "${GITHUB_ENV}"
+          echo "LOG_LEVEL=${LOG_LEVEL}" >> "${GITHUB_ENV}"
+        env:
+          RENOVATE_DRY_RUN: ${{ github.event.inputs.dryRun || env.WORKFLOW_RENOVATE_DRY_RUN }}
+          LOG_LEVEL: ${{ github.event.inputs.logLevel || env.WORKFLOW_RENOVATE_LOG_LEVEL }}
 
       - name: Renovate
         uses: renovatebot/github-action@2be773c4be8361d8182cc1b750e75bbc75af71b0 # v41.0.7

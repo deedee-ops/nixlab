@@ -12,6 +12,10 @@ keys:
 
 
 creation_rules:
+  - path_regex: local/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
   - path_regex: deedee/.*\.sops\.yaml$
     key_groups:
       - age:

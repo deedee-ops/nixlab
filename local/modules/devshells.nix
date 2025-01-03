@@ -28,6 +28,8 @@ _: {
         shellHook = ''
           ${config.pre-commit.installationScript}
 
+          export GH_TOKEN="$(${lib.getExe pkgs.sops} -d --output-type json local/linters.sops.yaml | ${lib.getExe pkgs.jq} -r '.zizmor.GH_TOKEN')"
+
           ${lib.getExe pkgs.git} pull origin master:master --rebase
         '';
       };
