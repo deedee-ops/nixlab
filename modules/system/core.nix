@@ -77,6 +77,15 @@
       example = "NAS Server";
     };
 
+    recoveryMode = lib.mkOption {
+      type = lib.types.bool;
+      description = ''
+        Provision nix into recovery mode - meaning no services dependant on backups will be started,
+        to avoid interference. Restore all backups, and then reprovision nix with this flag disabled.
+      '';
+      default = false;
+    };
+
     rootDomain = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;

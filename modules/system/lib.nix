@@ -140,7 +140,7 @@
         } // opts;
       in
       (lib.recursiveUpdate {
-        autoStart = true;
+        autoStart = !config.mySystem.recoveryMode;
         environment = {
           TZ = config.mySystem.time.timeZone;
         };
