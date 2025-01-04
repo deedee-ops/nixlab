@@ -74,6 +74,7 @@ in
             '';
             authentication = ''
               #type database  DBuser  host-mask     auth-method   optional_ident_map
+              local all       postgres              peer          map=superuser_map
               local sameuser  all                   peer          map=superuser_map
               host  sameuser  all     ${config.mySystemApps.docker.network.private.subnet} scram-sha-256
             '';

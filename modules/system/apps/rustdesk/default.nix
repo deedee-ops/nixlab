@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   svc,
   ...
 }:
@@ -38,29 +37,6 @@ in
           paths = [ dataDir ];
         }
       );
-    };
-
-    systemd.services.rustdesk-relay = {
-      serviceConfig = {
-        ReadWritePaths = "${dataDir}";
-      };
-      path = [
-        pkgs.diffutils
-        pkgs.procps
-      ];
-      postStart = lib.mkAfter ''
-        while [ ! -e /var/lib/rustdesk/id_ed25519 ]; do sleep 0.5; done
-        chown -R rustdesk:rustdesk "${dataDir}"
-        if ! diff "${dataDir}/id_ed25519" /var/lib/rustdesk/id_ed25519; then
-          [ -e "${dataDir}/id_ed25519" ] && cp "${dataDir}/id_ed25519" /var/lib/rustdesk
-          [ -e "${dataDir}/id_ed25519.pub" ] && cp "${dataDir}/id_ed25519.pub" /var/lib/rustdesk
-          pkill -f 'rustdesk.*hbb.?'
-        fi
-        cp -r /var/lib/rustdesk/* "${dataDir}"
-      '';
-      preStop = lib.mkAfter ''
-        cp -r /var/lib/rustdesk/* "${dataDir}"
-      '';
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =

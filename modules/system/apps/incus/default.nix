@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   svc,
   ...
 }:
@@ -134,19 +135,27 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
-    systemd.services.incus.postStart = lib.mkAfter (
-      (lib.optionalString cfg.enableUI ''
-        ${lib.getExe config.virtualisation.incus.package} config set core.https_address 127.0.0.1:8443
-        ${lib.getExe config.virtualisation.incus.package} config trust add-certificate ${
-          config.sops.secrets."${cfg.incusUICrtSopsSecret}".path
-        } || true
-      '')
-      + (lib.optionalString cfg.initializeBaseNixOSVM ''
-        if ! incus image show nixos/base/vm; then
-          nix run github:deedee-ops/nixlab#build-base-vm
-        fi
-      '')
-    );
+    systemd.services.incus = {
+      postStart = lib.mkAfter (
+        (lib.optionalString cfg.enableUI ''
+          ${lib.getExe config.virtualisation.incus.package} config set core.https_address 127.0.0.1:8443
+          ${lib.getExe config.virtualisation.incus.package} config trust add-certificate ${
+            config.sops.secrets."${cfg.incusUICrtSopsSecret}".path
+          } || true
+        '')
+        + (lib.optionalString cfg.initializeBaseNixOSVM ''
+          export PATH="${
+            lib.makeBinPath [
+              pkgs.incus
+              pkgs.nix
+            ]
+          }:$PATH"
+          if ! incus image show nixos/base/vm; then
+            nix run github:deedee-ops/nixlab#build-base-vm
+          fi
+        '')
+      );
+    };
 
     services.nginx.virtualHosts.incus = lib.mkIf cfg.enableUI (
       svc.mkNginxVHost {

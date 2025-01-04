@@ -69,14 +69,14 @@ rec {
       enable = true;
       hostId = "d732cc87";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897" ];
+      systemDiskDevs = [ "/dev/disk/by-id/nvme-WD_Blue_SN570_500GB_22319R456109" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
         };
       };
-      tankDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
+      tankDiskDevs = [ "/dev/disk/by-id/ata-KINGSTON_SEDC600M960G_50026B768689347B" ];
       tankDatasets = {
         webdav = {
           type = "zfs_fs";
@@ -127,7 +127,7 @@ rec {
       firewallEnable = true;
       hostname = "deedee";
       mainInterface = {
-        name = "enp87s0";
+        name = "enp100s0";
         bridge = true;
         bridgeMAC = "02:00:0a:64:14:01";
         DNS = [
