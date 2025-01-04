@@ -61,7 +61,7 @@ in
           theme = if config.stylix.polarity == "either" then "auto" else "${config.stylix.polarity}";
 
           dns = {
-            bind_hosts = [ "BINDHOST" ];
+            bind_hosts = "BINDHOST";
             port = 53;
             protection_enabled = true;
             filtering_enabled = true;
@@ -230,18 +230,27 @@ in
       systemd.services.adguardhome = {
         # if you have issues with adguard not accepting the password,
         # ensure that cfg.adminPasswordSopsSecret file on the remote machine is readable by services group!
-        preStart = lib.mkAfter ''
-          HASH="$(cat ${
-            config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
-          } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
-          MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev ${config.mySystem.networking.rootInterface} | grep -Po 'inet \K[\d.]+')"
-          cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug-pre.yaml"
-          echo "$HASH" > "$STATE_DIRECTORY/hash"
-          ${lib.getExe pkgs.gnused} -i"" "s,ADGUARDPASS,'$HASH',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
-          ${lib.getExe pkgs.gnused} -i"" "s,BINDHOST,'$MAINIP',g" "$STATE_DIRECTORY/AdGuardHome.yaml"
+        preStart = lib.mkAfter (
+          ''
+            HASH="$(cat ${
+              config.sops.secrets."${cfg.adminPasswordSopsSecret}".path
+            } | ${lib.getExe' pkgs.apacheHttpd "htpasswd"} -niB "" | cut -c 2-)"
+            MAINIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev ${config.mySystem.networking.rootInterface} | grep -Po 'inet \K[\d.]+')"
+            BINDHOST="['$MAINIP']"
+          ''
+          + (lib.optionalString (config.mySystem.networking.secondaryInterface != null) ''
+            SECONDARYIP="$(${lib.getExe' pkgs.iproute2 "ip"} -4 addr show dev ${config.mySystem.networking.secondaryInterface.name} | grep -Po 'inet \K[\d.]+')"
+            BINDHOST="['$MAINIP','$SECONDARYIP']"
+          '')
+          + ''
+            cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug-pre.yaml"
+            echo "$HASH" > "$STATE_DIRECTORY/hash"
+            ${lib.getExe pkgs.gnused} -i"" "s#ADGUARDPASS#'$HASH'#g" "$STATE_DIRECTORY/AdGuardHome.yaml"
+            ${lib.getExe pkgs.gnused} -i"" "s#BINDHOST#$BINDHOST#g" "$STATE_DIRECTORY/AdGuardHome.yaml"
 
-          cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug.yaml"
-        '';
+            cat "$STATE_DIRECTORY/AdGuardHome.yaml" > "$STATE_DIRECTORY/debug.yaml"
+          ''
+        );
         serviceConfig.User = cfg.user;
         serviceConfig.Group = "services";
       };
