@@ -120,7 +120,6 @@ in
     mySystemApps.homepage = {
       services.Apps.FireflyIII = svc.mkHomepage "firefly" // {
         container = "firefly-iii";
-        icon = "firefly.png";
         description = "Personal finance management";
       };
     };

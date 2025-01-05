@@ -68,7 +68,7 @@ in
         { directories = [ cfg.dataDir ]; };
 
     mySystemApps.homepage = {
-      services.Apps.wallos = svc.mkHomepage "wallos" // {
+      services.Apps.wallos = svc.mkHomepage "Wallos" // {
         icon = "wallos.png";
         description = "Subscriptions manager";
       };

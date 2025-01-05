@@ -97,7 +97,6 @@ in
 
     mySystemApps.homepage = {
       services.Apps.Wakapi = svc.mkHomepage "wakapi" // {
-        icon = "wakapi.png";
         description = "Coding time tracker";
       };
     };
