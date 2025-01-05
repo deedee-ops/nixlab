@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.mySystemApps.rustdesk;
-  dataDir = "/var/lib/rustdesk.backup";
+  dataDir = "/var/lib/rustdesk";
 in
 {
   options.mySystemApps.rustdesk = {
@@ -23,8 +23,19 @@ in
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for rustdesk are disabled!") ];
 
+    users = {
+      users.rustdesk = {
+        isSystemUser = true;
+        group = "rustdesk";
+        uid = 995;
+      };
+      groups.rustdesk = {
+        gid = 994;
+      };
+    };
+
     services = {
-      rustdesk-server = {
+      rustdesk-server = lib.mkIf (!config.mySystem.recoveryMode) {
         signal.relayHosts = [ cfg.relayHost ];
 
         enable = true;
@@ -39,8 +50,32 @@ in
       );
     };
 
+    systemd.services = lib.mkIf (!config.mySystem.recoveryMode) {
+      rustdesk-signal = {
+        serviceConfig = {
+          WorkingDirectory = lib.mkForce dataDir;
+          StateDirectory = lib.mkForce "";
+        };
+      };
+      rustdesk-relay = {
+        serviceConfig = {
+          WorkingDirectory = lib.mkForce dataDir;
+          StateDirectory = lib.mkForce "";
+        };
+      };
+    };
+
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
-        { directories = [ dataDir ]; };
+        {
+          directories = [
+            {
+              directory = dataDir;
+              user = "rustdesk";
+              group = "rustdesk";
+              mode = "700";
+            }
+          ];
+        };
   };
 }
