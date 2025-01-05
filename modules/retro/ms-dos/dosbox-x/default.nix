@@ -14,14 +14,20 @@ in
         PATH="${lib.makeBinPath [ pkgs.coreutils-full ]}:$PATH"
         cfgpath="$(mktemp -d)/mount.conf"
         gamepath="$(dirname "$1")"
+        isopath="$gamepath/"*.iso
         savepath="${cfg.saveStatePath}/$(basename "$1" | sed 's@\.[^.]*$@@g')"
 
         echo $cfgpath
         echo $gamepath
+        echo $isopath
         echo $savepath
 
         mkdir -p "$savepath"
-        echo -e "[dosbox]\nsavefile = \"$savepath/state.sav\"\n\n[autoexec]\nmount c \"$1\"\nmount s \"$savepath\"" > "$cfgpath"
+        echo -e "[dosbox]\nsavefile = \"$savepath/state.sav\"\n\n[autoexec]\nmount c \"$1\"\nmount c -t overlay \"$savepath\"" > "$cfgpath"
+        if [ -n "$isopath" ]; then
+          echo -e "imgmount d \"$isopath\" -cdrom" >> "$cfgpath"
+        fi
+
         exec ${lib.getExe cfg.package} -conf "${config.xdg.configHome}/dosbox-x/dosbox.conf" -conf "$cfgpath" -conf "$gamepath/dosbox.conf" "$@"
       '')
     ];
