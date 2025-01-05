@@ -26,9 +26,6 @@ in
   config = lib.mkIf cfg.enable {
     home.packages = [
       (inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
-        patches = [
-          ./no-sentry.patch
-        ];
         zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
       }))
     ];
