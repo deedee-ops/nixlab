@@ -139,7 +139,7 @@ in
           + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
             awful.key({ RC.vars.modkey, "Shift" }, "p", function()
               awful.util.spawn(
-                "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -theme "
+                "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
                   .. xdg_config_home
                   .. '/rofi/generic/config.rasi" --prompt="󱉼" '
                   .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
