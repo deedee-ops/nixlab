@@ -95,20 +95,20 @@ in
           export RESTIC_REPOSITORY="$BASE_RESTIC_REPO$repo"
 
           printf "\n\e[36mVeryfying %s\e[0m\n" "$repo"
-          last_snapshot_date="$(restic "$restic_extra_opts" snapshots --latest 1 --json | jq -r '.[0].time' | sed 's@T.*@@g')"
+          last_snapshot_date="$(restic $restic_extra_opts snapshots --latest 1 --json | jq -r '.[0].time' | sed 's@T.*@@g')"
           if [ "$last_snapshot_date" != "$(date +%F)" ]; then
             printf "\e[31mERROR: Repository %s is missing snapshots! Last snapshot date: %s\e[0m\n" "$repo" "$last_snapshot_date"
             exit 1
           fi
 
-          restic "$restic_extra_opts" check
+          restic $restic_extra_opts check
           res=$?
           verify
 
           [ -d "$repo" ] && continue
 
           printf "\n\e[35mRestoring %s\e[0m\n" "$repo"
-          restic "$restic_extra_opts" restore latest --target "$repo"
+          restic $restic_extra_opts restore latest --target "$repo"
         done
       '')
     ];
