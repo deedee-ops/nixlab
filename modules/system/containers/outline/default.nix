@@ -44,14 +44,6 @@ in
     };
 
     mySystemApps = {
-      postgresql.userDatabases = [
-        {
-          username = "outline";
-          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/OUTLINE_DB_PASSWORD".path;
-          databases = [ "outline" ];
-        }
-      ];
-
       authelia.oidcClients = [
         {
           client_id = "outline";
@@ -71,6 +63,16 @@ in
           token_endpoint_auth_method = "client_secret_post";
         }
       ];
+
+      postgresql.userDatabases = [
+        {
+          username = "outline";
+          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/OUTLINE_DB_PASSWORD".path;
+          databases = [ "outline" ];
+        }
+      ];
+
+      redis.servers.outline = 6383;
     };
 
     virtualisation.oci-containers.containers.outline = svc.mkContainer {

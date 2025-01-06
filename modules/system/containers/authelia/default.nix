@@ -89,14 +89,17 @@ in
       containerName = "authelia";
     };
 
-    mySystemApps.postgresql.userDatabases = [
-      {
-        username = "authelia";
-        passwordFile =
-          config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_STORAGE_POSTGRES_PASSWORD".path;
-        databases = [ "authelia" ];
-      }
-    ];
+    mySystemApps = {
+      postgresql.userDatabases = [
+        {
+          username = "authelia";
+          passwordFile =
+            config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_STORAGE_POSTGRES_PASSWORD".path;
+          databases = [ "authelia" ];
+        }
+      ];
+      redis.servers.authelia = 6379;
+    };
 
     virtualisation.oci-containers.containers.authelia = svc.mkContainer {
       cfg = {

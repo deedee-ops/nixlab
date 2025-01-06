@@ -42,14 +42,6 @@ in
     };
 
     mySystemApps = {
-      postgresql.userDatabases = [
-        {
-          username = "vikunja";
-          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/VIKUNJA_DATABASE_PASSWORD".path;
-          databases = [ "vikunja" ];
-        }
-      ];
-
       authelia.oidcClients = [
         {
           client_id = "vikunja";
@@ -71,6 +63,15 @@ in
         }
       ];
 
+      postgresql.userDatabases = [
+        {
+          username = "vikunja";
+          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/VIKUNJA_DATABASE_PASSWORD".path;
+          databases = [ "vikunja" ];
+        }
+      ];
+
+      redis.servers.vikunja = 6384;
     };
 
     virtualisation.oci-containers.containers.vikunja = svc.mkContainer {
@@ -107,7 +108,7 @@ in
           VIKUNJA_MIGRATION_TODOIST_ENABLE = "false";
           VIKUNJA_MIGRATION_TRELLO_ENABLE = "false";
           VIKUNJA_REDIS_ENABLED = "true";
-          VIKUNJA_REDIS_HOST = "host.docker.internal:6379";
+          VIKUNJA_REDIS_HOST = "host.docker.internal:6384";
           VIKUNJA_REDIS_PASSWORD_FILE = "/secrets/VIKUNJA_REDIS_PASSWORD";
           VIKUNJA_SENTRY_ENABLED = "false";
           VIKUNJA_SENTRY_FRONTENDENABLED = "false";

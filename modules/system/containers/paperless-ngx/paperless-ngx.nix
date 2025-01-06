@@ -30,13 +30,16 @@ in
       containerName = "paperless-ngx";
     };
 
-    mySystemApps.postgresql.userDatabases = [
-      {
-        username = "paperless";
-        passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/PAPERLESS_DBPASS".path;
-        databases = [ "paperless" ];
-      }
-    ];
+    mySystemApps = {
+      postgresql.userDatabases = [
+        {
+          username = "paperless";
+          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/PAPERLESS_DBPASS".path;
+          databases = [ "paperless" ];
+        }
+      ];
+      redis.servers.paperless-ngx = 6381;
+    };
 
     virtualisation.oci-containers.containers.paperless-ngx = svc.mkContainer {
       cfg = {

@@ -36,13 +36,16 @@ in
       containerName = "firefly-iii";
     };
 
-    mySystemApps.postgresql.userDatabases = [
-      {
-        username = "firefly";
-        passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/DB_PASSWORD".path;
-        databases = [ "firefly" ];
-      }
-    ];
+    mySystemApps = {
+      postgresql.userDatabases = [
+        {
+          username = "firefly";
+          passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/DB_PASSWORD".path;
+          databases = [ "firefly" ];
+        }
+      ];
+      redis.servers.firefly-iii = 6380;
+    };
 
     virtualisation.oci-containers.containers.firefly-iii = svc.mkContainer {
       cfg = {
@@ -69,7 +72,7 @@ in
           SESSION_DRIVER = "redis";
           REDIS_SCHEME = "tcp";
           REDIS_HOST = "host.docker.internal";
-          REDIS_PORT = "6379";
+          REDIS_PORT = "6380";
         }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         extraOptions = [
           "--mount"

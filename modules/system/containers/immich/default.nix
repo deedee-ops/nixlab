@@ -27,7 +27,7 @@ let
     NODE_ENV = "production";
     REDIS_HOSTNAME = "host.docker.internal";
     REDIS_PASSWORD_FILE = "/secrets/REDIS_PASSWORD";
-    REDIS_PORT = "6379";
+    REDIS_PORT = "6382";
     TRANSFORMERS_CACHE = "/cache";
   } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
 in
@@ -135,6 +135,8 @@ in
           '';
         };
       };
+
+      redis.servers.immich = 6382;
     };
 
     services = {
