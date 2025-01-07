@@ -124,8 +124,8 @@ in
           ''
           + builtins.concatStringsSep "\n" (
             builtins.map (dataset: ''
-              mkdir -p /mnt/backup-extra/${dataset}
-              umount /mnt/backup-extra/${dataset}
+              mkdir -p /mnt/backup-extra/${dataset} && \
+              umount /mnt/backup-extra/${dataset} || true && \
               zfs destroy ${dataset}@backup || true && \
               zfs snapshot ${dataset}@backup && \
               mount -t zfs ${dataset}@backup /mnt/backup-extra/${dataset}
