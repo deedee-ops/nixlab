@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  inputs,
+  config,
+  lib,
+  ...
+}:
 
 {
   options.mySystemApps = {
@@ -10,6 +15,8 @@
   };
 
   config = {
-    environment.systemPackages = config.mySystemApps.extraPackages;
+    environment.systemPackages = [
+      inputs.ghostty.packages.x86_64-linux.default.terminfo
+    ] ++ config.mySystemApps.extraPackages;
   };
 }

@@ -30,15 +30,6 @@ in
       }))
     ];
 
-    programs.zsh = {
-      initExtra = ''
-        if [[ "$TERM" == "xterm-ghostty" ]] && [[ -n $GHOSTTY_RESOURCES_DIR ]]; then
-          unalias sudo 2> /dev/null
-          source "$GHOSTTY_RESOURCES_DIR"/shell-integration/zsh/ghostty-integration
-        fi
-      '';
-    };
-
     xdg.configFile = {
       "ghostty/config".text = toGhosttyConfig {
         theme = "catppuccin-mocha";
