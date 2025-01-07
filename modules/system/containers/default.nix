@@ -33,6 +33,7 @@ _: {
     ./redlib
     ./retrom
     ./sonarr
+    ./sshwifty
     ./syncthing
     ./tika
     ./vaultwarden

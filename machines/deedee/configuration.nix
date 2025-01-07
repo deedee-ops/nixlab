@@ -10,6 +10,7 @@ let
   gwIP = "192.168.100.1";
   nasIP = "10.100.10.1";
   omadaIP = "10.100.1.1";
+  ownIP = "10.100.20.1";
 
   adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
 in
@@ -298,6 +299,19 @@ rec {
     sonarr = {
       inherit mediaPath;
       enable = true;
+    };
+    sshwifty = {
+      enable = true;
+      presets = [
+        {
+          title = "DeeDee";
+          host = ownIP;
+          user = mySystem.primaryUser;
+          privateKeyName = "personal";
+        }
+      ];
+      secretKeys = [ "personal" ];
+      onlyAllowPresetRemotes = false;
     };
     syncthing.enable = true;
     tika.enable = true;
