@@ -15,8 +15,9 @@ _: {
 
         nativeBuildInputs = [
           config.pre-commit.settings.package
-          inputs'.lix.packages.default
           inputs'.deploy-rs.packages.default
+          inputs'.lix.packages.default
+          inputs'.nix-inspect.packages.default
           inputs'.nixos-anywhere.packages.default
         ];
 
