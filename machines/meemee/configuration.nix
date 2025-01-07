@@ -1,8 +1,16 @@
 _:
 let
-  adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
-  nasIP = "10.100.10.1";
-  ownIP = "10.100.20.2";
+  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
+  adguardCustomMappings =
+    manifest.adguardCustomMappings
+    // builtins.listToAttrs (
+      builtins.map
+        (name: {
+          name = manifest.hosts."${name}".host;
+          value = manifest.hosts."${name}".ip;
+        })
+        (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts))
+    );
 in
 rec {
   sops = {
@@ -18,8 +26,6 @@ rec {
   };
 
   mySystem = {
-    inherit nasIP;
-
     purpose = "Smart Home";
     filesystem = "zfs";
     primaryUser = "ajgon";
@@ -85,7 +91,7 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume2/backup/meemee";
+        src = "${manifest.hosts.nas.ip}:/volume2/backup/meemee";
         dest = mySystem.backup.local.location;
       }
     ];
@@ -181,7 +187,7 @@ rec {
         "10.100.0.0/16"
         "10.250.1.0/24"
       ];
-      advertisedDNSServer = ownIP;
+      advertisedDNSServer = manifest.hosts.meemee.ip;
       externalHost = "homelab.${mySystem.rootDomain}";
       wireguardPort = 53201;
     };

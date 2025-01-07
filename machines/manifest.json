@@ -1,0 +1,45 @@
+{
+  "adguardCustomMappings": {
+    "*.rzegocki.dev": "10.100.20.1",
+    "adguard-meemee.rzegocki.dev": "10.100.20.2",
+    "deedee.rzegocki.dev": "10.100.20.1",
+    "home.rzegocki.dev": "10.100.20.2",
+    "home-code.rzegocki.dev": "10.100.20.2",
+    "meemee.rzegocki.dev": "10.100.20.2",
+    "wg.rzegocki.dev": "10.100.20.2",
+    "zigbee2mqtt-bottomfloor.rzegocki.dev": "10.100.20.2",
+    "zigbee2mqtt-topfloor.rzegocki.dev": "10.100.20.2"
+  },
+  "hosts": {
+    "gateway": {
+      "ip": "192.168.100.1",
+      "ssh": null,
+      "host": null
+    },
+    "omada": {
+      "ip": "10.100.1.1",
+      "ssh": null,
+      "host": null
+    },
+    "nas": {
+      "ip": "10.100.10.1",
+      "ssh": "10.100.10.1:51008",
+      "host": "nas.home.arpa"
+    },
+    "deedee": {
+      "ip": "10.100.20.1",
+      "ssh": "10.100.20.1:22",
+      "host": "deedee.home.arpa"
+    },
+    "meemee": {
+      "ip": "10.100.20.2",
+      "ssh": "10.100.20.2:22",
+      "host": "meemee.home.arpa"
+    },
+    "monkey": {
+      "ip": "10.200.10.10",
+      "ssh": "10.200.10.10:22",
+      "host": "monkey.home.arpa"
+    }
+  }
+}

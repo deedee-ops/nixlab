@@ -7,12 +7,17 @@ let
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
 
-  gwIP = "192.168.100.1";
-  nasIP = "10.100.10.1";
-  omadaIP = "10.100.1.1";
-  ownIP = "10.100.20.1";
-
-  adguardCustomMappings = builtins.fromJSON (builtins.readFile ../domains.json);
+  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
+  adguardCustomMappings =
+    manifest.adguardCustomMappings
+    // builtins.listToAttrs (
+      builtins.map
+        (name: {
+          name = manifest.hosts."${name}".host;
+          value = manifest.hosts."${name}".ip;
+        })
+        (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts))
+    );
 in
 rec {
   sops = {
@@ -28,8 +33,6 @@ rec {
   };
 
   mySystem = {
-    inherit nasIP;
-
     purpose = "Homelab";
     filesystem = "zfs";
     primaryUser = "ajgon";
@@ -101,24 +104,24 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume2/backup/deedee";
+        src = "${manifest.hosts.nas.ip}:/volume2/backup/deedee";
         dest = mySystem.backup.local.location;
       }
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume1/retro/retrom";
+        src = "${manifest.hosts.nas.ip}:/volume1/retro/retrom";
         dest = mySystemApps.retrom.romsPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume1/media/music";
+        src = "${manifest.hosts.nas.ip}:/volume1/media/music";
         dest = mySystemApps.navidrome.musicPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${mySystem.nasIP}:/volume1/media";
+        src = "${manifest.hosts.nas.ip}:/volume1/media";
         dest = mySystemApps.radarr.mediaPath;
       }
     ];
@@ -199,12 +202,12 @@ rec {
 
       enable = true;
       extraVHosts = {
-        nas = "http://${mySystem.nasIP}:5000";
+        nas = "http://${manifest.hosts.nas.ip}:5000";
 
-        omada = "https://${omadaIP}";
+        omada = "https://${manifest.hosts.omada.ip}";
       };
       extraRedirects = {
-        gw = "http://${gwIP}";
+        gw = "http://${manifest.hosts.gateway.ip}";
         www = "https://deedee.${mySystem.rootDomain}";
       };
     };
@@ -302,14 +305,15 @@ rec {
     };
     sshwifty = {
       enable = true;
-      presets = [
-        {
-          title = "DeeDee";
-          host = ownIP;
-          user = mySystem.primaryUser;
-          privateKeyName = "personal";
-        }
-      ];
+      presets =
+        builtins.map
+          (name: {
+            title = name;
+            host = manifest.hosts."${name}".ssh;
+            user = mySystem.primaryUser;
+            privateKeyName = "personal";
+          })
+          (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts));
       secretKeys = [ "personal" ];
       onlyAllowPresetRemotes = false;
     };

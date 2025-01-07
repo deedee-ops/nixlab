@@ -6,6 +6,12 @@
 }:
 let
   homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
+  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
+  extraHosts = builtins.concatStringsSep "\n" (
+    builtins.map (name: "${manifest.hosts."${name}".ip} ${manifest.hosts."${name}".host}") (
+      builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts)
+    )
+  );
 in
 rec {
   sops = {
@@ -76,6 +82,9 @@ rec {
     };
 
     networking = {
+      # ensure that homelab is available even if local DNS dies
+      inherit extraHosts;
+
       enable = true;
       firewallEnable = true;
       hostname = "piecyk";
@@ -83,12 +92,6 @@ rec {
         name = "enp6s0";
         bridge = true;
       };
-      # ensure that homelab is available even if local DNS dies
-      extraHosts = ''
-        10.100.20.1 deedee.home.arpa
-        10.100.20.2 meemee.home.arpa
-        10.200.10.10 monkey.home.arpa
-      '';
     };
 
     ssh = {
