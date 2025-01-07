@@ -43,7 +43,7 @@ in
 
   config =
     let
-      image = "ghcr.io/deedee-ops/davis:5.0.2@sha256:68548164cf88f0ee1750c06c75dac698c4214b54be0f6dc66aae0a825d0584ae";
+      image = "ghcr.io/deedee-ops/davis:5.0.2@sha256:e4707330ca64f562c4ea4fd964842f11452bed9b76c2f6eaaa0727925099e7b8";
     in
     lib.mkIf cfg.enable {
       warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for davis are disabled!") ];
