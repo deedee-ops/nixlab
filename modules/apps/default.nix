@@ -6,6 +6,7 @@ _: {
 
     # Terminal apps
     ./aichat
+    ./atuin
     ./bat
     ./btop
     ./direnv

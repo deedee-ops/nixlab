@@ -232,6 +232,11 @@ rec {
     theme = {
       terminalFontSize = 9;
     };
+
+    atuin = {
+      enable = true;
+      syncAddress = "https://atuin.rzegocki.dev";
+    };
     awesome = {
       enable = true;
       singleScreen = true;

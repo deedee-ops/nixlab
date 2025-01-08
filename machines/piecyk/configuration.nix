@@ -232,6 +232,10 @@ rec {
       };
     };
 
+    atuin = {
+      enable = true;
+      syncAddress = "https://atuin.rzegocki.dev";
+    };
     awesome.enable = true;
     caffeine.enable = true;
     discord.enable = true;

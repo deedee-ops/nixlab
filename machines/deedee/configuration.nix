@@ -220,6 +220,7 @@ rec {
     };
 
     # containers
+    atuin.enable = true;
     audiobookshelf = {
       inherit audiobooksPath podcastsPath;
       enable = true;

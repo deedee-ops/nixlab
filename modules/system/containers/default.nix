@@ -1,6 +1,7 @@
 _: {
   imports = [
     ./audiobookshelf
+    ./atuin
     ./authelia
     ./bazarr
     ./caddy
