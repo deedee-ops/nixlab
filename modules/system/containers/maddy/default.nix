@@ -33,7 +33,7 @@ in
 
     virtualisation.oci-containers.containers.maddy = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/maddy:0.7.1@sha256:cd073fe4f175e68503435da71ffc11ee4d01cf2e43bc95666d3bd2f64c9a9262";
+        image = "ghcr.io/deedee-ops/maddy:0.7.1@sha256:c70d525fec8c4a47a2b28a319c25f758e6e36f209ed40008935e87d13b70f5da";
         environment = {
           DEBUG = "no";
           INGRESS_DOMAIN = config.mySystem.rootDomain;
