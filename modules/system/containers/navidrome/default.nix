@@ -29,7 +29,7 @@ in
 
     virtualisation.oci-containers.containers.navidrome = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/navidrome:0.54.3@sha256:53e07a663c1fcc23788167d7df47ed81016381ecc546f7f8bba33a44bc314ce9";
+        image = "ghcr.io/deedee-ops/navidrome:0.54.3@sha256:74e50e2abc7efe0656a8ce273a1a04bdf8cda2d3fce60a7f469c8b6ab5a91d6e";
         environment = {
           ND_BASEURL = "/";
           ND_COVERARTPRIORITY = "folder.*, cover.*, front.*";
