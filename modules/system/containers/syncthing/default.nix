@@ -65,7 +65,7 @@ in
 
     virtualisation.oci-containers.containers.syncthing = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/syncthing:1.29.0@sha256:298b4ddf3369195bc808e0cf32660dd22e1f353bf3a833896b0287db1e4280fe";
+        image = "ghcr.io/deedee-ops/syncthing:1.29.1@sha256:733fc6240dfc104f7b29193ecb40b95068d0a6b3e61d026580b124b06b38e06d";
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.dataDir}/data:/data"
