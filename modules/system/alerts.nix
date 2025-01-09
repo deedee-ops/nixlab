@@ -50,6 +50,11 @@ in
 
         scriptArgs = "%i %H";
         script = ''
+          # hack to mute notifier during deployments
+          if pgrep -f deploy-rs; then
+            exit 0
+          fi
+
           ${pkgs.curl}/bin/curl --fail -s -o /dev/null \
             --form-string "token=$PUSHOVER_API_KEY" \
             --form-string "user=$PUSHOVER_USER_KEY" \
