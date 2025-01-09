@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.piped-frontend = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/piped-frontend:latest@sha256:10e035d7260bd2e0753610721a95eef861c5286c68f004e99c49588d615e7815";
+        image = "ghcr.io/deedee-ops/piped-frontend:latest@sha256:3fe9dee3f0e6a9bbfe2fcd24654ddde7f708aac5d80bf52ff2ef30e65817d09d";
         dependsOn = [ "piped-api" ];
         environment = {
           BACKEND_HOSTNAME = "piped-api.${config.mySystem.rootDomain}";
