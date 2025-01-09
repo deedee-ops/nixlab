@@ -11,7 +11,12 @@ in
   config = lib.mkIf (cfg.enable && cfg.package.pname == "dosbox-x") {
     home.packages = [
       (pkgs.writeShellScriptBin "dosbox-x" ''
-        PATH="${lib.makeBinPath [ pkgs.coreutils-full ]}:$PATH"
+        PATH="${
+          lib.makeBinPath [
+            pkgs.coreutils-full
+            pkgs.gnused
+          ]
+        }:$PATH"
         cfgpath="$(mktemp -d)/mount.conf"
         gamepath="$(dirname "$1")"
         isopath="$gamepath/"*.iso

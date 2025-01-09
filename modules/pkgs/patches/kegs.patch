@@ -1,0 +1,10 @@
+--- a/Makefile	2025-01-09 20:42:42.546304367 +0100
++++ b/Makefile	2025-01-09 20:43:37.191262648 +0100
+@@ -52,7 +52,6 @@
+ 	$(CC) $(CCOPTS) $(LDOPTS) $(OBJECTS) $(OBJECTS1) compile_time.o \
+ 		$(LDFLAGS) -o $(NAME)$(SUFFIX) $(XLIBS) $(EXTRA_LIBS) \
+ 		-lX11 -lXext
+-	mv xkegs ..
+ 
+ # Cygwin for X builds:
+ kegs.exe: $(OBJECTS) $(OBJECTS1) compile_time.o

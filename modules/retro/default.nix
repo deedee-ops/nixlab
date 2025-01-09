@@ -4,6 +4,7 @@ _: {
 
     ./retrom
 
+    ./apple2
     ./ms-dos
     ./nintendo64
   ];
