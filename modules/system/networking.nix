@@ -117,7 +117,13 @@ in
       resolvconf.enable = false;
       useDHCP = false;
       useHostResolvConf = false;
-      interfaces."${cfg.mainInterface.name}".wakeOnLan.enable = true;
+      interfaces =
+        {
+          "${cfg.mainInterface.name}".wakeOnLan.enable = true;
+        }
+        // lib.optionalAttrs (cfg.secondaryInterface != null) {
+          "${cfg.secondaryInterface.name}".wakeOnLan.enable = true;
+        };
 
       networkmanager.enable = cfg.wifiSupport;
     };
