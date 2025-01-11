@@ -137,7 +137,9 @@ in
           daemon.settings = cfg.daemonSettings;
           setSocketVariable = true;
         };
-        storageDriver = lib.mkIf (config.mySystem.filesystem == "zfs") "zfs";
+        storageDriver = lib.mkIf (
+          config.mySystem.filesystem == "zfs" || config.mySystem.filesystem == "btrfs"
+        ) config.mySystem.filesystem;
       };
     };
 

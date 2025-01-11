@@ -29,9 +29,10 @@
     filesystem = lib.mkOption {
       type = lib.types.enum [
         "ext4"
+        "btrfs"
         "zfs"
       ];
-      description = "Global filesystem for the system disks. As a rule of thumb - use 'ext4' for VMs and 'zfs' for bare metal";
+      description = "Global filesystem for the system disks. As a rule of thumb - use 'ext4' for VMs, 'zfs' for servers and 'btrfs' for desktops.";
       default = "zfs";
     };
 

@@ -15,7 +15,7 @@ in
       '';
       default = null;
     };
-    rootBlankSnapshotName = lib.mkOption {
+    zfsRootBlankSnapshotName = lib.mkOption {
       type = lib.types.str;
       default = "blank";
     };
@@ -36,8 +36,8 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = config.mySystem.filesystem == "zfs";
-        message = "Impermanence is supported only on ZFS";
+        assertion = config.mySystem.filesystem == "zfs" || config.mySystem.filesystem == "btrfs";
+        message = "Impermanence is supported only on ZFS or BTRFS";
       }
       {
         assertion =
@@ -49,11 +49,39 @@ in
 
     boot = {
       # bind a initrd command to rollback to blank root after boot
-      initrd.postResumeCommands = lib.mkAfter (
-        lib.optionalString (config.mySystem.filesystem == "zfs") ''
-          zfs rollback -r rpool@${cfg.rootBlankSnapshotName}
-        ''
-      );
+      initrd = {
+        postDeviceCommands = lib.mkAfter (
+          lib.optionalString (config.mySystem.filesystem == "btrfs") ''
+            mkdir /btrfs_tmp
+            mount ${builtins.head config.mySystem.disks.systemDiskDevs} /btrfs_tmp
+            if [[ -e /btrfs_tmp/root ]]; then
+                mkdir -p /btrfs_tmp/old_roots
+                timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
+                mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
+            fi
+
+            delete_subvolume_recursively() {
+                IFS=$'\n'
+                for i in $(btrfs subvolume list -o "$1" | cut -f 9- -d ' '); do
+                    delete_subvolume_recursively "/btrfs_tmp/$i"
+                done
+                btrfs subvolume delete "$1"
+            }
+
+            for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+                delete_subvolume_recursively "$i"
+            done
+
+            btrfs subvolume create /btrfs_tmp/root
+            umount /btrfs_tmp
+          ''
+        );
+        postResumeCommands = lib.mkAfter (
+          lib.optionalString (config.mySystem.filesystem == "zfs") ''
+            zfs rollback -r rpool@${cfg.zfsRootBlankSnapshotName}
+          ''
+        );
+      };
     };
 
     environment = {
@@ -71,11 +99,20 @@ in
       };
     };
 
-    fileSystems."${cfg.persistPath}" = {
-      device = "${cfg.zfsPool}/persist";
-      fsType = "zfs";
-      neededForBoot = true;
-    };
+    fileSystems."${cfg.persistPath}" =
+      if config.mySystem.filesystem == "zfs" then
+        {
+          device = "${cfg.zfsPool}/persist";
+          fsType = "zfs";
+          neededForBoot = true;
+        }
+      else
+        {
+          device = builtins.head config.mySystem.disks.systemDiskDevs;
+          neededForBoot = true;
+          fsType = "btrfs";
+          options = [ "subvol=${cfg.persistPath}" ];
+        };
 
     programs.fuse.userAllowOther = true;
 

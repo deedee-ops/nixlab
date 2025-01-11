@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 {
   boot = {
     initrd = {
@@ -15,7 +20,8 @@
     extraModulePackages = [ ];
     # https://discourse.nixos.org/t/asus-zenbook-no-sound-output/29326
     # https://github.com/farfaaa/asus_zenbook_UM3402YA
-    loader.grub.extraConfig = ''
+    # zfs enforces old (< 6.8) kernel
+    loader.grub.extraConfig = lib.mkIf (config.mySystem.filesystem == "zfs") ''
       acpi /ssdt_csc3551.aml
     '';
   };
@@ -39,7 +45,7 @@
     pkgs.acpi
   ];
 
-  system.activationScripts = {
+  system.activationScripts = lib.mkIf (config.mySystem.filesystem == "zfs") {
     add-sound-profile = {
       text = ''
         cp ${./zenbook-14/ssdt_csc3551.aml} /boot/ssdt_csc3551.aml

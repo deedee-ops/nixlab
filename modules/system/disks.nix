@@ -27,12 +27,26 @@ in
     systemDatasets = mkOption {
       type = types.nullOr types.attrs;
       description = "List of preinitialized datasets on system pool.";
-      default = {
-        nix = {
-          type = "zfs_fs";
-          mountpoint = "/nix";
-        };
-      };
+      default =
+        if config.mySystem.filesystem == "zfs" then
+          {
+            nix = {
+              mountpoint = "/nix";
+              type = "zfs_fs";
+            };
+          }
+        else if config.mySystem.filesystem == "btrfs" then
+          {
+            "/nix" = {
+              mountpoint = "/nix";
+              mountOptions = [
+                "noatime"
+                "compress=zstd"
+              ];
+            };
+          }
+        else
+          { };
       example = {
         nix = {
           type = "zfs_fs";
@@ -83,6 +97,10 @@ in
       {
         assertion = config.mySystem.filesystem != "zfs" || builtins.length cfg.systemDiskDevs >= 1;
         message = "At least one `systemDiskDevs` must be set for zfs global filesystem";
+      }
+      {
+        assertion = config.mySystem.filesystem != "zfs" || cfg.hostId != null;
+        message = "`hostId` is required for zfs";
       }
       {
         assertion = config.mySystem.filesystem == "zfs" || cfg.cacheDiskDev == null;
@@ -138,6 +156,35 @@ in
                         type = "filesystem";
                         format = "ext4";
                         mountpoint = "/";
+                      };
+                    } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
+                  }
+                  // lib.optionalAttrs (config.mySystem.filesystem == "btrfs") {
+                    root = {
+                      content = {
+                        type = "btrfs";
+                        extraArgs = [ "-f " ];
+                        subvolumes =
+                          {
+                            "/root" = {
+                              mountOptions = [
+                                "noatime"
+                                "compress=zstd"
+                              ];
+                              mountpoint = "/";
+                            };
+
+                          }
+                          // cfg.systemDatasets
+                          // lib.optionalAttrs config.mySystem.impermanence.enable {
+                            "${config.mySystem.impermanence.persistPath}" = {
+                              mountOptions = [
+                                "noatime"
+                                "compress=zstd"
+                              ];
+                              mountpoint = "${config.mySystem.impermanence.persistPath}";
+                            };
+                          };
                       };
                     } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
                   }
@@ -226,7 +273,7 @@ in
                 "com.sun:auto-snapshot" = "false";
               };
               mountpoint = "/";
-              postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool@${config.mySystem.impermanence.rootBlankSnapshotName}$' || zfs snapshot rpool@${config.mySystem.impermanence.rootBlankSnapshotName}";
+              postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}$' || zfs snapshot rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}";
               datasets =
                 cfg.systemDatasets
                 // lib.optionalAttrs
