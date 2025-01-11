@@ -61,6 +61,12 @@ in
     };
 
     home = {
+      activation = {
+        screenshots-dir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          mkdir -p "${config.home.homeDirectory}/Pictures/Screenshots"
+        '';
+      };
+
       packages = [
         pkgs.roboto
         pkgs.xclip # pbcopy and pbpaste
