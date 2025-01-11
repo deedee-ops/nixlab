@@ -65,10 +65,6 @@ rec {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-inspect = {
-      url = "github:bluskript/nix-inspect";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     nixos-anywhere = {
       url = "github:nix-community/nixos-anywhere";
       inputs.nixpkgs.follows = "nixpkgs";

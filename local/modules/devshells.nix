@@ -17,12 +17,12 @@ _: {
           config.pre-commit.settings.package
           inputs'.deploy-rs.packages.default
           inputs'.lix.packages.default
-          inputs'.nix-inspect.packages.default
           inputs'.nixos-anywhere.packages.default
         ];
 
         buildInputs = [
           pkgs.nh
+          pkgs.nix-inspect
           pkgs.openssl
         ];
 
