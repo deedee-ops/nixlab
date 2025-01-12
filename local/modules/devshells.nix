@@ -29,7 +29,9 @@ _: {
         shellHook = ''
           ${config.pre-commit.installationScript}
 
-          export GH_TOKEN="$(${lib.getExe pkgs.sops} -d --output-type json local/linters.sops.yaml | ${lib.getExe pkgs.jq} -r '.zizmor.GH_TOKEN')"
+          export GH_TOKEN="$(${lib.getExe pkgs.sops} -d --output-type json local/secrets.sops.yaml | ${lib.getExe pkgs.jq} -r '.zizmor.GH_TOKEN')"
+          export AWS_SECRET_ACCESS_KEY="$(${lib.getExe pkgs.sops} -d --output-type json local/secrets.sops.yaml | ${lib.getExe pkgs.jq} -r '.nixcache.AWS_SECRET_ACCESS_KEY')"
+          export AWS_ACCESS_KEY_ID="$(${lib.getExe pkgs.sops} -d --output-type json local/secrets.sops.yaml | ${lib.getExe pkgs.jq} -r '.nixcache.AWS_ACCESS_KEY_ID')"
 
           ${lib.getExe pkgs.git} pull origin master:master --rebase
         '';
