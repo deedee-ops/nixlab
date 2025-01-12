@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
@@ -11,7 +16,7 @@ rec {
   myHardware = {
     bluetooth = {
       enable = true;
-      trust = [ "58:10:31:7B:BE:7F" ];
+      trust = [ config.myInfra.devices.dualsense.mac ];
       # sadly, wake from bluetooth doesn't work on NUCs :(
     };
     sound.enable = true;
@@ -87,7 +92,7 @@ rec {
       enable = true;
       autoStream = {
         enable = true;
-        consoleIP = "10.200.10.11";
+        consoleIP = config.myInfra.devices.ps5.ip;
       };
     };
     gnupg.enable = false;

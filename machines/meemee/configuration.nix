@@ -1,17 +1,4 @@
-_:
-let
-  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
-  adguardCustomMappings =
-    manifest.adguardCustomMappings
-    // builtins.listToAttrs (
-      builtins.map
-        (name: {
-          name = manifest.hosts."${name}".host;
-          value = manifest.hosts."${name}".ip;
-        })
-        (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts))
-    );
-in
+{ config, ... }:
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
@@ -91,7 +78,7 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${manifest.hosts.nas.ip}:/volume2/backup/meemee";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/backup/meemee";
         dest = mySystem.backup.local.location;
       }
     ];
@@ -130,7 +117,6 @@ rec {
     adguardhome = {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
-      customMappings = adguardCustomMappings;
       subdomain = "adguard-meemee";
     };
 
@@ -184,11 +170,12 @@ rec {
     wg-easy = {
       enable = true;
       allowedCIDRs = [
-        "10.100.0.0/16"
-        "10.250.1.0/24"
+        config.myInfra.cidrs.trusted
+        config.myInfra.cidrs.wireguard
       ];
-      advertisedDNSServer = manifest.hosts.meemee.ip;
+      advertisedDNSServer = config.myInfra.machines.meemee.ip;
       externalHost = "homelab.${mySystem.rootDomain}";
+      wireguardNetworkCIDR = config.myInfra.cidrs.wireguard;
       wireguardPort = 53201;
     };
     zigbee2mqtt = {
@@ -214,7 +201,7 @@ rec {
               transmit_power = 20;
             };
             serial = {
-              port = "tcp://10.210.10.10:6638";
+              port = "tcp://${config.myInfra.devices.slzb06m-bottom.ip}:6638";
               baudrate = 115200;
               adapter = "ember";
             };
