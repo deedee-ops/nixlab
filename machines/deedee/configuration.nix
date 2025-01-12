@@ -1,4 +1,4 @@
-_:
+{ config, ... }:
 let
   mediaPath = "/mnt/media";
   audiobooksPath = "${mediaPath}/audiobooks";
@@ -6,18 +6,6 @@ let
   podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
-
-  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
-  adguardCustomMappings =
-    manifest.adguardCustomMappings
-    // builtins.listToAttrs (
-      builtins.map
-        (name: {
-          name = manifest.hosts."${name}".host;
-          value = manifest.hosts."${name}".ip;
-        })
-        (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts))
-    );
 in
 rec {
   sops = {
@@ -104,24 +92,24 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${manifest.hosts.nas.ip}:/volume2/backup/deedee";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/backup/deedee";
         dest = mySystem.backup.local.location;
       }
       {
         type = "nfs";
-        src = "${manifest.hosts.nas.ip}:/volume1/retro/retrom";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/retro/retrom";
         dest = mySystemApps.retrom.romsPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${manifest.hosts.nas.ip}:/volume1/media/music";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/media/music";
         dest = mySystemApps.navidrome.musicPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${manifest.hosts.nas.ip}:/volume1/media";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/media";
         dest = mySystemApps.radarr.mediaPath;
       }
     ];
@@ -159,7 +147,6 @@ rec {
     adguardhome = {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
-      customMappings = adguardCustomMappings;
       subdomain = "adguard-deedee";
     };
 
@@ -202,12 +189,12 @@ rec {
 
       enable = true;
       extraVHosts = {
-        nas = "http://${manifest.hosts.nas.ip}:5000";
+        nas = "http://${config.myInfra.machines.nas.ip}:5000";
 
-        omada = "https://${manifest.hosts.omada.ip}";
+        omada = "https://${config.myInfra.machines.omada.ip}";
       };
       extraRedirects = {
-        gw = "http://${manifest.hosts.gateway.ip}";
+        gw = "http://${config.myInfra.machines.gateway.ip}";
         www = "https://deedee.${mySystem.rootDomain}";
       };
     };
@@ -310,11 +297,15 @@ rec {
         builtins.map
           (name: {
             title = name;
-            host = manifest.hosts."${name}".ssh;
+            host = config.myInfra.machines."${name}".ssh;
             user = mySystem.primaryUser;
             privateKeyName = "personal";
           })
-          (builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts));
+          (
+            builtins.filter (name: config.myInfra.machines."${name}".ssh != null) (
+              builtins.attrNames config.myInfra.machines
+            )
+          );
       secretKeys = [ "personal" ];
       onlyAllowPresetRemotes = false;
     };

@@ -34,6 +34,11 @@ in
       description = "IP/host available from outside world, which can be used to connect to the Wireguard.";
       example = "mywg.example.com";
     };
+    wireguardNetworkCIDR = lib.mkOption {
+      type = lib.types.str;
+      description = "CIDR for wireguard network, must end with .0/24";
+      example = "192.168.100.0/24";
+    };
     wireguardPort = lib.mkOption {
       type = lib.types.port;
       description = "Exposed wireguard UDP port.";
@@ -43,6 +48,13 @@ in
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for wg-easy are disabled!") ];
+
+    assertions = [
+      {
+        assertion = lib.strings.hasSuffix ".0/24" cfg.wireguardNetworkCIDR;
+        message = "WG network CIDR, must end with .0/24";
+      }
+    ];
 
     boot.kernelModules = [ "iptable_nat" ];
 
@@ -55,7 +67,7 @@ in
           UI_CHART_TYPE = "2";
           UI_TRAFFIC_STATS = "true";
           WG_ALLOWED_IPS = builtins.concatStringsSep ", " cfg.allowedCIDRs;
-          WG_DEFAULT_ADDRESS = "10.250.1.x";
+          WG_DEFAULT_ADDRESS = builtins.replaceStrings [ ".0/24" ] [ ".x" ] cfg.wireguardNetworkCIDR;
           WG_DEFAULT_DNS = cfg.advertisedDNSServer;
           WG_HOST = cfg.externalHost;
           WG_PORT = builtins.toString cfg.wireguardPort;

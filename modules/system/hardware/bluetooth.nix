@@ -90,7 +90,9 @@ in
 
     system.activationScripts = {
       bluez-autotrust = lib.concatStringsSep "\n" (
-        builtins.map (trusted: "${lib.getExe' pkgs.bluez "bluetoothctl"} trust ${trusted}") cfg.trust
+        builtins.map (
+          trusted: "${lib.getExe' pkgs.bluez "bluetoothctl"} trust ${lib.strings.toUpper trusted}"
+        ) cfg.trust
       );
     };
   };
