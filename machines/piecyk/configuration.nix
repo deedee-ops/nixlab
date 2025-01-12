@@ -310,7 +310,7 @@ rec {
       screenWidth = 3840;
       screenHeight = 2160;
     };
-    retrom.enable = false;
+    retrom.enable = true;
   };
 
   system.stateVersion = "24.11";

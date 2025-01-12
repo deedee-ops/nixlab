@@ -8,6 +8,7 @@
   glib-networking,
   gnused,
   gtk3,
+  jq,
   libsoup_3,
   makeWrapper,
   nodejs,
@@ -83,6 +84,7 @@ rustPlatform.buildRustPackage rec {
   nativeBuildInputs = [
     cargo-tauri.hook
     gnused
+    jq
     makeWrapper
     nodejs
     perl
@@ -107,6 +109,8 @@ rustPlatform.buildRustPackage rec {
 
   preBuild = ''
     cp -r ${bufGenerated}/generated packages/client/web/src/
+    jq '. + {"bundle": { "windows": null } } | del(.plugins.updater)' packages/client/tauri.build.conf.json > temp.json
+    mv temp.json packages/client/tauri.build.conf.json
   '';
 
   postInstall = ''
