@@ -2,6 +2,10 @@ rec {
   description = "Description for the project";
 
   nixConfig = {
+    substituters = [
+      "s3://nix?endpoint=s3.rzegocki.dev&priority=30"
+      "https://cache.nixos.org"
+    ];
     extra-substituters = [
       "https://cache.garnix.io"
       "https://deploy-rs.cachix.org"
