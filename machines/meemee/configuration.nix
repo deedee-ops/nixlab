@@ -143,6 +143,10 @@ rec {
       inherit (mySystem) rootDomain;
 
       enable = true;
+      extraVHosts = {
+        minio = "http://${config.myInfra.machines.nas.ip}:9001";
+        s3 = "http://${config.myInfra.machines.nas.ip}:9000";
+      };
     };
 
     # containers

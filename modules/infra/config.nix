@@ -1,5 +1,5 @@
 _: {
-  myInfra = {
+  myInfra = rec {
     cidrs = {
       trusted = "10.100.0.0/16";
       untrusted = "10.200.0.0/16";
@@ -23,15 +23,17 @@ _: {
     };
 
     domains = {
-      "*.rzegocki.dev" = "10.100.20.1";
-      "adguard-meemee.rzegocki.dev" = "10.100.20.2";
-      "deedee.rzegocki.dev" = "10.100.20.1";
-      "home.rzegocki.dev" = "10.100.20.2";
-      "home-code.rzegocki.dev" = "10.100.20.2";
-      "meemee.rzegocki.dev" = "10.100.20.2";
-      "wg.rzegocki.dev" = "10.100.20.2";
-      "zigbee2mqtt-bottomfloor.rzegocki.dev" = "10.100.20.2";
-      "zigbee2mqtt-topfloor.rzegocki.dev" = "10.100.20.2";
+      "*.rzegocki.dev" = machines.deedee.ip;
+      "adguard-meemee.rzegocki.dev" = machines.meemee.ip;
+      "deedee.rzegocki.dev" = machines.deedee.ip;
+      "home.rzegocki.dev" = machines.meemee.ip;
+      "home-code.rzegocki.dev" = machines.meemee.ip;
+      "meemee.rzegocki.dev" = machines.meemee.ip;
+      "minio.rzegocki.dev" = machines.meemee.ip;
+      "s3.rzegocki.dev" = machines.meemee.ip;
+      "wg.rzegocki.dev" = machines.meemee.ip;
+      "zigbee2mqtt-bottomfloor.rzegocki.dev" = machines.meemee.ip;
+      "zigbee2mqtt-topfloor.rzegocki.dev" = machines.meemee.ip;
     };
 
     machines = {
