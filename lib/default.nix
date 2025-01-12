@@ -13,6 +13,7 @@ in
       system,
       osConfig,
       baseModules ? [
+        ../modules/infra
         ../modules/system
 
         inputs.disko.nixosModules.disko

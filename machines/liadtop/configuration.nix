@@ -6,12 +6,6 @@
 }:
 let
   homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
-  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
-  extraHosts = builtins.concatStringsSep "\n" (
-    builtins.map (name: "${manifest.hosts."${name}".ip} ${manifest.hosts."${name}".host}") (
-      builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts)
-    )
-  );
 in
 rec {
   sops = {
@@ -81,9 +75,6 @@ rec {
     };
 
     networking = {
-      # ensure that homelab is available even if local DNS dies
-      inherit extraHosts;
-
       enable = true;
       wifiSupport = true;
       firewallEnable = true;
@@ -294,7 +285,7 @@ rec {
       screenWidth = 2560;
       screenHeight = 1600;
     };
-    retrom.enable = true;
+    retrom.enable = false;
   };
 
   system.stateVersion = "24.11";

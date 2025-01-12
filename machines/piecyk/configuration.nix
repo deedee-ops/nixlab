@@ -6,12 +6,6 @@
 }:
 let
   homeDir = config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory;
-  manifest = builtins.fromJSON (builtins.readFile ../manifest.json);
-  extraHosts = builtins.concatStringsSep "\n" (
-    builtins.map (name: "${manifest.hosts."${name}".ip} ${manifest.hosts."${name}".host}") (
-      builtins.filter (name: manifest.hosts."${name}".ssh != null) (builtins.attrNames manifest.hosts)
-    )
-  );
 in
 rec {
   sops = {
@@ -34,7 +28,7 @@ rec {
   myHardware = {
     bluetooth = {
       enable = true;
-      trust = [ "00:1B:66:C7:BA:81" ];
+      trust = [ config.myInfra.devices.headphones.mac ];
     };
     sound.enable = true;
 
@@ -82,9 +76,6 @@ rec {
     };
 
     networking = {
-      # ensure that homelab is available even if local DNS dies
-      inherit extraHosts;
-
       enable = true;
       firewallEnable = true;
       hostname = "piecyk";
@@ -319,7 +310,7 @@ rec {
       screenWidth = 3840;
       screenHeight = 2160;
     };
-    retrom.enable = true;
+    retrom.enable = false;
   };
 
   system.stateVersion = "24.11";
