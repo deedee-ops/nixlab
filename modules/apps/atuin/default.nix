@@ -41,6 +41,7 @@ in
         -u "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/username".path})" \
         -p "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/password".path})" && \
         ${lib.getExe config.programs.atuin.package} sync -f
+        true
       '';
     };
 
@@ -85,7 +86,10 @@ in
 
     systemd.user.services.atuin = lib.mkIf cfg.useDaemon {
       Unit = {
-        After = "network.target";
+        After = [
+          "network.target"
+          "sops-nix.service"
+        ];
         Description = "atuin daemon";
       };
 
