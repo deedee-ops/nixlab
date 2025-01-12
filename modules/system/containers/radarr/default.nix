@@ -53,7 +53,7 @@ in
 
     virtualisation.oci-containers.containers.radarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/radarr-devel:5.18.0.9595@sha256:88dbe738874e2cd36c396ed90b57b959547cd7df1e23addb4769192fc0dcf3ef";
+        image = "ghcr.io/deedee-ops/radarr-devel:5.18.0.9595@sha256:9f59b4b8c45ad5b0e944594a4f04483d991534b55d6cd3c353d930a57b9fa8ab";
         environment = {
           RADARR__APP__INSTANCENAME = "Radarr";
           RADARR__APP__THEME = "dark";
