@@ -3,7 +3,7 @@ rec {
 
   nixConfig = {
     substituters = [
-      "s3://nix?endpoint=s3.rzegocki.dev&priority=30"
+      "s3://nix?endpoint=10.100.10.1:9000&scheme=http&priority=30"
       "https://cache.nixos.org"
     ];
     extra-substituters = [
