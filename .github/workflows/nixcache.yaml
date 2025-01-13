@@ -1,0 +1,51 @@
+# yamllint disable rule:comments rule:line-length
+---
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: nix cache
+'on':
+  push:
+    branches:
+      - master
+  pull_request:
+jobs:
+  lint-build-and-push:
+    runs-on: deedee
+    steps:
+      - name: Generate Token
+        uses: actions/create-github-app-token@c1a285145b9d317df6ced56c09f525b5c2b6f755 # v1
+        id: app-token
+        with:
+          app-id: "${{ secrets.BOT_APP_ID }}"
+          private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
+
+      - name: Checkout
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          token: "${{ steps.app-token.outputs.token }}"
+          persist-credentials: false
+
+      - name: Flake Check
+        run: nix flake check --fallback
+
+      - name: Build and push to cache
+        env:
+          AWS_ACCESS_KEY_ID: "${{ secrets.NIX_STORE_AWS_ACCESS_KEY_ID }}"
+          AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
+
+        run: |
+          for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substituters' | jq -r '.[]' | grep '^s3:'); do
+            for machine in $(nix --accept-flake-config flake show --json 2> /dev/null | jq -r '.nixosConfigurations | keys | .[]'); do
+              drv=".#nixosConfigurations.$machine.config.system.build.toplevel"
+
+              nix --accept-flake-config build --fallback --no-link "$drv"
+              nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
+              nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
+              nix --accept-flake-config --refresh copy --to "$sub" "$drv"
+            done
+
+            drv=".#devShells.x86_64-linux.default"
+            nix --accept-flake-config build --fallback --no-link "$drv"
+            nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
+            nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
+            nix --accept-flake-config --refresh copy --to "$sub" "$drv"
+          done

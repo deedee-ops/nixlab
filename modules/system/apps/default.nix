@@ -5,6 +5,7 @@ _: {
     ./adguardhome
     ./ddclient
     ./docker
+    ./github-runners
     ./incus
     ./letsencrypt
     ./mosquitto

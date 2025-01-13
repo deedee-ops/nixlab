@@ -158,6 +158,8 @@ rec {
       pruneAll = true;
     };
 
+    github-runners.enable = true;
+
     incus = {
       enable = true;
       enableUI = true;
