@@ -6,6 +6,9 @@ rec {
       "s3://nix?endpoint=10.100.10.1:9000&scheme=http&priority=30"
       "https://cache.nixos.org"
     ];
+    trusted-public-keys = [
+      "homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU="
+    ];
     extra-substituters = [
       "https://cache.garnix.io"
       "https://deploy-rs.cachix.org"
@@ -111,6 +114,8 @@ rec {
     }
     // {
       nixlab = {
+        inherit nixConfig;
+
         system = ./modules/system;
         hardware = {
           incus = ./modules/hardware/incus.nix;
