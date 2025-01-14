@@ -53,7 +53,7 @@ in
         postDeviceCommands = lib.mkAfter (
           lib.optionalString (config.mySystem.filesystem == "btrfs") ''
             mkdir /btrfs_tmp
-            mount ${builtins.head config.mySystem.disks.systemDiskDevs} /btrfs_tmp
+            mount /dev/disk/by-partlabel/disk-system-root /btrfs_tmp
             if [[ -e /btrfs_tmp/root ]]; then
                 mkdir -p /btrfs_tmp/old_roots
                 timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
@@ -108,7 +108,6 @@ in
         }
       else
         {
-          device = builtins.head config.mySystem.disks.systemDiskDevs;
           neededForBoot = true;
           fsType = "btrfs";
           options = [ "subvol=${cfg.persistPath}" ];

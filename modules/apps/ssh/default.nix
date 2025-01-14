@@ -34,7 +34,7 @@ in
 
     home = {
       activation = {
-        ssh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        ssh-state = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           run mkdir -p ${config.xdg.stateHome}/ssh || true
         '';
       };

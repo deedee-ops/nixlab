@@ -37,11 +37,13 @@ in
 
     home.activation = lib.optionalAttrs (cfg.syncAddress != null) {
       init-atuin = lib.hm.dag.entryAfter [ "sopsNix" ] ''
+        # headless atuin is a nightmare
+        export ATUIN_SESSION=dummy
+
         ${lib.getExe config.programs.atuin.package} login \
         -u "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/username".path})" \
-        -p "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/password".path})" && \
-        ${lib.getExe config.programs.atuin.package} sync -f
-        true
+        -p "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/password".path})" || true
+        ${lib.getExe config.programs.atuin.package} sync -f || true
       '';
     };
 

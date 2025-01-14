@@ -40,7 +40,7 @@ rec {
 
   mySystem = {
     purpose = "Laptop";
-    filesystem = "zfs";
+    filesystem = "btrfs";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
@@ -57,12 +57,6 @@ rec {
       systemDiskDevs = [
         "/dev/disk/by-id/nvme-Micron_2400_MTFDKBA512QFM_234143E75C14"
       ];
-      systemDatasets = {
-        nix = {
-          type = "zfs_fs";
-          mountpoint = "/nix";
-        };
-      };
     };
 
     grub.enable = true;
