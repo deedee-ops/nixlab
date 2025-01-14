@@ -6,6 +6,7 @@ _: {
     ./alerts.nix
     ./auto-upgrade.nix
     ./backup.nix
+    ./btrfs.nix
     ./disks.nix
     ./grub.nix
     ./healthcheck.nix
