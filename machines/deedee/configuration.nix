@@ -129,6 +129,8 @@ rec {
       };
     };
 
+    nix.gcPeriod = "monthly"; # for github runners
+
     ssh = {
       enable = true;
       authorizedKeys = {

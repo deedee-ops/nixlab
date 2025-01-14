@@ -17,6 +17,13 @@ in
     enableGC = lib.mkEnableOption "nix GC" // {
       default = true;
     };
+    gcPeriod = lib.mkOption {
+      type = lib.types.enum [
+        "daily"
+        "monthly"
+      ];
+      default = "daily";
+    };
     useBetaCache = lib.mkEnableOption "beta cache";
   };
 
@@ -24,8 +31,8 @@ in
     nix = {
       gc = lib.mkIf cfg.enableGC {
         automatic = true;
-        dates = "daily";
-        options = "--delete-older-than 30d";
+        dates = cfg.gcPeriod;
+        options = "--delete-older-than ${if cfg.gcPeriod == "daily" then "30" else "90"}d";
       };
 
       settings = {

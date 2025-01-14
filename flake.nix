@@ -8,6 +8,7 @@ rec {
     ];
     trusted-public-keys = [
       "homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
     extra-substituters = [
       "https://cache.garnix.io"
