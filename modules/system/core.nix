@@ -114,7 +114,10 @@
 
     users.groups.services = { };
 
-    boot.kernelModules = config.mySystem.extraModules;
+    boot = {
+      kernelPackages = pkgs.linuxPackages_6_12;
+      kernelModules = config.mySystem.extraModules;
+    };
 
     environment.enableAllTerminfo = true;
 

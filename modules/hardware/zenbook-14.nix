@@ -4,6 +4,11 @@
   config,
   ...
 }:
+let
+  soundDriverIncludedInKernel =
+    lib.strings.toInt (lib.versions.major config.boot.kernelPackages.kernel.version) >= 6
+    && lib.strings.toInt (lib.versions.minor config.boot.kernelPackages.kernel.version) >= 8;
+in
 {
   boot = {
     initrd = {
@@ -20,8 +25,7 @@
     extraModulePackages = [ ];
     # https://discourse.nixos.org/t/asus-zenbook-no-sound-output/29326
     # https://github.com/farfaaa/asus_zenbook_UM3402YA
-    # zfs enforces old (< 6.8) kernel
-    loader.grub.extraConfig = lib.mkIf (config.mySystem.filesystem == "zfs") ''
+    loader.grub.extraConfig = lib.mkIf (!soundDriverIncludedInKernel) ''
       acpi /ssdt_csc3551.aml
     '';
   };
@@ -45,7 +49,7 @@
     pkgs.acpi
   ];
 
-  system.activationScripts = lib.mkIf (config.mySystem.filesystem == "zfs") {
+  system.activationScripts = lib.mkIf (!soundDriverIncludedInKernel) {
     add-sound-profile = {
       text = ''
         cp ${./zenbook-14/ssdt_csc3551.aml} /boot/ssdt_csc3551.aml
