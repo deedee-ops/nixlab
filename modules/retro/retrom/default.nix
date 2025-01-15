@@ -1,4 +1,5 @@
 {
+  osConfig,
   config,
   lib,
   pkgs,
@@ -14,7 +15,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      (pkgs.callPackage ../../pkgs/retrom.nix { })
+      (pkgs.callPackage ../../pkgs/retrom.nix { supportNvidia = osConfig.myHardware.nvidia.enable; })
     ];
   };
 }

@@ -12,25 +12,30 @@
   libsoup_3,
   makeWrapper,
   nodejs,
+  openssl,
   perl,
   pkg-config,
   pnpm_9,
   protobuf,
   webkitgtk_4_1,
+  supportNvidia ? false,
 }:
 let
+  # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
+  rev = "retrom-v0.5.1";
+
   pname = "retrom";
-  version = "0.4.10";
+  version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
   src = fetchFromGitHub {
+    inherit rev;
+
     owner = "JMBeresford";
     repo = pname;
-    # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-    rev = "retrom-v0.4.10";
-    hash = "sha256-M6CEikK8JPAlCX//eXyLVK9rB/0Odu4pJy/2kAVBr40=";
+    hash = "sha256-IGl5ZdGuHdAOxdBjBnxcUrFvEOilxDYGn9l1PsObzxk=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-Ycw7NMA048oKjA5z7XJVEfxaFZI3E7UALbgYl5W1yqg=";
+    hash = "sha256-ys38pRF+nso8wwowT1qg40sjdJxOSXiUeCGRrOe2WmA=";
   };
 
   # Fixed Output Derivation
@@ -63,7 +68,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-U9V5xdHVdk63yUd6ainjLJe5tCHJbzD8JeZG/VMGr0o=";
+    outputHash = "sha256-u9is2UK0lplMcfsagjdtUmV4pjOl8miYy783gI3Acj8=";
   };
 in
 rustPlatform.buildRustPackage rec {
@@ -74,7 +79,7 @@ rustPlatform.buildRustPackage rec {
     pnpmDeps
     ;
 
-  cargoHash = "sha256-njoDxrJm0WXUu554rDPNbCojwv/llwrv2GIEfA+9xDE=";
+  cargoHash = "sha256-b+Q8lNI5lNlt4O0kl159/3OpRr1k4/QUNh8fYl3C8TQ=";
 
   # buildType = "debug";
   cargoRoot = "packages/client";
@@ -88,6 +93,7 @@ rustPlatform.buildRustPackage rec {
     jq
     makeWrapper
     nodejs
+    openssl
     perl
     pkg-config
     pnpm_9.configHook
@@ -104,6 +110,10 @@ rustPlatform.buildRustPackage rec {
 
   doCheck = false;
 
+  OPENSSL_NO_VENDOR = 1;
+  OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
+  OPENSSL_DIR = "${lib.getDev openssl}";
+
   postUnpack = ''
     [ ! -f "source/${cargoRoot}/Cargo.lock" ] && cp source/Cargo.lock source/${cargoRoot}
   '';
@@ -119,11 +129,9 @@ rustPlatform.buildRustPackage rec {
     sed -i"" 's@Exec=Retrom@Exec=retrom@g' $out/share/applications/Retrom.desktop
   '';
 
-  postFixup = ''
-    wrapProgram "$out/bin/retrom" \
-      --set GIO_MODULE_DIR "${glib-networking}/lib/gio/modules/" \
-      --set WEBKIT_DISABLE_DMABUF_RENDERER 1
-  '';
+  postFixup =
+    "wrapProgram \"$out/bin/retrom\" --set GIO_MODULE_DIR \"${glib-networking}/lib/gio/modules/\""
+    + (lib.optionalString supportNvidia " --set WEBKIT_DISABLE_DMABUF_RENDERER 1");
 
   meta = {
     description = "A centralized game library/collection management service with a focus on emulation.";
