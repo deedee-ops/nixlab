@@ -30,6 +30,7 @@ _: {
       "home-code.rzegocki.dev" = machines.meemee.ip;
       "meemee.rzegocki.dev" = machines.meemee.ip;
       "minio.rzegocki.dev" = machines.meemee.ip;
+      "registry.rzegocki.dev" = machines.meemee.ip;
       "s3.rzegocki.dev" = machines.meemee.ip;
       "wg.rzegocki.dev" = machines.meemee.ip;
       "zigbee2mqtt-bottomfloor.rzegocki.dev" = machines.meemee.ip;
