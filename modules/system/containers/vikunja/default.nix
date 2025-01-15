@@ -76,7 +76,7 @@ in
 
     virtualisation.oci-containers.containers.vikunja = svc.mkContainer {
       cfg = {
-        image = "vikunja/vikunja:unstable"; # @todo wait for 0.25.x which supports *_FILE envs
+        image = "vikunja/vikunja:0.24.6@sha256:ed1f3ed467fecec0b57e9de7bc6607f8bbcbb23ffced6a81f5dfefc794cdbe3b"; # @todo wait for 0.25.x which supports *_FILE envs
         user = "65000:65000";
         environment = {
           VIKUNJA_AUTH_OPENID_ENABLED = "true";
