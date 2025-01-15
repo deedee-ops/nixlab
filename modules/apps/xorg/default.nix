@@ -51,7 +51,9 @@ in
           ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 54 = c C cacute Cacute cacute Cacute cacute"
         '');
     };
+
     xdg.mimeApps.enable = true;
+    xdg.configFile."mimeapps.list".force = true; # some apps overrides this, creating conflict
 
     xresources = {
       path = "${config.xdg.configHome}/X11/xresources";
