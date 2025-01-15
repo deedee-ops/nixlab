@@ -6,7 +6,11 @@ name: nix cache
   push:
     branches:
       - master
+    paths:
+      - '**.nix'
   pull_request:
+    paths:
+      - '**.nix'
 jobs:
   lint-build-and-push:
     runs-on: deedee
