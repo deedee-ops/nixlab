@@ -25,7 +25,7 @@ let
     owner = "JMBeresford";
     repo = pname;
     # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-    rev = "retrom-v0.4.10";
+    rev = "retrom-v0.5.1";
     hash = "sha256-M6CEikK8JPAlCX//eXyLVK9rB/0Odu4pJy/2kAVBr40=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
