@@ -16,7 +16,9 @@
       {
         host,
         proxyPass,
+        useACMEHost ? "wildcard.${config.mySystem.rootDomain}",
         useAuthelia ? config.mySystemApps.authelia.enable,
+        useHostAsServerName ? false,
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
         extraConfig ? "",
@@ -52,6 +54,8 @@
           + extraConfig;
       in
       {
+        inherit useACMEHost;
+
         extraConfig =
           ''
             resolver 127.0.0.1:5533;
@@ -121,8 +125,7 @@
             }) autheliaIgnorePaths
           );
 
-        useACMEHost = "wildcard.${config.mySystem.rootDomain}";
-        serverName = "${host}.${config.mySystem.rootDomain}";
+        serverName = if useHostAsServerName then host else "${host}.${config.mySystem.rootDomain}";
         forceSSL = true;
       };
 
@@ -137,6 +140,7 @@
           readOnlyRootFilesystem = true;
           allowPrivilegeEscalation = false;
           routeThroughVPN = false;
+          customNetworks = [ ];
         } // opts;
       in
       (lib.recursiveUpdate {
@@ -157,13 +161,23 @@
           ++ lib.optionals (!args.routeThroughVPN) [
             # /etc/hosts mapping conflicts with container network mode
             "--add-host=host.docker.internal:${config.mySystemApps.docker.network.private.hostIP}"
-
-            "--network=${config.mySystemApps.docker.network.private.name}"
           ]
-          ++ lib.optionals (args.allowPublic && !args.routeThroughVPN) [
-            "--network=${config.mySystemApps.docker.network.public.name}"
-          ]
-          ++ lib.optionals args.routeThroughVPN [ "--network=container:gluetun" ];
+          ++ (
+            if (builtins.length args.customNetworks > 0) then
+              builtins.map (network: "--network=${network}") args.customNetworks
+            else
+              (
+                if args.routeThroughVPN then
+                  [ "--network=container:gluetun" ]
+                else
+                  [
+                    "--network=${config.mySystemApps.docker.network.private.name}"
+                  ]
+                  ++ lib.optionals args.allowPublic [
+                    "--network=${config.mySystemApps.docker.network.public.name}"
+                  ]
+              )
+          );
       };
 
     mkContainerSecretsSops =

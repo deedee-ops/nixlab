@@ -24,6 +24,7 @@ _: {
 
     domains = {
       "*.rzegocki.dev" = machines.deedee.ip;
+      "*.crypt.rzegocki.dev" = machines.deedee.ip;
       "adguard-meemee.rzegocki.dev" = machines.meemee.ip;
       "deedee.rzegocki.dev" = machines.deedee.ip;
       "home.rzegocki.dev" = machines.meemee.ip;
@@ -67,6 +68,11 @@ _: {
         ip = "10.200.10.10";
         ssh = "10.200.10.10:22";
         host = "monkey.home.arpa";
+      };
+      registry = {
+        ip = "10.100.20.2";
+        ssh = null;
+        host = "registry.rzegocki.dev";
       };
     };
   };

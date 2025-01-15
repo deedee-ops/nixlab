@@ -132,7 +132,7 @@ in
           default-src 'self' 'unsafe-inline' data: blob: wss:;
           connect-src 'self' https://api.github.com *.${config.mySystem.rootDomain};
           manifest-src 'self' *.${config.mySystem.rootDomain};
-          img-src 'self' https://cdn.jsdelivr.net; object-src 'none';
+          img-src 'self' https://cdn.jsdelivr.net https://upload.wikimedia.org; object-src 'none';
         '';
       };
 
