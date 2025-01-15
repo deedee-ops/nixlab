@@ -6,6 +6,7 @@ _: {
     ./bazarr
     ./caddy
     ./coredns
+    ./crypt
     ./echo-server
     ./davis
     ./firefly-iii

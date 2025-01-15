@@ -185,6 +185,7 @@ rec {
       domains = [
         mySystem.rootDomain
         "*.${mySystem.rootDomain}"
+        "*.crypt.${mySystem.rootDomain}"
       ];
     };
 
@@ -222,6 +223,7 @@ rec {
       enable = true;
     };
     coredns.enable = true;
+    crypt.enable = true;
     davis = {
       enable = true;
       carddavEnable = true;

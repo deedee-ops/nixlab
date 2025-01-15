@@ -16,7 +16,9 @@
       {
         host,
         proxyPass,
+        useACMEHost ? "wildcard.${config.mySystem.rootDomain}",
         useAuthelia ? config.mySystemApps.authelia.enable,
+        useHostAsServerName ? false,
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
         extraConfig ? "",
@@ -52,6 +54,8 @@
           + extraConfig;
       in
       {
+        inherit useACMEHost;
+
         extraConfig =
           ''
             resolver 127.0.0.1:5533;
@@ -121,8 +125,7 @@
             }) autheliaIgnorePaths
           );
 
-        useACMEHost = "wildcard.${config.mySystem.rootDomain}";
-        serverName = "${host}.${config.mySystem.rootDomain}";
+        serverName = if useHostAsServerName then host else "${host}.${config.mySystem.rootDomain}";
         forceSSL = true;
       };
 
