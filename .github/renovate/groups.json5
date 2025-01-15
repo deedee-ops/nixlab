@@ -11,5 +11,14 @@
       },
       "separateMinorPatch": true
     },
+    {
+      "description": ["Retrom Group"],
+      "groupName": "Retrom",
+      "matchPackagePatterns": [".*/retrom.*"],
+      "group": {
+        "commitMessageTopic": "{{{groupName}}} group"
+      },
+      "separateMinorPatch": true
+    },
   ]
 }
