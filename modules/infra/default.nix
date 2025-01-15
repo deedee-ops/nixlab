@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ config, lib, ... }:
 {
   imports = [
     ./config.nix
@@ -35,7 +35,7 @@
           };
         }
       );
-      description = "List of IPs and MACs of client devices.";
+      description = "List of IPs and MACs of client devices. Used mostly for bluetooth or static IPs.";
       default = { };
       example = {
         ps5 = {
@@ -74,5 +74,16 @@
       default = { };
       internal = true;
     };
+  };
+
+  config = {
+    assertions = [
+      {
+        assertion = lib.lists.all (device: device.ip != null || device.mac != null) (
+          builtins.attrValues config.myInfra.devices
+        );
+        message = "Each infra device must have either IP or MAC set.";
+      }
+    ];
   };
 }
