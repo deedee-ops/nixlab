@@ -56,7 +56,7 @@ in
     virtualisation.oci-containers.containers.retrom = svc.mkContainer {
       cfg = {
         # renovate: datasource=docker depName=ghcr.io/jmberesford/retrom-service versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-        image = "ghcr.io/jmberesford/retrom-service:retrom-v0.5.1@sha256:d372f5b26359e4d67d90ee9fde760c77c4d3601dccaeeb01b4887ea1bc8b374a";
+        image = "ghcr.io/jmberesford/retrom-service:retrom-v0.5.3@sha256:23bcacae8a41629dbacdedacdc07ac430ed7679b083f10022fce284ce646913d";
         ports = [ "5101:5101" ];
         volumes = [
           "${cfg.dataDir}/config:/app/config"
