@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     systemd =
       let
-        image = "ghcr.io/salvoxia/immich-folder-album-creator:0.17.1@sha256:7a85efae2b30a677e09a52c5b1be3908c6f5b6146b2d840504c07eabcbe9bb92";
+        image = "ghcr.io/salvoxia/immich-folder-album-creator:0.17.2@sha256:31fe3e6536678f4fa6821b3c2665119bd1c697744c24c71a41365b9e5ce4cce8";
       in
       {
         services.docker-immich-album-creator = {
