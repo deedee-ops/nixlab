@@ -32,6 +32,10 @@ in
           WHOOGLE_TOR_SERVICE = "0";
           WHOOGLE_CONFIG_TOR = "0";
           WHOOGLE_SHOW_FAVICONS = "0";
+
+          # https://github.com/benbusby/whoogle-search/issues/1211
+          WHOOGLE_USE_CLIENT_USER_AGENT = "0";
+          WHOOGLE_USER_AGENT = "Mozilla/3.0 (compatible; MSIE 3.0; Windows NT 5.0)";
         };
         extraOptions = [
           "--mount"
@@ -49,6 +53,7 @@ in
         host = "whoogle";
         proxyPass = "http://whoogle.docker:5000";
         useAuthelia = false;
+        customCSP = "disable"; # images results
       };
     };
 
