@@ -21,6 +21,13 @@ _: {
     enableRedistributableFirmware = true;
   };
 
+  # power
+  services.logind.extraConfig = ''
+    HandlePowerKey=suspend
+    IdleAction=suspend
+    IdleActionSec=5m
+  '';
+
   myHardware = {
     openrgb = {
       enable = true;
