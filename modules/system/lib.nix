@@ -210,9 +210,13 @@
       );
 
     mkContainerSecretsVolumes =
-      { sopsSecretPrefix, secretEnvs }:
+      {
+        sopsSecretPrefix,
+        secretEnvs,
+        secretPath ? "/secrets",
+      }:
       builtins.map (
-        env: "${config.sops.secrets."${sopsSecretPrefix}/${env}".path}:/secrets/${env}:ro"
+        env: "${config.sops.secrets."${sopsSecretPrefix}/${env}".path}:${secretPath}/${env}:ro"
       ) secretEnvs;
 
     mkSecretEnvFile =

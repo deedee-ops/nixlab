@@ -25,6 +25,7 @@ _: {
     ./memos
     ./miniflux
     ./navidrome
+    ./netbox
     ./outline
     ./paperless-ngx
     ./piped

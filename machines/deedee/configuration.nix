@@ -276,6 +276,7 @@ rec {
       enable = true;
       musicPath = "/mnt/music";
     };
+    netbox.enable = true;
     paperless-ngx.enable = true;
     piped.enable = true;
     prowlarr.enable = true;
