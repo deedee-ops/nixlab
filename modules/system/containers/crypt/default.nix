@@ -4,6 +4,9 @@
   pkgs,
   ...
 }:
+let
+  cfg = config.mySystemApps.crypt;
+in
 {
   imports = [
     ./crypt.nix
@@ -16,7 +19,7 @@
     enable = lib.mkEnableOption "crypt container";
   };
 
-  config = {
+  config = lib.mkIf cfg.enable {
     systemd.services.docker.postStart =
       let
         dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
