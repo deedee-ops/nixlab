@@ -3,6 +3,7 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: nix cache
 'on':
+  workflow_dispatch:
   push:
     branches:
       - master
@@ -38,19 +39,20 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
 
         run: |
-          for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substituters' | jq -r '.[]' | grep '^s3:'); do
+          for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substituters' | jq -r '.[]' | grep -v 'cache.nixos.org'); do
+            s3sub="$(echo "$sub" | sed -E 's@^([^:]+)://([^/]+)/([^?]+)\??(.*)$@s3://\3?endpoint=\2\&scheme=\1\&\4@g')"
             for machine in $(nix --accept-flake-config flake show --json 2> /dev/null | jq -r '.nixosConfigurations | keys | .[]'); do
               drv=".#nixosConfigurations.$machine.config.system.build.toplevel"
 
               nix --accept-flake-config build --fallback --no-link "$drv"
               nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
               nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
-              nix --accept-flake-config --refresh copy --to "$sub" "$drv"
+              nix --accept-flake-config --refresh copy --to "$s3sub" "$drv"
             done
 
             drv=".#devShells.x86_64-linux.default"
             nix --accept-flake-config build --fallback --no-link "$drv"
             nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
             nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
-            nix --accept-flake-config --refresh copy --to "$sub" "$drv"
+            nix --accept-flake-config --refresh copy --to "$s3sub" "$drv"
           done
