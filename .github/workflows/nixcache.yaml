@@ -11,6 +11,7 @@ name: nix cache
   pull_request:
     paths:
       - '**.nix'
+      - flake.lock
 jobs:
   lint-build-and-push:
     runs-on: deedee
