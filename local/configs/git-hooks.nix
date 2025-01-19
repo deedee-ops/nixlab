@@ -44,7 +44,10 @@
             lua-ls.enable = true;
             shellcheck = {
               enable = true;
-              excludes = [ ".*\.zsh" ];
+              excludes = [
+                ".*\.zsh"
+                ".envrc"
+              ];
             };
             stylua.enable = true;
             yamllint.enable = true;
