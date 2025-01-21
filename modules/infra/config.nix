@@ -64,6 +64,16 @@ _: {
         ssh = "10.100.20.2:22";
         host = "meemee.home.arpa";
       };
+      windows = {
+        ip = "10.100.30.2";
+        ssh = null;
+        host = "windows.home.arpa";
+      };
+      piecyk = {
+        ip = "10.100.40.1";
+        ssh = null;
+        host = "piecyk.home.arpa";
+      };
       monkey = {
         ip = "10.200.10.10";
         ssh = "10.200.10.10:22";
