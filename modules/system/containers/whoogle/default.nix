@@ -15,7 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.whoogle = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/benbusby/whoogle-search:0.9.2@sha256:1d6aa513c9bba21212e7fc7e4d5bd56b35168001f4187d68a5d5669e37bfc45f";
+        image = "ghcr.io/benbusby/whoogle-search:0.9.3@sha256:101817619c10e91b0775a013de0a66ff50c18e6ad877524730dd31d47c9e28eb";
         # disable tor
         cmd = [
           "/bin/sh"
