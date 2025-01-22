@@ -54,7 +54,7 @@ in
 
     virtualisation.oci-containers.containers.lldap = svc.mkContainer {
       cfg = rec {
-        image = "ghcr.io/deedee-ops/lldap:2025.01.21@sha256:37b652e560669de82d6ca3925e8150eb62d0991a4be6376875ee00f7fdb27309";
+        image = "ghcr.io/deedee-ops/lldap:2025.01.22@sha256:2bbb88878dedaf8b0d12b504ba78b4a4688791831469f116dac8cd47b579e35f";
         environment = {
           LLDAP_VERBOSE = "false";
           LLDAP_HTTP_URL = "http://lldap.${config.mySystem.rootDomain}";
