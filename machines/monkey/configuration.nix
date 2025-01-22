@@ -55,8 +55,6 @@ rec {
       hostname = "monkey";
       mainInterface = {
         name = "eno1";
-        bridge = true;
-        bridgeMAC = "02:00:0a:c8:0a:0a";
         DNS = [
           "9.9.9.9"
           "149.112.112.10"

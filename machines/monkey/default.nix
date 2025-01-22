@@ -21,7 +21,8 @@ rec {
 
     deploy.nodes.monkey = lib.mkDeployConfig {
       system = "x86_64-linux";
-      target = "monkey.home.arpa";
+      # target = "monkey.home.arpa";
+      target = "10.210.250.0";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.monkey;
     };
