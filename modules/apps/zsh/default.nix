@@ -69,7 +69,6 @@ in
         export HISTFILE="${config.xdg.stateHome}/zsh/history"
 
         if [[ "$TERM" == "xterm-ghostty" ]]; then
-          unalias sudo 2> /dev/null
           source ${inputs.ghostty.packages.x86_64-linux.default.shell_integration}/shell-integration/zsh/ghostty-integration
         fi
 
@@ -87,9 +86,6 @@ in
 
         grep = "grep --color";
         ls = "ls --color";
-
-        # sudo - pass env
-        sudo = "sudo -E";
 
         # check sync process (usually when unmounting USBs)
         syncstatus = "watch -d grep -e Dirty: -e Writeback: /proc/meminfo";
