@@ -15,10 +15,10 @@ _: {
         mac = "00:1b:66:c7:ba:81";
       };
       ps5 = {
-        ip = "10.200.10.11";
+        ip = "10.210.30.2";
       };
       slzb06m-bottom = {
-        ip = "10.210.10.10";
+        ip = "10.210.20.3";
       };
     };
 
@@ -75,12 +75,13 @@ _: {
         host = "piecyk.home.arpa";
       };
       monkey = {
-        ip = "10.200.10.10";
+        ip = "10.200.30.1";
         ssh = "10.200.10.10:22";
         host = "monkey.home.arpa";
       };
       registry = {
-        ip = "10.100.20.2";
+        inherit (machines.meemee) ip;
+
         ssh = null;
         host = "registry.rzegocki.dev";
       };
