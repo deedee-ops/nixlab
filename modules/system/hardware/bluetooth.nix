@@ -16,6 +16,11 @@ in
       default = [ ];
       example = [ "AA:BB:CC:DD:EE:FF" ];
     };
+    enableBluemanApplet = lib.mkOption {
+      type = lib.types.bool;
+      description = "Start blueman applet.";
+      default = config.mySystemApps.xorg.enable;
+    };
     wakeFromSuspend = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -82,7 +87,9 @@ in
       '';
     };
 
-    mySystemApps.xorg.userAutorun.blueman-applet = lib.getExe' pkgs.blueman "blueman-applet";
+    mySystemApps.xorg.userAutorun = lib.optionalAttrs cfg.enableBluemanApplet {
+      blueman-applet = lib.getExe' pkgs.blueman "blueman-applet";
+    };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

@@ -16,6 +16,7 @@ rec {
   myHardware = {
     bluetooth = {
       enable = true;
+      enableBluemanApplet = false;
       trust = [ config.myInfra.devices.dualsense.mac ];
       # sadly, wake from bluetooth doesn't work on NUCs :(
     };
@@ -34,7 +35,9 @@ rec {
       pushover.enable = true;
     };
 
-    autoUpgrade.enable = true;
+    # can introduce some unexpected changes, especially in chiaki-ng
+    # better do it manually via deployments
+    autoUpgrade.enable = false;
 
     disks = {
       enable = true;
@@ -55,8 +58,6 @@ rec {
       hostname = "monkey";
       mainInterface = {
         name = "eno1";
-        bridge = true;
-        bridgeMAC = "02:00:0a:c8:0a:0a";
         DNS = [
           "9.9.9.9"
           "149.112.112.10"
@@ -80,21 +81,24 @@ rec {
       enable = true;
       kiosk = {
         enable = true;
-        command = ''
-          ${lib.getExe pkgs.bash} -c '$XDG_DATA_HOME/Chiaki/chiaki-start; ${lib.getExe' pkgs.systemd "systemctl"} poweroff'
-        '';
+        command = lib.getExe (
+          pkgs.writeShellScriptBin "kiosk-chiaki" ''
+            (
+              while [ -z "$(${lib.getExe pkgs.lsof} -nPi @${config.myInfra.devices.ps5.ip}:9295 | grep ESTABLISHED)" ]; do sleep 1; done;
+              sleep 10
+              while [ -n "$(${lib.getExe pkgs.lsof} -nPi @${config.myInfra.devices.ps5.ip}:9295 | grep ESTABLISHED)" ]; do sleep 1; done;
+              ${lib.getExe' pkgs.systemd "systemctl"} poweroff
+            ) &
+
+            $XDG_DATA_HOME/Chiaki/chiaki-start
+          ''
+        );
       };
     };
   };
 
   myHomeApps = {
-    chiaki-ng = {
-      enable = true;
-      autoStream = {
-        enable = true;
-        consoleIP = config.myInfra.devices.ps5.ip;
-      };
-    };
+    chiaki-ng.enable = true;
     gnupg.enable = false;
     ssh.enable = false;
     wakatime.enable = false;
