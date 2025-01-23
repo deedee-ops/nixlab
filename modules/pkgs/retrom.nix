@@ -22,7 +22,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "retrom-v0.6.0";
+  rev = "retrom-v0.7.0";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
@@ -31,11 +31,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-506QySoXdAtkiVtrw/7CN127dXEVxvnwJR4R0Fh8n2A=";
+    hash = "sha256-lgwmZGi9jUpxdhhcaN0iuYpbg5IPCWVqbia5ipV9RNM=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-ys38pRF+nso8wwowT1qg40sjdJxOSXiUeCGRrOe2WmA=";
+    hash = "sha256-40/0wyiL1hMN//H1WqyHFGmYhvLqTspf2H/1ut1tFK0=";
   };
 
   # Fixed Output Derivation
@@ -79,7 +79,7 @@ rustPlatform.buildRustPackage rec {
     pnpmDeps
     ;
 
-  cargoHash = "sha256-QWBjFV1lqCHQcxzTjLLbQvXSOVYseyAkYcpHDHItwYQ=";
+  cargoHash = "sha256-Ow53jc2yZ+oPtL5LsQz0KM3B2bIsxpTMV2T1/+ICyh4=";
 
   # buildType = "debug";
   cargoRoot = "packages/client";
