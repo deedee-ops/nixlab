@@ -13,6 +13,9 @@ name: nix cache
     paths:
       - '**.nix'
       - flake.lock
+
+permissions: {}
+
 jobs:
   lint-build-and-push:
     runs-on: deedee
