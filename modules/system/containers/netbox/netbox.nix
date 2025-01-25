@@ -25,6 +25,9 @@ in
       nginx.virtualHosts.netbox = svc.mkNginxVHost {
         host = "netbox";
         proxyPass = "http://netbox.docker:8080";
+        autheliaIgnorePaths = [
+          "/api"
+        ];
         customCSP = ''
           default-src 'self' 'unsafe-inline' data: blob: wss:;
           img-src 'self' data:;
