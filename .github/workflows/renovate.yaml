@@ -27,6 +27,8 @@ name: "Renovate"
       - .github/renovate.json5
       - .github/renovate/**.json5
 
+permissions: {}
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
   cancel-in-progress: true
