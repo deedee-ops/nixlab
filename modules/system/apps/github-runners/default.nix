@@ -6,69 +6,130 @@
 }:
 let
   cfg = config.mySystemApps.github-runners;
+  host = config.networking.hostName;
+  user = "github-runner";
+  group = "github-runner";
+
+  commonOpts = {
+    inherit user group;
+
+    enable = true;
+    ephemeral = true;
+    extraLabels = [ host ];
+    extraPackages = [
+      pkgs.nix
+      pkgs.coreutils
+      pkgs.gnutar
+      pkgs.jq
+      pkgs.which
+    ];
+    noDefaultLabels = true;
+    replace = true;
+  };
+
+  paddedNum = n: if n < 10 then "0${builtins.toString n}" else builtins.toString n;
 in
 {
   options.mySystemApps.github-runners = {
     enable = lib.mkEnableOption "github runners";
-    runners = lib.mkOption {
-      type = lib.types.int;
-      description = "Number of runners";
-      default = 4;
+    orgRunners = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            num = lib.mkOption {
+              type = lib.types.int;
+            };
+
+            githubTokenSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing GitHub token.";
+            };
+          };
+        }
+      );
+      default = { };
     };
-    githubTokenSopsSecret = lib.mkOption {
-      type = lib.types.str;
-      description = "Sops secret name containing cloudflare token.";
-      default = "system/apps/github-runners/github_token";
+
+    personalRunners = lib.mkOption {
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            num = lib.mkOption {
+              type = lib.types.int;
+            };
+
+            githubTokenSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing GitHub token.";
+            };
+          };
+        }
+      );
+
+      default = { };
     };
   };
 
-  config =
-    let
-      paddedNum = n: if n < 10 then "0${builtins.toString n}" else builtins.toString n;
-
-      name = "deedee-ops";
-      host = config.networking.hostName;
-      user = "github-runner";
-      group = "github-runner";
-    in
-    lib.mkIf cfg.enable {
-      sops.secrets."${cfg.githubTokenSopsSecret}" = {
-        restartUnits = builtins.map (i: "github-runner-${host}-${name}-${paddedNum i}.service") (
-          lib.lists.range 1 cfg.runners
-        );
-      };
-
-      users = {
-        users."${user}" = {
-          inherit group;
-          isSystemUser = true;
-        };
-        groups."${group}" = { };
-      };
-      nix.settings.trusted-users = [ user ];
-
-      services.github-runners = builtins.listToAttrs (
-        builtins.map (i: {
-          name = "${host}-${name}-${paddedNum i}";
+  config = lib.mkIf cfg.enable {
+    sops.secrets =
+      builtins.listToAttrs (
+        builtins.map (runnerName: {
+          name = cfg.personalRunners."${runnerName}".githubTokenSopsSecret;
           value = {
-            inherit user group;
-
-            enable = true;
-            ephemeral = true;
-            extraLabels = [ host ];
-            extraPackages = [
-              pkgs.nix
-              pkgs.coreutils
-              pkgs.gnutar
-              pkgs.jq
-              pkgs.which
-            ];
-            noDefaultLabels = true;
-            replace = true;
-            tokenFile = config.sops.secrets."${cfg.githubTokenSopsSecret}".path;
-            url = "https://github.com/${name}";
+            restartUnits = builtins.map (
+              i:
+              "github-runner-${host}-${builtins.replaceStrings [ "/" ] [ "-" ] runnerName}-${paddedNum i}.service"
+            ) (lib.lists.range 1 cfg.personalRunners."${runnerName}".num);
           };
-        }) (lib.lists.range 1 cfg.runners)
+        }) (builtins.attrNames cfg.personalRunners)
+      )
+      // builtins.listToAttrs (
+        builtins.map (runnerName: {
+          name = cfg.orgRunners."${runnerName}".githubTokenSopsSecret;
+          value = {
+            restartUnits = builtins.map (i: "github-runner-${host}-${runnerName}-${paddedNum i}.service") (
+              lib.lists.range 1 cfg.orgRunners."${runnerName}".num
+            );
+          };
+        }) (builtins.attrNames cfg.orgRunners)
       );
+
+    users = {
+      users."${user}" = {
+        inherit group;
+        isSystemUser = true;
+      };
+      groups."${group}" = { };
     };
+    nix.settings.trusted-users = [ user ];
+
+    services.github-runners = lib.mergeAttrsList (
+      (builtins.map (
+        name:
+        (builtins.listToAttrs (
+          builtins.map (i: {
+            name = "${host}-${builtins.replaceStrings [ "/" ] [ "-" ] name}-${paddedNum i}";
+            value = commonOpts // {
+              tokenFile = config.sops.secrets."${cfg.personalRunners."${name}".githubTokenSopsSecret}".path;
+              url = "https://github.com/${name}";
+            };
+          }) (lib.lists.range 1 cfg.personalRunners."${name}".num)
+        )
+
+        )
+      ) (builtins.attrNames cfg.personalRunners))
+      ++ (builtins.map (
+        name:
+        (builtins.listToAttrs (
+          builtins.map (i: {
+            name = "${host}-${name}-${paddedNum i}";
+            value = commonOpts // {
+              tokenFile = config.sops.secrets."${cfg.orgRunners."${name}".githubTokenSopsSecret}".path;
+              url = "https://github.com/${name}";
+            };
+          }) (lib.lists.range 1 cfg.orgRunners."${name}".num)
+        ))
+      ) (builtins.attrNames cfg.orgRunners))
+    );
+  };
 }

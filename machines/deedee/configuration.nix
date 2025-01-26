@@ -160,7 +160,21 @@ rec {
       pruneAll = true;
     };
 
-    github-runners.enable = true;
+    github-runners = {
+      enable = true;
+      personalRunners = {
+        "ajgon/ajgon" = {
+          num = 1;
+          githubTokenSopsSecret = "system/apps/github-runners/ajgon_token";
+        };
+      };
+      orgRunners = {
+        "deedee-ops" = {
+          num = 3;
+          githubTokenSopsSecret = "system/apps/github-runners/deedee_ops_token";
+        };
+      };
+    };
 
     incus = {
       enable = true;
