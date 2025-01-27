@@ -136,6 +136,12 @@ in
           value = svc.mkNginxVHost {
             host = "zigbee2mqtt-${alias}";
             proxyPass = "http://zigbee2mqtt-${alias}.docker:8080";
+            customCSP = ''
+              default-src 'self' 'unsafe-inline' data: blob: wss:;
+              img-src 'self' data: https://www.zigbee2mqtt.io;
+              object-src 'none';
+              style-src 'self' 'unsafe-inline' data: blob: *.${config.mySystem.rootDomain};
+            '';
           };
         }) (builtins.attrNames cfg.coordinators)
       );
