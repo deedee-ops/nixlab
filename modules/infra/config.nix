@@ -79,6 +79,7 @@ _: {
         ssh = "10.200.10.10:22";
         host = "monkey.home.arpa";
       };
+
       registry = {
         inherit (machines.meemee) ip;
 

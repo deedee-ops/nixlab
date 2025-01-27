@@ -158,6 +158,9 @@ rec {
       enable = true;
       rootless = false;
       pruneAll = true;
+      daemonSettings = {
+        dns = [ config.myInfra.machines.deedee.ip ];
+      };
     };
 
     github-runners = {

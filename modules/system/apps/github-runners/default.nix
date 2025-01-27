@@ -17,6 +17,8 @@ let
     ephemeral = true;
     extraLabels = [ host ];
     extraPackages = [
+      pkgs."${config.virtualisation.oci-containers.backend}"
+
       pkgs.nix
       pkgs.coreutils
       pkgs.gnutar
@@ -98,6 +100,7 @@ in
       users."${user}" = {
         inherit group;
         isSystemUser = true;
+        extraGroups = [ "docker" ];
       };
       groups."${group}" = { };
     };
