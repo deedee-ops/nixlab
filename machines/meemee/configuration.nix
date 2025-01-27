@@ -193,7 +193,7 @@ rec {
               transmit_power = 20;
             };
             serial = {
-              port = "/dev/serial/by-id/usb-SMLIGHT_SMLIGHT_SLZB-06M_149444ac1ca6ed118ab2e8a32981d5c7-if00-port0";
+              port = "tcp://${config.myInfra.devices.slzb06m-top.ip}:6638";
               baudrate = 115200;
               adapter = "ember";
             };
