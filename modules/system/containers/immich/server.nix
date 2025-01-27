@@ -22,7 +22,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.immich-server = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/immich-app/immich-server:v1.125.3@sha256:da47ef138aef097358da675ff20cdfb2b995c025be489657ae0ad63539511182";
+        image = "ghcr.io/immich-app/immich-server:v1.125.5@sha256:9be304ef1c5cb1b7c69ad8db62a9bde41480ac9bb5084bd6263c75dd5792503f";
         user = "65000:65000";
         environment = dockerEnv;
         volumes =
