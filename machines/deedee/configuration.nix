@@ -122,10 +122,6 @@ rec {
         name = "enp100s0";
         bridge = true;
         bridgeMAC = "02:00:0a:64:14:01";
-        DNS = [
-          "9.9.9.9"
-          "149.112.112.10"
-        ];
       };
     };
 
@@ -150,6 +146,7 @@ rec {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
       subdomain = "adguard-deedee";
+      upstreamDNS = [ config.myInfra.machines.unifi.ip ];
     };
 
     ddclient.enable = true;
@@ -158,9 +155,6 @@ rec {
       enable = true;
       rootless = false;
       pruneAll = true;
-      daemonSettings = {
-        dns = [ config.myInfra.machines.deedee.ip ];
-      };
     };
 
     github-runners = {
@@ -213,7 +207,7 @@ rec {
       extraVHosts = {
         nas = "http://${config.myInfra.machines.nas.ip}:5000";
 
-        omada = "https://${config.myInfra.machines.omada.ip}";
+        unifi = "https://${config.myInfra.machines.unifi.ip}";
       };
       extraRedirects = {
         gw = "http://${config.myInfra.machines.gateway.ip}";

@@ -25,29 +25,13 @@ _: {
       };
     };
 
-    domains = {
-      "*.rzegocki.dev" = machines.deedee.ip;
-      "*.crypt.rzegocki.dev" = machines.deedee.ip;
-      "adguard-meemee.rzegocki.dev" = machines.meemee.ip;
-      "deedee.rzegocki.dev" = machines.deedee.ip;
-      "home.rzegocki.dev" = machines.meemee.ip;
-      "home-code.rzegocki.dev" = machines.meemee.ip;
-      "meemee.rzegocki.dev" = machines.meemee.ip;
-      "minio.rzegocki.dev" = machines.meemee.ip;
-      "registry.rzegocki.dev" = machines.meemee.ip;
-      "s3.rzegocki.dev" = machines.meemee.ip;
-      "wg.rzegocki.dev" = machines.meemee.ip;
-      "zigbee2mqtt-bottomfloor.rzegocki.dev" = machines.meemee.ip;
-      "zigbee2mqtt-topfloor.rzegocki.dev" = machines.meemee.ip;
-    };
-
     machines = {
       gateway = {
         ip = "192.168.100.1";
         ssh = null;
         host = null;
       };
-      omada = {
+      unifi = {
         ip = "10.100.1.1";
         ssh = null;
         host = null;
@@ -78,16 +62,9 @@ _: {
         host = "piecyk.home.arpa";
       };
       monkey = {
-        ip = "10.200.30.1";
-        ssh = "10.200.10.10:22";
+        ip = "10.210.10.10";
+        ssh = "10.210.10.10:22";
         host = "monkey.home.arpa";
-      };
-
-      registry = {
-        inherit (machines.meemee) ip;
-
-        ssh = null;
-        host = "registry.rzegocki.dev";
       };
     };
   };

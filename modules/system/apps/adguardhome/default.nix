@@ -23,6 +23,14 @@ in
       };
       default = { };
     };
+    upstreamDNS = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Upstream DNS for Adguard.";
+      default = [
+        "9.9.9.9"
+        "149.112.112.10"
+      ];
+    };
     adminPasswordSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing admin password.";
@@ -66,10 +74,7 @@ in
             protection_enabled = true;
             filtering_enabled = true;
             upstream_mode = "load_balance";
-            upstream_dns = [
-              "9.9.9.9"
-              "149.112.112.10"
-            ];
+            upstream_dns = cfg.upstreamDNS;
             bootstrap_dns = [
               "9.9.9.9"
               "149.112.112.10"
@@ -188,10 +193,6 @@ in
                 {
                   name = "Polskie Filtry Prywatności";
                   url = "https://raw.githubusercontent.com/olegwukr/polish-privacy-filters/master/adblock.txt";
-                }
-                {
-                  name = "AlleBlock";
-                  url = "https://alleblock.pl/alleblock/alleblock.txt";
                 }
                 {
                   name = "Polskie Filtry Anty-Adblockowe";
