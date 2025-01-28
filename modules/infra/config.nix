@@ -25,46 +25,30 @@ _: {
       };
     };
 
-    domains = {
-      "*.rzegocki.dev" = machines.deedee.ip;
-      "*.crypt.rzegocki.dev" = machines.deedee.ip;
-      "adguard-meemee.rzegocki.dev" = machines.meemee.ip;
-      "deedee.rzegocki.dev" = machines.deedee.ip;
-      "home.rzegocki.dev" = machines.meemee.ip;
-      "home-code.rzegocki.dev" = machines.meemee.ip;
-      "meemee.rzegocki.dev" = machines.meemee.ip;
-      "minio.rzegocki.dev" = machines.meemee.ip;
-      "registry.rzegocki.dev" = machines.meemee.ip;
-      "s3.rzegocki.dev" = machines.meemee.ip;
-      "wg.rzegocki.dev" = machines.meemee.ip;
-      "zigbee2mqtt-bottomfloor.rzegocki.dev" = machines.meemee.ip;
-      "zigbee2mqtt-topfloor.rzegocki.dev" = machines.meemee.ip;
-    };
-
     machines = {
       gateway = {
         ip = "192.168.100.1";
         ssh = null;
         host = null;
       };
-      omada = {
+      unifi = {
         ip = "10.100.1.1";
         ssh = null;
         host = null;
       };
       nas = {
         ip = "10.100.10.1";
-        ssh = "10.100.10.1:51008";
+        ssh = "nas.home.arpa:51008";
         host = "nas.home.arpa";
       };
       deedee = {
         ip = "10.100.20.1";
-        ssh = "10.100.20.1:22";
+        ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
       meemee = {
         ip = "10.100.20.2";
-        ssh = "10.100.20.2:22";
+        ssh = "meemee.home.arpa:22";
         host = "meemee.home.arpa";
       };
       windows = {
@@ -74,20 +58,13 @@ _: {
       };
       piecyk = {
         ip = "10.100.40.1";
-        ssh = null;
+        ssh = "piecyk.home.arpa:22";
         host = "piecyk.home.arpa";
       };
       monkey = {
-        ip = "10.200.30.1";
-        ssh = "10.200.10.10:22";
+        ip = "10.210.10.10";
+        ssh = "monkey.home.arpa:22";
         host = "monkey.home.arpa";
-      };
-
-      registry = {
-        inherit (machines.meemee) ip;
-
-        ssh = null;
-        host = "registry.rzegocki.dev";
       };
     };
   };

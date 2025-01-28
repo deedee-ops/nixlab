@@ -3,7 +3,6 @@
   imports = [
     ./config.nix
 
-    ./adguard.nix
     ./hosts.nix
   ];
 
@@ -43,12 +42,6 @@
           mac = "00:11:22:33:44:55";
         };
       };
-      internal = true;
-    };
-    domains = lib.mkOption {
-      type = lib.types.attrsOf lib.types.str;
-      description = "List of domains to IP mappings for DNS server.";
-      default = { };
       internal = true;
     };
     machines = lib.mkOption {

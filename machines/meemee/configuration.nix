@@ -89,17 +89,9 @@ rec {
       hostname = "meemee";
       mainInterface = {
         name = "enp3s0";
-        DNS = [
-          "9.9.9.9"
-          "149.112.112.10"
-        ];
       };
       secondaryInterface = {
         name = "enp4s0";
-        DNS = [
-          "9.9.9.9"
-          "149.112.112.10"
-        ];
       };
     };
 
@@ -118,6 +110,7 @@ rec {
       enable = true;
       adminPasswordSopsSecret = "credentials/services/admin";
       subdomain = "adguard-meemee";
+      upstreamDNS = [ config.myInfra.machines.unifi.ip ];
     };
 
     ddclient.enable = true;
