@@ -103,6 +103,7 @@ in
               host = name;
               proxyPass = value;
               useAuthelia = false;
+              customCSP = "disable";
             }
           ) cfg.extraVHosts)
           (
