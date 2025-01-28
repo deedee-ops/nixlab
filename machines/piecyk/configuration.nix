@@ -100,6 +100,7 @@ rec {
       rootless = false;
       pruneAll = false;
     };
+    # opensnitch.enable = true;
     # plymouth.enable = true;
 
     xorg = {

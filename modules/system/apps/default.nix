@@ -11,6 +11,7 @@ _: {
     ./mosquitto
     ./nginx
     ./openconnect
+    ./opensnitch
     ./plymouth
     ./postgresql
     ./redis
