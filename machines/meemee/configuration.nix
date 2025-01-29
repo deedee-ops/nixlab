@@ -165,17 +165,6 @@ rec {
       };
     };
     maddy.enable = true;
-    wg-easy = {
-      enable = true;
-      allowedCIDRs = [
-        config.myInfra.cidrs.trusted
-        config.myInfra.cidrs.wireguard
-      ];
-      advertisedDNSServer = config.myInfra.machines.meemee.ip;
-      externalHost = "homelab.${mySystem.rootDomain}";
-      wireguardNetworkCIDR = config.myInfra.cidrs.wireguard;
-      wireguardPort = 53201;
-    };
     zigbee2mqtt = {
       enable = true;
       coordinators = {
