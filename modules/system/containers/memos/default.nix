@@ -70,7 +70,7 @@ in
 
     virtualisation.oci-containers.containers.memos = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/memos:0.23.0@sha256:4d8bbd8cd45cb71501a4591f5d3b4977dc949b0f6d61aa1e1d7f91c127a7c448";
+        image = "ghcr.io/deedee-ops/memos:0.23.1@sha256:a412d7c250713817a81800dda02ee728ea5e56fbfc50757876a7a09e66d0dd28";
         environment = {
           MEMOS_DRIVER = "postgres";
           MEMOS_MODE = "prod";
