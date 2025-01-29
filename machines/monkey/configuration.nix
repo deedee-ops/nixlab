@@ -16,6 +16,7 @@ rec {
   myHardware = {
     bluetooth = {
       enable = true;
+      enableBluemanApplet = false;
       trust = [ config.myInfra.devices.dualsense.mac ];
       # sadly, wake from bluetooth doesn't work on NUCs :(
     };
