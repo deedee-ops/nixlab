@@ -17,6 +17,24 @@ let
       "gfx.x11-egl.force-enabled" = true;
 
     }
+    // lib.optionalAttrs (!cfg.dnsOverHttps.enable) {
+      # Variant A: kill DNS over HTTPS
+      "network.dns.force_waiting_https_rr" = false;
+      "network.dns.upgrade_with_https_rr" = false;
+      "network.dns.use_https_rr_as_altsvc" = false;
+      "network.trr.mode" = 5;
+    }
+    // lib.optionalAttrs cfg.dnsOverHttps.enable {
+      # Variant B: force DNS over HTTPS
+      "network.dns.echconfig.enabled" = true;
+      "network.dns.use_https_rr_as_altsvc" = true;
+      "network.security.esni.enabled" = true;
+      "network.trr.mode" = 3;
+      "network.trr.default_provider_uri" = cfg.dnsOverHttps.resolver;
+      "network.trr.custom_uri" = cfg.dnsOverHttps.resolver;
+      "network.trr.uri" = cfg.dnsOverHttps.resolver;
+      "network.trr.excluded-domains" = builtins.concatStringsSep "," cfg.dnsOverHttps.excludedDomains;
+    }
     // {
       # startup
       "browser.newtabpage.enabled" = false;
@@ -170,6 +188,27 @@ in
 {
   options.myHomeApps.firefox = {
     enable = lib.mkEnableOption "firefox";
+    dnsOverHttps = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "DNS over HTTPS";
+          excludedDomains = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "List of domains excluded from DoH";
+            default = [ ];
+          };
+          resolver = lib.mkOption {
+            type = lib.types.str;
+            description = "DoH resolver.";
+            default = "https://dns.quad9.net/dns-query";
+          };
+        };
+      };
+      default = {
+        enable = false;
+        excludedDomains = [ ];
+      };
+    };
     extraConfig = lib.mkOption {
       type = lib.types.attrs;
       description = "Extra settings for about:config";

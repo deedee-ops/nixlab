@@ -44,6 +44,7 @@ in
   config = lib.mkIf cfg.enable {
     services.nginx = {
       enable = true;
+      group = "services";
       package = pkgs.nginxStable.override { openssl = pkgs.libressl; };
 
       clientMaxBodySize = "0"; # disable file upload limits
@@ -118,8 +119,6 @@ in
             }) cfg.extraRedirects
           );
     };
-
-    mySystemApps.letsencrypt.certsGroup = config.services.nginx.group;
 
     networking.firewall.allowedTCPPorts = [
       80

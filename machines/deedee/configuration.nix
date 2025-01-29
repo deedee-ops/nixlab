@@ -144,9 +144,9 @@ rec {
   mySystemApps = {
     adguardhome = {
       enable = true;
+      enableDoH = true;
       adminPasswordSopsSecret = "credentials/services/admin";
       subdomain = "adguard-deedee";
-      upstreamDNS = [ config.myInfra.machines.unifi.ip ];
     };
 
     ddclient.enable = true;

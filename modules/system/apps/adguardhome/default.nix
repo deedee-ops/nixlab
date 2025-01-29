@@ -11,6 +11,7 @@ in
 {
   options.mySystemApps.adguardhome = {
     enable = lib.mkEnableOption "adguardhome";
+    enableDoH = lib.mkEnableOption "DNS over HTTPS server";
     user = lib.mkOption {
       type = lib.types.str;
       default = "adguardhome";
@@ -27,8 +28,8 @@ in
       type = lib.types.listOf lib.types.str;
       description = "Upstream DNS for Adguard.";
       default = [
-        "9.9.9.9"
-        "149.112.112.10"
+        "https://dns.quad9.net/dns-query"
+        "[/${config.mySystem.rootDomain}/]${config.myInfra.machines.unifi.ip}"
       ];
     };
     adminPasswordSopsSecret = lib.mkOption {
@@ -80,9 +81,12 @@ in
               "149.112.112.10"
             ];
             fallback_dns = [
-              "1.1.1.1"
-              "1.1.0.0"
+              "https://security.cloudflare-dns.com/dns-query"
+              "https://wikimedia-dns.org/dns-query"
             ];
+            use_private_ptr_resolvers = true;
+            local_ptr_upstreams = [ config.myInfra.machines.unifi.ip ];
+            aaaa_disabled = true;
             cache_size = 104857600;
             cache_ttl_min = 60;
             cache_optimistic = true;
@@ -93,6 +97,20 @@ in
               inherit domain;
               answer = builtins.getAttr domain cfg.customMappings;
             }) (builtins.attrNames cfg.customMappings);
+          };
+
+          tls = lib.optionalAttrs cfg.enableDoH {
+            enabled = true;
+            port_https = 4444;
+            port_dns_over_tls = 0;
+            port_dns_over_quic = 0;
+            port_dnscrypt = 0;
+            certificate_path = "${
+              config.security.acme.certs."wildcard.${config.mySystem.rootDomain}".directory
+            }/fullchain.pem";
+            private_key_path = "${
+              config.security.acme.certs."wildcard.${config.mySystem.rootDomain}".directory
+            }/key.pem";
           };
 
           filters =
@@ -258,12 +276,16 @@ in
 
       services.nginx.virtualHosts.adguard = svc.mkNginxVHost {
         host = cfg.subdomain;
-        proxyPass = "http://${webUIIP}:${builtins.toString config.services.adguardhome.port}";
+        proxyPass =
+          if cfg.enableDoH then
+            "https://${webUIIP}:4444"
+          else
+            "http://${webUIIP}:${builtins.toString config.services.adguardhome.port}";
         useAuthelia = false;
       };
 
       networking.firewall.allowedUDPPorts = [ 53 ];
-      networking.firewall.allowedTCPPorts = [ 3000 ];
+      # networking.firewall.allowedTCPPorts = [ 3000 ];
 
       mySystemApps.homepage = {
         services.Apps.AdGuardHome = svc.mkHomepage cfg.subdomain // {
