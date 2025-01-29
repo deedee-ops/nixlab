@@ -186,7 +186,9 @@ in
                     DHCP = "ipv4";
                     LinkLocalAddressing = "ipv4"; # disable ipv6
                   };
-                  dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                  dhcpV4Config = {
+                    UseDomains = true;
+                  } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
                   linkConfig.RequiredForOnline = "routable";
                 };
               };
@@ -204,7 +206,9 @@ in
                       DHCP = "ipv4";
                       LinkLocalAddressing = "ipv4"; # disable ipv6
                     };
-                    dhcpV4Config = lib.mkIf (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                    dhcpV4Config = {
+                      UseDomains = true;
+                    } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
                     linkConfig.RequiredForOnline = "routable";
                   };
                 }
@@ -217,7 +221,9 @@ in
                       DHCP = "ipv4";
                       LinkLocalAddressing = "ipv4"; # disable ipv6
                     };
-                    dhcpV4Config = lib.mkIf (cfg.secondaryInterface.DNS != null) { UseDNS = false; };
+                    dhcpV4Config = {
+                      UseDomains = true;
+                    } // lib.optionalAttrs (cfg.secondaryInterface.DNS != null) { UseDNS = false; };
                     linkConfig.RequiredForOnline = "carrier";
                   };
                 };

@@ -13,7 +13,7 @@ in
     certsGroup = lib.mkOption {
       type = lib.types.str;
       description = "Group owner of the generated certificates.";
-      default = config.security.acme.defaults.group;
+      default = "services";
     };
   };
 

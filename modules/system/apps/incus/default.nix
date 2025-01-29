@@ -84,13 +84,13 @@ in
 
     sops.secrets = {
       "${cfg.incusUICrtSopsSecret}" = {
-        owner = "nginx";
-        group = "nginx";
+        inherit (config.services.nginx) group;
+        owner = config.services.nginx.user;
         restartUnits = [ "nginx.service" ];
       };
       "${cfg.incusUIKeySopsSecret}" = {
-        owner = "nginx";
-        group = "nginx";
+        inherit (config.services.nginx) group;
+        owner = config.services.nginx.user;
         restartUnits = [ "nginx.service" ];
       };
     };
