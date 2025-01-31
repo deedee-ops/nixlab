@@ -51,6 +51,11 @@ _: {
         ssh = "meemee.home.arpa:22";
         host = "meemee.home.arpa";
       };
+      kvm-deedee = {
+        ip = "10.100.20.3";
+        ssh = null;
+        host = null;
+      };
       windows = {
         ip = "10.100.30.2";
         ssh = null;

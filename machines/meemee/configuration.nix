@@ -137,6 +137,7 @@ rec {
 
       enable = true;
       extraVHosts = {
+        kvm-deedee = "http://${config.myInfra.machines.kvm-deedee.ip}";
         minio = "http://${config.myInfra.machines.nas.ip}:9001";
         registry = "http://${config.myInfra.machines.nas.ip}:5555";
         s3 = "http://${config.myInfra.machines.nas.ip}:9000";
