@@ -1,4 +1,5 @@
 {
+  inputs,
   osConfig,
   config,
   lib,
@@ -15,7 +16,10 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      (pkgs.callPackage ../../pkgs/retrom.nix { supportNvidia = osConfig.myHardware.nvidia.enable; })
+      (pkgs.callPackage ../../pkgs/retrom.nix {
+        inherit (inputs) fenix;
+        supportNvidia = osConfig.myHardware.nvidia.enable;
+      })
     ];
 
     xdg.configFile."com.retrom.client/config.json".text = ''

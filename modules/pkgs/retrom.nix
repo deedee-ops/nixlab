@@ -1,7 +1,8 @@
 {
   lib,
   stdenv,
-  rustPlatform,
+  makeRustPlatform,
+  fenix,
   fetchFromGitHub,
   cargo-tauri,
   glib,
@@ -22,7 +23,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "retrom-v0.7.3";
+  rev = "retrom-v0.7.4";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
@@ -31,11 +32,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-rRbUbpN5xQ5594zEz07w43argitUrOdjkHZC4Z6saqY=";
+    hash = "sha256-gUfGfHpSUFP7CQq8g8Wta84lvhW1940tzFjjmVI75lQ=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-40/0wyiL1hMN//H1WqyHFGmYhvLqTspf2H/1ut1tFK0=";
+    hash = "sha256-cBoiN5TAiPhuZ9l9vruKaxBwN4SCswoNtiodGQvr7no=";
   };
 
   # Fixed Output Derivation
@@ -71,74 +72,77 @@ let
     outputHash = "sha256-u9is2UK0lplMcfsagjdtUmV4pjOl8miYy783gI3Acj8=";
   };
 in
-rustPlatform.buildRustPackage rec {
-  inherit
-    pname
-    version
-    src
-    pnpmDeps
-    ;
+(makeRustPlatform {
+  inherit (fenix.packages.x86_64-linux.stable) cargo rustc;
+}).buildRustPackage
+  rec {
+    inherit
+      pname
+      version
+      src
+      pnpmDeps
+      ;
 
-  cargoHash = "sha256-+su+pkK0KS0RqwVutGpcK225D4Ac36yJGmVNNWrDlNQ=";
+    cargoHash = "sha256-JpaF5vlE5Z4yfiGKa6ShtTlzq5LyfjThISm19bHtIwQ=";
 
-  # buildType = "debug";
-  cargoRoot = "packages/client";
-  buildAndTestSubdir = cargoRoot;
+    # buildType = "debug";
+    cargoRoot = "packages/client";
+    buildAndTestSubdir = cargoRoot;
 
-  tauriBuildFlags = [ "--config tauri.build.conf.json" ];
+    tauriBuildFlags = [ "--config tauri.build.conf.json" ];
 
-  nativeBuildInputs = [
-    cargo-tauri.hook
-    gnused
-    jq
-    makeWrapper
-    nodejs
-    openssl
-    perl
-    pkg-config
-    pnpm_9.configHook
-    protobuf
-  ];
+    nativeBuildInputs = [
+      cargo-tauri.hook
+      gnused
+      jq
+      makeWrapper
+      nodejs
+      openssl
+      perl
+      pkg-config
+      pnpm_9.configHook
+      protobuf
+    ];
 
-  buildInputs = [
-    glib
-    glib-networking
-    gtk3
-    libsoup_3
-    webkitgtk_4_1
-  ];
+    buildInputs = [
+      glib
+      glib-networking
+      gtk3
+      libsoup_3
+      webkitgtk_4_1
+    ];
 
-  doCheck = false;
+    doCheck = false;
 
-  OPENSSL_NO_VENDOR = 1;
-  OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
-  OPENSSL_DIR = "${lib.getDev openssl}";
+    OPENSSL_NO_VENDOR = 1;
+    OPENSSL_LIB_DIR = "${lib.getLib openssl}/lib";
+    OPENSSL_DIR = "${lib.getDev openssl}";
 
-  postUnpack = ''
-    [ ! -f "source/${cargoRoot}/Cargo.lock" ] && cp source/Cargo.lock source/${cargoRoot}
-  '';
+    postUnpack = ''
+      [ ! -f "source/${cargoRoot}/Cargo.lock" ] && cp source/Cargo.lock source/${cargoRoot}
+    '';
 
-  preBuild = ''
-    cp -r ${bufGenerated}/generated packages/client/web/src/
-    jq '. + {"bundle": { "windows": null } } | del(.plugins.updater)' packages/client/tauri.build.conf.json > temp.json
-    mv temp.json packages/client/tauri.build.conf.json
-  '';
+    preBuild = ''
+      cp -r ${bufGenerated}/generated packages/client/web/src/
+      jq '. + {"bundle": { "windows": null } } | del(.plugins.updater)' packages/client/tauri.build.conf.json > temp.json
+      mv temp.json packages/client/tauri.build.conf.json
+    '';
 
-  postInstall = ''
-    mv $out/bin/Retrom $out/bin/retrom
-    sed -i"" 's@Exec=Retrom@Exec=retrom@g' $out/share/applications/Retrom.desktop
-  '';
+    postInstall = ''
+      mv $out/bin/Retrom $out/bin/retrom
+      sed -i"" 's@Exec=Retrom@Exec=retrom@g' $out/share/applications/Retrom.desktop
+    '';
 
-  postFixup =
-    "wrapProgram \"$out/bin/retrom\" --set GIO_MODULE_DIR \"${glib-networking}/lib/gio/modules/\""
-    + (lib.optionalString supportNvidia " --set WEBKIT_DISABLE_DMABUF_RENDERER 1");
+    postFixup =
+      "wrapProgram \"$out/bin/retrom\" --set GIO_MODULE_DIR \"${glib-networking}/lib/gio/modules/\""
+      + (lib.optionalString supportNvidia " --set WEBKIT_DISABLE_DMABUF_RENDERER 1");
 
-  meta = {
-    description = "A centralized game library/collection management service with a focus on emulation.";
-    homepage = "https://github.com/JMBeresford/retrom";
-    license = with lib.licenses; [ gpl3 ];
-    mainProgram = "retrom";
-    maintainers = with lib.maintainers; [ ajgon ];
-    platforms = lib.platforms.linux;
-  };
-}
+    meta = {
+      description = "A centralized game library/collection management service with a focus on emulation.";
+      homepage = "https://github.com/JMBeresford/retrom";
+      license = with lib.licenses; [ gpl3 ];
+      mainProgram = "retrom";
+      maintainers = with lib.maintainers; [ ajgon ];
+      platforms = lib.platforms.linux;
+    };
+  }
