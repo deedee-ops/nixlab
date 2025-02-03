@@ -34,6 +34,7 @@ _: {
           export AWS_ACCESS_KEY_ID="$(${lib.getExe pkgs.sops} -d --output-type json local/secrets.sops.yaml | ${lib.getExe pkgs.jq} -r '.nixcache.AWS_ACCESS_KEY_ID')"
 
           ${lib.getExe pkgs.git} pull origin master:master --rebase
+          ${lib.getExe pkgs.git} fetch --all
         '';
       };
     };
