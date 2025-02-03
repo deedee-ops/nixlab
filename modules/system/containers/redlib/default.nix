@@ -22,7 +22,7 @@ in
 
     virtualisation.oci-containers.containers.redlib = svc.mkContainer {
       cfg = {
-        image = "quay.io/redlib/redlib:latest@sha256:5a4d4c50be740fd8d4ec1d6c365701eef9bba7056f33df12e907327b321701a0";
+        image = "quay.io/redlib/redlib:latest@sha256:17ad31b6d144fc5fed39e9b247902212e391bcff5e32443222f19bc0f073c38c";
         environment = {
           REDLIB_BANNER = "";
           REDLIB_DEFAULT_AUTOPLAY_VIDEOS = "off";
