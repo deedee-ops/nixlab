@@ -1,0 +1,57 @@
+{
+  config,
+  lib,
+  ...
+}:
+let
+  cfg = config.myHomeApps.zellij;
+in
+{
+  options.myHomeApps.zellij = {
+    enable = lib.mkEnableOption "zellij";
+    autoStart = lib.mkEnableOption "zellij autostart and autoattach" // {
+      default = true;
+    };
+    singleInstance = lib.mkEnableOption "zellij keep single instance between multiple sessions" // {
+      default = true;
+    };
+  };
+
+  config = lib.mkIf cfg.enable {
+    stylix.targets.zellij.enable = true;
+
+    programs.zellij = {
+      enable = true;
+      enableZshIntegration = cfg.autoStart;
+      settings =
+        {
+          default_layout = "compact";
+          default_mode = "locked";
+          mouse_mode = false;
+          pane_frames = false;
+          scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
+        }
+        // lib.optionalAttrs cfg.singleInstance {
+          keybinds = {
+            shared_among = {
+              _args = [
+                "normal"
+                "locked"
+              ];
+              bind = {
+                _args = [ "Ctrl d" ];
+                Detach = { };
+              };
+            };
+          };
+        };
+    };
+
+    programs.zsh.initExtra = lib.mkIf cfg.autoStart (
+      lib.mkOrder 100 ''
+        export ZELLIJ_AUTO_ATTACH="${if cfg.singleInstance then "true" else "false"}";
+        export ZELLIJ_AUTO_EXIT="true";
+      ''
+    );
+  };
+}

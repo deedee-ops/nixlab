@@ -11,6 +11,11 @@ in
           description = "Size of terminal font";
           default = 12;
         };
+        terminalScrollBuffer = lib.mkOption {
+          type = lib.types.int;
+          description = "Size of terminal scroll buffer";
+          default = 25000;
+        };
       };
     };
     default = { };

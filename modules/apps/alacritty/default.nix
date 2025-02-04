@@ -25,6 +25,10 @@ in
           TERM = "xterm-256color";
         };
 
+        scrolling = {
+          history = config.myHomeApps.theme.terminalScrollBuffer;
+        };
+
         selection = {
           save_to_clipboard = true;
         };
