@@ -20,6 +20,7 @@ _: {
     ./ssh
     ./wakatime
     ./xdg-ninja
+    ./zellij
     ./zsh
 
     # GUI apps

@@ -102,6 +102,7 @@ rec {
     gnupg.enable = false;
     ssh.enable = false;
     wakatime.enable = false;
+    zellij.enable = true;
 
     zsh.promptColor = "yellow";
   };

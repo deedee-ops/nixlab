@@ -40,7 +40,7 @@ in
         gtk-single-instance = true;
         gtk-adwaita = false;
 
-        scrollback-limit = 5000;
+        scrollback-limit = config.myHomeApps.theme.terminalScrollBuffer;
         confirm-close-surface = false;
         copy-on-select = "clipboard";
         shell-integration = "zsh";

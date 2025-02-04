@@ -116,6 +116,7 @@ rec {
         salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
       })
     ];
+    theme.terminalFontSize = 10;
 
     scripts = {
       backupverify.enable = true;
