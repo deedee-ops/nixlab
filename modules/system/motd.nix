@@ -84,9 +84,7 @@ let
 in
 {
   options.mySystem.motd = {
-    enable = lib.mkEnableOption "MOTD" // {
-      default = true;
-    };
+    enable = lib.mkEnableOption "MOTD";
     networkInterfaces = lib.mkOption {
       description = "Network interfaces to monitor";
       type = lib.types.listOf lib.types.str;
