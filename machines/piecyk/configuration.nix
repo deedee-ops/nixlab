@@ -129,7 +129,7 @@ rec {
         mail.enable = false;
         paperless = {
           enable = true;
-          consumeDir = "${homeDir}/Sync/paperless-consume";
+          consumeDir = "${config.mySystem.impermanence.persistPath}${homeDir}/Sync/paperless-consume";
         };
         ssh = {
           enable = true;
