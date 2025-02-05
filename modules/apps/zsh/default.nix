@@ -1,5 +1,6 @@
 {
   inputs,
+  osConfig,
   config,
   lib,
   pkgs,
@@ -45,6 +46,12 @@ in
           run mkdir -p ${config.xdg.stateHome}/zsh || true
         '';
       };
+
+      # hack to persist .zcompdump file
+      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
+        lib.mkIf osConfig.mySystem.impermanence.enable [
+          ".config/zsh"
+        ];
     };
 
     programs.zsh = {
