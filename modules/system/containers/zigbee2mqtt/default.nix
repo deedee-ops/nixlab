@@ -100,7 +100,7 @@ in
           name = "zigbee2mqtt-${alias}";
           value = svc.mkContainer {
             cfg = {
-              image = "ghcr.io/koenkk/zigbee2mqtt:2.1.0@sha256:c67070c98982b744b92c20310265fe0b18168b3cab11154bd3c68e3cd9f585f9";
+              image = "ghcr.io/koenkk/zigbee2mqtt:2.1.1@sha256:aac8411a8b9701a3bdf22e1901c6e125a0ae968d4ec8b3fe4210da98e23831ab";
               user = "65000:65000";
               environment = {
                 ZIGBEE2MQTT_CONFIG_MQTT_USER = "mq";
