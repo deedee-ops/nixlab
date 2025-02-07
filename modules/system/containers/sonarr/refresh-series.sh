@@ -2,8 +2,10 @@
 # shellcheck disable=SC2154
 set -euo pipefail
 
+SONARR__AUTH__APIKEY=$(cat /secrets/SONARR__AUTH__APIKEY)
+
 CURL_CMD=(curl -fsSL --header "X-Api-Key: ${SONARR__AUTH__APIKEY:-}")
-SONARR_API_URL="http://localhost:${SONARR__SERVER__PORT:-}/api/v3"
+SONARR_API_URL="http://localhost:${SONARR__SERVER__PORT:-8989}/api/v3"
 
 if [[ "${sonarr_eventtype:-}" == "Grab" ]]; then
     tba=$("${CURL_CMD[@]}" "${SONARR_API_URL}/episode?seriesId=${sonarr_series_id:-}" | jq --raw-output '
