@@ -56,7 +56,7 @@ in
 
     virtualisation.oci-containers.containers.forgejo = svc.mkContainer {
       cfg = {
-        image = "codeberg.org/forgejo/forgejo:10.0.0-rootless@sha256:d07a623ff4da1a78baab6f3ba0b3273268efd305c73cbc597e1ebe735b77e6b1";
+        image = "codeberg.org/forgejo/forgejo:10.0.1-rootless@sha256:20a12bd39d49554964e059c501d88a021a0ac04c1d3128c24921045013bd16f7";
         environment =
           {
             FORGEJO__server__DOMAIN = "git.${config.mySystem.rootDomain}";
