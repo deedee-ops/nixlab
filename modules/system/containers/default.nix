@@ -19,6 +19,7 @@ _: {
     ./homepage
     ./immich
     ./jellyfin
+    ./kms
     ./lldap
     ./maddy
     ./mail-archive

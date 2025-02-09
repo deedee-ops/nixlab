@@ -279,6 +279,7 @@ rec {
       inherit videoPath;
       enable = true;
     };
+    kms.enable = true;
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
