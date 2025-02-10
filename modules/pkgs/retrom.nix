@@ -23,7 +23,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "retrom-v0.7.8";
+  rev = "retrom-v0.7.9";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
@@ -32,11 +32,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-1ckiALzKLelYtLBv4tqjePrvOlIIBqQKuTgBLx+XabQ=";
+    hash = "sha256-GHJIkUwzqUDPSnv+LmNTc4YQzLCEsOO3crzyYEkpqx4=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-cBoiN5TAiPhuZ9l9vruKaxBwN4SCswoNtiodGQvr7no=";
+    hash = "sha256-BHgn6F38rLTgqDBXwxv/35po3PAQqbxzuu7w0i8gxrE=";
   };
 
   # Fixed Output Derivation
@@ -83,7 +83,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-jNvmZKXmNGWYVIFxyj87P/c0lNxJtFnVDanOFo+jRds=";
+    cargoHash = "sha256-3HqQMchp5L07FYOrhIxxJ4kouNPPR69ZvzTDUnm2E+g=";
 
     # buildType = "debug";
     cargoRoot = "packages/client";
