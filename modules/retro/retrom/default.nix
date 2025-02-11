@@ -36,7 +36,8 @@ in
           },
           "interface": {
             "fullscreenByDefault": false
-          }
+          },
+          "installationDir": "${config.xdg.dataHome}/retrom"
         },
         "flowCompletions": {
           "setupComplete": true
