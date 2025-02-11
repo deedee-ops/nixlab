@@ -22,6 +22,11 @@ in
         isopath="$gamepath/"*.iso
         savepath="${cfg.saveStatePath}/$(basename "$1" | sed 's@\.[^.]*$@@g')"
 
+        isopath="$(ls -1 "$gamepath/"*.iso | head -n 1)"
+        if [ -z "$isopath" ]; then
+          isopath="$(ls -1 "$gamepath/"*.cue | head -n 1)"
+        fi
+
         echo $cfgpath
         echo $gamepath
         echo $isopath
