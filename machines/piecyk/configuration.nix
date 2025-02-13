@@ -256,7 +256,7 @@ rec {
       enable = true;
       passwordManager = "bitwarden";
       bitwarden = {
-        email = "bitwarden@ajgon.ovh";
+        email = "igor@rzegocki.pl";
         base_url = "https://vault.bitwarden.eu/";
       };
     };
