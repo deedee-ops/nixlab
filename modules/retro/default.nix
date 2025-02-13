@@ -7,5 +7,6 @@ _: {
     ./apple2
     ./ms-dos
     ./nintendo64
+    ./windows98
   ];
 }
