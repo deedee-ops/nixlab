@@ -233,6 +233,7 @@ rec {
       inherit videoPath;
       enable = true;
     };
+    bitmagnet.enable = true;
     coredns.enable = true;
     crypt.enable = true;
     davis = {

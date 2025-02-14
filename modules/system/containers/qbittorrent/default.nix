@@ -43,7 +43,7 @@ in
       "${cfg.sopsSecretPrefix}/WEBUI_PASSWORD" = { };
     };
 
-    mySystemApps.gluetun.extraPorts = [ 8080 ];
+    mySystemApps.gluetun.extraPorts = [ "8080" ];
 
     virtualisation.oci-containers.containers.qbittorrent = svc.mkContainer {
       cfg = {
