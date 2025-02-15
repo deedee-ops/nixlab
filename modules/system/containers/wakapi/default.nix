@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.wakapi = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/wakapi:2.12.3@sha256:ca51b3abef79aede7218b48d2c80d350e044c566208346eb273b8ded06f8cbd2";
+        image = "ghcr.io/deedee-ops/wakapi:2.12.3@sha256:9ae932f8e9d939b7e764ba19415e6c65bdd49ccb19d5e3633a3f8cff2a14f921";
         environment = {
           ENVIRONMENT = "prod";
           WAKAPI_LEADERBOARD_ENABLED = "false";
