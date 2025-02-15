@@ -69,7 +69,7 @@ in
         cfg = {
           inherit (cfg) dependsOn;
 
-          image = "public.ecr.aws/docker/library/caddy:2.9.1@sha256:ca29b067a632213b310e82a2881a17f186b87913044eb6ed9ea632aeb0d36cea";
+          image = "public.ecr.aws/docker/library/caddy:2.9.1@sha256:f27c4c64e20ca80651d1fdee831785e49553169bf9c9668600b456932f75ac47";
           volumes = [ "${caddyfile}:/config/Caddyfile" ] ++ cfg.mounts;
           cmd = [
             "caddy"
