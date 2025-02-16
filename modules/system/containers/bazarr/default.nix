@@ -8,6 +8,7 @@ let
   cfg = config.mySystemApps.bazarr;
   secretEnvs = [
     "BAZARR__API_KEY"
+    "JELLYFIN_API_KEY"
   ];
 in
 {
@@ -49,6 +50,8 @@ in
         image = "ghcr.io/deedee-ops/bazarr:1.5.1@sha256:8b99750ad24d72b3105d0ffe4d14d55a01fc6685e685ef293750e81489588615";
         environment = {
           BAZARR__ANALYTICS_ENABLED = "false";
+
+          JELLYFIN_URL = "http://jellyfin:8096";
         }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
@@ -58,6 +61,7 @@ in
           ++ [
             "${cfg.dataDir}/config:/config"
             "${cfg.videoPath}:/data/video"
+            "${./refresh-jellyfin.sh}:/scripts/refresh-jellyfin.sh"
           ];
       };
       opts = {
