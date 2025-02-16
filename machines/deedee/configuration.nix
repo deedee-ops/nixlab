@@ -6,6 +6,7 @@ let
   podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
+  youtubePath = "${mediaPath}/youtube";
 in
 rec {
   sops = {
@@ -106,6 +107,11 @@ rec {
         src = "${config.myInfra.machines.nas.ip}:/volume1/media/music";
         dest = mySystemApps.navidrome.musicPath;
         opts = "ro";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/media/youtube";
+        dest = mySystemApps.pinchflat.downloadsPath;
       }
       {
         type = "nfs";
@@ -291,6 +297,10 @@ rec {
     };
     netbox.enable = true;
     paperless-ngx.enable = true;
+    pinchflat = {
+      enable = true;
+      downloadsPath = youtubePath;
+    };
     piped.enable = true;
     prowlarr.enable = true;
     qbittorrent = {

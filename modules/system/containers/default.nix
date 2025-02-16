@@ -30,6 +30,7 @@ _: {
     ./netbox
     ./outline
     ./paperless-ngx
+    ./pinchflat
     ./piped
     ./prowlarr
     ./qbittorrent
