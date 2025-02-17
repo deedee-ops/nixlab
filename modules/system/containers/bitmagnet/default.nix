@@ -105,6 +105,7 @@ in
 
     mySystemApps.homepage = {
       services.Media.Bitmagnet = svc.mkHomepage "bitmagnet" // {
+        icon = "camera-ui.png";
         description = "DHT cache";
       };
     };

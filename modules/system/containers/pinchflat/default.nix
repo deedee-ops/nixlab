@@ -109,6 +109,7 @@ in
 
     mySystemApps.homepage = {
       services.Media.Pinchflat = svc.mkHomepage "pinchflat" // {
+        icon = "pinchflat.png";
         description = "YouTube downloader";
       };
     };
