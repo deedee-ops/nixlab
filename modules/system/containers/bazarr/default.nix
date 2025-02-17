@@ -6,10 +6,13 @@
 }:
 let
   cfg = config.mySystemApps.bazarr;
-  secretEnvs = [
-    "BAZARR__API_KEY"
-    "JELLYFIN_API_KEY"
-  ];
+  secretEnvs =
+    [
+      "BAZARR__API_KEY"
+    ]
+    ++ lib.optionals config.mySystemApps.jellyfin.enable [
+      "JELLYFIN_API_KEY"
+    ];
 in
 {
   # postgres setup in bazarr is utterly broken, so for now, sqlite3 is the only stable option
@@ -48,11 +51,13 @@ in
     virtualisation.oci-containers.containers.bazarr = svc.mkContainer {
       cfg = {
         image = "ghcr.io/deedee-ops/bazarr:1.5.1@sha256:8b99750ad24d72b3105d0ffe4d14d55a01fc6685e685ef293750e81489588615";
-        environment = {
-          BAZARR__ANALYTICS_ENABLED = "false";
-
-          JELLYFIN_URL = "http://jellyfin:8096";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        environment =
+          {
+            BAZARR__ANALYTICS_ENABLED = "false";
+          }
+          // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
+            JELLYFIN_URL = "http://jellyfin:8096";
+          };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;
@@ -61,8 +66,10 @@ in
           ++ [
             "${cfg.dataDir}/config:/config"
             "${cfg.videoPath}:/data/video"
+          ]
+          ++ (lib.optionals config.mySystemApps.jellyfin.enable [
             "${./refresh-jellyfin.sh}:/scripts/refresh-jellyfin.sh"
-          ];
+          ]);
       };
       opts = {
         # downloading subtitles

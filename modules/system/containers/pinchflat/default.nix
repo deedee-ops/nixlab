@@ -6,7 +6,7 @@
 }:
 let
   cfg = config.mySystemApps.pinchflat;
-  secretEnvs = [
+  secretEnvs = lib.optionals config.mySystemApps.jellyfin.enable [
     "JELLYFIN_API_KEY"
   ];
 in
@@ -46,12 +46,14 @@ in
       cfg = {
         image = "ghcr.io/kieraneglin/pinchflat:v2025.1.27@sha256:01e52e1f1025aea789acd83dd05735d6875d61539f8283a7b4f83e8f470a0627";
         user = "65000:65000";
-        environment = {
-          JELLYFIN_URL = "http://jellyfin:8096";
-
-          LOG_LEVEL = "info";
-          TZ_DATA_DIR = "/tmp/elixir_tz_data";
-        };
+        environment =
+          {
+            LOG_LEVEL = "info";
+            TZ_DATA_DIR = "/tmp/elixir_tz_data";
+          }
+          // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
+            JELLYFIN_URL = "http://jellyfin:8096";
+          };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;
@@ -89,12 +91,16 @@ in
     };
 
     systemd.services.docker-pinchflat = {
-      preStart = lib.mkAfter ''
-        mkdir -p "${cfg.dataDir}/config/extras/user-scripts"
-        cp "${./refresh-jellyfin.sh}" "${cfg.dataDir}/config/extras/user-scripts/lifecycle"
-        chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/config/extras" \
-                          "${cfg.dataDir}/config/extras/user-scripts" "${cfg.dataDir}/config/extras/user-scripts/lifecycle"
-      '';
+      preStart = lib.mkAfter (
+        ''
+          mkdir -p "${cfg.dataDir}/config/extras/user-scripts"
+          chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/config/extras" "${cfg.dataDir}/config/extras/user-scripts"
+        ''
+        + (lib.optionalString config.mySystemApps.jellyfin.enable ''
+          cp "${./refresh-jellyfin.sh}" "${cfg.dataDir}/config/extras/user-scripts/lifecycle"
+          chown 65000:65000 "${cfg.dataDir}/config/extras/user-scripts/lifecycle"
+        '')
+      );
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
