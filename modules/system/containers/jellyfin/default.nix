@@ -23,6 +23,11 @@ in
       type = lib.types.str;
       description = "Path to directory containing movies and tv shows.";
     };
+    youtubePath = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      description = "Path to directory containing youtube videos.";
+      default = null;
+    };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
@@ -47,7 +52,7 @@ in
           "/var/cache/jellyfin/transcode:/transcode"
           "/var/cache/jellyfin/internal-ip:/secrets/JELLYFIN_PublishedServerUrl:ro" # hack to dynamically pass current machine IP to env
           "${cfg.videoPath}:/data/video"
-        ];
+        ] ++ lib.optionals (cfg.youtubePath != null) [ "${cfg.youtubePath}:/data/youtube" ];
         extraOptions = [
           "--device=/dev/dri"
           "--add-host=authelia.${config.mySystem.rootDomain}:${config.mySystemApps.docker.network.private.hostIP}"

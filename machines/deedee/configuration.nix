@@ -283,7 +283,7 @@ rec {
       dataPath = "/mnt/media/immich";
     };
     jellyfin = {
-      inherit videoPath;
+      inherit videoPath youtubePath;
       enable = true;
     };
     kms.enable = true;
@@ -301,7 +301,6 @@ rec {
       enable = true;
       downloadsPath = youtubePath;
     };
-    piped.enable = true;
     prowlarr.enable = true;
     qbittorrent = {
       enable = true;
