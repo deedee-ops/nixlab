@@ -29,6 +29,7 @@ rec {
     rootDomain = "rzegocki.dev";
     notificationEmail = "homelab@${mySystem.rootDomain}";
     notificationSender = "deedee@${mySystem.rootDomain}";
+    crossBuildSystems = [ "aarch64-linux" ];
 
     alerts = {
       pushover.enable = true;

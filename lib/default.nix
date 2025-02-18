@@ -12,18 +12,21 @@ in
     {
       system,
       osConfig,
-      baseModules ? [
-        ../modules/infra
-        ../modules/system
+      baseModules ?
+        [
+          ../modules/infra
+          ../modules/system
 
-        inputs.disko.nixosModules.disko
-        inputs.home-manager.nixosModules.home-manager
-        inputs.impermanence.nixosModules.impermanence
-        inputs.lix-module.nixosModules.default
-        inputs.nix-index-database.nixosModules.nix-index
-        inputs.sops-nix.nixosModules.sops
-        inputs.stylix.nixosModules.stylix
-      ],
+          inputs.disko.nixosModules.disko
+          inputs.home-manager.nixosModules.home-manager
+          inputs.impermanence.nixosModules.impermanence
+          inputs.nix-index-database.nixosModules.nix-index
+          inputs.sops-nix.nixosModules.sops
+          inputs.stylix.nixosModules.stylix
+        ]
+        ++ lib.optionals (system == "x86_64-linux") [
+          inputs.lix-module.nixosModules.default
+        ],
       hardwareModules ? [ ],
       profileModules ? [ ],
     }:

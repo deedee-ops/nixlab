@@ -44,6 +44,7 @@ rec {
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
+    crossBuildSystems = [ "aarch64-linux" ];
 
     alerts = {
       pushover.enable = true;

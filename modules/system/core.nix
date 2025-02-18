@@ -13,6 +13,13 @@
       default = [ ];
     };
 
+    crossBuildSystems = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of systems, which will be enabled for qemu crossbuild on this machine.";
+      example = [ "aarch64-linux" ];
+      default = [ ];
+    };
+
     extraModules = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "Extra modules to load on boot.";
@@ -127,6 +134,7 @@
     boot = {
       kernelPackages = pkgs.linuxPackages_6_12;
       kernelModules = config.mySystem.extraModules;
+      binfmt.emulatedSystems = config.mySystem.crossBuildSystems;
     };
 
     # terminfo for terminals I use
