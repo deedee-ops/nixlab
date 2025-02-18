@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  pkgs,
   lib,
   ...
 }:
@@ -25,7 +26,7 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
-      (inputs.ghostty.packages.x86_64-linux.ghostty.overrideAttrs (oldAttrs: {
+      (inputs.ghostty.packages."${pkgs.system}".ghostty.overrideAttrs (oldAttrs: {
         zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
       }))
     ];

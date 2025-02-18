@@ -76,7 +76,9 @@ in
         export HISTFILE="${config.xdg.stateHome}/zsh/history"
 
         if [[ "$TERM" == "xterm-ghostty" ]]; then
-          source ${inputs.ghostty.packages.x86_64-linux.default.shell_integration}/shell-integration/zsh/ghostty-integration
+          source ${
+            inputs.ghostty.packages."${pkgs.system}".default.shell_integration
+          }/shell-integration/zsh/ghostty-integration
         fi
 
         ${shellInitExtra}

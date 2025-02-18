@@ -1,4 +1,5 @@
 {
+  system,
   lib,
   stdenv,
   makeRustPlatform,
@@ -73,7 +74,7 @@ let
   };
 in
 (makeRustPlatform {
-  inherit (fenix.packages.x86_64-linux.stable) cargo rustc;
+  inherit (fenix.packages."${system}".stable) cargo rustc;
 }).buildRustPackage
   rec {
     inherit

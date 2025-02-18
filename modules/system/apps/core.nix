@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  pkgs,
   lib,
   ...
 }:
@@ -16,7 +17,7 @@
 
   config = {
     environment.systemPackages = [
-      inputs.ghostty.packages.x86_64-linux.default.terminfo
+      inputs.ghostty.packages."${pkgs.system}".default.terminfo
     ] ++ config.mySystemApps.extraPackages;
   };
 }
