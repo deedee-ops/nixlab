@@ -1,5 +1,4 @@
 {
-  inputs,
   osConfig,
   config,
   lib,
@@ -72,17 +71,20 @@ in
         autoload -U colors && colors
       '';
 
-      initExtra = ''
-        export HISTFILE="${config.xdg.stateHome}/zsh/history"
+      initExtra =
+        ''
+          export HISTFILE="${config.xdg.stateHome}/zsh/history"
+        ''
+        + (lib.optionalString config.myHomeApps.ghostty.enable ''
 
-        if [[ "$TERM" == "xterm-ghostty" ]]; then
-          source ${
-            inputs.ghostty.packages."${pkgs.system}".default.shell_integration
-          }/shell-integration/zsh/ghostty-integration
-        fi
+          if [[ "$TERM" == "xterm-ghostty" ]]; then
+            source ${pkgs.ghostty.shell_integration}/shell-integration/zsh/ghostty-integration
+          fi
+        '')
+        + ''
 
-        ${shellInitExtra}
-      '';
+          ${shellInitExtra}
+        '';
 
       shellAliases = {
         ".." = "cd ..";

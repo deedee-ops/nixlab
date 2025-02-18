@@ -1,7 +1,5 @@
 {
-  inputs,
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -16,8 +14,6 @@
   };
 
   config = {
-    environment.systemPackages = [
-      inputs.ghostty.packages."${pkgs.system}".default.terminfo
-    ] ++ config.mySystemApps.extraPackages;
+    environment.systemPackages = config.mySystemApps.extraPackages;
   };
 }

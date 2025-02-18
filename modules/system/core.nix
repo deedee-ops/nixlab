@@ -107,6 +107,16 @@
       description = "Desktop wallpaper";
       default = ./assets/pixel.png;
     };
+
+    supportedTerminals = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [
+        "alacritty"
+        "ghostty"
+        "kitty"
+      ];
+      internal = true;
+    };
   };
 
   config = {
@@ -119,7 +129,10 @@
       kernelModules = config.mySystem.extraModules;
     };
 
-    environment.enableAllTerminfo = true;
+    # terminfo for terminals I use
+    environment.systemPackages = builtins.map (
+      term: pkgs."${term}".terminfo
+    ) config.mySystem.supportedTerminals;
 
     # more file descriptors
     security.pam.loginLimits = [

@@ -44,11 +44,6 @@ rec {
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
     };
-    ghostty = {
-      url = "github:ghostty-org/ghostty";
-      inputs.nixpkgs-stable.follows = "nixpkgs-stable";
-      inputs.nixpkgs-unstable.follows = "nixpkgs";
-    };
     git-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
