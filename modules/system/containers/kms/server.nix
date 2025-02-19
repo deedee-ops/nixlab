@@ -16,7 +16,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.kms-server = svc.mkContainer {
       cfg = {
-        image = "11notes/kms:stable@sha256:7a6a1d0e5585128fcd19f8630571ccc7a0995289a9b56a7034caf552d2961de2";
+        image = "11notes/kms:stable@sha256:8bb0bb2ad0cdf205dd3035f4089f4ace5a4796a57e1bc08e61590cd9e71b2b43";
         user = "65000:65000";
         environment = {
           KMS_LOCALE = locale."${cfg.locale}";
