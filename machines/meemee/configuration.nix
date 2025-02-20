@@ -14,7 +14,6 @@ rec {
 
   mySystem = {
     purpose = "Smart Home";
-    filesystem = "zfs";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     rootDomain = "rzegocki.dev";
@@ -51,15 +50,8 @@ rec {
 
     disks = {
       enable = true;
-      hostId = "bec09da4";
-      swapSize = "4G";
-      systemDiskDevs = [ "/dev/sda" ];
-      systemDatasets = {
-        nix = {
-          type = "zfs_fs";
-          mountpoint = "/nix";
-        };
-      };
+      swapSize = "2G";
+      thinLvsSize = "10G";
     };
 
     healthcheck.enable = true;
@@ -83,11 +75,12 @@ rec {
       firewallEnable = true;
       hostname = "meemee";
       mainInterface = {
-        name = "enp3s0";
+        # name = "enp3s0";
+        name = "eth0";
       };
-      secondaryInterface = {
-        name = "enp4s0";
-      };
+      # secondaryInterface = {
+      #   name = "enp4s0";
+      # };
     };
 
     ssh = {

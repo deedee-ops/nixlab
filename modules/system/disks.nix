@@ -5,10 +5,24 @@ in
 {
   options.mySystem.disks = with lib; {
     enable = mkEnableOption "disks setup and partitioning";
+    bootPartition = mkOption {
+      type = types.attrs;
+      default = {
+        name = "boot";
+        size = "1M";
+        type = "EF02";
+      };
+      description = "Initial boot partition format, for PIs - this should contain firmware.";
+    };
     hostId = mkOption {
       type = types.nullOr types.str;
       default = null;
       description = "The 32-bit host ID of the machine, formatted as 8 hexadecimal characters. To ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.";
+    };
+    thinLvsSize = mkOption {
+      type = types.nullOr types.str;
+      default = null;
+      description = "Size of the main volume in LVM thin pool. Applicable only for ext4. When used on PI, it also determines image size.";
     };
     swapSize = mkOption {
       type = types.nullOr types.str;
@@ -103,6 +117,10 @@ in
         message = "`hostId` is required for zfs";
       }
       {
+        assertion = config.mySystem.filesystem != "ext4" || cfg.thinLvsSize != null;
+        message = "`thinLvsSize` is required for ext4";
+      }
+      {
         assertion = config.mySystem.filesystem == "zfs" || cfg.cacheDiskDev == null;
         message = "`cacheDiskDev` cannot be set for global filesystem different than zfs";
       }
@@ -126,11 +144,7 @@ in
                 type = "gpt";
                 partitions =
                   {
-                    boot = {
-                      name = "boot";
-                      size = "1M";
-                      type = "EF02";
-                    };
+                    boot = cfg.bootPartition;
                     esp = {
                       name = "ESP";
                       size = "512M";
@@ -272,7 +286,7 @@ in
                   lvm_type = "thin-pool";
                 };
                 persist = {
-                  size = "1T"; # overprovision in most cases
+                  size = config.mySystem.disks.thinLvsSize;
                   lvm_type = "thinlv";
                   pool = "thinpool";
                   content = {
@@ -289,7 +303,7 @@ in
               }
               // lib.optionals config.mySystem.impermanence.enable {
                 nix = {
-                  size = "1T"; # overprovision in most cases
+                  size = config.mySystem.disks.thinLvsSize;
                   lvm_type = "thinlv";
                   pool = "thinpool";
                   content = {

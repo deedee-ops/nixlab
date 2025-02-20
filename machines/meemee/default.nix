@@ -4,15 +4,17 @@ rec {
     nixosConfigurations.meemee = lib.mkNixosConfig {
       osConfig = self.nixosConfigurations.meemee.config;
 
-      system = "x86_64-linux";
-      hardwareModules = [ ../../modules/hardware/vm-amd.nix ];
+      system = "aarch64-linux";
+      hardwareModules = [
+        ../../modules/hardware/raspberry-pi-4b.nix
+      ];
       profileModules = [
         ./configuration.nix
       ];
     };
 
     deploy.nodes.meemee = lib.mkDeployConfig {
-      system = "x86_64-linux";
+      system = "aarch64-linux";
       target = "meemee.home.arpa";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.meemee;

@@ -25,4 +25,9 @@ trap cleanup EXIT
 
 openssl aes-256-cbc -d -a -salt -md sha256 -pbkdf2 -in "${SCRIPTPATH}/../secrets.tar.gz.enc" | tar -xz -C "${temp}"
 
-nixos-anywhere --extra-files "${temp}/${MACHINE}" --flake ".#${MACHINE}" "root@${IP}"
+if [ "$(nix eval --raw ".#nixosConfigurations.${MACHINE}.config.nixpkgs.system")" = "aarch64-linux" ]; then
+  result="$(nix build ".#nixosConfigurations.${MACHINE}.config.system.build.diskoImagesScript" --print-out-paths --no-link)"
+  sudo "${result}" --post-format-files "${temp}/${MACHINE}/persist/etc" /persist/etc
+else
+  nixos-anywhere --extra-files "${temp}/${MACHINE}" --flake ".#${MACHINE}" "root@${IP}"
+fi

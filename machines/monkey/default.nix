@@ -1,9 +1,4 @@
-{
-  inputs,
-  self,
-  lib,
-  ...
-}:
+{ self, lib, ... }:
 rec {
   flakePart = {
     nixosConfigurations.monkey = lib.mkNixosConfig {
@@ -11,7 +6,6 @@ rec {
 
       system = "x86_64-linux";
       hardwareModules = [
-        inputs.nixos-hardware.nixosModules.intel-nuc-8i7beh
         ../../modules/hardware/nuc8.nix
       ];
       profileModules = [

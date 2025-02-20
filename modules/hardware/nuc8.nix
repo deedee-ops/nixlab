@@ -1,4 +1,9 @@
-_: {
+{ inputs, ... }:
+{
+  imports = [
+    inputs.nixos-hardware.nixosModules.intel-nuc-8i7beh
+  ];
+
   boot = {
     initrd = {
       availableKernelModules = [
