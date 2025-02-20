@@ -62,8 +62,12 @@ in
   config = lib.mkIf (cfg.local.enable || (builtins.length cfg.remotes > 0)) {
     assertions = [
       {
-        assertion = config.mySystem.filesystem == "zfs";
-        message = "Backups are supported only on ZFS";
+        assertion = config.mySystem.filesystem == "zfs" || config.mySystem.filesystem == "ext4";
+        message = "Backups are supported only on ZFS and EXT4";
+      }
+      {
+        assertion = (builtins.length cfg.extraBackupDatasets == 0) || config.mySystem.filesystem == "zfs";
+        message = "Extra backup datasets are sypported only on ZFS";
       }
     ];
 
@@ -108,29 +112,41 @@ in
       };
 
       services.backup-snapshot = {
-        description = "Nightly ZFS snapshot for backups";
-        path = [
-          pkgs.zfs
-          pkgs.busybox
-        ];
+        description = "Nightly snapshot for backups";
+        path =
+          [
+            pkgs.busybox
+          ]
+          ++ (lib.optionals (config.mySystem.filesystem == "zfs") [ pkgs.zfs ])
+          ++ (lib.optionals (config.mySystem.filesystem == "ext4") [ pkgs.lvm2 ]);
         serviceConfig.Type = "simple";
         script =
-          ''
+          (lib.optionalString (config.mySystem.filesystem == "zfs") (
+            ''
+              mkdir -p ${cfg.snapshotMountPath} && \
+              umount ${cfg.snapshotMountPath} || true && \
+              zfs destroy ${config.mySystem.impermanence.zfsPool}/persist@backup || true && \
+              zfs snapshot ${config.mySystem.impermanence.zfsPool}/persist@backup && \
+              mount -t zfs ${config.mySystem.impermanence.zfsPool}/persist@backup ${cfg.snapshotMountPath}
+            ''
+            + builtins.concatStringsSep "\n" (
+              builtins.map (dataset: ''
+                mkdir -p /mnt/backup-extra/${dataset} && \
+                umount /mnt/backup-extra/${dataset} || true && \
+                zfs destroy ${dataset}@backup || true && \
+                zfs snapshot ${dataset}@backup && \
+                mount -t zfs ${dataset}@backup /mnt/backup-extra/${dataset}
+              '') cfg.extraBackupDatasets
+            )
+          ))
+          + (lib.optionalString (config.mySystem.filesystem == "ext4") ''
             mkdir -p ${cfg.snapshotMountPath} && \
             umount ${cfg.snapshotMountPath} || true && \
-            zfs destroy ${config.mySystem.impermanence.zfsPool}/persist@backup || true && \
-            zfs snapshot ${config.mySystem.impermanence.zfsPool}/persist@backup && \
-            mount -t zfs ${config.mySystem.impermanence.zfsPool}/persist@backup ${cfg.snapshotMountPath}
-          ''
-          + builtins.concatStringsSep "\n" (
-            builtins.map (dataset: ''
-              mkdir -p /mnt/backup-extra/${dataset} && \
-              umount /mnt/backup-extra/${dataset} || true && \
-              zfs destroy ${dataset}@backup || true && \
-              zfs snapshot ${dataset}@backup && \
-              mount -t zfs ${dataset}@backup /mnt/backup-extra/${dataset}
-            '') cfg.extraBackupDatasets
-          );
+            lvremove -y rpool/backup || true && \
+            lvcreate -s --thinpool thinpool rpool/persist -n backup && \
+            lvchange -ay -Ky rpool/backup && \
+            mount /dev/rpool/backup ${cfg.snapshotMountPath}
+          '');
       };
     };
   };

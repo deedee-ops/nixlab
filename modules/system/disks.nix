@@ -153,9 +153,8 @@ in
                   // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
                     root = {
                       content = {
-                        type = "filesystem";
-                        format = "ext4";
-                        mountpoint = "/";
+                        type = "lvm_pv";
+                        vg = "rpool";
                       };
                     } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
                   }
@@ -261,6 +260,62 @@ in
               };
             }) cfg.tankDiskDevs
           );
+      }
+      // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
+        lvm_vg = {
+          rpool = {
+            type = "lvm_vg";
+            lvs =
+              {
+                thinpool = {
+                  size = "100%FREE";
+                  lvm_type = "thin-pool";
+                };
+                persist = {
+                  size = "1T"; # overprovision in most cases
+                  lvm_type = "thinlv";
+                  pool = "thinpool";
+                  content = {
+                    type = "filesystem";
+                    format = "ext4";
+                    mountpoint =
+                      if config.mySystem.impermanence.enable then "${config.mySystem.impermanence.persistPath}" else "/";
+                    mountOptions = [
+                      "defaults"
+                      "noatime"
+                    ];
+                  };
+                };
+              }
+              // lib.optionals config.mySystem.impermanence.enable {
+                nix = {
+                  size = "1T"; # overprovision in most cases
+                  lvm_type = "thinlv";
+                  pool = "thinpool";
+                  content = {
+                    type = "filesystem";
+                    format = "ext4";
+                    mountpoint = "/nix";
+                    mountOptions = [
+                      "defaults"
+                      "noatime"
+                    ];
+                  };
+                };
+              };
+          };
+        };
+      }
+      // lib.optionalAttrs (config.mySystem.filesystem == "ext4" && config.mySystem.impermanence.enable) {
+        nodev = {
+          "/" = {
+            fsType = "tmpfs";
+            mountOptions = [
+              "size=1G"
+              "mode=0755"
+            ];
+          };
+        };
       }
       // lib.optionalAttrs (config.mySystem.filesystem == "zfs") {
         zpool =

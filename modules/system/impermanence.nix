@@ -36,10 +36,6 @@ in
   config = lib.mkIf cfg.enable {
     assertions = [
       {
-        assertion = config.mySystem.filesystem == "zfs" || config.mySystem.filesystem == "btrfs";
-        message = "Impermanence is supported only on ZFS or BTRFS";
-      }
-      {
         assertion =
           (cfg.machineId != null && !config.virtualisation.incus.agent.enable)
           || (cfg.machineId == null && config.virtualisation.incus.agent.enable);
@@ -106,11 +102,20 @@ in
           fsType = "zfs";
           neededForBoot = true;
         }
-      else
+      else if config.mySystem.filesystem == "btrfs" then
         {
           neededForBoot = true;
           fsType = "btrfs";
           options = [ "subvol=${cfg.persistPath}" ];
+        }
+      else
+        {
+          neededForBoot = true;
+          fsType = "ext4";
+          options = [
+            "defaults"
+            "noatime"
+          ];
         };
 
     programs.fuse.userAllowOther = true;
