@@ -7,6 +7,7 @@ keys:
       - &ajgon age13s2dafyr9sfltp8heujttxug4v4m3qhj7sxzqrj6x6x3cu5n29uqfvj62l
   - hosts:
       - &deedee age15j2q7j9nx0eklslk93zstedzkhhm3r6kqfd7pgcesne6c9yeldzqdvm0v8
+      - &leelee age1f2dmyxwyn9gy75ccpk27yaax4ce7nu2nua4muwuk2rrtt7nm33yqe9zzrj
       - &meemee age1jvlrjcy0fh4tspzv5z4cxulmhrd5c5htkd8juuxpmn3vnk3xtsdqeggxhg
       - &monkey age1lfx84pz5u2hcdmtkpc7hw0kw080065c3fhvatghqzpp9fla3my2s5kd45x
 
@@ -21,6 +22,11 @@ creation_rules:
       - age:
           - *ajgon
           - *deedee
+  - path_regex: leelee/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *leelee
   - path_regex: liadtop/.*\.sops\.yaml$
     key_groups:
       - age:

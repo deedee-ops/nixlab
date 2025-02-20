@@ -30,6 +30,7 @@ in
       default = [
         "https://dns.quad9.net/dns-query"
         "[/${config.mySystem.rootDomain}/]${config.myInfra.machines.unifi.ip}"
+        "[/home.arpa/]${config.myInfra.machines.unifi.ip}"
       ];
     };
     adminPasswordSopsSecret = lib.mkOption {
