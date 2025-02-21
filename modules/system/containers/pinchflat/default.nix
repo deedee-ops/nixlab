@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.pinchflat = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/kieraneglin/pinchflat:v2025.1.27@sha256:01e52e1f1025aea789acd83dd05735d6875d61539f8283a7b4f83e8f470a0627";
+        image = "ghcr.io/kieraneglin/pinchflat:v2025.2.20@sha256:1ed87782db0a81a08e39d2ed05d354f82bb6ac0ce110c1a0fe4900914b464ef0";
         user = "65000:65000";
         environment =
           {
