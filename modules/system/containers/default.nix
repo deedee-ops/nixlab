@@ -30,6 +30,7 @@ _: {
     ./miniflux
     ./navidrome
     ./netbox
+    ./open-webui
     ./outline
     ./paperless-ngx
     ./pinchflat

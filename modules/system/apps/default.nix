@@ -10,6 +10,7 @@ _: {
     ./letsencrypt
     ./mosquitto
     ./nginx
+    ./ollama
     ./openconnect
     ./opensnitch
     ./plymouth

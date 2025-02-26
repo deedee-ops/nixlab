@@ -105,6 +105,8 @@ rec {
     # opensnitch.enable = true;
     # plymouth.enable = true;
 
+    ollama.enable = true;
+
     xorg = {
       enable = true;
       windowManager = "awesome";
