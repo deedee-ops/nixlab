@@ -31,7 +31,7 @@ in
     };
 
     mySystemApps.homepage = {
-      services.Apps.kms = svc.mkHomepage "kms" // {
+      services.Apps.KMS = svc.mkHomepage "kms" // {
         icon = "windows-10";
         container = "kms-gui";
         description = "KMS activation server";

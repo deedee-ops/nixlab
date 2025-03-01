@@ -116,7 +116,7 @@ in
         { directories = [ cfg.dataDir ]; };
 
     mySystemApps.homepage = {
-      services.Apps.retrom = svc.mkHomepage "RetROM" // {
+      services.Apps.RetROM = svc.mkHomepage "retrom" // {
         icon = "https://cdn.jsdelivr.net/gh/JMBeresford/retrom@main/packages/client/icons/icon.png";
         description = "Server for steam-like retro games manager";
       };

@@ -73,7 +73,7 @@ in
     };
 
     mySystemApps.homepage = {
-      services.Apps.gatus = svc.mkHomepage "gatus" // {
+      services.Apps.Gatus = svc.mkHomepage "gatus" // {
         description = "Services monitoring";
       };
     };

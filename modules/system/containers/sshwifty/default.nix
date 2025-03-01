@@ -105,7 +105,7 @@ in
     };
 
     mySystemApps.homepage = {
-      services.Apps.sshwifty = svc.mkHomepage "sshwifty" // {
+      services.Apps.SSHwifty = svc.mkHomepage "sshwifty" // {
         href = "https://ssh.${config.mySystem.rootDomain}";
         description = "SSH client";
       };
