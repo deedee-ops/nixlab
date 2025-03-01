@@ -61,39 +61,39 @@ in
         backupPath = "/var/lib/postgresql/backups";
       in
       {
-        postgresql =
-          {
-            enable = true;
-            identMap = ''
-              # ArbitraryMapName systemUser DBUser
-               superuser_map      root      postgres
-               superuser_map      postgres  postgres
+        postgresql = {
+          enable = true;
+          identMap = ''
+            # ArbitraryMapName systemUser DBUser
+             superuser_map      root      postgres
+             superuser_map      postgres  postgres
 
-               # Let other names login as themselves
-               superuser_map      /^(.*)$   \1
-            '';
-            authentication = ''
-              #type database  DBuser  host-mask     auth-method   optional_ident_map
-              local all       postgres              peer          map=superuser_map
-              local sameuser  all                   peer          map=superuser_map
-              host  sameuser  all     ${config.mySystemApps.docker.network.private.subnet} scram-sha-256
-            '';
+             # Let other names login as themselves
+             superuser_map      /^(.*)$   \1
+          '';
+          authentication = ''
+            #type database  DBuser  host-mask     auth-method   optional_ident_map
+            local all       postgres              peer          map=superuser_map
+            local sameuser  all                   peer          map=superuser_map
+            host  sameuser  all     ${config.mySystemApps.docker.network.private.subnet} scram-sha-256
+          '';
 
-            enableTCPIP = true;
-            ensureDatabases = lib.flatten (builtins.map (opt: opt.databases) cfg.userDatabases);
-            ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
+          enableTCPIP = true;
+          ensureDatabases = lib.flatten (builtins.map (opt: opt.databases) cfg.userDatabases);
+          ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
 
-            settings = {
+          settings =
+            {
               password_encryption = "scram-sha-256";
-            };
-          }
-          // lib.optionalAttrs cfg.enablePgVectoRs {
-            extensions = ps: [ ps.pgvecto-rs ];
-            settings = {
+              max_connections = 500;
+            }
+            // lib.optionalAttrs cfg.enablePgVectoRs {
               shared_preload_libraries = [ "vectors.so" ];
               search_path = "\"$user\", public, vectors";
             };
-          };
+
+          extensions = ps: (lib.optionals cfg.enablePgVectoRs [ ps.pgvecto-rs ]);
+        };
 
         postgresqlBackup = lib.mkIf cfg.backup {
           enable = true;
