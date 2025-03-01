@@ -86,26 +86,42 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
-    mySystemApps.homepage = {
-      services.Media.qBittorrent = svc.mkHomepage "qbittorrent" // {
-        href = "https://torrents.${config.mySystem.rootDomain}";
-        description = "Torrent downloader";
-        widget = {
-          type = "qbittorrent";
-          url = "http://gluetun:8080";
-          username = "@@QBITTORRENT_USERNAME@@";
-          password = "@@QBITTORRENT_PASSWORD@@";
-          fields = [
-            "leech"
-            "download"
-            "seed"
-            "upload"
+    mySystemApps = {
+      gatus.endpoints = [
+        {
+          name = "qbittorrent";
+          url = "tcp://${config.mySystemApps.gluetun.externalDomain}:${builtins.toString config.mySystemApps.gluetun.forwardedPort}";
+          interval = "30s";
+          conditions = [ "[CONNECTED] == true" ];
+          alerts = [
+            {
+              type = "email";
+              description = "VPN port unreachable from outside world.";
+            }
           ];
+        }
+      ];
+      homepage = {
+        services.Media.qBittorrent = svc.mkHomepage "qbittorrent" // {
+          href = "https://torrents.${config.mySystem.rootDomain}";
+          description = "Torrent downloader";
+          widget = {
+            type = "qbittorrent";
+            url = "http://gluetun:8080";
+            username = "@@QBITTORRENT_USERNAME@@";
+            password = "@@QBITTORRENT_PASSWORD@@";
+            fields = [
+              "leech"
+              "download"
+              "seed"
+              "upload"
+            ];
+          };
         };
-      };
-      secrets = {
-        QBITTORRENT_USERNAME = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_USERNAME".path;
-        QBITTORRENT_PASSWORD = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_PASSWORD".path;
+        secrets = {
+          QBITTORRENT_USERNAME = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_USERNAME".path;
+          QBITTORRENT_PASSWORD = config.sops.secrets."${cfg.sopsSecretPrefix}/WEBUI_PASSWORD".path;
+        };
       };
     };
   };

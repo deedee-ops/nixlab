@@ -14,6 +14,7 @@ _: {
     ./firefoxsync
     ./flaresolverr
     ./forgejo
+    ./gatus
     ./gluetun
     ./gose
     ./home-assistant

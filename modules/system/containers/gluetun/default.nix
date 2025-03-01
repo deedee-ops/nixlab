@@ -22,6 +22,10 @@ in
     backup = lib.mkEnableOption "postgresql and data backup" // {
       default = true;
     };
+    externalDomain = lib.mkOption {
+      type = lib.types.str;
+      description = "A domain name under which external VPN IP is available.";
+    };
     forwardedPort = lib.mkOption {
       type = lib.types.port;
       description = "VPN forwarded port.";

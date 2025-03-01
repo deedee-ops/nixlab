@@ -256,8 +256,13 @@ rec {
     firefly-iii.enable = true;
     flaresolverr.enable = true;
     forgejo.enable = true;
+    gatus = {
+      enable = true;
+      alertEmails = [ "admin@ajgon.ovh" ];
+    };
     gluetun = {
       enable = true;
+      externalDomain = "deedee.airdns.org";
       forwardedPort = 17307;
     };
     homepage = {
