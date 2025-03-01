@@ -286,7 +286,7 @@ in
       };
 
       networking.firewall.allowedUDPPorts = [ 53 ];
-      # networking.firewall.allowedTCPPorts = [ 3000 ];
+      networking.firewall.allowedTCPPorts = [ 3000 ];
 
       mySystemApps.homepage = {
         services.Apps.AdGuardHome = svc.mkHomepage cfg.subdomain // {
