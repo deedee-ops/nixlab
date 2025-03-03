@@ -249,6 +249,7 @@ rec {
       caldavEnable = false;
       webdavEnable = true;
       webdavDir = "/tank/webdav";
+      webdavDirBackup = false;
       useAuthelia = true;
     };
     echo-server.enable = false;

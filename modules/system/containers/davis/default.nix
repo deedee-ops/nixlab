@@ -34,6 +34,11 @@ in
       '';
       default = "${cfg.dataDir}/data";
     };
+    webdavDirBackup = lib.mkOption {
+      type = lib.types.bool;
+      description = "Include webdav dir in backups.";
+      default = true;
+    };
     envFileSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing redlib envs.";
@@ -101,14 +106,16 @@ in
         );
       };
 
-      mySystem.backup.extraBackupDatasets = lib.optionals (config.mySystem.filesystem == "zfs") [
-        (
-          if lib.strings.hasPrefix "/" cfg.webdavDir then
-            builtins.substring 1 100000 cfg.webdavDir
-          else
-            cfg.webdavDir
-        )
-      ];
+      mySystem.backup.extraBackupDatasets =
+        lib.optionals (config.mySystem.filesystem == "zfs" && cfg.webdavDirBackup)
+          [
+            (
+              if lib.strings.hasPrefix "/" cfg.webdavDir then
+                builtins.substring 1 100000 cfg.webdavDir
+              else
+                cfg.webdavDir
+            )
+          ];
 
       systemd.services.docker-davis = {
         preStart = lib.mkAfter ''

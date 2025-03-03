@@ -18,7 +18,6 @@ in
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
         lib.mkIf osConfig.mySystem.impermanence.enable [
           ".config/obsidian"
-          "PKM"
         ];
 
       packages = [
