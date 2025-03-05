@@ -22,6 +22,11 @@ in
       description = "Prefix for sops secret, under which all ENVs will be appended.";
       default = "system/apps/prowlarr/env";
     };
+    customDefinitions = lib.mkOption {
+      type = lib.types.listOf lib.types.path;
+      description = "List of paths to custom indexer definitions.";
+      default = [ ];
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -58,10 +63,14 @@ in
           PROWLARR__POSTGRES__USER = "prowlarr";
           PROWLARR__UPDATE__BRANCH = "develop";
         }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes = svc.mkContainerSecretsVolumes {
-          inherit (cfg) sopsSecretPrefix;
-          inherit secretEnvs;
-        };
+        volumes =
+          svc.mkContainerSecretsVolumes {
+            inherit (cfg) sopsSecretPrefix;
+            inherit secretEnvs;
+          }
+          ++ builtins.map (
+            def: "${def}:/config/Definitions/Custom/${builtins.baseNameOf def}:ro"
+          ) cfg.customDefinitions;
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/config,tmpfs-mode=1777"

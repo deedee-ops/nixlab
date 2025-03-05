@@ -103,11 +103,15 @@ in
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
 
-    mySystemApps.homepage = {
-      services.Media.Bitmagnet = svc.mkHomepage "bitmagnet" // {
-        icon = "camera-ui.png";
-        description = "DHT cache";
+    mySystemApps = {
+      homepage = {
+        services.Media.Bitmagnet = svc.mkHomepage "bitmagnet" // {
+          icon = "camera-ui.png";
+          description = "DHT cache";
+        };
       };
+
+      prowlarr.customDefinitions = [ ./bitmagnet-gluetun.yml ];
     };
   };
 }
