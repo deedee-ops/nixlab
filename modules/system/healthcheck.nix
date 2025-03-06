@@ -30,7 +30,7 @@ in
       };
 
       timers.healthcheck = {
-        description = "Update pipied feeds timer.";
+        description = "Run healthcheck.";
         wantedBy = [ "timers.target" ];
         partOf = [ "healthcheck.service" ];
         timerConfig.OnCalendar = "*:0/10";

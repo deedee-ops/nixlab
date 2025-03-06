@@ -1,5 +1,6 @@
 {
   config,
+  pkgs,
   lib,
   svc,
   ...
@@ -75,11 +76,31 @@ in
       );
     };
 
-    systemd.services.docker-qbittorrent = {
-      preStart = lib.mkAfter ''
-        mkdir -p "${cfg.dataDir}/config"
-        chown 65000:65000 "${cfg.dataDir}/config"
-      '';
+    systemd = {
+      services = {
+        docker-qbittorrent = {
+          preStart = lib.mkAfter ''
+            mkdir -p "${cfg.dataDir}/config"
+            chown 65000:65000 "${cfg.dataDir}/config"
+          '';
+        };
+
+        qbittorrent-healthcheck = {
+          description = "Ensure qbittorrent is available on external VPN port.";
+          serviceConfig.Type = "simple";
+          script = ''
+            ${lib.getExe pkgs.netcat-openbsd} -z ${config.mySystemApps.gluetun.externalDomain} ${builtins.toString config.mySystemApps.gluetun.forwardedPort} || ${lib.getExe' pkgs.systemd "systemctl"} restart docker-qbittorrent
+          '';
+        };
+      };
+
+      timers.qbittorrent-healthcheck = {
+        description = "Run qbittorrent healthcheck.";
+        wantedBy = [ "timers.target" ];
+        partOf = [ "qbittorrent-healthcheck.service" ];
+        timerConfig.OnCalendar = "*:*";
+        timerConfig.Persistent = "true";
+      };
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
@@ -96,6 +117,7 @@ in
           alerts = [
             {
               type = "email";
+              failure-threshold = 5;
               description = "VPN port unreachable from outside world.";
             }
           ];
