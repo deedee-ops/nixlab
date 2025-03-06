@@ -57,7 +57,7 @@ window {
     enabled:                     true;
     margin:                      0.0em;
     padding:                     0.0em;
-    border:                      0.0em solid;
+    border:                      1.0em solid;
     border-radius:               0.556em;
     border-color:                @border-colour;
     cursor:                      "default";
