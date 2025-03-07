@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.kms-gui = svc.mkContainer {
       cfg = {
-        image = "11notes/kms-gui:stable@sha256:71244a0ab1c696fa287683cd9e8d875e93c83e0982f38d88252c0651cc10fbd4";
+        image = "11notes/kms-gui:stable@sha256:54f036fe695679f58e700e4d46b47a4c10f5b8d9bff1183083fa5516273d35cb";
         user = "65000:65000";
         dependsOn = [ "kms-server" ];
         volumes = [ "${cfg.dataDir}:/kms/var" ];
