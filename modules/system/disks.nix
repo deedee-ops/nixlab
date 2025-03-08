@@ -287,7 +287,7 @@ in
                   };
                 };
               }
-              // lib.optionals config.mySystem.impermanence.enable {
+              // lib.optionalAttrs config.mySystem.impermanence.enable {
                 nix = {
                   size = "1T"; # overprovision in most cases
                   lvm_type = "thinlv";
