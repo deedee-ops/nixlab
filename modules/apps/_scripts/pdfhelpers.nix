@@ -14,6 +14,14 @@ in
 
   config = lib.mkIf cfg.enable {
     home.packages = [
+      (pkgs.writeShellScriptBin "catPDF" ''
+        PATH="${
+          lib.makeBinPath [
+            pkgs.pdftk
+          ]
+        }"
+        pdftk "$@" cat output output.pdf && echo "Result saved as 'output.pdf'."
+      '')
       (pkgs.writeShellScriptBin "rasterizePDF" ''
         PATH="${
           lib.makeBinPath [
