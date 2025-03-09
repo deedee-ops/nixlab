@@ -51,7 +51,7 @@ in
         scriptArgs = "%i %H";
         script = ''
           # hack to mute notifier during deployments
-          if pgrep -f deploy-rs; then
+          if ${lib.getExe' pkgs.procps "pgrep"} -f deploy-rs; then
             exit 0
           fi
 
