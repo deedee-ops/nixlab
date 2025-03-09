@@ -121,6 +121,10 @@ let
       "browser.translations.enable" = false;
       "browser.translations.automaticallyPopup" = false;
 
+      # disable AI
+      "browser.ml.chat.enabled" = false;
+      "browser.ml.chat.shortcuts" = false;
+
       # UI
       "browser.uiCustomization.state" = builtins.toJSON {
         placements = {
