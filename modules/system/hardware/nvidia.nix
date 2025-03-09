@@ -10,6 +10,15 @@ in
 {
   options.myHardware.nvidia = {
     enable = lib.mkEnableOption "nvidia";
+    useOpenDrivers = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = ''
+        Use NVIDIA open-source drivers - should be set true for all Turing, Ampere and newer architectures
+        (effectively for RTX 2xxx and newer). If unsure, check compatible GPU list here:
+        <https://github.com/NVIDIA/open-gpu-kernel-modules?tab=readme-ov-file#compatible-gpus>
+      '';
+    };
     metamodes = lib.mkOption {
       type = lib.types.str;
       description = "XServer metamodes configuration for displays.";
@@ -17,6 +26,8 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    boot.blacklistedKernelModules = [ "nouveau" ]; # disable community nvidia driver
+
     hardware = {
       graphics = {
         enable = true;
@@ -26,7 +37,7 @@ in
       nvidia = {
         modesetting.enable = true;
         powerManagement.enable = true;
-        open = false;
+        open = cfg.useOpenDrivers;
         nvidiaSettings = true;
         package = config.boot.kernelPackages.nvidiaPackages.stable;
       };
