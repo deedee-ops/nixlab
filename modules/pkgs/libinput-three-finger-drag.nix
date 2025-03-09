@@ -17,7 +17,8 @@ rustPlatform.buildRustPackage {
     rev = "6acd3f84b551b855b5f21b08db55e95dae3305c5";
     hash = "sha256-xmcTb+23d6mMzIfMVjzN6bwV0fWH4p6YhXXqrFmt4TM=";
   };
-  cargoHash = "sha256-D8a+kaINXqYkNmh1NJWom1p9/ziEzUoJvcknJPZxOS4=";
+  cargoHash = "sha256-0a4egvNTGup/HhsF88G7PLTm7BfUKEDLTh3IPsnZ1zY=";
+  useFetchCargoVendor = true;
 
   nativeBuildInputs = [ makeWrapper ];
   buildInputs = [ xdotool ];
