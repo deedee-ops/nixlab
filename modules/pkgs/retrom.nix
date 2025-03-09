@@ -70,7 +70,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-pQip4c0RDcYXs2HSjVZ9wVYQEHzG2HYAr1hqUa904/c=";
+    outputHash = "sha256-S8xdMdw6qasv1oJtarCw0domHt7doDEn8g5JVBWh8Qk=";
   };
 in
 (makeRustPlatform {
