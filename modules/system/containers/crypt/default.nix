@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -20,12 +19,12 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    systemd.services.docker.postStart =
-      let
-        dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
-      in
-      lib.mkAfter ''
-        ${dockerBin} network inspect crypt >/dev/null 2>&1 || ${dockerBin} network create crypt --subnet 172.29.1.0/24 --internal
-      '';
+    mySystemApps.docker.extraNetworks = [
+      {
+        name = "crypt";
+        subnet = "172.29.1.0/24";
+        hostIP = "172.29.1.1";
+      }
+    ];
   };
 }

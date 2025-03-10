@@ -20,6 +20,44 @@ in
     rootless = lib.mkEnableOption "rootless docker" // {
       default = true;
     };
+    extraNetworks = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "Name of the network used by containers.";
+              example = "private";
+            };
+            subnet = lib.mkOption {
+              type = lib.types.str;
+              description = "Subnet of the netword user by containers.";
+              example = "172.30.0.0/16";
+            };
+            hostIP = lib.mkOption {
+              type = lib.types.str;
+              description = "IP under which the host is reachable for given network.";
+              example = "172.30.0.1";
+            };
+          };
+        }
+      );
+      default = [ ];
+      example = [
+        {
+          name = "mynetwork";
+          subnet = "192.168.10.0/24";
+          hostIP = "192.168.10.1";
+        }
+      ];
+      description = "List of extra networks (aside from private and public) created for docker.";
+    };
+    startDockerSockProxy = lib.mkOption {
+      type = lib.types.bool;
+      description = "Start read-only proxy with minimal permissions, for docker.sock, to avoid mounting it directly in containers.";
+      default = false;
+      example = true;
+    };
     network = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -85,14 +123,9 @@ in
         public = {
           name = "public";
           subnet = "172.31.0.0/16";
+          hostIP = "172.31.0.1";
         };
       };
-    };
-    startDockerSockProxy = lib.mkOption {
-      type = lib.types.bool;
-      description = "Start read-only proxy with minimal permissions, for docker.sock, to avoid mounting it directly in containers.";
-      default = false;
-      example = true;
     };
   };
 
@@ -163,10 +196,18 @@ in
       let
         dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
       in
-      lib.mkAfter ''
-        ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
-        ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
-      '';
+      lib.mkAfter (
+        ''
+          ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
+          ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
+        ''
+        + (builtins.concatStringsSep "\n" (
+          builtins.map (
+            network:
+            "${dockerBin} network inspect ${network.name} >/dev/null 2>&1 || ${dockerBin} network create ${network.name} --subnet ${network.subnet} --internal"
+          ) cfg.extraNetworks
+        ))
+      );
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
