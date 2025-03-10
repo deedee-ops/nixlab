@@ -73,8 +73,10 @@ in
           ''
         );
         postResumeCommands = lib.mkAfter (
+          # without sleep systemd-tmpfiles fails for some reason
           lib.optionalString (config.mySystem.filesystem == "zfs") ''
             zfs rollback -r rpool@${cfg.zfsRootBlankSnapshotName}
+            sleep 5
           ''
         );
       };
