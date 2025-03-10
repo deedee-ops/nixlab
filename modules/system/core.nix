@@ -132,7 +132,6 @@
     users.groups.services = { };
 
     boot = {
-      kernelPackages = pkgs.linuxPackages_6_12;
       kernelModules = config.mySystem.extraModules;
       binfmt.emulatedSystems = config.mySystem.crossBuildSystems;
     };

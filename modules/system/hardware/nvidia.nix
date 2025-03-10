@@ -39,7 +39,15 @@ in
         powerManagement.enable = true;
         open = cfg.useOpenDrivers;
         nvidiaSettings = true;
-        package = config.boot.kernelPackages.nvidiaPackages.stable;
+        # package = config.boot.kernelPackages.nvidiaPackages.stable;
+        package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
+          # 570.124.04 fails during boot for some reason
+          version = "550.144.03";
+          sha256_64bit = "sha256-akg44s2ybkwOBzZ6wNO895nVa1KG9o+iAb49PduIqsQ=";
+          openSha256 = "sha256-ygH9/UOWsdG53eqMbfUcyLAzAN39LJNo+uT4Wue0/7g=";
+          settingsSha256 = "sha256-ZopBInC4qaPvTFJFUdlUw4nmn5eRJ1Ti3kgblprEGy4=";
+          usePersistenced = false;
+        };
       };
     };
 
