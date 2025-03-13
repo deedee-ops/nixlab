@@ -141,6 +141,11 @@ rec {
       };
     };
 
+    tailscale = {
+      enable = true;
+      advertiseRoutes = [ config.myInfra.cidrs.trusted ];
+    };
+
     # containers
     coredns.enable = true;
     home-assistant.enable = true;

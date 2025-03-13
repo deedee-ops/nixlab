@@ -17,6 +17,7 @@ _: {
     ./redis
     ./rustdesk
     ./squid
+    ./tailscale
     ./xorg
   ];
 }

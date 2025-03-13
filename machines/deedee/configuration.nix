@@ -228,6 +228,10 @@ rec {
       enable = true;
       relayHost = "relay.${mySystem.rootDomain}";
     };
+    tailscale = {
+      enable = true;
+      advertiseRoutes = [ config.myInfra.cidrs.trusted ];
+    };
 
     # containers
     atuin.enable = true;
