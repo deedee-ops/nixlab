@@ -1,4 +1,5 @@
-_: {
+{ lib, config, ... }:
+{
   boot = {
     initrd = {
       availableKernelModules = [
@@ -22,11 +23,14 @@ _: {
   };
 
   # power
-  services.logind.extraConfig = ''
-    HandlePowerKey=suspend
-    IdleAction=suspend
-    IdleActionSec=5m
-  '';
+  # on older nvidia drivers it never wakes up properly
+  services.logind.extraConfig =
+    lib.optionalString (config.hardware.nvidia.package.version >= "570")
+      ''
+        HandlePowerKey=suspend
+        IdleAction=suspend
+        IdleActionSec=5m
+      '';
 
   myHardware = {
     openrgb = {
