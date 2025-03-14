@@ -104,14 +104,16 @@ in
       cfg = {
         dependsOn = [ "socket-proxy" ];
         user = "1000:1000";
-        image = "ghcr.io/gethomepage/homepage:v0.10.9@sha256:b6d732817572f9af99ec168b10641b8f7820f30cfa5a5cc5c68f1e291804bec8";
+        image = "ghcr.io/gethomepage/homepage:v1.0.0@sha256:c33ccb1f850c178bf424cd19dca87f0dc796be3e40927ea1c7416809cd6c71c6";
+        environment = {
+          HOMEPAGE_ALLOWED_HOSTS = "${cfg.subdomain}.${config.mySystem.rootDomain}";
+        };
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/app/config,tmpfs-mode=1777"
         ];
         volumes = [
           "${./bookmarks.yaml}:/app/config/bookmarks.yaml:ro"
-          "${./custom.css}:/app/config/custom.css:ro"
           "${settings}:/app/config/settings.yaml:ro"
           "${./docker.yaml}:/app/config/docker.yaml:ro"
           "/run/homepage/services.yaml:/app/config/services.yaml:ro"

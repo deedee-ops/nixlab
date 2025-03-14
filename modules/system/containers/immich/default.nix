@@ -165,7 +165,6 @@ in
           fields = [
             "photos"
             "videos"
-            "storage"
           ];
         };
       };
