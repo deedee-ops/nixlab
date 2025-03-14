@@ -75,6 +75,15 @@ in
     mySystemApps.homepage = {
       services.Apps.Gatus = svc.mkHomepage "gatus" // {
         description = "Services monitoring";
+        widget = {
+          type = "gatus";
+          url = "http://gatus:8080";
+          fields = [
+            "up"
+            "down"
+            "uptime"
+          ];
+        };
       };
     };
   };

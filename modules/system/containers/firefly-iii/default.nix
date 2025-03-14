@@ -11,6 +11,7 @@ let
     "APP_KEY"
     "DB_PASSWORD"
     "FIREFLY_III_TOKEN"
+    "HOMEPAGE_API_KEY"
   ];
 in
 {
@@ -124,7 +125,17 @@ in
       services.Apps.FireflyIII = svc.mkHomepage "firefly" // {
         container = "firefly-iii";
         description = "Personal finance management";
+        widget = {
+          type = "firefly";
+          url = "http://firefly-iii:8080";
+          key = "@@FIREFLYIII_API_KEY@@";
+          fields = [
+            "networth"
+            "budget"
+          ];
+        };
       };
+      secrets.FIREFLYIII_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
     };
   };
 }
