@@ -104,7 +104,7 @@ in
       cfg = {
         dependsOn = [ "socket-proxy" ];
         user = "1000:1000";
-        image = "ghcr.io/gethomepage/homepage:v1.0.2@sha256:a729ffc5254a7d081d45270f7cb5b844819f9381d58c48e5f89f953d1f845817";
+        image = "ghcr.io/gethomepage/homepage:v1.0.3@sha256:d4e2ac4c0890f05e9a7d0f1e37afdefafcdb7b8ae67516219ac9c4f50c6c7c2e";
         environment = {
           HOMEPAGE_ALLOWED_HOSTS = "${cfg.subdomain}.${config.mySystem.rootDomain}";
         };
