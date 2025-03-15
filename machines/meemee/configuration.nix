@@ -147,6 +147,15 @@ rec {
     };
 
     # containers
+    beszel = {
+      enable = true;
+      mode = "agent";
+      rootFs = "/extra-filesystems/persist";
+      monitoredFilesystems = {
+        nix = "/nix";
+        persist = "/persist";
+      };
+    };
     coredns.enable = true;
     home-assistant.enable = true;
     homepage = {

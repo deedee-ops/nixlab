@@ -244,6 +244,16 @@ rec {
       inherit videoPath;
       enable = true;
     };
+    beszel = {
+      enable = true;
+      mode = "both";
+      rootFs = "/extra-filesystems/persist";
+      monitoredFilesystems = {
+        nix = "/nix";
+        persist = "/persist";
+        webdav = "/tank/webdav";
+      };
+    };
     bitmagnet.enable = true;
     coredns.enable = true;
     crypt.enable = true;

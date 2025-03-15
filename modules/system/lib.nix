@@ -137,9 +137,11 @@
       let
         args = {
           allowPublic = false;
+          enableGPU = false;
           readOnlyRootFilesystem = true;
           allowPrivilegeEscalation = false;
           routeThroughVPN = false;
+          useHostNetwork = false;
           customNetworks = [ ];
         } // opts;
       in
@@ -156,6 +158,10 @@
           ++ [
             "--cap-drop=all"
           ]
+          ++ (lib.optionals args.enableGPU [
+            "--device"
+            "nvidia.com/gpu=all"
+          ])
           ++ (lib.optionals (!args.allowPrivilegeEscalation) [ "--security-opt=no-new-privileges" ])
           ++ (cfg.extraOptions or [ ])
           ++ lib.optionals (!args.routeThroughVPN) [
@@ -169,6 +175,8 @@
               (
                 if args.routeThroughVPN then
                   [ "--network=container:gluetun" ]
+                else if args.useHostNetwork then
+                  [ "--network=host" ]
                 else
                   [
                     "--network=${config.mySystemApps.docker.network.private.name}"

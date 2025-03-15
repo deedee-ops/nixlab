@@ -4,6 +4,7 @@ _: {
     ./atuin
     ./authelia
     ./bazarr
+    ./beszel
     ./bitmagnet
     ./caddy
     ./coredns
