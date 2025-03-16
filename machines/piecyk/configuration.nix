@@ -177,6 +177,7 @@ rec {
       ];
       rememberPasswordTime = 28800;
     };
+    minio-client.enable = true;
     mitmproxy.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;

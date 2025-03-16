@@ -153,6 +153,7 @@ rec {
       ];
       rememberPasswordTime = 28800;
     };
+    minio-client.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;
     ssh = {

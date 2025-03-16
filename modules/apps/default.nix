@@ -14,6 +14,7 @@ _: {
     ./git
     ./gnupg
     ./kubernetes
+    ./minio-client
     ./mitmproxy
     ./neovim
     ./qrtools
