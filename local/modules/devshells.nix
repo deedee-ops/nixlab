@@ -1,7 +1,6 @@
 _: {
   perSystem =
     {
-      system,
       config,
       pkgs,
       lib,
@@ -14,15 +13,11 @@ _: {
       devShells.homelab = pkgs.mkShell {
         SOPS_AGE_KEY_FILE = "/persist/etc/age/keys.txt";
 
-        nativeBuildInputs =
-          [
-            config.pre-commit.settings.package
-            inputs'.deploy-rs.packages.default
-            inputs'.nixos-anywhere.packages.default
-          ]
-          ++ lib.optionals (system == "x86_64-linux") [
-            inputs'.lix.packages.default
-          ];
+        nativeBuildInputs = [
+          config.pre-commit.settings.package
+          inputs'.deploy-rs.packages.default
+          inputs'.nixos-anywhere.packages.default
+        ];
 
         buildInputs = [
           pkgs.nh

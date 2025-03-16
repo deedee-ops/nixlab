@@ -60,13 +60,6 @@ rec {
       url = "github:brumhard/krewfile";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    lix = {
-      url = "git+https://git.lix.systems/lix-project/lix?ref=main";
-    };
-    lix-module = {
-      url = "git+https://git.lix.systems/lix-project/nixos-module?ref=main";
-      inputs.lix.follows = "lix";
-    };
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
