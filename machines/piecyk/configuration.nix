@@ -274,7 +274,7 @@ rec {
         base_url = "https://vault.bitwarden.eu/";
       };
     };
-    rustdesk.enable = true;
+    # rustdesk.enable = true;
     syncthing.enable = true;
     teams.enable = true;
     telegram.enable = true;
