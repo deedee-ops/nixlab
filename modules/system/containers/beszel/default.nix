@@ -144,7 +144,7 @@ in
           };
         }
         // (lib.optionalAttrs (cfg.gpuMode == "nvidia") {
-          image = "ghcr.io/arunoruto/beszel-agent:v0.10.1@sha256:f153466a5d8ba8b1f396d6f2dedaf51e74cc5683ac2c96f53c3fa28cb5d5ffcf";
+          image = "ghcr.io/arunoruto/beszel-agent:v0.10.2@sha256:c04a9e3dd8d0fad4220ec625ffeb08d209fe263c1620c97c9d3f4a15f7dcd7b5";
         })
       );
 
