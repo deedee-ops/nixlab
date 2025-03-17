@@ -57,7 +57,7 @@ in
 
     virtualisation.oci-containers.containers.bitmagnet = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/bitmagnet:0.9.5@sha256:6d6fb03ff371ba88568785520a62f801c0851a7eab97a862619d4399839b448b";
+        image = "ghcr.io/deedee-ops/bitmagnet:0.10.0@sha256:ecba3fefb339e8c9bae318017206fa6c0fd2eff9c7aa177ac45466235c32b743";
         environment = {
           CLASSIFIER_DELETE_XXX = "true";
           POSTGRES_NAME = "bitmagnet";
