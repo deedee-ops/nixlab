@@ -42,10 +42,10 @@ in
         # package = config.boot.kernelPackages.nvidiaPackages.stable;
         package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
           # 570.124.04 fails during boot for some reason
-          version = "550.144.03";
-          sha256_64bit = "sha256-akg44s2ybkwOBzZ6wNO895nVa1KG9o+iAb49PduIqsQ=";
-          openSha256 = "sha256-ygH9/UOWsdG53eqMbfUcyLAzAN39LJNo+uT4Wue0/7g=";
-          settingsSha256 = "sha256-ZopBInC4qaPvTFJFUdlUw4nmn5eRJ1Ti3kgblprEGy4=";
+          version = "570.133.07";
+          sha256_64bit = "sha256-LUPmTFgb5e9VTemIixqpADfvbUX1QoTT2dztwI3E3CY=";
+          openSha256 = "sha256-9l8N83Spj0MccA8+8R1uqiXBS0Ag4JrLPjrU3TaXHnM=";
+          settingsSha256 = "sha256-XMk+FvTlGpMquM8aE8kgYK2PIEszUZD2+Zmj2OpYrzU=";
           usePersistenced = false;
         };
       };
