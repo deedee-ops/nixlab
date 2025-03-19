@@ -29,6 +29,8 @@ in
 
   config = {
     nix = {
+      channel.enable = false; # don't use old nix channels
+
       gc = lib.mkIf cfg.enableGC {
         automatic = true;
         dates = cfg.gcPeriod;
