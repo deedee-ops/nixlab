@@ -117,7 +117,7 @@ in
           alerts = [
             {
               type = "email";
-              failure-threshold = 5;
+              failure-threshold = 10;
               description = "VPN port unreachable from outside world.";
             }
           ];
