@@ -48,7 +48,7 @@ in
 
     virtualisation.oci-containers.containers.qbittorrent = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/home-operations/qbittorrent:5.0.4@sha256:2b94ecf499c4d4634e54e2d2dc2b2ffbb2b6989b5fa0ee03ab9f7823dd74fc70";
+        image = "ghcr.io/home-operations/qbittorrent:5.0.4@sha256:26eeddf19e2b22f56f364c693ef421925a10e04e084ef741c2671a234796aac2";
         user = "65000:65000";
         environment = {
           QBT_TORRENTING_PORT = "${builtins.toString config.mySystemApps.gluetun.forwardedPort}";
