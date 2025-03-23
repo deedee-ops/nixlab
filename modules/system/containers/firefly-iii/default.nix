@@ -50,7 +50,8 @@ in
 
     virtualisation.oci-containers.containers.firefly-iii = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/firefly-iii:6.1.25@sha256:315a2f57b51e59448a4f9b736889c5f5b1e0541c08ee8db92f3c9cc9f89f7d12";
+        image = "ghcr.io/deedee-ops/firefly:6.2.10@sha256:96c7b7b1bfad0d67d678141f840df06fad786237079f9d560d725e5453c29a60";
+        user = "33:65000";
         environment = {
           APP_URL = "https://firefly.${config.mySystem.rootDomain}";
           AUTHENTICATION_GUARD = "remote_user_guard";
@@ -73,8 +74,9 @@ in
           SESSION_DRIVER = "redis";
           REDIS_SCHEME = "tcp";
           REDIS_HOST = "host.docker.internal";
+          REDIS_PASSWORD_FILE = "/secrets/REDIS_PASSWORD";
           REDIS_PORT = "6380";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/config,tmpfs-mode=1777"
@@ -89,6 +91,9 @@ in
               config.sops.secrets."${config.mySystemApps.redis.passFileSopsSecret}".path
             }:/secrets/REDIS_PASSWORD:ro"
           ];
+      };
+      opts = {
+        readOnlyRootFilesystem = false;
       };
     };
 
