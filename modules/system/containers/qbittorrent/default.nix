@@ -89,7 +89,7 @@ in
           description = "Ensure qbittorrent is available on external VPN port.";
           serviceConfig.Type = "simple";
           script = ''
-            ${lib.getExe pkgs.netcat-openbsd} -z ${config.mySystemApps.gluetun.externalDomain} ${builtins.toString config.mySystemApps.gluetun.forwardedPort} || ${lib.getExe' pkgs.systemd "systemctl"} restart docker-qbittorrent
+            ${lib.getExe' pkgs.coreutils-full "timeout"} 5 ${lib.getExe pkgs.netcat-openbsd} -z ${config.mySystemApps.gluetun.externalDomain} ${builtins.toString config.mySystemApps.gluetun.forwardedPort} || ${lib.getExe' pkgs.systemd "systemctl"} restart docker-qbittorrent
           '';
         };
       };
