@@ -22,7 +22,7 @@ in
 
     programs.zellij = {
       enable = true;
-      enableZshIntegration = cfg.autoStart;
+      enableZshIntegration = false; # broken for some reason
       settings =
         {
           default_layout = "compact";
@@ -30,6 +30,7 @@ in
           mouse_mode = false;
           pane_frames = false;
           scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
+          show_startup_tips = false;
         }
         // lib.optionalAttrs cfg.singleInstance {
           keybinds = {
@@ -51,6 +52,8 @@ in
       lib.mkOrder 100 ''
         export ZELLIJ_AUTO_ATTACH="${if cfg.singleInstance then "true" else "false"}";
         export ZELLIJ_AUTO_EXIT="true";
+
+        eval "$(${lib.getExe config.programs.zellij.package} setup --generate-auto-start zsh)"
       ''
     );
   };
