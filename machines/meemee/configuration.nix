@@ -144,6 +144,7 @@ rec {
     tailscale = {
       enable = true;
       advertiseRoutes = [ config.myInfra.cidrs.trusted ];
+      autoProvision = true;
     };
 
     # containers
