@@ -44,6 +44,7 @@ in
         disable_ligatures = "always";
         enable_audio_bell = false;
         scrollback_lines = config.myHomeApps.theme.terminalScrollBuffer;
+        strip_trailing_spaces = "smart";
         update_check_interval = 0;
         underline_hyperlinks = "never";
         window_padding_width = 6;

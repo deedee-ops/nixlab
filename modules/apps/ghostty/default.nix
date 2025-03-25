@@ -43,6 +43,7 @@ in
         scrollback-limit = config.myHomeApps.theme.terminalScrollBuffer;
         confirm-close-surface = false;
         copy-on-select = "clipboard";
+        clipboard-trim-trailing-spaces = true;
         shell-integration = "zsh";
         shell-integration-features = "no-cursor,sudo";
         cursor-style = "block";
