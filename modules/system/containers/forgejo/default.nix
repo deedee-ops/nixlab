@@ -23,6 +23,7 @@ in
 {
   options.mySystemApps.forgejo = {
     enable = lib.mkEnableOption "forgejo container";
+    enableRunner = lib.mkEnableOption "forgejo runner";
     backup = lib.mkEnableOption "postgresql and data backup" // {
       default = true;
     };
@@ -41,12 +42,16 @@ in
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for forgejo are disabled!") ];
 
-    sops.secrets = svc.mkContainerSecretsSops {
-      inherit (cfg) sopsSecretPrefix;
-      inherit secretEnvs;
+    sops.secrets =
+      svc.mkContainerSecretsSops {
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
 
-      containerName = "forgejo";
-    };
+        containerName = "forgejo";
+      }
+      // lib.optionals cfg.enableRunner {
+        "${cfg.sopsSecretPrefix}/FORGEJO_RUNNER_TOKEN" = { };
+      };
 
     mySystemApps.postgresql.userDatabases = [
       {
@@ -56,38 +61,56 @@ in
       }
     ];
 
-    virtualisation.oci-containers.containers.forgejo = svc.mkContainer {
-      cfg = {
-        image = "codeberg.org/forgejo/forgejo:10.0.3-rootless@sha256:5658d26e908b9acb533f86616000dd3d9619085e6979aa394d89142ed69f19b2";
-        environment =
-          {
-            FORGEJO__server__DOMAIN = "git.${config.mySystem.rootDomain}";
-            FORGEJO__server__SSH_DOMAIN = "git.${config.mySystem.rootDomain}";
-            FORGEJO__server__ROOT_URL = "https://git.${config.mySystem.rootDomain}";
-            FORGEJO__mailer__FROM = config.mySystem.notificationSender;
-            FORGEJO__storage__MINIO_ENDPOINT = "s3.${config.mySystem.rootDomain}";
-            FORGEJO__time__DEFAULT_UI_LOCATION = config.mySystem.time.timeZone;
-          }
-          // svc.mkContainerSecretsEnv {
-            inherit secretEnvs;
-            suffix = "__FILE";
+    virtualisation.oci-containers.containers = {
+      forgejo = svc.mkContainer {
+        cfg = {
+          image = "codeberg.org/forgejo/forgejo:10.0.3-rootless@sha256:5658d26e908b9acb533f86616000dd3d9619085e6979aa394d89142ed69f19b2";
+          environment =
+            {
+              FORGEJO__server__DOMAIN = "git.${config.mySystem.rootDomain}";
+              FORGEJO__server__SSH_DOMAIN = "git.${config.mySystem.rootDomain}";
+              FORGEJO__server__ROOT_URL = "https://git.${config.mySystem.rootDomain}";
+              FORGEJO__mailer__FROM = config.mySystem.notificationSender;
+              FORGEJO__storage__MINIO_ENDPOINT = "s3.${config.mySystem.rootDomain}";
+              FORGEJO__time__DEFAULT_UI_LOCATION = config.mySystem.time.timeZone;
+            }
+            // svc.mkContainerSecretsEnv {
+              inherit secretEnvs;
+              suffix = "__FILE";
+            };
+          ports = [ "2222:2222" ];
+          volumes =
+            svc.mkContainerSecretsVolumes {
+              inherit (cfg) sopsSecretPrefix;
+              inherit secretEnvs;
+            }
+            ++ [ "${cfg.dataDir}:/var/lib/gitea" ];
+          extraOptions = [
+            "--mount"
+            "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
+          ];
+        };
+        opts = {
+          # to expose port to host, public network must be used
+          allowPublic = true;
+        };
+      };
+      forgejo-runner = lib.mkIf cfg.enableRunner (
+        svc.mkContainer {
+          cfg = {
+            dependsOn = [
+              "forgejo"
+              "socket-proxy"
+            ];
+            image = "data.forgejo.org/forgejo/runner:4.0.0@sha256:978387b5ea3f37d0a325f6013525f769029144b0cd788d219cb200fd45e80281";
+            environment = {
+              DOCKER_HOST = "tcp://socket-proxy:2375";
+            };
+            volumes = [ "${cfg.dataDir}/runner:/data" ];
           };
-        ports = [ "2222:2222" ];
-        volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ [ "${cfg.dataDir}:/var/lib/gitea" ];
-        extraOptions = [
-          "--mount"
-          "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
-        ];
-      };
-      opts = {
-        # to expose port to host, public network must be used
-        allowPublic = true;
-      };
+        }
+      );
+
     };
 
     services = {
@@ -105,19 +128,41 @@ in
       );
     };
 
-    systemd.services.docker-forgejo = {
-      path = [ pkgs.diffutils ];
-      preStart = lib.mkAfter ''
-        mkdir -p "${cfg.dataDir}/custom/conf"
-        cp ${./app.ini} "${cfg.dataDir}/custom/conf/app.ini"
-        chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/custom" "${cfg.dataDir}/custom/conf" "${cfg.dataDir}/custom/conf/app.ini"
-        chmod 640 "${cfg.dataDir}/custom/conf/app.ini"
+    systemd.services = {
+      docker-forgejo = {
+        path = [ pkgs.diffutils ];
+        preStart = lib.mkAfter ''
+          mkdir -p "${cfg.dataDir}/custom/conf"
+          cp ${./app.ini} "${cfg.dataDir}/custom/conf/app.ini"
+          chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/custom" "${cfg.dataDir}/custom/conf" "${cfg.dataDir}/custom/conf/app.ini"
+          chmod 640 "${cfg.dataDir}/custom/conf/app.ini"
 
-        # ugly hack to fix forgejo permissions, as sops-nix doesn't allow setting direct UID/GID yet
-        chown -R 1000:1000 "$(dirname ${
-          config.sops.secrets."${cfg.sopsSecretPrefix}/${builtins.elemAt secretEnvs 0}".path
-        })"
-      '';
+          # ugly hack to fix forgejo permissions, as sops-nix doesn't allow setting direct UID/GID yet
+          chown -R 1000:1000 "$(dirname ${
+            config.sops.secrets."${cfg.sopsSecretPrefix}/${builtins.elemAt secretEnvs 0}".path
+          })"
+        '';
+        postStart = lib.mkAfter ''
+          until ${lib.getExe pkgs."${config.virtualisation.oci-containers.backend}"} exec forgejo \
+          forgejo forgejo-cli actions register --name default \
+          --secret "${
+            config.sops.secrets."${cfg.sopsSecretPrefix}/FORGEJO_RUNNER_TOKEN".path
+          }"; do sleep 1; done
+        '';
+      };
+      docker-forgejo-runner = lib.mkIf cfg.enableRunner {
+        preStart = lib.mkAfter ''
+          mkdir -p "${cfg.dataDir}/custom/runner"
+          chown 1000:1000 "${cfg.dataDir}/runner"
+        '';
+        postStart = lib.mkAfter ''
+          until ${lib.getExe pkgs."${config.virtualisation.oci-containers.backend}"} exec forgejo-runner \
+          forgejo-runner create-runner-file --instance http://forgejo:3000 \
+          --secret "${
+            config.sops.secrets."${cfg.sopsSecretPrefix}/FORGEJO_RUNNER_TOKEN".path
+          }"}; do sleep 1; done
+        '';
+      };
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =

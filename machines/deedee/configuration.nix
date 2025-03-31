@@ -271,7 +271,10 @@ rec {
     firefoxsync.enable = true;
     firefly-iii.enable = true;
     flaresolverr.enable = true;
-    forgejo.enable = true;
+    forgejo = {
+      enable = true;
+      enableRunner = true;
+    };
     gatus = {
       enable = true;
       alertEmails = [ "admin@ajgon.ovh" ];
