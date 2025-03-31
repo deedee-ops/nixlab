@@ -371,6 +371,7 @@ rec {
     gnupg.enable = false;
     ssh.enable = false;
     wakatime.enable = false;
+    yt-dlp.enable = true;
     zellij.enable = true;
 
     zsh.promptColor = "yellow";

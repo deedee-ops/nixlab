@@ -323,6 +323,7 @@ rec {
       };
       terminal = pkgs.kitty;
     };
+    yt-dlp.enable = true;
     zathura.enable = true;
     zsh.promptColor = "magenta";
   };

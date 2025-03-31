@@ -21,6 +21,7 @@ _: {
     ./ssh
     ./wakatime
     ./xdg-ninja
+    ./yt-dlp
     ./zellij
     ./zsh
 

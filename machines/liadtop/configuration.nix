@@ -277,6 +277,7 @@ rec {
       terminal = pkgs.kitty;
       trackpadSupport = true;
     };
+    yt-dlp.enable = true;
     zathura.enable = true;
     zsh.promptColor = "magenta";
   };
