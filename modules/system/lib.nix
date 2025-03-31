@@ -137,6 +137,7 @@
       }:
       let
         args = {
+          privileged = false;
           allowPublic = false;
           enableGPU = false;
           readOnlyRootFilesystem = true;
@@ -155,15 +156,20 @@
       // {
         dependsOn = (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
         extraOptions =
-          (lib.optionals args.readOnlyRootFilesystem [ "--read-only" ])
-          ++ [
-            "--cap-drop=all"
-          ]
+          (
+            if args.privileged then
+              [ "--privileged" ]
+            else
+              (lib.optionals args.readOnlyRootFilesystem [ "--read-only" ])
+              ++ [
+                "--cap-drop=all"
+              ]
+              ++ (lib.optionals (!args.allowPrivilegeEscalation) [ "--security-opt=no-new-privileges" ])
+          )
           ++ (lib.optionals args.enableGPU [
             "--device"
             "nvidia.com/gpu=all"
           ])
-          ++ (lib.optionals (!args.allowPrivilegeEscalation) [ "--security-opt=no-new-privileges" ])
           ++ (cfg.extraOptions or [ ])
           ++ lib.optionals (!args.routeThroughVPN) [
             # /etc/hosts mapping conflicts with container network mode
