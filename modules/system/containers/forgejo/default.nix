@@ -102,7 +102,7 @@ in
               "forgejo"
               "socket-proxy"
             ];
-            image = "data.forgejo.org/forgejo/runner:4.0.1@sha256:f1bd3f3a699a8ec248612a52efcea492ecef42c6e201f58b27e5d5cea1725261";
+            image = "data.forgejo.org/forgejo/runner:6.3.1@sha256:5071e6832313bafe71577e05631bece88caff08fcfb372193e4a21941f4ed54b";
             environment = {
               DOCKER_HOST = "tcp://socket-proxy:2375";
             };
