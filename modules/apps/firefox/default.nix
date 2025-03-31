@@ -129,36 +129,29 @@ let
       "browser.uiCustomization.state" = builtins.toJSON {
         placements = {
           widget-overflow-fixed-list = [ ];
-          unified-extensions-area = [
-            "firefoxcolor_mozilla_com-browser-action"
-            "smart-referer_meh_paranoid_pk-browser-action"
-            "canvasblocker_kkapsner_de-browser-action"
-            "_7fc8ef53-24ec-4205-87a4-1e745953bb0d_-browser-action"
-            "_testpilot-containers-browser-action"
-            "_74145f27-f039-47ce-a470-a662b129930a_-browser-action"
-            "jid1-kkzogwgsw3ao4q_jetpack-browser-action"
-            "polishcookieconsentext_polishannoyancefilters_netlify_com-browser-action"
-            "canvasblocker-beta_kkapsner_de-browser-action"
-            "_7c6d56ed-2616-48f2-bfde-d1830f1cf2ed_-browser-action"
-            "7esoorv3_alefvanoon_anonaddy_me-browser-action"
-          ];
-          nav-bar = [
-            "back-button"
-            "forward-button"
-            "stop-reload-button"
-            "customizableui-special-spring1"
-            "urlbar-container"
-            "customizableui-special-spring2"
-            "downloads-button"
-            "fxa-toolbar-menu-button"
+          nav-bar =
+            [
+              "back-button"
+              "forward-button"
+              "stop-reload-button"
+              "customizableui-special-spring1"
+              "urlbar-container"
+              "customizableui-special-spring2"
+              "downloads-button"
+              "fxa-toolbar-menu-button"
 
-            # Extensions
-            "foxyproxy_eric_h_jung-browser-action" # FoxyProxy
-            "containerise_kinte_sh-browser-action" # Containerise
-            "_15b1b2af-e84a-4c70-ac7c-5608b0eeed5a_-browser-action" # Cookiebro
-            "ublock0_raymondhill_net-browser-action" # uBlock Origin
-            "unified-extensions-button"
-          ];
+              # Extensions
+              "foxyproxy_eric_h_jung-browser-action" # FoxyProxy
+              "containerise_kinte_sh-browser-action" # Containerise
+              "_15b1b2af-e84a-4c70-ac7c-5608b0eeed5a_-browser-action" # Cookiebro
+              "ublock0_raymondhill_net-browser-action" # uBlock origin
+            ]
+            ++ (lib.optionals config.myHomeApps.obsidian.enable [
+              "clipper_obsidian_md-browser-action" # obsidian clipper
+            ])
+            ++ [
+              "unified-extensions-button"
+            ];
           toolbar-menubar = [ "menubar-items" ];
           TabsToolbar = [
             "tabbrowser-tabs"
