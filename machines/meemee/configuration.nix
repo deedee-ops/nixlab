@@ -132,9 +132,14 @@ rec {
 
       enable = true;
       extraVHosts = {
-        minio = "http://${config.myInfra.machines.nas.ip}:9001";
-        registry = "http://${config.myInfra.machines.nas.ip}:5555";
-        s3 = "http://${config.myInfra.machines.nas.ip}:9000";
+        obsidian = {
+          target = "http://${config.myInfra.machines.nas.ip}:9000/assets/obsidian$request_uri";
+          extraConfig = ''rewrite ^(.*)/$ https://obsidian.${mySystem.rootDomain}''$1/index.html break;'';
+        };
+
+        minio.target = "http://${config.myInfra.machines.nas.ip}:9001";
+        registry.target = "http://${config.myInfra.machines.nas.ip}:5555";
+        s3.target = "http://${config.myInfra.machines.nas.ip}:9000";
       };
       extraRedirects = {
         kvm-deedee = "http://${config.myInfra.machines.kvm-deedee.ip}";

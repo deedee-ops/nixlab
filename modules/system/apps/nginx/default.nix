@@ -24,11 +24,30 @@ in
       description = "Default CSP header for all VHosts (can be overriden per vhost).";
     };
     extraVHosts = lib.mkOption {
-      type = lib.types.attrs;
+      type = lib.types.attrsOf (
+        lib.types.submodule {
+          options = {
+            target = lib.mkOption {
+              type = lib.types.str;
+              description = "Target for the VHost.";
+              example = "http://service.somewhere:1234";
+            };
+            extraConfig = lib.mkOption {
+              type = lib.types.str;
+              default = "";
+              description = "Extra configuration for VHost.";
+              example = "rewrite ^/$ /index.html break;";
+            };
+          };
+        }
+      );
       description = "Extra VHosts to be configured with proxy pass.";
       default = { };
       example = {
-        "myhost" = "http://service.somewhere:1234";
+        "myhost" = {
+          target = "http://service.somewhere:1234";
+          extraConfig = "rewrite ^/$ /index.html break;";
+        };
       };
     };
     extraRedirects = lib.mkOption {
@@ -101,8 +120,9 @@ in
           (builtins.mapAttrs (
             name: value:
             svc.mkNginxVHost {
+              inherit (value) extraConfig;
               host = name;
-              proxyPass = value;
+              proxyPass = value.target;
               useAuthelia = false;
               customCSP = "disable";
             }

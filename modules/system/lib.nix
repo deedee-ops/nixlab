@@ -26,7 +26,9 @@
       let
         # proxy_pass needs to be passed as variable, otherwise resolver won't work as expected
         baseConfig =
-          ''
+          extraConfig
+          + ''
+
             set $host_to_pass ${proxyPass};
             proxy_pass $host_to_pass;
 
@@ -50,8 +52,7 @@
                   lib.trim (builtins.replaceStrings [ "\n" ] [ " " ] customCSP)
                 }";
               ''
-          ))
-          + extraConfig;
+          ));
       in
       {
         inherit useACMEHost;
