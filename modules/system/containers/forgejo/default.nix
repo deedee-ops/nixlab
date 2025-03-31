@@ -16,6 +16,8 @@ let
     "FORGEJO__security__SECRET_KEY"
     "FORGEJO__server__LFS_JWT_SECRET"
     "FORGEJO__session__PROVIDER_CONFIG"
+    "FORGEJO__storage__MINIO_ACCESS_KEY_ID"
+    "FORGEJO__storage__MINIO_SECRET_ACCESS_KEY"
   ];
 in
 {
@@ -63,6 +65,7 @@ in
             FORGEJO__server__SSH_DOMAIN = "git.${config.mySystem.rootDomain}";
             FORGEJO__server__ROOT_URL = "https://git.${config.mySystem.rootDomain}";
             FORGEJO__mailer__FROM = config.mySystem.notificationSender;
+            FORGEJO__storage__MINIO_ENDPOINT = "s3.${config.mySystem.rootDomain}";
             FORGEJO__time__DEFAULT_UI_LOCATION = config.mySystem.time.timeZone;
           }
           // svc.mkContainerSecretsEnv {
@@ -91,6 +94,7 @@ in
       nginx.virtualHosts.forgejo = svc.mkNginxVHost {
         host = "git";
         proxyPass = "http://forgejo.docker:3000";
+        autheliaIgnorePaths = [ "~* ^/[^/]+/[^/]+/info/lfs/.*$" ];
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "forgejo" ]; };
       restic.backups = lib.mkIf cfg.backup (

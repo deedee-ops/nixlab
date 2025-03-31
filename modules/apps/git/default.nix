@@ -21,6 +21,8 @@ in
   config = lib.mkIf cfg.enable {
     programs.git = lib.attrsets.recursiveUpdate {
       enable = true;
+      lfs.enable = true;
+
       aliases = {
         pf = "push --force-with-lease --force-if-includes";
         tags = "tag -l";
