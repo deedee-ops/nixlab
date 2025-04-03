@@ -23,17 +23,17 @@
   supportNvidia ? false,
 }:
 let
-  # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "retrom-v0.7.15";
+  # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
+  rev = "v0.7.16";
 
   pname = "retrom";
-  version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
+  version = builtins.replaceStrings [ "v" ] [ "" ] rev;
   src = fetchFromGitHub {
     inherit rev;
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-+2Rw7IWe7Wvav/OxGJcN8Sp7cSVu9+pHImh5hkebObk=";
+    hash = "sha256-ZUvNlULsV/nH1p8/axBgPPuVoXeiiuIZ4JeLeK6sd7o=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
@@ -84,7 +84,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-8yRY0b3jSBv293SepmIbeFNM1OPf6+wWx4LDpjA1TXM=";
+    outputHash = "sha256-umQs5Jwi578tnKOT+H5ztfEr3RaRFnXDR9Wvlhrzqcc=";
   };
 in
 (makeRustPlatform {
@@ -98,7 +98,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-yJdkZHsKOap8T+7GiDv/VUs5hLAMYSxpPQb4d7/7xaU=";
+    cargoHash = "sha256-sWpEs3MvVaSaE/fgIfEtbK2eI1tL2j7TUmTPCb3zi98=";
     useFetchCargoVendor = true;
 
     # buildType = "debug";
@@ -118,6 +118,7 @@ in
       pkg-config
       pnpm_9.configHook
       protobuf
+      depsGenerated
     ];
 
     buildInputs = [
