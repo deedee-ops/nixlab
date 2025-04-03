@@ -24,7 +24,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>retrom-v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "retrom-v0.7.14";
+  rev = "retrom-v0.7.15";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "retrom-v" ] [ "" ] rev;
@@ -33,44 +33,58 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-qwPd7zJysvoXJEaxcuhzhrPG5CgOEcoTKCPPZ1YbBeM=";
+    hash = "sha256-+2Rw7IWe7Wvav/OxGJcN8Sp7cSVu9+pHImh5hkebObk=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-AIoJlQAD2UQypDYw5+5EbghQpSvW4cy9QZDN+laQ5jY=";
+    hash = "sha256-g+paHLfGlfNADY95e7W0a8xfIk5RlQ6c3ROFUEm3P/w=";
   };
 
   # Fixed Output Derivation
   # https://phip1611.de/blog/accessing-network-from-a-nix-derivation/
-  bufGenerated = stdenv.mkDerivation {
+  depsGenerated = stdenv.mkDerivation {
     inherit src pnpmDeps;
 
-    pname = "retrom-buf-generated";
+    pname = "retrom-deps-generated";
     version = "0.0.0";
     doCheck = false;
     dontFixup = true;
 
     nativeBuildInputs = [
       pnpm_9.configHook
+      gnused
       nodejs
     ];
 
     buildPhase = ''
       runHook preBuild
-      pnpm exec buf generate
+      # patch out cargo build, we'll do it in next step
+      sed -E -i"" 's@"dependsOn":(.*), "cargo-build-transit"@"dependsOn":\1@g' turbo.json
+      sed -E -i"" 's@"build":.*@@g' packages/client/package.json
+
+      pnpm turbo --filter @retrom/client build
       runHook postBuild
     '';
 
     installPhase = ''
       runHook preInstall
-      mkdir $out
-      cp -r packages/client/web/src/generated $out
+      mkdir -p $out/packages/client/web
+      mkdir -p $out/packages/codegen
+      mkdir -p $out/plugins/retrom-plugin-config/
+      mkdir -p $out/plugins/retrom-plugin-installer/
+      mkdir -p $out/plugins/retrom-plugin-standalone/
+
+      cp -r packages/client/web/dist $out/packages/client/web/
+      cp -r packages/codegen/dist $out/packages/codegen/
+      cp -r plugins/retrom-plugin-config/dist $out/plugins/retrom-plugin-config/
+      cp -r plugins/retrom-plugin-installer/dist $out/plugins/retrom-plugin-installer/
+      cp -r plugins/retrom-plugin-standalone/dist $out/plugins/retrom-plugin-standalone/
       runHook postInstall
     '';
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-S8xdMdw6qasv1oJtarCw0domHt7doDEn8g5JVBWh8Qk=";
+    outputHash = "sha256-8yRY0b3jSBv293SepmIbeFNM1OPf6+wWx4LDpjA1TXM=";
   };
 in
 (makeRustPlatform {
@@ -84,7 +98,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-cHzIAtEMWwSdxpGYnTBZUTP4QPbSUvag++laegqsbw4=";
+    cargoHash = "sha256-yJdkZHsKOap8T+7GiDv/VUs5hLAMYSxpPQb4d7/7xaU=";
     useFetchCargoVendor = true;
 
     # buildType = "debug";
@@ -125,7 +139,8 @@ in
     '';
 
     preBuild = ''
-      cp -r ${bufGenerated}/generated packages/client/web/src/
+      cp -r ${depsGenerated}/packages .
+      cp -r ${depsGenerated}/plugins .
       jq '. + {"bundle": { "windows": null } } | del(.plugins.updater)' packages/client/tauri.build.conf.json > temp.json
       mv temp.json packages/client/tauri.build.conf.json
     '';
