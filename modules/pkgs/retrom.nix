@@ -24,7 +24,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "v0.7.16";
+  rev = "v0.7.17";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
