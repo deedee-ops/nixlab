@@ -23,8 +23,8 @@
   supportNvidia ? false,
 }:
 let
-  # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=regex:^(?<compatibility>v)(?<major>\d+)(\.(?<minor>\d+))(\.(?<patch>\d+))?$
-  rev = "v0.7.16";
+  # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
+  rev = "v0.7.17";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -33,11 +33,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-ZUvNlULsV/nH1p8/axBgPPuVoXeiiuIZ4JeLeK6sd7o=";
+    hash = "sha256-XDt3W3y/B2EEWhL4BwxmnctlKGjHFR/GilEKJLKVnQo=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-g+paHLfGlfNADY95e7W0a8xfIk5RlQ6c3ROFUEm3P/w=";
+    hash = "sha256-/4tAhfzH8WDb32+puoFcCWPKVByjbWkU3VGFrWjUYBA=";
   };
 
   # Fixed Output Derivation
@@ -84,7 +84,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-umQs5Jwi578tnKOT+H5ztfEr3RaRFnXDR9Wvlhrzqcc=";
+    outputHash = "sha256-SN2AdCrmwuv4jFHq3o2VH8te+Z5wzVWK3uWbB+GYDQA=";
   };
 in
 (makeRustPlatform {
@@ -98,7 +98,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-sWpEs3MvVaSaE/fgIfEtbK2eI1tL2j7TUmTPCb3zi98=";
+    cargoHash = "sha256-ilDBX610gouJ2fVZPJYW5aRTnhBka1nYK/8b61OxzJ0=";
     useFetchCargoVendor = true;
 
     # buildType = "debug";
