@@ -270,7 +270,6 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
     };
-    whatsie.enable = true;
     xorg = {
       autorandr = { };
       mapRightCtrlToAltGr = true;

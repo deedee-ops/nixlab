@@ -66,7 +66,7 @@ in
             };
             properties = {
               screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-              tag = " 5 ";
+              tag = if config.myHomeApps.whatsie.enable then " 5 " else " 6 ";
             };
           }
         ];
