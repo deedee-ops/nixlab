@@ -170,7 +170,6 @@ in
 
     mySystemApps.homepage = lib.mkIf cfg.enableUI {
       services.Apps.Incus = svc.mkHomepage "incus" // {
-        icon = "https://cdn.jsdelivr.net/gh/ajgon/dashboard-icons@add-incus/svg/incus.svg";
         container = null;
         description = "Virtual machines manager";
       };

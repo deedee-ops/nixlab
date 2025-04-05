@@ -106,7 +106,7 @@ in
       homepage = {
         services.Apps.Upsnap = svc.mkHomepage cfg.subdomain // {
           description = "WakeOnLan tool";
-          icon = "upsnap";
+          icon = "upsnap.svg";
         };
       };
     };

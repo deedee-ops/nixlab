@@ -69,7 +69,6 @@ in
 
     mySystemApps.homepage = {
       services.Apps."GoSƐ" = svc.mkHomepage "gose" // {
-        icon = "https://cdn.jsdelivr.net/gh/stv0g/gose@main/frontend/img/gose-logo.svg";
         href = "https://files.${config.mySystem.rootDomain}";
         description = "A terascale file uploader";
       };
