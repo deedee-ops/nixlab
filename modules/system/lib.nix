@@ -254,6 +254,7 @@
       {
         name,
         paths,
+        keepRemote ? true,
         fullPaths ? [ ],
         excludePaths ? [ ],
       }:
@@ -297,26 +298,28 @@
         };
 
       }
-      // builtins.listToAttrs (
-        # remote backups
-        builtins.map (remote: {
-          name = "${name}-remote-${remote.name}";
-          value = {
-            inherit
-              pruneOpts
-              timerConfig
-              initialize
-              backupPrepareCommand
-              ;
+      // (lib.optionalAttrs keepRemote (
+        builtins.listToAttrs (
+          # remote backups
+          builtins.map (remote: {
+            name = "${name}-remote-${remote.name}";
+            value = {
+              inherit
+                pruneOpts
+                timerConfig
+                initialize
+                backupPrepareCommand
+                ;
 
-            paths = includePaths;
-            exclude = excludePaths;
-            passwordFile = config.sops.secrets."${remote.passFileSopsSecret}".path;
-            repository = "${remote.location}/${name}";
-            environmentFile = config.sops.secrets."${remote.envFileSopsSecret}".path;
-          };
-        }) config.mySystem.backup.remotes
-      );
+              paths = includePaths;
+              exclude = excludePaths;
+              passwordFile = config.sops.secrets."${remote.passFileSopsSecret}".path;
+              repository = "${remote.location}/${name}";
+              environmentFile = config.sops.secrets."${remote.envFileSopsSecret}".path;
+            };
+          }) config.mySystem.backup.remotes
+        )
+      ));
     importYAML =
       file:
       builtins.fromJSON (

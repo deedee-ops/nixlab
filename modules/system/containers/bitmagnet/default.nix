@@ -111,6 +111,8 @@ in
         };
       };
 
+      postgresql.databasesToExcludeFromRemoteBackup = [ "bitmagnet" ];
+
       prowlarr.customDefinitions = [ ./bitmagnet-gluetun.yml ];
     };
   };

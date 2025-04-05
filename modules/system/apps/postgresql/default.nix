@@ -14,6 +14,15 @@ in
     backup = lib.mkEnableOption "postgresql backup" // {
       default = true;
     };
+    databasesToExcludeFromRemoteBackup = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = ''
+        List of databases to be excluded from remote backups (still kept on local).
+        Useful for the ones, which tend grow up out of hand, and can quickly saturate remote backup quota.
+      '';
+      default = [ ];
+      example = [ "logs" ];
+    };
     enablePgVectoRs = lib.mkOption {
       type = lib.types.bool;
       description = "Enable pg-vecto.rs extension.";
@@ -105,6 +114,9 @@ in
           svc.mkRestic {
             name = "postgresql";
             paths = [ backupPath ];
+            excludePaths = builtins.map (
+              db: "/mnt/backup-snapshot/var/lib/postgresql/backups/${db}.*.gz"
+            ) cfg.databasesToExcludeFromRemoteBackup;
           }
         );
       };
