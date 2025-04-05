@@ -45,6 +45,7 @@ _: {
     ./sshwifty
     ./syncthing
     ./tika
+    ./upsnap
     ./vaultwarden
     ./vikunja
     ./wakapi

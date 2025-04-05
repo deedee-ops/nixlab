@@ -183,6 +183,10 @@ rec {
       };
     };
     maddy.enable = true;
+    upsnap = {
+      enable = true;
+      subdomain = "upsnap-meemee";
+    };
     zigbee2mqtt = {
       enable = true;
       coordinators = {

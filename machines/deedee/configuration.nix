@@ -364,6 +364,10 @@ rec {
     };
     syncthing.enable = true;
     tika.enable = true;
+    upsnap = {
+      enable = true;
+      subdomain = "upsnap-deedee";
+    };
     vikunja.enable = false;
     wakapi.enable = true;
     wallos.enable = true;
