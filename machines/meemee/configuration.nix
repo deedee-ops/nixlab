@@ -138,6 +138,7 @@ rec {
         };
 
         minio.target = "http://${config.myInfra.machines.nas.ip}:9001";
+        nas.target = "http://${config.myInfra.machines.nas.ip}:5000";
         registry.target = "http://${config.myInfra.machines.nas.ip}:5555";
         s3.target = "http://${config.myInfra.machines.nas.ip}:9000";
       };

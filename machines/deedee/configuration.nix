@@ -212,8 +212,6 @@ rec {
 
       enable = true;
       extraVHosts = {
-        nas.target = "http://${config.myInfra.machines.nas.ip}:5000";
-
         unifi.target = "https://${config.myInfra.machines.unifi.ip}";
       };
       extraRedirects = {
