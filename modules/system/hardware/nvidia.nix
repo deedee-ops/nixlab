@@ -67,6 +67,14 @@ in
       '';
     };
 
+    # nvidia cards goes haywire when device is put into sleep
+    systemd.targets = {
+      sleep.enable = false;
+      suspend.enable = false;
+      hibernate.enable = false;
+      hybrid-sleep.enable = false;
+    };
+
     mySystem.allowUnfree =
       [
         "cuda_cccl"
