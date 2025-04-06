@@ -94,6 +94,10 @@ in
         for repo in $repos; do
           export RESTIC_REPOSITORY="$BASE_RESTIC_REPO$repo"
 
+          if [ "$region" = "eu" ] || [ "$region" = "us" ]; then
+            restic $restic_extra_opts unlock --remove-all
+          fi
+
           printf "\n\e[36mVeryfying %s\e[0m\n" "$repo"
           last_snapshot_date="$(restic $restic_extra_opts snapshots --latest 1 --json | jq -r '.[0].time' | sed 's@T.*@@g')"
           if [ "$last_snapshot_date" != "$(date +%F)" ]; then
