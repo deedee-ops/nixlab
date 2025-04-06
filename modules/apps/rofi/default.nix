@@ -158,7 +158,7 @@ in
             end, { description = "password manager", group = "apps" }),
           '')
           + ''
-              awful.key({ RC.vars.modkey, "Shift" }, "e", function()
+              awful.key({ RC.vars.modkey, "Shift" }, "x", function()
                 awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
               end, { description = "shutdown menu", group = "apps" })
             )
