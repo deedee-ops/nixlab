@@ -24,7 +24,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.17";
+  rev = "v0.7.18";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
