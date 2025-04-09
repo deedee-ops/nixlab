@@ -14,6 +14,7 @@
     {
       "description": ["Retrom Group"],
       "groupName": "Retrom",
+      "automerge": false,
       "matchPackagePatterns": [".*/retrom.*"],
       "group": {
         "commitMessageTopic": "{{{groupName}}} group"

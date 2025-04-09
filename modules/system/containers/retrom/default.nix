@@ -55,7 +55,7 @@ in
 
     virtualisation.oci-containers.containers.retrom = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/jmberesford/retrom-service:v0.7.17@sha256:bf885d78d66aaf2eec56de86d5ec6152b594d345793af9e06d7c90a22e2b49de";
+        image = "ghcr.io/jmberesford/retrom-service:v0.7.18@sha256:bc0632c8f04e89e4a40928ce416a0d0444287205646c21cd7b4423b2b5863cba";
         user = "1000:1000";
         ports = [ "5101:5101" ];
         volumes = [
@@ -116,7 +116,6 @@ in
 
     mySystemApps.homepage = {
       services.Apps.RetROM = svc.mkHomepage "retrom" // {
-        icon = "https://cdn.jsdelivr.net/gh/JMBeresford/retrom@main/packages/client/icons/icon.png";
         description = "Server for steam-like retro games manager";
       };
     };

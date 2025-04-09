@@ -24,7 +24,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.17";
+  rev = "v0.7.18";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -33,11 +33,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-XDt3W3y/B2EEWhL4BwxmnctlKGjHFR/GilEKJLKVnQo=";
+    hash = "sha256-fCK0HksDLIuvlrYz0ATOJm5VN/VTyXpU6ji3/up8aeI=";
   };
   pnpmDeps = pnpm_9.fetchDeps {
     inherit pname version src;
-    hash = "sha256-/4tAhfzH8WDb32+puoFcCWPKVByjbWkU3VGFrWjUYBA=";
+    hash = "sha256-Cm/1CLZgJe4pYOsK2Eigukbyy1KI9FrcTXVEmJh0N/c=";
   };
 
   # Fixed Output Derivation
@@ -84,7 +84,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-SN2AdCrmwuv4jFHq3o2VH8te+Z5wzVWK3uWbB+GYDQA=";
+    outputHash = "sha256-fV7Plq0K2K1prrn4RWI4HsVsJthQRxbsub2T9iN3xqw=";
   };
 in
 (makeRustPlatform {
@@ -98,7 +98,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-ilDBX610gouJ2fVZPJYW5aRTnhBka1nYK/8b61OxzJ0=";
+    cargoHash = "sha256-uiQKyHS8Gq+Yku4N0/d4EhqUMEtMkJUxuMHjXGU6Azs=";
     useFetchCargoVendor = true;
 
     # buildType = "debug";
