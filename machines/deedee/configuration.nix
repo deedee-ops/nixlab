@@ -268,7 +268,6 @@ rec {
     echo-server.enable = false;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
-    flaresolverr.enable = true;
     forgejo = {
       enable = true;
       enableRunner = true;
