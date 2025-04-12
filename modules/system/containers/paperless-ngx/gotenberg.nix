@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.gotenberg = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/gotenberg:8.20.0@sha256:f521de00faefc3b3c6b2658e371c7cc91e8a35a13162b536b383d501ab1e3c25";
+        image = "ghcr.io/deedee-ops/gotenberg:8.20.1@sha256:5977dbab97efdf16f28af22c259fab475b2dc32c1003bca3e134ac457d1b470d";
       };
     };
   };
