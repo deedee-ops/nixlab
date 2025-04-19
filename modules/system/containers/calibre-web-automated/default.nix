@@ -29,7 +29,7 @@ in
 
     virtualisation.oci-containers.containers.calibre-web-automated = svc.mkContainer {
       cfg = {
-        image = "crocodilestick/calibre-web-automated:V3.0.4@sha256:6175aac53bf4c17529f8e566310011901572e487a60ca2b82efc34cd517e2f15";
+        image = "crocodilestick/calibre-web-automated:V3.0.4@sha256:bdf3dbf10be5a22cea09dd05f4d9ac4e7bdba4c411fef3e15c512ca723ee393d";
         environment = {
           PUID = "65000";
           PGID = "65000";
