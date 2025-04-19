@@ -94,6 +94,10 @@ rec {
       pruneAll = false;
     };
     # plymouth.enable = true;
+    tailscale = {
+      enable = true;
+      backup = false;
+    };
 
     xorg = {
       enable = true;

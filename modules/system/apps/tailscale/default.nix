@@ -31,7 +31,11 @@ in
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for tailscale are disabled!") ];
 
-    sops.secrets."${cfg.authKeySopsSecret}" = { };
+    sops.secrets = lib.optionalAttrs cfg.autoProvision { "${cfg.authKeySopsSecret}" = { }; };
+
+    home-manager.users."${config.mySystem.primaryUser}".home.shellAliases = {
+      tailscale-up = "${lib.getExe config.services.tailscale.package} up --accept-routes --operator=${config.mySystem.primaryUser}";
+    };
 
     services = {
       tailscale =
