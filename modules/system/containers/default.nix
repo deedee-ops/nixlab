@@ -7,6 +7,7 @@ _: {
     ./beszel
     ./bitmagnet
     ./caddy
+    ./calibre-web-automated
     ./coredns
     ./crypt
     ./echo-server

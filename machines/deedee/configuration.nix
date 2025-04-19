@@ -2,6 +2,7 @@
 let
   mediaPath = "/mnt/media";
   audiobooksPath = "${mediaPath}/audiobooks";
+  booksPath = "${mediaPath}/books";
   photosPath = "${mediaPath}/photos";
   podcastsPath = "${mediaPath}/podcasts";
   torrentsPath = "${mediaPath}/torrents";
@@ -254,6 +255,11 @@ rec {
       };
     };
     bitmagnet.enable = true;
+    calibre-web-automated = {
+      inherit booksPath;
+
+      enable = true;
+    };
     coredns.enable = true;
     crypt.enable = true;
     davis = {
