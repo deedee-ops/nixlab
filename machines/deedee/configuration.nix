@@ -314,6 +314,7 @@ rec {
       inherit videoPath youtubePath;
       enable = true;
     };
+    koreader.enable = true;
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;

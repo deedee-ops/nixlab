@@ -60,6 +60,8 @@ in
       nginx.virtualHosts.calibre-web-automated = svc.mkNginxVHost {
         host = "calibre-web";
         proxyPass = "http://calibre-web-automated.docker:8083";
+        customCSP = "disable";
+        autheliaIgnorePaths = [ "/opds" ];
       };
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {

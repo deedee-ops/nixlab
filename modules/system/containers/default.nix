@@ -24,6 +24,7 @@ _: {
     ./immich
     ./jellyfin
     ./kms
+    ./koreader
     ./lldap
     ./maddy
     ./mail-archive
