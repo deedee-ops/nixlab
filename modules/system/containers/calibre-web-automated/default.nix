@@ -34,6 +34,7 @@ in
           PUID = "65000";
           PGID = "65000";
         };
+        ports = [ "8083:8083" ];
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.dataDir}/cwa-book-ingest:/cwa-book-ingest"
@@ -81,6 +82,8 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    networking.firewall.allowedTCPPorts = [ 8083 ];
 
     mySystemApps = {
       syncthing.extraPaths = {

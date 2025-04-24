@@ -24,7 +24,12 @@ in
         environment = {
           HOSTNAME = "0.0.0.0";
         };
+        ports = [ "8082:3000" ];
         volumes = [ "${cfg.dataDir}/insight:/app/data" ];
+      };
+      opts = {
+        # allow port to be available externally
+        allowPublic = true;
       };
     };
 
@@ -56,6 +61,8 @@ in
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
         { directories = [ cfg.dataDir ]; };
+
+    networking.firewall.allowedTCPPorts = [ 8082 ];
 
     mySystemApps.homepage = {
       services.Apps.KoInsight = svc.mkHomepage "koinsight" // {

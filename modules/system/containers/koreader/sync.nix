@@ -20,6 +20,7 @@ in
     virtualisation.oci-containers.containers.koreader-sync = svc.mkContainer {
       cfg = {
         image = "koreader/kosync:1.0.1.3@sha256:5129931e8e5066a109d9baa23e3a9c3568e0fea284ca57c50e372b6434b0e827";
+        ports = [ "8081:7200" ];
         volumes = [ "${cfg.dataDir}/sync:/var/lib/redis" ];
         extraOptions = [
           "--mount"
@@ -35,6 +36,8 @@ in
       };
       opts = {
         readOnlyRootFilesystem = false;
+        # allow port to be available externally
+        allowPublic = true;
       };
     };
 
@@ -52,6 +55,8 @@ in
         chown 65000:65000 "${cfg.dataDir}/sync"
       '';
     };
+
+    networking.firewall.allowedTCPPorts = [ 8081 ];
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
