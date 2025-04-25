@@ -72,6 +72,9 @@ in
       pkgs.dconf
     ];
 
+    programs.i3lock.enable =
+      config.home-manager.users."${config.mySystem.primaryUser}".services.betterlockscreen.enable; # fixes various issues like PAM
+
     home-manager.users."${config.mySystem.primaryUser}".systemd.user.services = builtins.listToAttrs (
       builtins.map (name: {
         inherit name;
