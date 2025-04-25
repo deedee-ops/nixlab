@@ -36,6 +36,7 @@ in
         };
         ports = [ "8083:8083" ];
         volumes = [
+          "${./patch-cbz.sh}:/custom-cont-init.d/patch-cbz.sh"
           "${cfg.dataDir}/config:/config"
           "${cfg.dataDir}/cwa-book-ingest:/cwa-book-ingest"
           "${cfg.booksPath}:/calibre-library"
