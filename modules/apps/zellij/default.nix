@@ -48,7 +48,7 @@ in
         };
     };
 
-    programs.zsh.initExtra = lib.mkIf cfg.autoStart (
+    programs.zsh.initContent = lib.mkIf cfg.autoStart (
       lib.mkOrder 100 ''
         export ZELLIJ_AUTO_ATTACH="${if cfg.singleInstance then "true" else "false"}";
         export ZELLIJ_AUTO_EXIT="true";

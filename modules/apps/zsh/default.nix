@@ -67,24 +67,27 @@ in
 
       completionInit = "autoload -U compinit && compinit -u";
 
-      initExtraBeforeCompInit = ''
-        autoload -U colors && colors
-      '';
-
-      initExtra =
-        ''
-          export HISTFILE="${config.xdg.stateHome}/zsh/history"
-        ''
-        + (lib.optionalString config.myHomeApps.ghostty.enable ''
-
-          if [[ "$TERM" == "xterm-ghostty" ]]; then
-            source ${pkgs.ghostty.shell_integration}/shell-integration/zsh/ghostty-integration
-          fi
+      initContent = lib.mkMerge [
+        (lib.mkOrder 550 ''
+          autoload -U colors && colors
         '')
-        + ''
 
-          ${shellInitExtra}
-        '';
+        (
+          ''
+            export HISTFILE="${config.xdg.stateHome}/zsh/history"
+          ''
+          + (lib.optionalString config.myHomeApps.ghostty.enable ''
+
+            if [[ "$TERM" == "xterm-ghostty" ]]; then
+              source ${pkgs.ghostty.shell_integration}/shell-integration/zsh/ghostty-integration
+            fi
+          '')
+          + ''
+
+            ${shellInitExtra}
+          ''
+        )
+      ];
 
       shellAliases = {
         ".." = "cd ..";
