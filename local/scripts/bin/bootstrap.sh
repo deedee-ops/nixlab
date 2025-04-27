@@ -25,4 +25,4 @@ trap cleanup EXIT
 
 openssl aes-256-cbc -d -a -salt -md sha256 -pbkdf2 -in "${SCRIPTPATH}/../secrets.tar.gz.enc" | tar -xz -C "${temp}"
 
-nixos-anywhere --extra-files "${temp}/${MACHINE}" --flake ".#${MACHINE}" "root@${IP}"
+nixos-anywhere --disko-mode disko --extra-files "${temp}/${MACHINE}" --flake ".#${MACHINE}" "root@${IP}"

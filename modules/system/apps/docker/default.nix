@@ -164,6 +164,7 @@ in
 
       docker = {
         enable = true;
+        package = pkgs.docker_28;
         daemon.settings = cfg.daemonSettings;
         autoPrune = {
           enable = true;
