@@ -13,7 +13,7 @@ in
       cfg = {
         inherit (cfg) environment volumes;
 
-        image = "ghcr.io/netbox-community/netbox:v4.2.2-3.1.0@sha256:707e242b567387aa7eccfbfc5c07d781db7bde806cc41d34062d765316f09422";
+        image = "ghcr.io/netbox-community/netbox:v4.2.2-3.1.0@sha256:51e14595287666bf8e0fc02d9e9aa5c4b54f9d5203257d6618d97ee8ddaa4364";
         dependsOn = [ "netbox" ];
         user = "unit:root";
 
