@@ -19,7 +19,7 @@ name: "Renovate"
         default: latest
         required: false
   schedule:
-    - cron: "0 * * * *"  # Every hour
+    - cron: "0 9-18 * * *"  # Only during working hours
   push:
     branches:
       - master
