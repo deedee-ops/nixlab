@@ -145,7 +145,7 @@ in
         containers.socket-proxy = lib.mkIf cfg.startDockerSockProxy (
           svc.mkContainer {
             cfg = {
-              image = "ghcr.io/tecnativa/docker-socket-proxy:0.3@sha256:2f92c6e85a1199b3403c99d7439695898a162c69689b11130450ffadb352f0a0";
+              image = "ghcr.io/tecnativa/docker-socket-proxy:0.3@sha256:9e4b9e7517a6b660f2cc903a19b257b1852d5b3344794e3ea334ff00ae677ac2";
               environment = {
                 CONTAINERS = "1";
                 POST = "0";
