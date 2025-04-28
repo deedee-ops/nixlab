@@ -122,7 +122,7 @@ in
         svc.mkContainer {
           cfg = {
             dependsOn = [ "socket-proxy" ];
-            image = "ghcr.io/henrygd/beszel/beszel-agent:0.10.2@sha256:94b370f24d3479355aa5beef58a09bd60463b4813ff2463d1f00ee48f9ac73be";
+            image = "ghcr.io/henrygd/beszel/beszel-agent:0.11.0@sha256:3af21e8849683023171803c87a78bfae2b300e3ef6de86c26920d204326c65fa";
             environment = {
               DOCKER_HOST = "tcp://127.0.0.1:2375";
               FILESYSTEM = cfg.rootFs;
