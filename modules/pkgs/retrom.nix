@@ -13,18 +13,18 @@
   jq,
   libsoup_3,
   makeWrapper,
-  nodejs,
+  nodejs_22,
   openssl,
   perl,
   pkg-config,
-  pnpm_9,
+  pnpm_10,
   protobuf,
   webkitgtk_4_1,
   supportNvidia ? false,
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.18";
+  rev = "v0.7.20";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -33,11 +33,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-fCK0HksDLIuvlrYz0ATOJm5VN/VTyXpU6ji3/up8aeI=";
+    hash = "sha256-X5vP0gmhC2lzdAgUn4YIetRI2LrokuzZp/WgpHHbBk8=";
   };
-  pnpmDeps = pnpm_9.fetchDeps {
+  pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
-    hash = "sha256-Cm/1CLZgJe4pYOsK2Eigukbyy1KI9FrcTXVEmJh0N/c=";
+    hash = "sha256-lA2nUULDmBOqscGCTkn0aq2DSK8XZseuDYh/0yoURtc=";
   };
 
   # Fixed Output Derivation
@@ -51,18 +51,18 @@ let
     dontFixup = true;
 
     nativeBuildInputs = [
-      pnpm_9.configHook
+      pnpm_10.configHook
       gnused
-      nodejs
+      nodejs_22
     ];
 
     buildPhase = ''
       runHook preBuild
       # patch out cargo build, we'll do it in next step
       sed -E -i"" 's@"dependsOn":(.*), "cargo-build-transit"@"dependsOn":\1@g' turbo.json
-      sed -E -i"" 's@"build":.*@@g' packages/client/package.json
+      # sed -E -i"" 's@"build":.*@@g' packages/client/package.json
 
-      pnpm turbo --filter @retrom/client build
+      pnpm turbo --filter @retrom/client-web build
       runHook postBuild
     '';
 
@@ -84,7 +84,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-fV7Plq0K2K1prrn4RWI4HsVsJthQRxbsub2T9iN3xqw=";
+    outputHash = "sha256-jVLgDC6hlaMkwdFaORpptcVbIn9cpzdBrQk3ywv5pR8=";
   };
 in
 (makeRustPlatform {
@@ -98,7 +98,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-uiQKyHS8Gq+Yku4N0/d4EhqUMEtMkJUxuMHjXGU6Azs=";
+    cargoHash = "sha256-FmH44aDoX4djTOW2Bqiexb9u357pnDjgIl9x0N4TN+U=";
     useFetchCargoVendor = true;
 
     # buildType = "debug";
@@ -112,11 +112,11 @@ in
       gnused
       jq
       makeWrapper
-      nodejs
+      nodejs_22
       openssl
       perl
       pkg-config
-      pnpm_9.configHook
+      pnpm_10.configHook
       protobuf
       depsGenerated
     ];
