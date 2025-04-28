@@ -100,7 +100,7 @@ in
       virtualisation.oci-containers.containers.beszel-hub = lib.mkIf isHub (
         svc.mkContainer {
           cfg = {
-            image = "ghcr.io/henrygd/beszel/beszel:0.10.2@sha256:4866b38de49b96341b1684f23f646d439be2d6fcb4842686bf393bd311631035";
+            image = "ghcr.io/henrygd/beszel/beszel:0.10.2@sha256:6fa885246ce0f0d238a64d30d62c6a9ef77bb3f7201a4090a8564cc00f86eeab";
             environment = {
               SHARE_ALL_SYSTEMS = "true";
             };
