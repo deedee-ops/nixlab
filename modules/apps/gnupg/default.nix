@@ -93,11 +93,10 @@ in
     };
 
     services.gpg-agent = lib.mkIf cfg.enableGpgAgent {
-      inherit (cfg) pinentryPackage;
-
       enable = true;
       enableScDaemon = true;
       defaultCacheTtl = cfg.rememberPasswordTime;
+      pinentry.package = cfg.pinentryPackage;
     };
 
     systemd.user.services.gnupg-create-socketdir = lib.mkIf cfg.enableYubikey {
