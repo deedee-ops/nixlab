@@ -14,7 +14,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.sync.enable {
+  config = lib.mkIf (cfg.enable && cfg.sync.enable) {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for koreader are disabled!") ];
 
     virtualisation.oci-containers.containers.koreader-sync = svc.mkContainer {

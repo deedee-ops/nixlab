@@ -14,7 +14,7 @@ in
     };
   };
 
-  config = lib.mkIf cfg.insight.enable {
+  config = lib.mkIf (cfg.enable && cfg.insight.enable) {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for koreader are disabled!") ];
 
     virtualisation.oci-containers.containers.koinsight = svc.mkContainer {
