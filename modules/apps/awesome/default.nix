@@ -7,6 +7,31 @@
 }:
 let
   cfg = config.myHomeApps.awesome;
+  clientSubmodule = lib.types.submodule {
+    options = {
+      instance = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "Floating windows by instance.";
+        default = [ ];
+      };
+      class = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "Floating windows by class.";
+        default = [ ];
+      };
+      name = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "Floating windows by name.";
+        default = [ ];
+      };
+      role = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        description = "Floating windows by role.";
+        default = [ ];
+      };
+    };
+  };
+
 in
 {
   options.myHomeApps.awesome = {
@@ -38,30 +63,11 @@ in
       default = "";
     };
     floatingClients = lib.mkOption {
-      type = lib.types.submodule {
-        options = {
-          instance = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            description = "Floating windows by instance.";
-            default = [ ];
-          };
-          class = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            description = "Floating windows by class.";
-            default = [ ];
-          };
-          name = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            description = "Floating windows by name.";
-            default = [ ];
-          };
-          role = lib.mkOption {
-            type = lib.types.listOf lib.types.str;
-            description = "Floating windows by role.";
-            default = [ ];
-          };
-        };
-      };
+      type = clientSubmodule;
+      default = { };
+    };
+    forcedFloatingClients = lib.mkOption {
+      type = clientSubmodule;
       default = { };
     };
     modKey = lib.mkOption {
@@ -146,7 +152,6 @@ in
                   builtins.map (item: "\"${item}\"") (
                     [
                       "copyq"
-                      "pinentry"
                     ]
                     ++ cfg.floatingClients.instance
                   )
@@ -170,6 +175,26 @@ in
               } },
               floatingRole = { ${
                 builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.floatingClients.role)
+              } },
+
+              forcedFloatingInstance = { ${
+                builtins.concatStringsSep "," (
+                  builtins.map (item: "\"${item}\"") (
+                    [
+                      "pinentry"
+                    ]
+                    ++ cfg.forcedFloatingClients.instance
+                  )
+                )
+              } },
+              forcedFloatingClass = { ${
+                builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.forcedFloatingClients.class)
+              } },
+              forcedFloatingName = { ${
+                builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.forcedFloatingClients.name)
+              } },
+              forcedFloatingRole = { ${
+                builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.forcedFloatingClients.role)
               } },
 
               extraAwfulRules = ${lib.generators.toLua { } cfg.awfulRules},

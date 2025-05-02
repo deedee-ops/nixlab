@@ -143,6 +143,16 @@ awful.rules.rules = gears.table.join({
     },
     properties = { floating = true },
   },
+  -- Always on top on all desktops floating clients
+  {
+    rule_any = {
+      instance = RC.vars.forcedFloatingInstance,
+      class = RC.vars.forcedFloatingClass,
+      name = RC.vars.forcedFloatingName,
+      role = RC.vars.forcedFloatingRole,
+    },
+    properties = { floating = true, ontop = true, focus = true, sticky = true },
+  },
 
   -- Add titlebars to dialog clients
   {

@@ -111,7 +111,7 @@ in
       };
 
       myHomeApps.awesome = {
-        floatingClients.name = [ "rofi - Passphrase:" ];
+        forcedFloatingClients.name = [ "rofi - Passphrase:" ];
         extraConfig =
           ''
             local home = os.getenv("HOME")

@@ -4,6 +4,14 @@ local gears = require("gears")
 local wibox = require("wibox")
 local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
 
+local naughty = require("naughty")
+
+-- always keep floating sticky windows on top
+client.connect_signal("property::floating", function(c)
+  if not c.fullscreen and c.floating and c.sticky then
+    c.ontop = true
+  end
+end)
 -- prevent wibox from obstructing fullscreen window clients
 client.connect_signal("focus", function(c)
   if c.fullscreen then
