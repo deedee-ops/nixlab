@@ -73,7 +73,7 @@ in
             local home = os.getenv("HOME")
             local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
             local obsidiankeys = gears.table.join(
-              awful.key({ RC.vars.modkey, "Shift" }, "e", function()
+              awful.key({ RC.vars.modkey, "Shift" }, "a", function()
                 awful.util.spawn("${terminalRunners."${config.myHomeApps.xorg.terminal.pname}"} "
                   .. "${lib.getExe config.programs.neovim.package} "
                   .. "${cfg.PKMpath}/Inbox/" .. os.time() .. ".md"
