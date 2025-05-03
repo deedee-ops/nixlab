@@ -57,7 +57,6 @@ in
       cfg = {
         image = "ghcr.io/jmberesford/retrom-service:0.7.21@sha256:966ca32eb55c60062b82022e0b42c8ea6ba3016b39f2d45d3bd3d19a43b61bc4";
         user = "1000:1000";
-        ports = [ "5101:5101" ];
         volumes = [
           "${cfg.dataDir}/config:/app/config"
           "${cfg.romsPath}:/roms"
@@ -81,6 +80,11 @@ in
           object-src 'none';
           style-src 'self' 'unsafe-inline' data: blob: *.${config.mySystem.rootDomain};
         '';
+      };
+      nginx.virtualHosts.retrom-server = svc.mkNginxVHost {
+        host = "retrom-server";
+        proxyPass = "http://retrom.docker:5101";
+        useAuthelia = false;
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "retrom" ]; };
       restic.backups = lib.mkIf cfg.backup (
@@ -107,8 +111,6 @@ in
         chown 1505:1505 "${cfg.dataDir}/config" "${cfg.dataDir}/config/config.json"
       '';
     };
-
-    networking.firewall.allowedTCPPorts = [ 5101 ];
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

@@ -333,7 +333,13 @@ rec {
       screenWidth = 3840;
       screenHeight = 2160;
     };
-    retrom.enable = true;
+    retrom = {
+      enable = true;
+      server = {
+        hostname = "https://retrom-server.rzegocki.dev";
+        port = 443;
+      };
+    };
   };
 
   system.stateVersion = "24.11";

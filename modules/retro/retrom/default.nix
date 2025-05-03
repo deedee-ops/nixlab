@@ -12,6 +12,28 @@ in
 {
   options.myRetro.retrom = {
     enable = lib.mkEnableOption "retrom";
+    server = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          hostname = lib.mkOption {
+            type = lib.types.str;
+            description = "Hostname including proto, but without port.";
+            example = "https://retrom.example.com";
+          };
+          port = lib.mkOption {
+            type = lib.types.port;
+            description = "Port number.";
+            example = 443;
+            default = 5101;
+          };
+          standalone = lib.mkOption {
+            type = lib.types.bool;
+            description = "Use built-in server.";
+            default = false;
+          };
+        };
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -24,11 +46,7 @@ in
 
     xdg.configFile."com.retrom.client/config.json".text = ''
       {
-        "server": {
-          "hostname": "http://${osConfig.myInfra.machines.deedee.ip}",
-          "port": 5101,
-          "standalone": false
-        },
+        "server": ${builtins.toJSON cfg.server},
         "config": {
           "clientInfo": {
             "id": 1,
