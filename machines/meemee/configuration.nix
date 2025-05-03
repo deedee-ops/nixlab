@@ -139,7 +139,6 @@ rec {
 
         minio.target = "http://${config.myInfra.machines.nas.ip}:9001";
         nas.target = "http://${config.myInfra.machines.nas.ip}:5000";
-        registry.target = "http://${config.myInfra.machines.nas.ip}:5555";
         s3.target = "http://${config.myInfra.machines.nas.ip}:9000";
       };
       extraRedirects = {
@@ -184,6 +183,10 @@ rec {
       };
     };
     maddy.enable = true;
+    registry = {
+      enable = true;
+      s3.endpoint = mySystemApps.nginx.extraVHosts.s3.target;
+    };
     upsnap = {
       enable = true;
       subdomain = "upsnap-meemee";

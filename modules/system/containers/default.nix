@@ -42,6 +42,7 @@ _: {
     ./radarr
     ./recyclarr
     ./redlib
+    ./registry
     ./retrom
     ./sonarr
     ./sshwifty
