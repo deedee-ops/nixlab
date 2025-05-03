@@ -12,6 +12,23 @@ RCLONE_ENABLE="${RCLONE_ENABLE:-false}"
 PAPERLESS_ENABLE="${PAPERLESS_ENABLE:-false}"
 SSH_ENABLE="${SSH_ENABLE:-false}"
 
+function ensure_file_is_copied() {
+  sleep 0.5
+  prev_size=$(stat -c%s "$1")
+
+  while true; do
+    sleep 0.2
+
+    current_size=$(stat -c%s "$1")
+
+    if [[ "$current_size" -eq "$prev_size" ]]; then
+      break
+    else
+      prev_size="${current_size}"
+    fi
+  done
+}
+
 function handle_mail() {
   if [ "$MAIL_ENABLE" != "true" ]; then
     return
@@ -57,6 +74,9 @@ while read -r event file; do
   if [ "$event" != "CREATE" ] && [ "$event" != "MOVED_TO" ]; then
     continue
   fi
+
+  ensure_file_is_copied "$pathfile"
+  sleep 0.5
 
   pathfile="${WATCH_DIR}/${file}"
 
