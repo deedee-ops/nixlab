@@ -31,16 +31,30 @@ in
           server = "https://acme-staging-v02.api.letsencrypt.org/directory";
         };
       certs = builtins.listToAttrs (
-        builtins.map (domain: {
+        (builtins.map (domain: {
           name = builtins.replaceStrings [ "*" ] [ "wildcard" ] domain;
           value = {
             inherit domain;
 
+            keyType = "ec256";
             group = cfg.certsGroup;
             dnsProvider = "cloudflare";
+            dnsResolver = "1.1.1.1:53";
             environmentFile = config.sops.secrets."system/apps/letsencrypt/envfile".path;
           };
-        }) cfg.domains
+        }) cfg.domains)
+        ++ (builtins.map (domain: {
+          name = "rsa-" + (builtins.replaceStrings [ "*" ] [ "wildcard" ] domain);
+          value = {
+            inherit domain;
+
+            keyType = "rsa4096";
+            group = cfg.certsGroup;
+            dnsProvider = "cloudflare";
+            dnsResolver = "1.1.1.1:53";
+            environmentFile = config.sops.secrets."system/apps/letsencrypt/envfile".path;
+          };
+        }) cfg.domains)
       );
     };
 

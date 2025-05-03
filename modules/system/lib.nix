@@ -21,6 +21,7 @@
         useHostAsServerName ? false,
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
+        allowHTTP ? false,
         extraConfig ? "",
       }:
       let
@@ -60,6 +61,9 @@
         extraConfig =
           ''
             resolver 127.0.0.1:5533;
+
+            ssl_certificate "${config.security.acme.certs."rsa-${useACMEHost}".directory}/fullchain.pem";
+            ssl_certificate_key "${config.security.acme.certs."rsa-${useACMEHost}".directory}/key.pem";
           ''
           + lib.optionalString useAuthelia ''
             set $upstream_authelia http://authelia.docker:9091/api/authz/auth-request;
@@ -127,7 +131,8 @@
           );
 
         serverName = if useHostAsServerName then host else "${host}.${config.mySystem.rootDomain}";
-        forceSSL = true;
+        forceSSL = !allowHTTP;
+        addSSL = allowHTTP;
       };
 
     mkContainer =

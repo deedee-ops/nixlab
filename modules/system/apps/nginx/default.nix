@@ -78,10 +78,12 @@ in
 
       # harden TLS
       recommendedTlsSettings = false; # OCSP stapling is PITA
-      sslProtocols = "TLSv1.3";
-      sslCiphers = null;
+      sslProtocols = "TLSv1.2 TLSv1.3";
+      sslCiphers = "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305";
       commonHttpConfig = ''
         # Keep in sync with https://ssl-config.mozilla.org/#server=nginx&config=intermediate
+
+        ssl_ecdh_curve X25519:prime256v1:secp384r1;
 
         ssl_session_timeout 1d;
         ssl_session_cache shared:SSL:10m;
