@@ -60,9 +60,8 @@ let
       runHook preBuild
       # patch out cargo build, we'll do it in next step
       sed -E -i"" 's@"dependsOn":(.*), "cargo-build-transit"@"dependsOn":\1@g' turbo.json
-      # sed -E -i"" 's@"build":.*@@g' packages/client/package.json
 
-      pnpm turbo --filter @retrom/client-web build
+      pnpm turbo --filter @retrom/client-web build:desktop
       runHook postBuild
     '';
 
@@ -84,7 +83,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-mtiUrE/sjLip61bLqWPZoBGrtM/eKGdUCV5MWskEZHc=";
+    outputHash = "sha256-myV9xPvLP5XPQ4ijUgi6OMZja3Fooxp8cEQ7k8WqGFQ=";
   };
 in
 (makeRustPlatform {
