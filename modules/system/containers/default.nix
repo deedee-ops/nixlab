@@ -47,6 +47,7 @@ _: {
     ./sonarr
     ./sshwifty
     ./syncthing
+    ./talos-factory
     ./tika
     ./upsnap
     ./vaultwarden

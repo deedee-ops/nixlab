@@ -187,6 +187,11 @@ rec {
       enable = true;
       s3.endpoint = mySystemApps.nginx.extraVHosts.s3.target;
     };
+    talos-factory = {
+      enable = true;
+      internalRegistryHost = "registry:5000";
+      externalRegistryHost = "registry.${mySystem.rootDomain}";
+    };
     upsnap = {
       enable = true;
       subdomain = "upsnap-meemee";
