@@ -48,6 +48,7 @@ _: {
     ./sshwifty
     ./syncthing
     ./talos-factory
+    ./tftpd
     ./tika
     ./upsnap
     ./vaultwarden

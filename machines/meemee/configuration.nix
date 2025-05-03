@@ -192,6 +192,10 @@ rec {
       internalRegistryHost = "registry:5000";
       externalRegistryHost = "registry.${mySystem.rootDomain}";
     };
+    tftpd = {
+      enable = true;
+      useHostNetwork = true;
+    };
     upsnap = {
       enable = true;
       subdomain = "upsnap-meemee";
