@@ -195,6 +195,10 @@ rec {
     };
     tftpd = {
       enable = true;
+      ipxe = {
+        enable = true;
+        signingKeysSopsSecret = "system/apps/talos-factory/keys";
+      };
       useHostNetwork = true;
     };
     upsnap = {
