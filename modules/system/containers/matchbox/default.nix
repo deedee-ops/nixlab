@@ -24,7 +24,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.matchbox = svc.mkContainer {
       cfg = {
-        image = "quay.io/poseidon/matchbox:v0.10.0@sha256:e14cc4a8f6e8f1182fce74d04fe949b6bfc91b04132b3944297661e2c38c9790";
+        image = "quay.io/poseidon/matchbox:v0.11.0@sha256:06bcdae85335fd00e8277b007b55cfb49d96a0114628c0f70db2b92b079d246a";
         user = "65000:65000";
         cmd =
           [
