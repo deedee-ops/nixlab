@@ -183,6 +183,7 @@ rec {
       };
     };
     maddy.enable = true;
+    matchbox.enable = true;
     registry = {
       enable = true;
       s3.endpoint = mySystemApps.nginx.extraVHosts.s3.target;

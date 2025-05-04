@@ -28,6 +28,7 @@ _: {
     ./lldap
     ./maddy
     ./mail-archive
+    ./matchbox
     ./memos
     ./miniflux
     ./navidrome
