@@ -98,6 +98,9 @@ return {
             extra_args = { "-m", "160", "-t", "2" },
           }), -- golang
           formatting.nixfmt, -- nix
+          formatting.prettierd.with({
+            extra_filetypes = { "json5" },
+          }), -- json
           formatting.stylua, -- lua
         },
       })
@@ -122,6 +125,7 @@ return {
           "luacheck",
           "nil",
           "nixpkgs-fmt",
+          "prettierd",
           "stylua",
           "yaml-language-server",
           "yamllint",
