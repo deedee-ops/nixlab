@@ -43,7 +43,7 @@ in
 
     virtualisation.oci-containers.containers.atuin = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/atuin:18.5.0@sha256:467f1af512761d0d4e7a5b1f4de015c9296dc96b1020ca35009edc6142f3e226";
+        image = "ghcr.io/deedee-ops/atuin:18.5.0@sha256:3464b25e0b24ca96248392f8f95b4d97d97b58654178ebdc86e98a0ecd3b46ba";
         environment = {
           ATUIN__POSTGRES_DATABASE = "atuin";
           ATUIN__POSTGRES_HOST = "host.docker.internal";
