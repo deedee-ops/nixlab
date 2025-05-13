@@ -1,21 +1,21 @@
 return {
   "rmagatti/auto-session",
+  lazy = false,
   config = function()
     require("auto-session").setup({
-      auto_session_allowed_dirs = {
+      allowed_dirs = {
         "~/Projects/*",
-        "~/.config/home-manager",
       },
       session_lens = {
         buftypes_to_ignore = {},
-        load_on_setup = true,
+        load_on_setup = false,
         theme_conf = { border = true },
         previewer = false,
       },
-      post_restore_cmds = { "Neotree filesystem reveal left" },
       pre_save_cmds = { "Neotree close" },
     })
 
-    vim.keymap.set("n", "<Leader>S", require("auto-session.session-lens").search_session, { noremap = true })
+    vim.o.sessionoptions = "blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions"
+    vim.keymap.set("n", "<Leader>S", ":SessionSearch<cr>", { noremap = true })
   end,
 }

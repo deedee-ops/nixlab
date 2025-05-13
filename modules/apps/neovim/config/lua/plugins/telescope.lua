@@ -11,6 +11,7 @@ return {
   },
   {
     "nvim-telescope/telescope-ui-select.nvim",
+    event = "VeryLazy",
     dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
       require("telescope").setup({
@@ -25,6 +26,7 @@ return {
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
+    event = "VeryLazy",
     build = "make",
     dependencies = { "nvim-telescope/telescope.nvim" },
     config = function()
@@ -42,5 +44,21 @@ return {
 
       vim.keymap.set("n", "<Leader>P", "<cmd>lua Fuzzy_find_files{}<cr>", {})
     end,
+  },
+  {
+    "folke/todo-comments.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-lua/plenary.nvim" },
+    opts = {
+      keywords = {
+        FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT" } },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "XXX" } },
+        PERF = { icon = " ", alt = { "OPTIM" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        TEST = { icon = "⏲ ", color = "test", alt = {} },
+      },
+    },
   },
 }

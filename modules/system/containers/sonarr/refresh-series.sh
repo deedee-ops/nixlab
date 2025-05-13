@@ -13,7 +13,7 @@ if [[ "${sonarr_eventtype:-}" == "Grab" ]]; then
     ')
 
     if (( tba > 0 )); then
-        echo "INFO: Refreshing series ${sonarr_series_id:-} due to TBA/TBD episodes found"
+        echo "INFO : Refreshing series ${sonarr_series_id:-} due to TBA/TBD episodes found"
         "${CURL_CMD[@]}" \
             --request POST \
             --header "Content-Type: application/json" \

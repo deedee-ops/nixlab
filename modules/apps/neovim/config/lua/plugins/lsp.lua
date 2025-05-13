@@ -6,6 +6,7 @@ return {
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+    event = "VeryLazy",
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -23,17 +24,16 @@ return {
   },
   {
     "neovim/nvim-lspconfig",
-    commit = "36f21ab9555dacac485f35059e20f327501320d5", -- https://github.com/williamboman/mason-lspconfig.nvim/issues/469
     config = function()
-      local lspconfig = require("lspconfig")
-
-      lspconfig.ansiblels.setup({})
-      lspconfig.bashls.setup({})
-      lspconfig.golangci_lint_ls.setup({})
-      lspconfig.gopls.setup({})
-      lspconfig.jsonls.setup({})
-      lspconfig.lua_ls.setup({})
-      lspconfig.nil_ls.setup({
+      -- vim.lsp.enable("ansiblels")
+      -- vim.lsp.enable("bashls")
+      -- vim.lsp.enable("golangci_lint_ls")
+      -- vim.lsp.enable("gopls")
+      -- vim.lsp.enable("jsonls")
+      -- vim.lsp.enable("lua_ls")
+      --
+      -- vim.lsp.enable("nil_ls")
+      vim.lsp.config("nil_ls", {
         settings = {
           ["nil"] = {
             formatting = {
@@ -42,13 +42,18 @@ return {
           },
         },
       })
-      lspconfig.rubocop.setup({
+
+      -- vim.lsp.enable("rubocop")
+      vim.lsp.config("rubocop", {
         cmd = { "bundle", "exec", "rubocop", "--lsp" },
       })
-      lspconfig.solargraph.setup({
+
+      -- vim.lsp.enable("solargraph")
+      vim.lsp.config("solargraph", {
         cmd = { "bundle", "exec", "solargraph", "stdio" },
       })
-      lspconfig.yamlls.setup({})
+
+      -- vim.lsp.enable("yamlls")
 
       vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
       vim.keymap.set({ "n", "v" }, "gc", vim.lsp.buf.code_action, {})
@@ -109,6 +114,7 @@ return {
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
+    event = "VeryLazy",
     config = function()
       require("mason-tool-installer").setup({
         ensure_installed = {

@@ -1,6 +1,7 @@
 return {
   {
     "voldikss/vim-floaterm",
+    event = "VeryLazy",
     config = function()
       vim.keymap.set("n", "<Leader>t", ":FloatermToggle<CR>", {})
       vim.keymap.set("t", "<C-t>", "<C-\\><C-n>:FloatermToggle<CR>", {})
@@ -11,6 +12,7 @@ return {
   },
   {
     "kdheepak/lazygit.nvim",
+    event = "VeryLazy",
     dependencies = {
       "nvim-lua/plenary.nvim",
     },

@@ -27,10 +27,13 @@ in
       pkgs.markdownlint-cli # mason
       pkgs.nixfmt-rfc-style # mason
       pkgs.python3 # mason
+      pkgs.python3Packages.pip # mason
       pkgs.shellcheck # mason
       pkgs.statix # mason
       pkgs.unzip # mason
       pkgs.wget # mason
+      pkgs.buf # null-ls
+      pkgs.cue # null-ls
       pkgs.ripgrep # telescope
       pkgs.fd # telescope-filebrowser
       pkgs.gnumake # telescope-fzf
