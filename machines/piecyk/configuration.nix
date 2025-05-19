@@ -252,7 +252,11 @@ rec {
       enable = true;
       dnsOverHttps = {
         enable = true;
-        excludedDomains = [ "rzegocki.dev" ];
+        excludedDomains = [
+          "rzegocki.dev"
+          "deedee.casa"
+          "meemee.casa"
+        ];
         resolver = "https://adguard-meemee.rzegocki.dev/dns-query";
       };
       startupPage = "https://www.rzegocki.dev/";
