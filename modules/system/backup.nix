@@ -107,7 +107,7 @@ in
         description = "Nightly ZFS snapshot timer";
         wantedBy = [ "timers.target" ];
         partOf = [ "backup-snapshot.service" ];
-        timerConfig.OnCalendar = "2:00";
+        timerConfig.OnCalendar = "3:00";
         timerConfig.Persistent = "true";
       };
 

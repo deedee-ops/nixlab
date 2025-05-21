@@ -265,9 +265,9 @@
       }:
       let
         timerConfig = {
-          OnCalendar = "02:05";
+          OnCalendar = "03:05";
           Persistent = true;
-          RandomizedDelaySec = "3h";
+          RandomizedDelaySec = "160m";
         };
         pruneOpts = [
           "--keep-daily 7"
