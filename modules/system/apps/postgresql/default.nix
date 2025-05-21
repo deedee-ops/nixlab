@@ -107,7 +107,7 @@ in
         postgresqlBackup = lib.mkIf cfg.backup {
           enable = true;
           location = backupPath;
-          startAt = "*-*-* 01:00:00";
+          startAt = "*-*-* 02:30:00";
         };
 
         restic.backups = lib.mkIf cfg.backup (
