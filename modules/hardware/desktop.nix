@@ -13,6 +13,7 @@
       kernelModules = [ ];
     };
     kernelModules = [ "kvm-amd" ];
+    kernelParams = [ "amd_pstate=passive" ];
     extraModulePackages = [ ];
   };
 
@@ -23,9 +24,14 @@
   };
 
   # power
-  # on older nvidia drivers it never wakes up properly
   services.logind.extraConfig =
-    lib.optionalString (config.hardware.nvidia.package.version >= "570")
+    if ((config.systemd.targets ? suspend) && !config.systemd.targets.suspend.enable) then
+      ''
+        HandlePowerKey=poweroff
+        IdleAction=poweroff
+        IdleActionSec=5m
+      ''
+    else
       ''
         HandlePowerKey=suspend
         IdleAction=suspend

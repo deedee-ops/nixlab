@@ -46,6 +46,13 @@ rec {
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
     crossBuildSystems = [ "aarch64-linux" ];
+    powerSaveMode = true;
+    powerUSBWhitelist = [
+      "TP-Link Bluetooth USB Adapter"
+      "2.4G Receiver"
+      "Security Key by Yubico"
+      "USB Keyboard"
+    ];
 
     alerts = {
       pushover.enable = true;
@@ -310,7 +317,7 @@ rec {
               mode = "3840x2160";
               position = "0x0";
               primary = true;
-              rate = "119.91";
+              rate = if mySystem.powerSaveMode then "59.94" else "119.91";
             };
             "DP-0" = {
               crtc = 1;
@@ -319,7 +326,7 @@ rec {
               gamma = "1.099:1.0:0.909";
               mode = "3840x2160";
               position = "3840x0";
-              rate = "120.00";
+              rate = if mySystem.powerSaveMode then "59.94" else "120.00";
             };
           };
         };
