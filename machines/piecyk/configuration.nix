@@ -46,6 +46,13 @@ rec {
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
     crossBuildSystems = [ "aarch64-linux" ];
+    powerSaveMode = true;
+    powerUSBWhitelist = [
+      "TP-Link Bluetooth USB Adapter"
+      "2.4G Receiver"
+      "Security Key by Yubico"
+      "USB Keyboard"
+    ];
 
     alerts = {
       pushover.enable = true;

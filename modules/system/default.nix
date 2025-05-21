@@ -17,6 +17,7 @@ _: {
     ./mounts.nix
     ./networking.nix
     ./nix.nix
+    ./power.nix
     ./ssh.nix
     ./time.nix
     ./user.nix

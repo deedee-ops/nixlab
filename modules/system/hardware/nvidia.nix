@@ -67,12 +67,28 @@ in
       '';
     };
 
-    # nvidia cards goes haywire when device is put into sleep
-    systemd.targets = {
+    # nvidia cards with old drivers my go haywire when device is put into sleep
+    systemd.targets = lib.mkIf (config.hardware.nvidia.package.version < "570") {
       sleep.enable = false;
       suspend.enable = false;
       hibernate.enable = false;
       hybrid-sleep.enable = false;
+    };
+
+    systemd.services.nvidia-autotune = lib.mkIf config.mySystem.powerSaveMode {
+      description = "nVIDIA Auto-Tune";
+      wantedBy = [ "multi-user.target" ];
+      path = [
+        config.hardware.nvidia.package
+        pkgs.gawk
+      ];
+      serviceConfig = {
+        Type = "oneshot";
+      };
+
+      script = ''
+        nvidia-smi -pl "$(nvidia-smi -q -d POWER | grep 'Min Power Limit' | grep 'W$' | awk '{print $(NF-1)}')"
+      '';
     };
 
     mySystem.allowUnfree =
