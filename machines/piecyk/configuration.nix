@@ -158,7 +158,7 @@ rec {
         ssh = {
           enable = true;
           host = "nas";
-          targetDir = "/volume1/private/Memories/Private/Firma/%Y/%m/koszty";
+          targetDir = "/volume3/private/Memories/Private/Firma/%Y/%m/koszty";
         };
       };
       pdfhelpers.enable = true;

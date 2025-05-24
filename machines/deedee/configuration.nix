@@ -95,29 +95,29 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/backup/deedee";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/backup/deedee";
         dest = mySystem.backup.local.location;
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume1/retro/retrom";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/retro/retrom";
         dest = mySystemApps.retrom.romsPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume1/media/music";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/media/music";
         dest = mySystemApps.navidrome.musicPath;
         opts = "ro";
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume1/media/youtube";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/media/youtube";
         dest = mySystemApps.pinchflat.downloadsPath;
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume1/media";
+        src = "${config.myInfra.machines.nas.ip}:/volume2/media";
         dest = mySystemApps.radarr.mediaPath;
       }
     ];

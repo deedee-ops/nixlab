@@ -73,7 +73,7 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/backup/meemee";
+        src = "${config.myInfra.machines.nas.ip}:/volume1/backup/meemee";
         dest = mySystem.backup.local.location;
       }
     ];
