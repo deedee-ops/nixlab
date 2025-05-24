@@ -335,6 +335,7 @@ rec {
     };
     yt-dlp.enable = true;
     zathura.enable = true;
+    zoom.enable = true;
     zsh.promptColor = "magenta";
   };
 
