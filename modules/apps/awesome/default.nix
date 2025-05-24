@@ -140,6 +140,7 @@ in
               scrotPath = "${lib.getExe pkgs.scrot}",
               slopPath = "${lib.getExe pkgs.slop}",
               xkillPath = "${lib.getExe pkgs.xorg.xkill}",
+              xsetPath = "${lib.getExe pkgs.xorg.xset}",
 
             	modkey = "${cfg.modKey}",
             	terminal = "${lib.getExe config.myHomeApps.xorg.terminal}",
