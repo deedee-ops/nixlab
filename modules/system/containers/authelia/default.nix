@@ -104,7 +104,7 @@ in
     virtualisation.oci-containers.containers.authelia = svc.mkContainer {
       cfg = {
         dependsOn = [ "lldap" ];
-        image = "ghcr.io/deedee-ops/authelia:4.39.3@sha256:0a922cde10da64ea4462e4d6d12c15a5151d1aaa80d5e683850458e6c4f263b1";
+        image = "ghcr.io/deedee-ops/authelia:4.39.4@sha256:7d15e8cecdc03e52b5e5d141412e86b07103330560248779f11b2823c5766235";
         environment = {
           AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
           AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
