@@ -48,7 +48,9 @@ in
 
       script =
         ''
-          ${pkgs.powertop}/bin/powertop --auto-tune
+          set +e
+          ${pkgs.powertop}/bin/powertop --auto-tune || true
+          sleep 2
 
         ''
         + (builtins.concatStringsSep "\n" (

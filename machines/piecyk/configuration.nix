@@ -48,10 +48,11 @@ rec {
     crossBuildSystems = [ "aarch64-linux" ];
     powerSaveMode = true;
     powerUSBWhitelist = [
-      "TP-Link Bluetooth USB Adapter"
+      "Bluetooth USB Adapter"
       "2.4G Receiver"
       "Security Key by Yubico"
       "USB Keyboard"
+      "HD 350BT"
     ];
 
     alerts = {
