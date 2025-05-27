@@ -35,6 +35,7 @@ in
           ND_COVERARTPRIORITY = "folder.*, cover.*, front.*";
           ND_DEFAULTLANGUAGE = "en";
           ND_ENABLEINSIGHTSCOLLECTOR = "false";
+          ND_PID_ALBUM = "folder";
           ND_REVERSEPROXYUSERHEADER = "Remote-User";
           ND_REVERSEPROXYWHITELIST = "172.16.0.0/12";
           ND_SCANNER_GROUPALBUMRELEASES = "true";
