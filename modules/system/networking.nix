@@ -102,6 +102,8 @@ in
       }
     ];
 
+    boot.kernelParams = [ "ipv6.disable=1" ];
+
     networking = {
       inherit (cfg) extraHosts;
 
