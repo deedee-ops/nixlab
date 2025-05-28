@@ -22,18 +22,23 @@ let
       "network.dns.force_waiting_https_rr" = false;
       "network.dns.upgrade_with_https_rr" = false;
       "network.dns.use_https_rr_as_altsvc" = false;
+      "network.security.esni.enabled" = false;
+      "network.trr.custom_uri" = "";
+      "network.trr.default_provider_uri" = "";
+      "network.trr.excluded-domains" = "";
       "network.trr.mode" = 5;
+      "network.trr.uri" = "";
     }
     // lib.optionalAttrs cfg.dnsOverHttps.enable {
       # Variant B: force DNS over HTTPS
       "network.dns.echconfig.enabled" = true;
       "network.dns.use_https_rr_as_altsvc" = true;
       "network.security.esni.enabled" = true;
-      "network.trr.mode" = 3;
-      "network.trr.default_provider_uri" = cfg.dnsOverHttps.resolver;
       "network.trr.custom_uri" = cfg.dnsOverHttps.resolver;
-      "network.trr.uri" = cfg.dnsOverHttps.resolver;
+      "network.trr.default_provider_uri" = cfg.dnsOverHttps.resolver;
       "network.trr.excluded-domains" = builtins.concatStringsSep "," cfg.dnsOverHttps.excludedDomains;
+      "network.trr.mode" = 3;
+      "network.trr.uri" = cfg.dnsOverHttps.resolver;
     }
     // {
       # startup
