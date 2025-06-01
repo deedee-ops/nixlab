@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.roundcube = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/roundcube:1.6.10@sha256:e932fb8955023c3ed71b259537be0d22a55443b3ef783b1cc4bfd4c3b66e24b6";
+        image = "ghcr.io/deedee-ops/roundcube:1.6.11@sha256:809dbe987a8c8a63aa7075f4b6a95cd12008316a62cbcb397777b659fa3438c5";
         volumes = [ "${cfg.dataDir}/roundcube:/config" ];
         extraOptions = [
           "--mount"
