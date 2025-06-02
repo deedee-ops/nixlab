@@ -41,7 +41,7 @@ in
 
     virtualisation.oci-containers.containers.audiobookshelf = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/advplyr/audiobookshelf:2.23.0@sha256:2d8bee3e87e860d67e11e13b5c42d97cb1fe071de53dea5502b3a9292e75e024";
+        image = "ghcr.io/advplyr/audiobookshelf:2.24.0@sha256:4e3ea23c551706c6d7934e2b48e9c4015a60ef5d70f965d3f4e5b68d59ef6c95";
         user = "65000:65000";
         environment = {
           PORT = "3000";
