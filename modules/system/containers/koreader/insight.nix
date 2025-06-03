@@ -66,6 +66,7 @@ in
 
     mySystemApps.homepage = {
       services.Apps.KoInsight = svc.mkHomepage "koinsight" // {
+        icon = "ko-insight.svg";
         description = "KoReader statistics";
       };
     };
