@@ -50,6 +50,7 @@ _: {
     ./telegram
     ./thunderbird
     ./ticktick
+    ./ulauncher
     ./whatsie
     ./workrave
     ./yazi
