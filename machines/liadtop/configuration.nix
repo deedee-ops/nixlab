@@ -269,7 +269,7 @@ rec {
     xorg = {
       autorandr = { };
       mapRightCtrlToAltGr = true;
-      terminal = pkgs.kitty;
+      terminal = pkgs.ghostty;
       trackpadSupport = true;
     };
     yt-dlp.enable = true;

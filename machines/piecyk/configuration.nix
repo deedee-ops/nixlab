@@ -315,7 +315,7 @@ rec {
           };
         };
       };
-      terminal = pkgs.kitty;
+      terminal = pkgs.ghostty;
     };
     yt-dlp.enable = true;
     zathura.enable = true;

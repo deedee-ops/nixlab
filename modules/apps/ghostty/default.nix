@@ -6,17 +6,6 @@
 }:
 let
   cfg = config.myHomeApps.ghostty;
-
-  toGhosttyConfig = lib.generators.toKeyValue {
-    mkKeyValue =
-      key: value:
-      if builtins.isList value then
-        builtins.concatStringsSep "\n" (builtins.map (v: "${key} = ${v}") value)
-      else
-        "${key} = ${
-          if builtins.isBool value then (if value then "true" else "false") else (builtins.toString value)
-        }";
-  };
 in
 {
   options.myHomeApps.ghostty = {
@@ -24,14 +13,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      (pkgs.ghostty.overrideAttrs (oldAttrs: {
-        zigBuildFlags = oldAttrs.zigBuildFlags + " -Dsentry=false";
-      }))
-    ];
+    programs.ghostty = {
+      enable = true;
+      enableZshIntegration = true;
 
-    xdg.configFile = {
-      "ghostty/config".text = toGhosttyConfig {
+      package = pkgs.ghostty.overrideAttrs (oldAttrs: {
+        zigBuildFlags = oldAttrs.zigBuildFlags ++ [ "-Dsentry=false" ];
+      });
+
+      settings = {
         theme = "catppuccin-mocha";
         background-opacity = config.stylix.opacity.terminal;
         font-size = config.stylix.fonts.sizes.terminal;
