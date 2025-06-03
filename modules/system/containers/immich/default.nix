@@ -14,22 +14,25 @@ let
     "OIDC_SECRET_RAW"
   ];
 
-  dockerEnv = {
-    DB_DATABASE_NAME = "immich";
-    DB_HOSTNAME = "host.docker.internal";
-    DB_USERNAME = "immich";
-    IMMICH_CONFIG_FILE = "/config/config.json";
-    IMMICH_ENV = "production";
-    IMMICH_MACHINE_LEARNING_URL = "http://immich-machine-learning:3003";
-    IMMICH_MEDIA_LOCATION = "/data";
-    IMMICH_SERVER_URL = "http://immich-server:2283";
-    MPLCONFIGDIR = "/cache/matplotlib";
-    NODE_ENV = "production";
-    REDIS_HOSTNAME = "host.docker.internal";
-    REDIS_PASSWORD_FILE = "/secrets/REDIS_PASSWORD";
-    REDIS_PORT = "6382";
-    TRANSFORMERS_CACHE = "/cache";
-  } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+  dockerEnv =
+    {
+      DB_DATABASE_NAME = "immich";
+      DB_HOSTNAME = "host.docker.internal";
+      DB_USERNAME = "immich";
+      IMMICH_CONFIG_FILE = "/config/config.json";
+      IMMICH_ENV = "production";
+      IMMICH_MACHINE_LEARNING_URL = "http://immich-machine-learning:3003";
+      IMMICH_MEDIA_LOCATION = "/data";
+      IMMICH_SERVER_URL = "http://immich-server:2283";
+      MPLCONFIGDIR = "/cache/matplotlib";
+      NODE_ENV = "production";
+      REDIS_HOSTNAME = "host.docker.internal";
+      REDIS_PASSWORD_FILE = "/secrets/REDIS_PASSWORD";
+      REDIS_PORT = "6382";
+      TRANSFORMERS_CACHE = "/cache";
+    }
+    // svc.mkContainerSecretsEnv { inherit secretEnvs; }
+    // lib.optionalAttrs config.mySystem.networking.completelyDisableIPV6 { IMMICH_HOST = "0.0.0.0"; };
 in
 {
   imports = [

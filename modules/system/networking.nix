@@ -12,6 +12,11 @@ in
     enable = lib.mkEnableOption "system networking";
     firewallEnable = lib.mkEnableOption "firewall";
     wifiSupport = lib.mkEnableOption "WiFi support";
+    completelyDisableIPV6 = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "When enabled, kills IPV6 on kernel level (meaning, it's not even available as sysctl).";
+    };
     hostname = lib.mkOption {
       type = lib.types.str;
       description = "Machine hostname.";
@@ -102,14 +107,14 @@ in
       }
     ];
 
-    boot.kernelParams = [ "ipv6.disable=1" ];
+    boot.kernelParams = lib.mkIf cfg.completelyDisableIPV6 [ "ipv6.disable=1" ];
 
     networking = {
       inherit (cfg) extraHosts;
 
       hostName = cfg.hostname;
       dhcpcd.enable = false;
-      enableIPv6 = false;
+      enableIPv6 = !cfg.completelyDisableIPV6;
       firewall = {
         enable = cfg.firewallEnable;
         checkReversePath =
@@ -182,12 +187,15 @@ in
                 };
                 "1003-br0-up" = {
                   matchConfig.Name = "br0";
-                  networkConfig = {
-                    inherit (cfg.mainInterface) DNS;
+                  networkConfig =
+                    {
+                      inherit (cfg.mainInterface) DNS;
 
-                    DHCP = "ipv4";
-                    LinkLocalAddressing = "ipv4"; # disable ipv6
-                  };
+                      DHCP = "ipv4";
+                    }
+                    // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                      LinkLocalAddressing = "ipv4"; # disable ipv6
+                    };
                   dhcpV4Config = {
                     UseDomains = true;
                   } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
@@ -202,12 +210,15 @@ in
                 {
                   "50-${cfg.mainInterface.name}" = {
                     matchConfig.Name = cfg.mainInterface.name;
-                    networkConfig = {
-                      inherit (cfg.mainInterface) DNS;
+                    networkConfig =
+                      {
+                        inherit (cfg.mainInterface) DNS;
 
-                      DHCP = "ipv4";
-                      LinkLocalAddressing = "ipv4"; # disable ipv6
-                    };
+                        DHCP = "ipv4";
+                      }
+                      // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                        LinkLocalAddressing = "ipv4"; # disable ipv6
+                      };
                     dhcpV4Config = {
                       UseDomains = true;
                     } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
@@ -217,12 +228,15 @@ in
                 // lib.optionalAttrs (cfg.secondaryInterface != null) {
                   "55-${cfg.secondaryInterface.name}" = {
                     matchConfig.Name = cfg.secondaryInterface.name;
-                    networkConfig = {
-                      inherit (cfg.secondaryInterface) DNS;
+                    networkConfig =
+                      {
+                        inherit (cfg.secondaryInterface) DNS;
 
-                      DHCP = "ipv4";
-                      LinkLocalAddressing = "ipv4"; # disable ipv6
-                    };
+                        DHCP = "ipv4";
+                      }
+                      // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                        LinkLocalAddressing = "ipv4"; # disable ipv6
+                      };
                     dhcpV4Config = {
                       UseDomains = true;
                     } // lib.optionalAttrs (cfg.secondaryInterface.DNS != null) { UseDNS = false; };

@@ -71,6 +71,7 @@ rec {
       enable = true;
       wifiSupport = true;
       firewallEnable = true;
+      completelyDisableIPV6 = true;
       hostname = "liadtop";
       mainInterface = {
         name = "wlp1s0";

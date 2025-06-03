@@ -55,6 +55,7 @@ rec {
     networking = {
       enable = true;
       firewallEnable = false;
+      completelyDisableIPV6 = true;
       hostname = "monkey";
       mainInterface = {
         name = "eno1";

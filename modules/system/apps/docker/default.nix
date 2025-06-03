@@ -149,7 +149,7 @@ in
               environment = {
                 CONTAINERS = "1";
                 POST = "0";
-              };
+              } // lib.optionalAttrs config.mySystem.networking.completelyDisableIPV6 { DISABLE_IPV6 = "1"; };
               ports = [ "127.0.0.1:2375:2375" ];
               volumes = [ "/var/run/docker.sock:/var/run/docker.sock:ro" ]; # in rootless mode, socket lives under /run/<user id>/....
             };

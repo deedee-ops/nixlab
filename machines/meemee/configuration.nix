@@ -81,6 +81,7 @@ rec {
     networking = {
       enable = true;
       firewallEnable = true;
+      completelyDisableIPV6 = true;
       hostname = "meemee";
       mainInterface = {
         name = "enp3s0";

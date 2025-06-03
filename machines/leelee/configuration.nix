@@ -40,6 +40,7 @@ _: rec {
     networking = {
       enable = true;
       firewallEnable = true;
+      completelyDisableIPV6 = true;
       hostname = "leelee";
       mainInterface = {
         name = "enp5s0";

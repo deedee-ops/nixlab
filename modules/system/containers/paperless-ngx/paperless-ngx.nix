@@ -48,37 +48,42 @@ in
           "gotenberg"
           "tika"
         ];
-        environment = {
-          # s6 nonsense
-          USERMAP_UID = "65000";
-          USERMAP_GID = "65000";
+        environment =
+          {
+            # s6 nonsense
+            USERMAP_UID = "65000";
+            USERMAP_GID = "65000";
 
-          PAPERLESS_ALLOWED_HOSTS = "*";
-          PAPERLESS_CONSUMER_POLLING = "0"; # use ionotify
-          PAPERLESS_CONSUMER_RECURSIVE = "true";
-          PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS = "true";
-          PAPERLESS_CONSUMPTION_DIR = "/data/consume";
-          PAPERLESS_DATA_DIR = "/config";
-          PAPERLESS_DBHOST = "host.docker.internal";
-          PAPERLESS_DBNAME = "paperless";
-          PAPERLESS_DBPORT = "5432";
-          PAPERLESS_DBSSLMODE = "prefer";
-          PAPERLESS_DBUSER = "paperless";
-          PAPERLESS_ENABLE_HTTP_REMOTE_USER = "true";
-          PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME = "HTTP_REMOTE_USER";
-          PAPERLESS_MEDIA_ROOT = "/data/media";
-          PAPERLESS_OCR_LANGUAGE = "eng+pol";
-          PAPERLESS_OCR_LANGUAGES = "pol";
-          PAPERLESS_OCR_USER_ARGS = "{\"invalidate_digital_signatures\": true}";
-          PAPERLESS_PORT = "8000";
-          PAPERLESS_SUPERVISORD_WORKING_DIR = "/tmp";
-          PAPERLESS_TASK_WORKERS = "2";
-          PAPERLESS_TIKA_ENABLED = "1";
-          PAPERLESS_TIKA_ENDPOINT = "http://tika:9998";
-          PAPERLESS_TIKA_GOTENBERG_ENDPOINT = "http://gotenberg:3000";
-          PAPERLESS_TIME_ZONE = config.mySystem.time.timeZone;
-          PAPERLESS_URL = "https://paperless.${config.mySystem.rootDomain}";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+            PAPERLESS_ALLOWED_HOSTS = "*";
+            PAPERLESS_CONSUMER_POLLING = "0"; # use ionotify
+            PAPERLESS_CONSUMER_RECURSIVE = "true";
+            PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS = "true";
+            PAPERLESS_CONSUMPTION_DIR = "/data/consume";
+            PAPERLESS_DATA_DIR = "/config";
+            PAPERLESS_DBHOST = "host.docker.internal";
+            PAPERLESS_DBNAME = "paperless";
+            PAPERLESS_DBPORT = "5432";
+            PAPERLESS_DBSSLMODE = "prefer";
+            PAPERLESS_DBUSER = "paperless";
+            PAPERLESS_ENABLE_HTTP_REMOTE_USER = "true";
+            PAPERLESS_HTTP_REMOTE_USER_HEADER_NAME = "HTTP_REMOTE_USER";
+            PAPERLESS_MEDIA_ROOT = "/data/media";
+            PAPERLESS_OCR_LANGUAGE = "eng+pol";
+            PAPERLESS_OCR_LANGUAGES = "pol";
+            PAPERLESS_OCR_USER_ARGS = "{\"invalidate_digital_signatures\": true}";
+            PAPERLESS_PORT = "8000";
+            PAPERLESS_SUPERVISORD_WORKING_DIR = "/tmp";
+            PAPERLESS_TASK_WORKERS = "2";
+            PAPERLESS_TIKA_ENABLED = "1";
+            PAPERLESS_TIKA_ENDPOINT = "http://tika:9998";
+            PAPERLESS_TIKA_GOTENBERG_ENDPOINT = "http://gotenberg:3000";
+            PAPERLESS_TIME_ZONE = config.mySystem.time.timeZone;
+            PAPERLESS_URL = "https://paperless.${config.mySystem.rootDomain}";
+          }
+          // svc.mkContainerSecretsEnv { inherit secretEnvs; }
+          // lib.optionalAttrs config.mySystem.networking.completelyDisableIPV6 {
+            PAPERLESS_BIND_ADDR = "0.0.0.0";
+          };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

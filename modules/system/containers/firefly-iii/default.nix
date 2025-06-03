@@ -90,6 +90,9 @@ in
             "${
               config.sops.secrets."${config.mySystemApps.redis.passFileSopsSecret}".path
             }:/secrets/REDIS_PASSWORD:ro"
+          ]
+          ++ lib.optionals config.mySystem.networking.completelyDisableIPV6 [
+            "${pkgs.writeText "0-disable-ipv6.sh" "sed -i'' 's@listen \\[::\\].*@@g' /etc/nginx/site-opts.d/*"}:/etc/entrypoint.d/0-disable-ipv6.sh"
           ];
       };
       opts = {

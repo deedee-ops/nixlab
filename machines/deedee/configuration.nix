@@ -125,6 +125,7 @@ rec {
     networking = {
       enable = true;
       firewallEnable = true;
+      completelyDisableIPV6 = true;
       hostname = "deedee";
       mainInterface = {
         name = "enp89s0";
@@ -219,11 +220,6 @@ rec {
     rustdesk = {
       enable = true;
       relayHost = "relay.${mySystem.rootDomain}";
-    };
-    tailscale = {
-      enable = true;
-      advertiseRoutes = [ config.myInfra.cidrs.trusted ];
-      # autoProvision = true;
     };
 
     # containers

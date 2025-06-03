@@ -87,6 +87,7 @@ rec {
     networking = {
       enable = true;
       firewallEnable = true;
+      completelyDisableIPV6 = true;
       hostname = "piecyk";
       mainInterface = {
         name = "enp6s0";
