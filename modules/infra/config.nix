@@ -46,11 +46,6 @@ _: {
         ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
-      meemee = {
-        ip = "10.100.20.2";
-        ssh = "meemee.home.arpa:22";
-        host = "meemee.home.arpa";
-      };
       leelee = {
         ip = "10.100.30.3";
         ssh = "leelee.home.arpa:22";

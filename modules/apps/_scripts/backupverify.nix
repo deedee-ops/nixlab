@@ -59,16 +59,6 @@ in
           else
             usage
           fi
-        elif [ "$machine" = "meemee" ]; then
-          if [ "$region" = "eu" ]; then
-            BASE_RESTIC_REPO="rest:https://x49pyrz3.repo.borgbase.com/"
-          elif [ "$region" = "us" ]; then
-            BASE_RESTIC_REPO="rest:https://rr742mx3.repo.borgbase.com/"
-          elif [ "$region" = "local" ]; then
-            BASE_RESTIC_REPO="/mnt/local/meemee/"
-          else
-            usage
-          fi
         else
           usage
         fi

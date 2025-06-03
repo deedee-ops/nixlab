@@ -217,15 +217,6 @@ rec {
             port = 2222;
             user = "git";
           };
-          meemee = {
-            forwardAgent = true;
-            host = "meemee";
-            hostname = "meemee.home.arpa";
-            identitiesOnly = true;
-            identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = 22;
-            user = "ajgon";
-          };
           nas = {
             forwardAgent = false;
             host = "nas";

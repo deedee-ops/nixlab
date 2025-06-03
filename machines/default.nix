@@ -10,7 +10,6 @@
     ./deedee
     ./leelee
     ./liadtop
-    ./meemee
     ./monkey
     ./piecyk
   ];

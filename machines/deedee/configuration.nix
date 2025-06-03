@@ -283,16 +283,6 @@ rec {
         DATA = "/";
       };
       subdomain = "deedee";
-      services.Hosts = {
-        deedee = {
-          icon = "netboot.svg";
-          href = "https://deedee.${mySystem.rootDomain}";
-        };
-        meemee = {
-          icon = "netboot.svg";
-          href = "https://meemee.${mySystem.rootDomain}";
-        };
-      };
     };
     immich = {
       inherit photosPath;
