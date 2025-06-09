@@ -206,9 +206,6 @@ rec {
       inherit (mySystem) rootDomain;
 
       enable = true;
-      extraVHosts = {
-        unifi.target = "https://${config.myInfra.machines.unifi.ip}";
-      };
       extraRedirects = {
         gw = "http://${config.myInfra.machines.gateway.ip}";
         www = "https://deedee.${mySystem.rootDomain}";
