@@ -31,6 +31,10 @@ let
         install_url = "https://raw.githubusercontent.com/catppuccin/thunderbird/main/themes/mocha/mocha-blue.xpi";
         installation_mode = "force_installed";
       };
+      "thunderai@micz.it" = {
+        install_url = "https://services.addons.thunderbird.net/thunderbird/downloads/latest/thunderai/addon-988699-latest.xpi";
+        installation_mode = "force_installed";
+      };
     };
   };
 in
