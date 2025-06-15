@@ -262,7 +262,6 @@ rec {
     telegram.enable = true;
     thunderbird.enable = true;
     ticktick.enable = true;
-    ulauncher.enable = true;
     wakatime = {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
