@@ -64,7 +64,7 @@ in
     virtualisation.oci-containers.containers = {
       forgejo = svc.mkContainer {
         cfg = {
-          image = "codeberg.org/forgejo/forgejo:11.0.1-rootless@sha256:97b544c9bf4ff13c034a6a8319feffe822ff4f5f73d5bd03dbca3fdeaae0c2ac";
+          image = "codeberg.org/forgejo/forgejo:11.0.2-rootless@sha256:040cda466b6e8b067a9eb7dd88b090333d69ca51d6ac80c0dc964c1ef12f1810";
           environment =
             {
               FORGEJO__actions__ENABLED = if cfg.enableRunner then "true" else "false";
