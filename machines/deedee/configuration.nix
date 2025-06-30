@@ -1,8 +1,4 @@
 { config, ... }:
-let
-  mediaPath = "/mnt/media";
-  photosPath = "${mediaPath}/photos";
-in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
@@ -231,9 +227,8 @@ rec {
       subdomain = "deedee";
     };
     immich = {
-      inherit photosPath;
       enable = true;
-      dataPath = "/mnt/media/immich";
+      dataPath = "/tank/immich";
     };
     lldap.enable = true;
     maddy.enable = true;

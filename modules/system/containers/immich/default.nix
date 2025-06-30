@@ -67,8 +67,9 @@ in
       description = "Path to directory containing immich data (mostly thumbnails).";
     };
     photosPath = lib.mkOption {
-      type = lib.types.str;
-      description = "Path to directory containing photos.";
+      type = lib.types.nullOr lib.types.str;
+      description = "Path to directory containing photos to import. Disabled if null.";
+      default = null;
     };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
@@ -157,7 +158,7 @@ in
     };
 
     mySystemApps.homepage = {
-      services.Media.Immich = svc.mkHomepage "immich" // {
+      services.Apps.Immich = svc.mkHomepage "immich" // {
         container = "immich-server";
         description = "Photos library";
         widget = {

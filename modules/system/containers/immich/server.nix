@@ -36,8 +36,8 @@ in
             }:/secrets/REDIS_PASSWORD:ro"
             "/run/immich/config.json:/config/config.json:ro"
             "${cfg.dataPath}:/data"
-            "${cfg.photosPath}:/external:ro"
-          ];
+          ]
+          ++ lib.optionals (cfg.photosPath != null) [ "${cfg.photosPath}:/external:ro" ];
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
