@@ -190,16 +190,6 @@ rec {
     # containers
     atuin.enable = true;
     authelia.enable = true;
-    beszel = {
-      enable = true;
-      mode = "both";
-      rootFs = "/extra-filesystems/persist";
-      monitoredFilesystems = {
-        nix = "/nix";
-        persist = "/persist";
-        webdav = "/tank/webdav";
-      };
-    };
     coredns.enable = true;
     crypt.enable = true;
     davis = {
@@ -211,7 +201,6 @@ rec {
       webdavDirBackup = false;
       useAuthelia = true;
     };
-    echo-server.enable = false;
     firefoxsync.enable = true;
     firefly-iii.enable = true;
     forgejo = {
@@ -234,27 +223,7 @@ rec {
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;
-    netbox.enable = true;
     paperless-ngx.enable = true;
-    redlib.enable = true;
-    sshwifty = {
-      enable = true;
-      presets =
-        builtins.map
-          (name: {
-            title = name;
-            host = config.myInfra.machines."${name}".ssh;
-            user = mySystem.primaryUser;
-            privateKeyName = "personal";
-          })
-          (
-            builtins.filter (name: config.myInfra.machines."${name}".ssh != null) (
-              builtins.attrNames config.myInfra.machines
-            )
-          );
-      secretKeys = [ "personal" ];
-      onlyAllowPresetRemotes = false;
-    };
     syncthing.enable = true;
     tika.enable = true;
     upsnap = {

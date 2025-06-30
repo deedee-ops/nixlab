@@ -120,18 +120,6 @@ rec {
       enable = true;
       windowManager = "awesome";
     };
-
-    # containers
-    beszel = {
-      enable = true;
-      mode = "agent";
-      gpuMode = "nvidia";
-      rootFs = "/extra-filesystems/persist";
-      monitoredFilesystems = {
-        nix = "/nix";
-        persist = "/persist";
-      };
-    };
   };
 
   myHomeApps = {
