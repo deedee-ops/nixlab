@@ -1,13 +1,7 @@
 { config, ... }:
 let
   mediaPath = "/mnt/media";
-  audiobooksPath = "${mediaPath}/audiobooks";
-  booksPath = "${mediaPath}/books";
   photosPath = "${mediaPath}/photos";
-  podcastsPath = "${mediaPath}/podcasts";
-  torrentsPath = "${mediaPath}/torrents";
-  videoPath = "${mediaPath}/video";
-  youtubePath = "${mediaPath}/youtube";
 in
 rec {
   sops = {
@@ -97,28 +91,6 @@ rec {
         type = "nfs";
         src = "${config.myInfra.machines.nas.ip}:/volume1/backup/deedee";
         dest = mySystem.backup.local.location;
-      }
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/retro/retrom";
-        dest = mySystemApps.retrom.romsPath;
-        opts = "ro";
-      }
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/media/music";
-        dest = mySystemApps.navidrome.musicPath;
-        opts = "ro";
-      }
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/media/youtube";
-        dest = mySystemApps.pinchflat.downloadsPath;
-      }
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume2/media";
-        dest = mySystemApps.radarr.mediaPath;
       }
     ];
 
@@ -221,15 +193,7 @@ rec {
 
     # containers
     atuin.enable = true;
-    audiobookshelf = {
-      inherit audiobooksPath podcastsPath;
-      enable = true;
-    };
     authelia.enable = true;
-    bazarr = {
-      inherit videoPath;
-      enable = true;
-    };
     beszel = {
       enable = true;
       mode = "both";
@@ -239,12 +203,6 @@ rec {
         persist = "/persist";
         webdav = "/tank/webdav";
       };
-    };
-    bitmagnet.enable = true;
-    calibre-web-automated = {
-      inherit booksPath;
-
-      enable = true;
     };
     coredns.enable = true;
     crypt.enable = true;
@@ -264,15 +222,6 @@ rec {
       enable = true;
       enableRunner = true;
     };
-    gatus = {
-      enable = true;
-      alertEmails = [ "admin@ajgon.ovh" ];
-    };
-    gluetun = {
-      enable = true;
-      externalDomain = "deedee.airdns.org";
-      forwardedPort = 17307;
-    };
     homepage = {
       enable = true;
       title = "deedee";
@@ -286,44 +235,13 @@ rec {
       enable = true;
       dataPath = "/mnt/media/immich";
     };
-    jellyfin = {
-      inherit videoPath youtubePath;
-      enable = true;
-    };
-    koreader.enable = true;
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;
-    navidrome = {
-      enable = true;
-      musicPath = "/mnt/music";
-    };
     netbox.enable = true;
     paperless-ngx.enable = true;
-    pinchflat = {
-      enable = true;
-      downloadsPath = youtubePath;
-    };
-    prowlarr.enable = true;
-    qbittorrent = {
-      enable = true;
-      downloadsPath = torrentsPath;
-    };
-    radarr = {
-      inherit mediaPath;
-      enable = true;
-    };
-    recyclarr.enable = true;
     redlib.enable = true;
-    retrom = {
-      enable = true;
-      romsPath = "/mnt/retro";
-    };
-    sonarr = {
-      inherit mediaPath;
-      enable = true;
-    };
     sshwifty = {
       enable = true;
       presets =
@@ -348,7 +266,6 @@ rec {
       enable = true;
       subdomain = "upsnap-deedee";
     };
-    vikunja.enable = false;
     wakapi.enable = true;
     wallos.enable = true;
     whoogle.enable = true;
