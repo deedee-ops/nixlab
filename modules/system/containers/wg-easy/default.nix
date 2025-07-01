@@ -60,7 +60,7 @@ in
 
     virtualisation.oci-containers.containers.wg-easy = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/wg-easy/wg-easy:15@sha256:07ed8f95eeeb4082c2e6afe3f5f3991723f496a21dd2dc25860b119a728b9ab0";
+        image = "ghcr.io/wg-easy/wg-easy:15@sha256:bb8152762c36f824eb42bb2f3c5ab8ad952818fbef677d584bc69ec513b251b0";
         environment = {
           LANG = "en";
           PORT = "51821";
