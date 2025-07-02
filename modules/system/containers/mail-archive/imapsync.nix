@@ -16,7 +16,7 @@ let
   ];
 in
 {
-  config = lib.mkIf cfg.enable {
+  config = lib.mkIf (cfg.enable && !config.mySystem.recoveryMode) {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for mail-archive are disabled!") ];
 
     sops.secrets = svc.mkContainerSecretsSops {

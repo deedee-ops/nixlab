@@ -13,6 +13,7 @@ rec {
   };
 
   mySystem = {
+    recoveryMode = false;
     purpose = "Homelab";
     filesystem = "zfs";
     primaryUser = "ajgon";
@@ -29,11 +30,6 @@ rec {
     autoUpgrade.enable = true;
 
     backup = {
-      local = {
-        enable = true;
-        location = "/mnt/backup";
-        passFileSopsSecret = "backups/restic/local/password";
-      };
       remotes = [
         {
           name = "borgbase-eu";
@@ -54,15 +50,18 @@ rec {
       enable = true;
       hostId = "d732cc87";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897" ];
+      systemDiskDevs = [ "/dev/disk/by-id/nvme-Patriot_M.2_P300_256GB_P300NDBB24031803163" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
         };
       };
-      tankDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
+      tankDiskDevs = [ "/dev/disk/by-id/ata-GOODRAM_5A67076819FC00008569" ];
       tankDatasets = {
+        media = {
+          type = "zfs_fs";
+        };
         webdav = {
           type = "zfs_fs";
         };
@@ -82,21 +81,13 @@ rec {
       zfsPool = "tank";
     };
 
-    mounts = [
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.nas.ip}:/volume1/backup/deedee";
-        dest = mySystem.backup.local.location;
-      }
-    ];
-
     networking = {
       enable = true;
       firewallEnable = true;
       completelyDisableIPV6 = true;
       hostname = "deedee";
       mainInterface = {
-        name = "enp89s0";
+        name = "eno1";
         bridge = true;
         bridgeMAC = "02:00:0a:64:14:01";
       };
@@ -119,8 +110,6 @@ rec {
   };
 
   mySystemApps = {
-    ddclient.enable = true;
-
     docker = {
       enable = true;
       rootless = false;
@@ -182,16 +171,12 @@ rec {
 
     postgresql.enable = true;
     redis.enable = true;
-    rustdesk = {
-      enable = true;
-      relayHost = "relay.${mySystem.rootDomain}";
-    };
 
     # containers
     atuin.enable = true;
     authelia.enable = true;
     coredns.enable = true;
-    crypt.enable = true;
+    # crypt.enable = true;
     davis = {
       enable = true;
       carddavEnable = true;
@@ -215,10 +200,10 @@ rec {
       };
       subdomain = "deedee";
     };
-    immich = {
-      enable = true;
-      dataPath = "/tank/immich";
-    };
+    # immich = {
+    #   enable = true;
+    #   dataPath = "/tank/immich";
+    # };
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
@@ -226,10 +211,7 @@ rec {
     paperless-ngx.enable = true;
     syncthing.enable = true;
     tika.enable = true;
-    upsnap = {
-      enable = true;
-      subdomain = "upsnap-deedee";
-    };
+    upsnap.enable = true;
     wakapi.enable = true;
     wallos.enable = true;
     whoogle.enable = true;
@@ -245,5 +227,5 @@ rec {
     zsh.promptColor = "yellow";
   };
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.11";
 }

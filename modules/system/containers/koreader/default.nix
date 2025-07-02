@@ -24,7 +24,7 @@ in
       default = "/var/lib/koreader";
     };
   };
-  config = {
+  config = lib.mkIf cfg.enable {
     services = {
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {

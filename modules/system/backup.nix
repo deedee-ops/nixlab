@@ -77,9 +77,9 @@ in
     ];
 
     sops.secrets =
-      {
+      (lib.optionalAttrs cfg.local.enable {
         "${cfg.local.passFileSopsSecret}" = { };
-      }
+      })
       // builtins.listToAttrs (
         builtins.map (remote: {
           name = remote.passFileSopsSecret;
