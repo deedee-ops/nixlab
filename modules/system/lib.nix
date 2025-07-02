@@ -258,7 +258,7 @@
     mkRestic =
       {
         name,
-        paths,
+        paths ? [ ],
         keepRemote ? true,
         fullPaths ? [ ],
         excludePaths ? [ ],

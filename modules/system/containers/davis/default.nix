@@ -99,23 +99,11 @@ in
         restic.backups = lib.mkIf cfg.backup (
           svc.mkRestic {
             name = "davis";
-            paths = [
-              cfg.dataDir
-            ] ++ lib.optionals (lib.strings.hasPrefix cfg.dataDir cfg.webdavDir) [ cfg.webdavDir ];
+            fullPaths = lib.optionals cfg.webdavDirBackup [ cfg.webdavDir ];
+            paths = [ cfg.dataDir ];
           }
         );
       };
-
-      mySystem.backup.extraBackupDatasets =
-        lib.optionals (config.mySystem.filesystem == "zfs" && cfg.webdavDirBackup)
-          [
-            (
-              if lib.strings.hasPrefix "/" cfg.webdavDir then
-                builtins.substring 1 100000 cfg.webdavDir
-              else
-                cfg.webdavDir
-            )
-          ];
 
       systemd.services.docker-davis = {
         preStart = lib.mkAfter ''

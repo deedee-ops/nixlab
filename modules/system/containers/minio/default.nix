@@ -126,7 +126,7 @@ in
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {
           name = "minio";
-          paths = builtins.map (bucket: cfg.dataPath + "/" + bucket.name) (
+          fullPaths = builtins.map (bucket: cfg.dataPath + "/" + bucket.name) (
             builtins.filter (bucket: bucket.backup) cfg.buckets
           );
         }
@@ -200,7 +200,8 @@ in
                     config.sops.secrets."${cfg.sopsSecretPrefix}/MINIO_USER_${bucket.owner}_PASSWORD".path
                   })"
                   mc admin policy attach minio "${bucket.name}-rw" --user "${bucket.owner}"
-                '' + lib.optionalString bucket.public ''
+                ''
+                + lib.optionalString bucket.public ''
                   mc anonymous set download "minio/${bucket.name}"
                 ''
               )
