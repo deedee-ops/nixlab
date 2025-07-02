@@ -34,7 +34,7 @@ jobs:
           persist-credentials: false
 
       - name: Flake Check
-        run: nix flake check --fallback
+        run: nix --accept-flake-config flake check --fallback
 
       - name: Build and push to cache
         env:
