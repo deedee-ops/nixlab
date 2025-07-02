@@ -31,6 +31,7 @@ _: {
     ./matchbox
     ./memos
     ./miniflux
+    ./minio
     ./navidrome
     ./netbox
     ./open-webui

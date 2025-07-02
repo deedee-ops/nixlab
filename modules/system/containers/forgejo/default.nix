@@ -65,6 +65,7 @@ in
       forgejo = svc.mkContainer {
         cfg = {
           image = "codeberg.org/forgejo/forgejo:11.0.2-rootless@sha256:040cda466b6e8b067a9eb7dd88b090333d69ca51d6ac80c0dc964c1ef12f1810";
+          dependsOn = lib.optionals config.mySystemApps.minio.enable [ "minio" ];
           environment =
             {
               FORGEJO__actions__ENABLED = if cfg.enableRunner then "true" else "false";

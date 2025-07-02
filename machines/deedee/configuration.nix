@@ -1,4 +1,7 @@
 { config, ... }:
+let
+  mediaPath = "/tank/media";
+in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
@@ -60,9 +63,6 @@ rec {
       tankDiskDevs = [ "/dev/disk/by-id/ata-GOODRAM_5A67076819FC00008569" ];
       tankDatasets = {
         media = {
-          type = "zfs_fs";
-        };
-        webdav = {
           type = "zfs_fs";
         };
         vms = {
@@ -182,7 +182,7 @@ rec {
       carddavEnable = true;
       caldavEnable = false;
       webdavEnable = true;
-      webdavDir = "/tank/webdav";
+      webdavDir = "${mediaPath}/webdav";
       webdavDirBackup = false;
       useAuthelia = true;
     };
@@ -202,12 +202,36 @@ rec {
     };
     # immich = {
     #   enable = true;
-    #   dataPath = "/tank/immich";
+    #   dataPath = "${mediaPath}/immich";
     # };
     lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;
+    minio = {
+      enable = true;
+      dataPath = "${mediaPath}/s3";
+      buckets = [
+        {
+          name = "forgejo";
+          backup = true;
+          public = false;
+          owner = "forgejo";
+        }
+        {
+          name = "nix";
+          backup = false;
+          public = true;
+          owner = "nixcache";
+        }
+        {
+          name = "states";
+          backup = true;
+          public = false;
+          owner = "states";
+        }
+      ];
+    };
     paperless-ngx.enable = true;
     syncthing.enable = true;
     tika.enable = true;

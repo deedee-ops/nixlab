@@ -3,11 +3,11 @@ rec {
 
   nixConfig = {
     substituters = [
-      "https://s3.rzegocki.dev/nix?priority=30"
+      # "https://s3.rzegocki.dev/nix?priority=30"
       "https://cache.nixos.org"
     ];
     trusted-public-keys = [
-      "homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU="
+      # "homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU="
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
     ];
     extra-substituters = [
