@@ -109,7 +109,7 @@ in
         preStart = lib.mkAfter ''
           rm -rf /var/cache/davis/web || true
           mkdir -p "${cfg.dataDir}/config"
-          [ ! -d "${cfg.webdavDir}"] && mkdir -p "${cfg.webdavDir}"
+          [ ! -d "${cfg.webdavDir}" ] && mkdir -p "${cfg.webdavDir}"
           chown 65000:65000 "${cfg.dataDir}/config" "${cfg.webdavDir}"
         '';
       };

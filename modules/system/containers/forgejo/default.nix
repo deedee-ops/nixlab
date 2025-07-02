@@ -170,7 +170,7 @@ in
           chmod 640 "${cfg.dataDir}/custom/conf/app.ini"
 
           # ugly hack to fix forgejo permissions, as sops-nix doesn't allow setting direct UID/GID yet
-          chown -R 1000:1000 "$(dirname ${
+          chown -R 1000:65000 "$(dirname ${
             config.sops.secrets."${cfg.sopsSecretPrefix}/${builtins.elemAt secretEnvs 0}".path
           })"
         '';

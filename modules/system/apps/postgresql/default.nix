@@ -125,7 +125,7 @@ in
 
     systemd.services.postgresql.postStart =
       ''
-        $PSQL -tA <<'EOF'
+        psql -tA <<'EOF'
           DO $$
           DECLARE password TEXT;
           BEGIN
@@ -145,7 +145,7 @@ in
       ''
       + builtins.concatStringsSep "\n" (
         builtins.map (db: ''
-          $PSQL -d ${db} -f "${(pkgs.writeText "init-${db}.sql" (builtins.getAttr db cfg.initSQL))}"
+          psql -d ${db} -f "${(pkgs.writeText "init-${db}.sql" (builtins.getAttr db cfg.initSQL))}"
         '') (builtins.attrNames cfg.initSQL)
       );
 
