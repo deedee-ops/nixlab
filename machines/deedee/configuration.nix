@@ -197,7 +197,6 @@ rec {
       webdavEnable = true;
       webdavDir = "${mediaPath}/webdav";
       webdavDirBackup = false;
-      useAuthelia = true;
     };
     firefoxsync.enable = true;
     firefly-iii.enable = true;

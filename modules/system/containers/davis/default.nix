@@ -17,7 +17,6 @@ in
       default = true;
     };
     webdavEnable = lib.mkEnableOption "WebDAV";
-    useAuthelia = lib.mkEnableOption "authelia";
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
@@ -59,24 +58,38 @@ in
         cfg = {
           inherit image;
 
-          dependsOn = [ "lldap" ];
-          environment = {
-            ADMIN_AUTH_BYPASS = if cfg.useAuthelia then "true" else "false";
-            APP_TIMEZONE = "${config.mySystem.time.timeZone}";
-            AUTH_METHOD = "LDAP";
-            CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
-            CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
-            INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
-            LDAP_AUTH_URL = "ldap://lldap:3890";
-            LDAP_AUTH_USER_AUTOCREATE = "true";
-            LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
-            LDAP_MAIL_ATTRIBUTE = "mail";
-            MAILER_DSN = "smtp://maddy:25";
-            TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
-            TRUSTED_PROXIES = "172.16.0.0/16";
-            WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
-            WEBDAV_HOMES_DIR = "/webdav";
-          };
+          dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
+          environment =
+            {
+              ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
+              APP_ENV = "prod";
+              APP_TIMEZONE = "${config.mySystem.time.timeZone}";
+              CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
+              CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
+              DATABASE_DRIVER = "sqlite";
+              DATABASE_URL = "sqlite:////config/davis-database.db";
+              INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
+              LOG_FILE_PATH = "/dev/stdout";
+              MAILER_DSN = "smtp://maddy:25";
+              TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
+              TRUSTED_PROXIES = "172.16.0.0/16";
+              UMASK = "0002";
+              WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
+              WEBDAV_HOMES_DIR = "/webdav";
+              WEBDAV_PUBLIC_DIR = "/data";
+              WEBDAV_TMP_DIR = "/tmp/webdav";
+            }
+            // (lib.optionalAttrs config.mySystemApps.lldap.enable {
+              AUTH_METHOD = "LDAP";
+              LDAP_AUTH_URL = "ldap://lldap:3890";
+              LDAP_AUTH_USER_AUTOCREATE = "true";
+              LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
+              LDAP_MAIL_ATTRIBUTE = "mail";
+            })
+            // (lib.optionalAttrs (!config.mySystemApps.lldap.enable) {
+              AUTH_REALM = "SabreDAV";
+              AUTH_METHOD = "Basic";
+            });
           environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
           volumes = [
             "${cfg.dataDir}/config:/config"
@@ -87,7 +100,7 @@ in
 
       services = {
         nginx.virtualHosts.davis = svc.mkNginxVHost {
-          inherit (cfg) useAuthelia;
+          useAuthelia = config.mySystemApps.authelia.enable;
 
           host = "davis";
           proxyPass = "http://davis.docker:9000";
