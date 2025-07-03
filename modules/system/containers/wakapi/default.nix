@@ -44,7 +44,8 @@ in
 
     virtualisation.oci-containers.containers.wakapi = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/wakapi:2.13.4@sha256:9e410806fc27f6e978cc7e957720de47a7c2a12cdd795a9c8ba3a095f8a46f1f";
+        image = "ghcr.io/muety/wakapi:2.14.0@sha256:8e84b4ffc349dabf7065a96279eb738ed9cd51977d44dc248a20995c32357339";
+        user = "1000:65000";
         environment = {
           ENVIRONMENT = "prod";
           WAKAPI_LEADERBOARD_ENABLED = "false";
@@ -78,7 +79,7 @@ in
           WAKAPI_SENTRY_TRACING = "false";
           WAKAPI_QUICK_START = "false";
           WAKAPI_ENABLE_PPROF = "false";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

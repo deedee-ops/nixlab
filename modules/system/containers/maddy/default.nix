@@ -6,46 +6,29 @@
 }:
 let
   cfg = config.mySystemApps.maddy;
-  secretEnvs = [
-    "EGRESS_HOST"
-    "EGRESS_PASSWORD"
-    "EGRESS_PORT"
-    "EGRESS_USERNAME"
-  ];
 in
 {
   options.mySystemApps.maddy = {
     enable = lib.mkEnableOption "maddy container";
-    sopsSecretPrefix = lib.mkOption {
+    envFileSopsSecret = lib.mkOption {
       type = lib.types.str;
-      description = "Prefix for sops secret, under which all ENVs will be appended.";
-      default = "system/apps/maddy/env";
+      description = "Sops secret name containing maddy envs.";
+      default = "system/apps/maddy/envfile";
     };
   };
 
   config = lib.mkIf cfg.enable {
-    sops.secrets = svc.mkContainerSecretsSops {
-      inherit (cfg) sopsSecretPrefix;
-      inherit secretEnvs;
-
-      containerName = "maddy";
-    };
+    sops.secrets."${cfg.envFileSopsSecret}" = { };
 
     virtualisation.oci-containers.containers.maddy = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/maddy:0.7.1@sha256:c70d525fec8c4a47a2b28a319c25f758e6e36f209ed40008935e87d13b70f5da";
+        image = "ghcr.io/foxcpp/maddy:0.8.1@sha256:3a315845fe7f4fd99010e7d0f6c7d09fb7bb84ced7265200e09c2a9e79c7eb04";
         environment = {
           DEBUG = "no";
           INGRESS_DOMAIN = config.mySystem.rootDomain;
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-
-        volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ [ "${./maddy.conf}:/config/maddy.conf" ];
-
+        };
+        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
+        volumes = [ "${./maddy.conf}:/data/maddy.conf" ];
         extraOptions = [ "--cap-add=CAP_NET_BIND_SERVICE" ];
       };
       opts = {

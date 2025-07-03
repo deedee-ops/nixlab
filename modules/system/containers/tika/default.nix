@@ -15,7 +15,11 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.tika = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/tika:3.1.0@sha256:47265b4812b0408f74a85c47c8f1f36b596b50a293b4fb7d0bad35110ec055d1";
+        image = "docker.io/apache/tika:3.2.0.0@sha256:c01b700def0f3020265ec4072ed37e98b5f1f3aa7ee5f9a27e2eb3e88a3561d8";
+        extraOptions = [
+          "--mount"
+          "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
+        ];
       };
     };
   };

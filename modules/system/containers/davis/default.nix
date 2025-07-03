@@ -45,97 +45,105 @@ in
     };
   };
 
-  config =
-    let
-      image = "ghcr.io/deedee-ops/davis:5.0.2@sha256:a8b7464fa65196cb304610f5cf0b0e82b71c7214632371b53444d05e4c9ab2fa";
-    in
-    lib.mkIf cfg.enable {
-      warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for davis are disabled!") ];
+  config = lib.mkIf cfg.enable {
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for davis are disabled!") ];
 
-      sops.secrets."${cfg.envFileSopsSecret}" = { };
+    sops.secrets."${cfg.envFileSopsSecret}" = { };
 
-      virtualisation.oci-containers.containers.davis = svc.mkContainer {
-        cfg = {
-          inherit image;
-
-          dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
-          environment =
-            {
-              ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
-              APP_ENV = "prod";
-              APP_TIMEZONE = "${config.mySystem.time.timeZone}";
-              CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
-              CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
-              DATABASE_DRIVER = "sqlite";
-              DATABASE_URL = "sqlite:////config/davis-database.db";
-              INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
-              LOG_FILE_PATH = "/dev/stdout";
-              MAILER_DSN = "smtp://maddy:25";
-              TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
-              TRUSTED_PROXIES = "172.16.0.0/16";
-              UMASK = "0002";
-              WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
-              WEBDAV_HOMES_DIR = "/webdav";
-              WEBDAV_PUBLIC_DIR = "/data";
-              WEBDAV_TMP_DIR = "/tmp/webdav";
-            }
-            // (lib.optionalAttrs config.mySystemApps.lldap.enable {
-              AUTH_METHOD = "LDAP";
-              LDAP_AUTH_URL = "ldap://lldap:3890";
-              LDAP_AUTH_USER_AUTOCREATE = "true";
-              LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
-              LDAP_MAIL_ATTRIBUTE = "mail";
-            })
-            // (lib.optionalAttrs (!config.mySystemApps.lldap.enable) {
-              AUTH_REALM = "SabreDAV";
-              AUTH_METHOD = "Basic";
-            });
-          environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
-          volumes = [
-            "${cfg.dataDir}/config:/config"
-            "${cfg.webdavDir}:/webdav"
-          ];
-        };
-      };
-
-      services = {
-        nginx.virtualHosts.davis = svc.mkNginxVHost {
-          useAuthelia = config.mySystemApps.authelia.enable;
-
-          host = "davis";
-          proxyPass = "http://davis.docker:9000";
-          autheliaIgnorePaths = [
-            "/dav"
-            "/.well-known"
-          ];
-        };
-        restic.backups = lib.mkIf cfg.backup (
-          svc.mkRestic {
-            name = "davis";
-            fullPaths = lib.optionals cfg.webdavDirBackup [ cfg.webdavDir ];
-            paths = [ cfg.dataDir ];
+    virtualisation.oci-containers.containers.davis = svc.mkContainer {
+      cfg = {
+        image = "ghcr.io/tchapi/davis-standalone:5.1.2@sha256:53afc0c315ebd7426cf0ef56d7a6704f3663c85fa16de936d43469b108433e05";
+        dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
+        environment =
+          {
+            ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
+            APP_ENV = "prod";
+            APP_TIMEZONE = "${config.mySystem.time.timeZone}";
+            CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
+            CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
+            DATABASE_DRIVER = "sqlite";
+            DATABASE_URL = "sqlite:////config/davis-database.db";
+            INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
+            LOG_FILE_PATH = "/tmp/davis.log";
+            MAILER_DSN = "smtp://maddy:25";
+            TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
+            TRUSTED_PROXIES = "172.16.0.0/16";
+            UMASK = "0002";
+            WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
+            WEBDAV_HOMES_DIR = "/webdav";
+            WEBDAV_PUBLIC_DIR = "/data";
+            WEBDAV_TMP_DIR = "/tmp/webdav";
           }
-        );
+          // (lib.optionalAttrs config.mySystemApps.lldap.enable {
+            AUTH_METHOD = "LDAP";
+            LDAP_AUTH_URL = "ldap://lldap:3890";
+            LDAP_AUTH_USER_AUTOCREATE = "true";
+            LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
+            LDAP_MAIL_ATTRIBUTE = "mail";
+          })
+          // (lib.optionalAttrs (!config.mySystemApps.lldap.enable) {
+            AUTH_REALM = "SabreDAV";
+            AUTH_METHOD = "Basic";
+          });
+        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
+        volumes = [
+          "${cfg.dataDir}/config:/config"
+          "${cfg.webdavDir}:/webdav"
+        ];
+        extraOptions = [
+          "--cap-add=CAP_CHOWN"
+          "--cap-add=CAP_SETGID"
+          "--cap-add=CAP_SETUID"
+          "--cap-add=CAP_DAC_OVERRIDE"
+          "--mount"
+          "type=tmpfs,destination=/data,tmpfs-mode=1777"
+          "--mount"
+          "type=tmpfs,destination=/tmp/webdav,tmpfs-mode=1777"
+        ];
       };
-
-      systemd.services.docker-davis = {
-        preStart = lib.mkAfter ''
-          rm -rf /var/cache/davis/web || true
-          mkdir -p "${cfg.dataDir}/config"
-          [ ! -d "${cfg.webdavDir}" ] && mkdir -p "${cfg.webdavDir}"
-          chown 65000:65000 "${cfg.dataDir}/config" "${cfg.webdavDir}"
-        '';
-      };
-
-      environment.persistence."${config.mySystem.impermanence.persistPath}" =
-        lib.mkIf config.mySystem.impermanence.enable
-          { directories = [ cfg.dataDir ]; };
-
-      mySystemApps.homepage = {
-        services.Apps.Davis = svc.mkHomepage "davis" // {
-          icon = "davis.png";
-          description = "CardDAV, CalDAV and WebDAV";
-        };
+      opts = {
+        readOnlyRootFilesystem = false;
       };
     };
+
+    services = {
+      nginx.virtualHosts.davis = svc.mkNginxVHost {
+        useAuthelia = config.mySystemApps.authelia.enable;
+
+        host = "davis";
+        proxyPass = "http://davis.docker:9000";
+        autheliaIgnorePaths = [
+          "/dav"
+          "/.well-known"
+        ];
+      };
+      restic.backups = lib.mkIf cfg.backup (
+        svc.mkRestic {
+          name = "davis";
+          fullPaths = lib.optionals cfg.webdavDirBackup [ cfg.webdavDir ];
+          paths = [ cfg.dataDir ];
+        }
+      );
+    };
+
+    systemd.services.docker-davis = {
+      preStart = lib.mkAfter ''
+        rm -rf /var/cache/davis/web || true
+        mkdir -p "${cfg.dataDir}/config"
+        [ ! -d "${cfg.webdavDir}" ] && mkdir -p "${cfg.webdavDir}"
+        chown 65000:65000 "${cfg.dataDir}/config" "${cfg.webdavDir}"
+      '';
+    };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ cfg.dataDir ]; };
+
+    mySystemApps.homepage = {
+      services.Apps.Davis = svc.mkHomepage "davis" // {
+        icon = "davis.png";
+        description = "CardDAV, CalDAV and WebDAV";
+      };
+    };
+  };
 }

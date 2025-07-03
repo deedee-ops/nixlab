@@ -65,13 +65,21 @@ in
 
     virtualisation.oci-containers.containers.syncthing = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/syncthing:1.29.2@sha256:1ac638a3c40d72ab501865a38fecaa784aa8a2917e37280e51da189e8598607b";
+        image = "ghcr.io/syncthing/syncthing:1.30.0@sha256:cf2075c28869d533c3255f46f8fc97b1959bc24a6343698bea9cbefe1bab5bf6";
+        user = "65000:65000";
+        environment = {
+          STHOMEDIR = "/config";
+        };
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.dataDir}/data:/data"
           "${cfg.dataDir}/external:/external"
         ];
         ports = [ "22000:22000" ];
+        extraOptions = [
+          "--mount"
+          "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
+        ];
       };
       opts = {
         # to expose port to host, public network must be used

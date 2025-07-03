@@ -9,6 +9,7 @@ let
   secretEnvs = [
     "ADMIN_PASSWORD"
     "ADMIN_USERNAME"
+    "DATABASE_URL"
     "HOMEPAGE_API_KEY"
     "MINIFLUX__POSTGRES_PASSWORD"
   ];
@@ -46,21 +47,20 @@ in
 
     virtualisation.oci-containers.containers.miniflux = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/miniflux:2.2.10@sha256:26e3a28e227e046e4133243b1c3f877fad1f2bf889c65c251028dc10034933c0";
+        image = "ghcr.io/miniflux/miniflux:2.2.10@sha256:0eab0c1f9566e32f81a33f318263aff9efdd9a1ebe287f3089501ab394c78c83";
+        user = "65000:65000";
         environment =
           {
             AUTH_PROXY_HEADER = "Remote-User";
             CREATE_ADMIN = "1";
+            LISTEN_ADDR = "0.0.0.0:3000";
             POLLING_PARSING_ERROR_LIMIT = "3";
             RUN_MIGRATIONS = "1";
-            MINIFLUX__POSTGRES_DATABASE = "miniflux";
-            MINIFLUX__POSTGRES_HOST = "host.docker.internal";
-            MINIFLUX__POSTGRES_SSLMODE = "disable";
-            MINIFLUX__POSTGRES_USERNAME = "miniflux";
           }
           // lib.optionalAttrs config.mySystemApps.piped.enable {
             YOUTUBE_EMBED_URL_OVERRIDE = "https://piped.${config.mySystem.rootDomain}/embed/";
-          }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+          }
+          // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

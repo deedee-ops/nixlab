@@ -50,7 +50,7 @@ in
 
     virtualisation.oci-containers.containers.firefly-iii = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/firefly:6.2.10@sha256:96c7b7b1bfad0d67d678141f840df06fad786237079f9d560d725e5453c29a60";
+        image = "docker.io/fireflyiii/core:version-6.2.20";
         user = "33:65000";
         environment = {
           APP_URL = "https://firefly.${config.mySystem.rootDomain}";
