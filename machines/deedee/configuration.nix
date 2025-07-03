@@ -169,6 +169,7 @@ rec {
         "*.${mySystem.rootDomain}"
         "*.crypt.${mySystem.rootDomain}"
       ];
+      syncCerts.unifi = "wildcard.${mySystem.rootDomain}";
     };
 
     nginx = {
