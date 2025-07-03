@@ -175,6 +175,12 @@ rec {
       inherit (mySystem) rootDomain;
 
       enable = true;
+      extraVHosts = {
+        obsidian = {
+          target = "http://minio.docker:9000/assets/obsidian$request_uri";
+          extraConfig = ''rewrite ^(.*)/$ https://obsidian.${mySystem.rootDomain}''$1/index.html break;'';
+        };
+      };
       extraRedirects = {
         gw = "http://${config.myInfra.machines.gateway.ip}";
         www = "https://deedee.${mySystem.rootDomain}";
@@ -235,6 +241,12 @@ rec {
       enable = true;
       dataPath = "${mediaPath}/s3";
       buckets = [
+        {
+          name = "assets";
+          backup = true;
+          public = true;
+          owner = "assets";
+        }
         {
           name = "forgejo";
           backup = true;
