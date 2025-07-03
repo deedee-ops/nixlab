@@ -52,7 +52,7 @@ in
 
     virtualisation.oci-containers.containers.davis = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/tchapi/davis-standalone:5.1.2@sha256:53afc0c315ebd7426cf0ef56d7a6704f3663c85fa16de936d43469b108433e05";
+        image = "ghcr.io/tchapi/davis-standalone:5.1.2@sha256:fe44cd11e7f73b237719a010982cebe68597caef22c61c4e1cf5508dafde9d64";
         dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
         environment =
           {
