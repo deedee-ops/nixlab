@@ -62,12 +62,15 @@ in
           DB_HOST = "host.docker.internal";
           DB_PORT = "5432";
           DB_USERNAME = "firefly";
+          ENABLE_EXCHANGE_RATES = "true";
+          ENABLE_EXTERNAL_RATES = "true";
           MAIL_ENCRYPTION = "null";
           MAIL_FROM = config.mySystem.notificationSender;
           MAIL_HOST = "maddy";
           MAIL_MAILER = "smtp";
           MAIL_PORT = "25";
           SEND_TELEMETRY = "false";
+          SITE_OWNER = config.mySystem.notificationSender;
           TRUSTED_PROXIES = "**";
 
           CACHE_DRIVER = "redis";
@@ -96,6 +99,8 @@ in
           ];
       };
       opts = {
+        # download exchange rates
+        allowPublic = true;
         readOnlyRootFilesystem = false;
       };
     };

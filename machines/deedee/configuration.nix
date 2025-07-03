@@ -193,7 +193,7 @@ rec {
       ];
     };
     coredns.enable = true;
-    # crypt.enable = true;
+    crypt.enable = true;
     davis = {
       enable = true;
       carddavEnable = true;
@@ -260,9 +260,7 @@ rec {
     };
     syncthing.enable = true;
     tika.enable = true;
-    upsnap.enable = true;
     wakapi.enable = true;
-    wallos.enable = true;
     whoogle.enable = true;
   };
 
