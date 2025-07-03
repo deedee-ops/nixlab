@@ -176,7 +176,7 @@ rec {
     atuin.enable = true;
     authelia.enable = true;
     coredns.enable = true;
-    # crypt.enable = true;
+    crypt.enable = true;
     davis = {
       enable = true;
       carddavEnable = true;
@@ -225,6 +225,12 @@ rec {
           owner = "nixcache";
         }
         {
+          name = "registry";
+          backup = false;
+          public = false;
+          owner = "registry";
+        }
+        {
           name = "states";
           backup = true;
           public = false;
@@ -233,6 +239,10 @@ rec {
       ];
     };
     paperless-ngx.enable = true;
+    registry = {
+      enable = true;
+      enableUI = true;
+    };
     syncthing.enable = true;
     tika.enable = true;
     upsnap.enable = true;

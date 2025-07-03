@@ -12,6 +12,7 @@ in
     virtualisation.oci-containers.containers.crypt-postgresql = svc.mkContainer {
       cfg = {
         image = "registry.${config.mySystem.rootDomain}/deedee/crypt-postgresql:8.4.22";
+        dependsOn = lib.optionals config.mySystemApps.registry.enable [ "registry" ];
       };
       opts = {
         customNetworks = [ "crypt" ];
