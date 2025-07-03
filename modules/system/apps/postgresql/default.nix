@@ -125,6 +125,9 @@ in
 
     systemd.services.postgresql.postStart =
       ''
+        # hack to force password regeneration when recovery mode changes
+        # ${if config.mySystem.recoveryMode then "recovery" else "main"}
+
         psql -tA <<'EOF'
           DO $$
           DECLARE password TEXT;

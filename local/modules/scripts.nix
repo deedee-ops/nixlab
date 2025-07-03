@@ -18,6 +18,9 @@ _: {
         build-base-vm = pkgs.writeScriptBin "build-base-vm" (
           builtins.readFile ../scripts/bin/build-base-vm.sh
         );
+        cache-packages = pkgs.writeScriptBin "cache-packages" (
+          builtins.readFile ../scripts/bin/cache-packages.sh
+        );
         disko-install = pkgs.writeScriptBin "disko-install" (
           builtins.readFile ../scripts/bin/disko-install.sh
         );
@@ -31,6 +34,10 @@ _: {
         build-base-vm = {
           type = "app";
           program = "${packages.build-base-vm}/bin/build-base-vm";
+        };
+        cache-packages = {
+          type = "app";
+          program = "${packages.cache-packages}/bin/cache-packages";
         };
         disko-install = {
           type = "app";

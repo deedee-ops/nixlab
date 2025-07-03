@@ -60,8 +60,11 @@ rec {
           mountpoint = "/nix";
         };
       };
-      tankDiskDevs = [ "/dev/disk/by-id/ata-GOODRAM_5A67076819FC00008569" ];
+      tankDiskDevs = [ "/dev/disk/by-id/ata-WD_Blue_SA510_2.5_4TB_24404UD00701" ];
       tankDatasets = {
+        data = {
+          type = "zfs_fs";
+        };
         media = {
           type = "zfs_fs";
         };
@@ -105,6 +108,7 @@ rec {
     };
 
     zfs.snapshots = {
+      "tank/data" = { };
       "tank/webdav" = { };
     };
   };
@@ -189,7 +193,7 @@ rec {
       ];
     };
     coredns.enable = true;
-    crypt.enable = true;
+    # crypt.enable = true;
     davis = {
       enable = true;
       carddavEnable = true;
