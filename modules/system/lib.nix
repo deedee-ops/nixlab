@@ -259,6 +259,7 @@
       {
         name,
         paths ? [ ],
+        keepLocal ? true,
         keepRemote ? true,
         fullPaths ? [ ],
         excludePaths ? [ ],
@@ -286,23 +287,27 @@
         includePaths =
           (map (path: "${config.mySystem.backup.snapshotMountPath}/${path}") paths) ++ fullPaths;
       in
-      {
-        # local backup
-        "${name}-local" = lib.mkIf config.mySystem.backup.local.enable {
-          inherit
-            pruneOpts
-            timerConfig
-            initialize
-            backupPrepareCommand
-            ;
+      (lib.optionalAttrs keepLocal (
+        builtins.listToAttrs (
+          # remote backups
+          builtins.map (local: {
+            name = "${name}-local-${local.name}";
+            value = {
+              inherit
+                pruneOpts
+                timerConfig
+                initialize
+                backupPrepareCommand
+                ;
 
-          paths = includePaths;
-          exclude = excludePaths;
-          passwordFile = config.sops.secrets."${config.mySystem.backup.local.passFileSopsSecret}".path;
-          repository = "${config.mySystem.backup.local.location}/${name}";
-        };
-
-      }
+              paths = includePaths;
+              exclude = excludePaths;
+              passwordFile = config.sops.secrets."${local.passFileSopsSecret}".path;
+              repository = "${local.location}/${name}";
+            };
+          }) config.mySystem.backup.locals
+        )
+      ))
       // (lib.optionalAttrs keepRemote (
         builtins.listToAttrs (
           # remote backups

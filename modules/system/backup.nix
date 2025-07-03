@@ -9,16 +9,25 @@ let
 in
 {
   options.mySystem.backup = {
-    local = {
-      enable = lib.mkEnableOption "local backups";
-      location = lib.mkOption {
-        type = lib.types.str;
-        description = "Location for local backups.";
-      };
-      passFileSopsSecret = lib.mkOption {
-        type = lib.types.str;
-        description = "Sops secret name containing local restic backups password.";
-      };
+    locals = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "Local repository alias for restic.";
+            };
+            location = lib.mkOption {
+              type = lib.types.str;
+              description = "Location for local backups.";
+            };
+            passFileSopsSecret = lib.mkOption {
+              type = lib.types.str;
+              description = "Sops secret name containing local restic backups password.";
+            };
+          };
+        }
+      );
     };
     remotes = lib.mkOption {
       type = lib.types.listOf (
@@ -52,7 +61,7 @@ in
     };
   };
 
-  config = lib.mkIf (cfg.local.enable || (builtins.length cfg.remotes > 0)) {
+  config = lib.mkIf ((builtins.length cfg.locals > 0) || (builtins.length cfg.remotes > 0)) {
     assertions = [
       {
         assertion = config.mySystem.filesystem == "zfs" || config.mySystem.filesystem == "ext4";
@@ -61,14 +70,17 @@ in
     ];
 
     warnings = [
-      (lib.mkIf (!cfg.local.enable) "WARNING: Local backups are disabled!")
+      (lib.mkIf (builtins.length cfg.locals == 0) "WARNING: Local backups are disabled!")
       (lib.mkIf (builtins.length cfg.remotes == 0) "WARNING: Remote backups are disabled!")
     ];
 
     sops.secrets =
-      (lib.optionalAttrs cfg.local.enable {
-        "${cfg.local.passFileSopsSecret}" = { };
-      })
+      builtins.listToAttrs (
+        builtins.map (local: {
+          name = local.passFileSopsSecret;
+          value = { };
+        }) cfg.locals
+      )
       // builtins.listToAttrs (
         builtins.map (remote: {
           name = remote.passFileSopsSecret;

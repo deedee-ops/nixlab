@@ -1,5 +1,6 @@
 { config, ... }:
 let
+  dataPath = "/tank/data";
   mediaPath = "/tank/media";
 in
 rec {
@@ -33,6 +34,13 @@ rec {
     autoUpgrade.enable = true;
 
     backup = {
+      locals = [
+        {
+          name = "tank";
+          location = "${dataPath}/backups";
+          passFileSopsSecret = "backups/restic/local/password";
+        }
+      ];
       remotes = [
         {
           name = "borgbase-eu";
