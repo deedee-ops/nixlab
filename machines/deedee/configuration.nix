@@ -174,7 +174,20 @@ rec {
 
     # containers
     atuin.enable = true;
-    authelia.enable = true;
+    authelia = {
+      enable = true;
+      users = [
+        {
+          username = "admin";
+          email = "admin@${mySystem.rootDomain}";
+          groups = [ "admins" ];
+        }
+        {
+          username = "ajgon";
+          email = "ajgon@${mySystem.rootDomain}";
+        }
+      ];
+    };
     coredns.enable = true;
     crypt.enable = true;
     davis = {
@@ -204,7 +217,6 @@ rec {
     #   enable = true;
     #   dataPath = "${mediaPath}/immich";
     # };
-    lldap.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;

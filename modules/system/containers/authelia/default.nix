@@ -15,6 +15,22 @@ let
     "AUTHELIA_STORAGE_ENCRYPTION_KEY"
     "AUTHELIA_STORAGE_POSTGRES_PASSWORD"
   ];
+  usersDatabase = pkgs.writeText "users_database.yaml" (
+    builtins.toJSON {
+      users = builtins.listToAttrs (
+        builtins.map (user: {
+          name = user.username;
+          value = {
+            inherit (user) email groups;
+
+            disabled = false;
+            displayname = user.username;
+            password = "@@AUTHELIA_USER_${user.username}_PASSWORD@@";
+          };
+        }) cfg.users
+      );
+    }
+  );
   configuration = pkgs.writeText "configuration.yaml" (
     builtins.toJSON (
       lib.recursiveUpdate
@@ -24,8 +40,6 @@ let
             src = ./configuration.yaml;
 
             vars = {
-              LLDAP_LDAP_BASE_DN = config.mySystemApps.lldap.baseDN;
-              LLDAP_LDAP_USER_DN = config.mySystemApps.lldap.userDN;
               NOTIFICATION_SENDER = config.mySystem.notificationSender;
               ROOT_DOMAIN = config.mySystem.rootDomain;
             };
@@ -37,8 +51,43 @@ let
               clients = cfg.oidcClients;
             };
           };
+          authentication_backend =
+            lib.optionalAttrs (cfg.authenticationBackend == "ldap") {
+              ldap = {
+                implementation = "custom";
+                address = "ldap://lldap:3890";
+                timeout = "5s";
+                start_tls = false;
+                base_dn = config.mySystemApps.lldap.baseDN;
+                additional_users_dn = "ou=people";
+                users_filter = "(&({username_attribute}={input})(objectClass=person))";
+                additional_groups_dn = "ou=groups";
+                groups_filter = "(member={dn})";
+                permit_referrals = false;
+                permit_unauthenticated_bind = false;
+                permit_feature_detection_failure = false;
+                user = "uid=${config.mySystemApps.lldap.userDN},ou=people,${config.mySystemApps.lldap.baseDN}";
+                attributes = {
+                  display_name = "displayName";
+                  group_name = "cn";
+                  mail = "mail";
+                  username = "uid";
+                };
+              };
+            }
+            // lib.optionalAttrs (cfg.authenticationBackend == "file") {
+              file = lib.optionalAttrs (cfg.authenticationBackend == "file") {
+                path = "/config/users_database.yml";
+                watch = false;
+              };
+              password_change = {
+                disable = true;
+              };
+              password_reset = {
+                disable = true;
+              };
+            };
         }
-
     )
   );
 in
@@ -52,6 +101,34 @@ in
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
       default = "system/apps/authelia/env";
+    };
+    authenticationBackend = lib.mkOption {
+      type = lib.types.enum [
+        "file"
+        "ldap"
+      ];
+      description = "Which authentication backend to use.";
+      default = if config.mySystemApps.lldap.enable then "ldap" else "file";
+    };
+    users = lib.mkOption {
+      type = lib.types.nullOr (
+        lib.types.listOf (
+          lib.types.submodule {
+            options = {
+              username = lib.mkOption {
+                type = lib.types.str;
+              };
+              email = lib.mkOption {
+                type = lib.types.str;
+              };
+              groups = lib.mkOption {
+                type = lib.types.listOf lib.types.str;
+                default = [ ];
+              };
+            };
+          }
+        )
+      );
     };
     oidcClients = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
@@ -77,14 +154,19 @@ in
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for authelia are disabled!") ];
     assertions = [
       {
-        assertion = config.mySystemApps.lldap.enable;
-        message = "To use authelia, lldap container needs to be enabled.";
+        assertion = cfg.authenticationBackend != "ldap" || config.mySystemApps.lldap.enable;
+        message = "To use LDAP backend, lldap container needs to be enabled.";
+      }
+      {
+        assertion = cfg.authenticationBackend != "file" || (builtins.length cfg.users > 0);
+        message = "To use FILE backend, at least one user must be defined.";
       }
     ];
 
     sops.secrets = svc.mkContainerSecretsSops {
       inherit (cfg) sopsSecretPrefix;
-      inherit secretEnvs;
+      secretEnvs =
+        secretEnvs ++ (builtins.map (user: "AUTHELIA_USER_${user.username}_PASSWORD") cfg.users);
 
       containerName = "authelia";
     };
@@ -103,38 +185,69 @@ in
 
     virtualisation.oci-containers.containers.authelia = svc.mkContainer {
       cfg = {
-        dependsOn = [ "lldap" ];
-        image = "ghcr.io/deedee-ops/authelia:4.39.4@sha256:7d15e8cecdc03e52b5e5d141412e86b07103330560248779f11b2823c5766235";
-        environment = {
-          AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
-          AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
-          AUTHELIA_STORAGE_POSTGRES_USERNAME = "authelia";
-          X_AUTHELIA_CONFIG_FILTERS = "template";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        dependsOn = lib.optionals (cfg.authenticationBackend == "lldap") [ "lldap" ];
+        user = "65000:65000";
+        image = "ghcr.io/authelia/authelia:4.39.4@sha256:9983c11ae35974fc99d66694e2ac20280b50c0ed4aa7a5cddca2d240c5bc6af0";
+        environment =
+          {
+            AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
+            AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
+            AUTHELIA_STORAGE_POSTGRES_USERNAME = "authelia";
+            AUTHELIA_SESSION_REDIS_PASSWORD_FILE = "/secrets/AUTHELIA_SESSION_REDIS_PASSWORD";
+            X_AUTHELIA_CONFIG_FILTERS = "template";
+          }
+          // (lib.optionalAttrs (cfg.authenticationBackend == "lldap") {
+            AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = "/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD";
+          })
+          // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;
             inherit secretEnvs;
           }
           ++ [
-            "/run/authelia/configuration.yaml:/config/configuration.yaml:ro"
-            "${
-              config.sops.secrets."${config.mySystemApps.lldap.sopsSecretPrefix}/LLDAP_LDAP_USER_PASS".path
-            }:/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD:ro"
+            "/run/authelia/configuration.yaml:/config/configuration.yml"
             "${
               config.sops.secrets."${config.mySystemApps.redis.passFileSopsSecret}".path
             }:/secrets/AUTHELIA_SESSION_REDIS_PASSWORD:ro"
-          ];
+          ]
+          ++ (lib.optionals (cfg.authenticationBackend == "lldap") [
+            "${
+              config.sops.secrets."${config.mySystemApps.lldap.sopsSecretPrefix}/LLDAP_LDAP_USER_PASS".path
+            }:/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD:ro"
+          ])
+          ++ (lib.optionals (cfg.authenticationBackend == "file") [
+            "/run/authelia/users_database.yaml:/config/users_database.yml"
+          ]);
+        extraOptions = [
+          "--mount"
+          "type=tmpfs,destination=/config,tmpfs-mode=1777"
+        ];
       };
     };
 
     systemd.services.docker-authelia = {
-      preStart = lib.mkAfter ''
-        mkdir -p /run/authelia
-        sed "s,@@AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY@@,$(cat ${
-          config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY".path
-        } | tr '\n' '#' | sed 's@#@\\\\n@g'),g" ${configuration} > /run/authelia/configuration.yaml
-      '';
+      preStart = lib.mkAfter (
+        ''
+          mkdir -p /run/authelia
+          sed "s,@@AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY@@,$(cat ${
+            config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_IDENTITY_PROVIDERS_OIDC_JWKS_KEY".path
+          } | tr '\n' '#' | sed 's@#@\\\\n@g'),g" ${configuration} > /run/authelia/configuration.yaml
+
+        ''
+        + lib.optionalString (cfg.authenticationBackend == "file") (
+          ''
+            cat ${usersDatabase} > /run/authelia/users_database.yaml
+          ''
+          + (lib.concatStringsSep "\n" (
+            builtins.map (user: ''
+              sed -i"" "s#@@AUTHELIA_USER_${user.username}_PASSWORD@@#$(cat ${
+                config.sops.secrets."${cfg.sopsSecretPrefix}/AUTHELIA_USER_${user.username}_PASSWORD".path
+              })#g" /run/authelia/users_database.yaml
+            '') cfg.users
+          ))
+        )
+      );
     };
 
     services.nginx.virtualHosts.authelia = svc.mkNginxVHost {
