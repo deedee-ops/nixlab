@@ -38,7 +38,7 @@ in
               osConfig.mySystem.allowUnfree
               ++ osConfig.home-manager.users."${osConfig.mySystem.primaryUser}".myHomeApps.allowUnfree
             );
-          cudaSupport = osConfig.myHardware.nvidia.enable && !osConfig.mySystem.powerSaveMode;
+          cudaSupport = osConfig.myHardware.nvidia.enable && osConfig.myHardware.nvidia.forceCompileCUDA;
         };
       };
       modules = baseModules ++ hardwareModules ++ profileModules;

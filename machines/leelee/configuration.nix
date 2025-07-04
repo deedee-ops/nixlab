@@ -18,11 +18,13 @@ _: rec {
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
 
     backup = {
-      local = {
-        enable = true;
-        location = "/mnt/backup";
-        passFileSopsSecret = "backups/restic/local/password";
-      };
+      locals = [
+        {
+          name = "tank";
+          location = "/mnt/backup";
+          passFileSopsSecret = "backups/restic/local/password";
+        }
+      ];
     };
 
     disks = {

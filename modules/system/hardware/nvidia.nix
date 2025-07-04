@@ -19,6 +19,15 @@ in
         <https://github.com/NVIDIA/open-gpu-kernel-modules?tab=readme-ov-file#compatible-gpus>
       '';
     };
+    forceCompileCUDA = lib.mkOption {
+      type = lib.types.bool;
+      default = true;
+      description = ''
+        Compile all applicable packages with CUDA support directly.
+        WARNING! Since, there is no cache of these packages, nixos rebuild may take
+        long, long, looooonggg time!
+      '';
+    };
     metamodes = lib.mkOption {
       type = lib.types.str;
       description = "XServer metamodes configuration for displays.";

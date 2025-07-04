@@ -320,6 +320,11 @@ rec {
       enableUI = true;
     };
     syncthing.enable = true;
+    tailscale = {
+      enable = true;
+      autoProvision = true; # see option description in tailscale.nix
+      advertiseRoutes = [ "10.100.0.0/16" ];
+    };
     tika.enable = true;
     wakapi.enable = true;
     whoogle.enable = true;

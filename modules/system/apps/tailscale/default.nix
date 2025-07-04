@@ -14,7 +14,19 @@ in
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
-    autoProvision = lib.mkEnableOption "auto provision with auth key";
+    autoProvision = lib.mkEnableOption ''
+      Auto provision with auth key. To so:
+      - login to tailscale
+      - Add device => Linux server
+      - (if you wish to provision multiple machines, set auth key as reusable)
+      - Generate install script
+      - Put auth key in sops secret
+      - Deploy tailscale config to machines
+      - When machines appears in tailscale UI:
+        - ... => Disable key expiry
+        - ... => Edit route settings...
+          - Enable all Subnet routes
+    '';
     authKeySopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing auth key.";
