@@ -56,6 +56,11 @@ _: {
         ssh = null;
         host = null;
       };
+      work = {
+        ip = "10.100.30.1";
+        ssh = null;
+        host = null;
+      };
       windows = {
         ip = "10.100.30.2";
         ssh = null;

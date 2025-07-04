@@ -88,24 +88,22 @@ in
 
       k9s = {
         enable = true;
-        plugin = {
-          plugins = {
-            edit-secret = {
-              shortCut = "Shift-E";
-              confirm = false;
-              description = "Edit Decoded Secret";
-              scopes = [ "secrets" ];
-              command = "${pkgs.kubectl}/bin/kubectl";
-              background = false;
-              args = [
-                "modify-secret"
-                "--namespace"
-                "$NAMESPACE"
-                "--context"
-                "$CONTEXT"
-                "$NAME"
-              ];
-            };
+        plugins = {
+          edit-secret = {
+            shortCut = "Shift-E";
+            confirm = false;
+            description = "Edit Decoded Secret";
+            scopes = [ "secrets" ];
+            command = "${pkgs.kubectl}/bin/kubectl";
+            background = false;
+            args = [
+              "modify-secret"
+              "--namespace"
+              "$NAMESPACE"
+              "--context"
+              "$CONTEXT"
+              "$NAME"
+            ];
           };
         };
       };

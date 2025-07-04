@@ -38,7 +38,9 @@ in
 
   config =
     let
-      withNFS = (lib.lists.findFirstIndex (mount: mount.type == "nfs") null cfg.mounts) != null;
+      withNFS =
+        (lib.lists.findFirstIndex (mount: mount.type == "nfs") null cfg.mounts) != null
+        || config.mySystemApps.nfs.enable;
     in
     {
       environment.systemPackages = lib.optionals withNFS [ pkgs.nfs-utils ];

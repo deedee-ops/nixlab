@@ -42,6 +42,7 @@ rec {
     purpose = "Main rig";
     filesystem = "zfs";
     primaryUser = "ajgon";
+    primaryUserExtraDirs = [ "/tank" ];
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
@@ -83,6 +84,20 @@ rec {
       persistPath = "/persist";
       zfsPool = "rpool";
     };
+
+    mounts = [
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.deedee.ip}:/tank/data";
+        dest = "/tank/data";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.deedee.ip}:/tank/media";
+        dest = "/tank/media";
+        opts = "ro";
+      }
+    ];
 
     networking = {
       enable = true;

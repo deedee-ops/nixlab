@@ -67,6 +67,13 @@
       example = "bob";
     };
 
+    primaryUserExtraDirs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Extra directories on filesystem to be created for user.";
+      default = [ ];
+      example = [ "/media" ];
+    };
+
     primaryUserPasswordSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret path for primary user password.";
@@ -173,6 +180,7 @@
       polarity = (svc.importYAML base16Scheme).variant;
       opacity.terminal = 0.95;
       image = config.mySystem.wallpaper;
+      targets.font-packages.enable = true;
 
       cursor = {
         package = pkgs.catppuccin-cursors.mochaDark;

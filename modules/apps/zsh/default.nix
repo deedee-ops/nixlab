@@ -79,7 +79,7 @@ in
           + (lib.optionalString config.myHomeApps.ghostty.enable ''
 
             if [[ "$TERM" == "xterm-ghostty" ]]; then
-              source ${pkgs.ghostty.shell_integration}/shell-integration/zsh/ghostty-integration
+              source ${pkgs.ghostty.shell_integration}/zsh/ghostty-integration
             fi
           '')
           + ''

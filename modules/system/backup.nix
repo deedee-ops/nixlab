@@ -28,6 +28,7 @@ in
           };
         }
       );
+      default = [ ];
     };
     remotes = lib.mkOption {
       type = lib.types.listOf (

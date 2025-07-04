@@ -9,6 +9,7 @@ _: {
     ./incus
     ./letsencrypt
     ./mosquitto
+    ./nfs
     ./nginx
     ./ollama
     ./openconnect

@@ -378,7 +378,9 @@ in
                   {
                     persist = {
                       type = "zfs_fs";
-                      mountpoint = "${config.mySystem.impermanence.persistPath}";
+                      # impermanence.nix user `fileSystems."/persist"....` stanza, which will collide with ZFS mount system,
+                      # and mail fail at boot. "legacy" delegates mounting to the OS, and allows to boot properly.
+                      mountpoint = "legacy";
                     };
                   };
             };

@@ -1,7 +1,11 @@
-{ config, ... }:
+{ config, lib, ... }:
 let
+  backupsPath = "/tank/backups";
   dataPath = "/tank/data";
   mediaPath = "/tank/media";
+
+  # CAREFUL! THIS WILL WIPE WHOLE DATA ON TANK ZFS IF SET TO TRUE DURING PROVISION!
+  resetTankDisk = false;
 in
 rec {
   sops = {
@@ -37,7 +41,7 @@ rec {
       locals = [
         {
           name = "tank";
-          location = "${dataPath}/backups";
+          location = backupsPath;
           passFileSopsSecret = "backups/restic/local/password";
         }
       ];
@@ -68,13 +72,21 @@ rec {
           mountpoint = "/nix";
         };
       };
-      tankDiskDevs = [ "/dev/disk/by-id/ata-WD_Blue_SA510_2.5_4TB_24404UD00701" ];
-      tankDatasets = {
+      tankDiskDevs = lib.optionals resetTankDisk [
+        "/dev/disk/by-id/ata-WD_Blue_SA510_2.5_4TB_24404UD00701"
+      ];
+      tankDatasets = lib.optionalAttrs resetTankDisk {
+        backups = {
+          type = "zfs_fs";
+          options.acltype = "posix";
+        };
         data = {
           type = "zfs_fs";
+          options.acltype = "posix";
         };
         media = {
           type = "zfs_fs";
+          options.acltype = "posix";
         };
         vms = {
           type = "zfs_fs";
@@ -116,8 +128,8 @@ rec {
     };
 
     zfs.snapshots = {
+      "tank/backups" = { };
       "tank/data" = { };
-      "tank/webdav" = { };
     };
   };
 
@@ -172,6 +184,15 @@ rec {
       syncCerts.unifi = "wildcard.${mySystem.rootDomain}";
     };
 
+    nfs = {
+      enable = true;
+      exports = ''
+        /tank/backups ${config.myInfra.machines.work.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
+        /tank/data    ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
+        /tank/media   ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
+      '';
+    };
+
     nginx = {
       inherit (mySystem) rootDomain;
 
@@ -221,12 +242,16 @@ rec {
       enable = true;
       subdomain = "nas";
       sources = {
-        "/tank/data" = {
-          path = "/tank/data";
+        "${backupsPath}" = {
+          path = backupsPath;
+          name = "backups";
+        };
+        "${dataPath}" = {
+          path = dataPath;
           name = "data";
         };
-        "/tank/media" = {
-          path = "/tank/media";
+        "${mediaPath}" = {
+          path = mediaPath;
           name = "media";
         };
       };

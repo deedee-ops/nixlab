@@ -1,10 +1,11 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
 let
-  inherit (config.mySystem) primaryUser primaryUserPasswordSopsSecret;
+  inherit (config.mySystem) primaryUser primaryUserExtraDirs primaryUserPasswordSopsSecret;
 in
 {
   sops.secrets."${primaryUserPasswordSopsSecret}".neededForUsers = true;
@@ -27,12 +28,14 @@ in
   programs.zsh.enable = true;
 
   system.activationScripts = {
-    create-media = {
+    create-extra-dirs = {
       deps = [ "users" ];
-      text = ''
-        mkdir -p /media || true
-        chown ${primaryUser}:users /media
-      '';
+      text = lib.concatStringsSep "\n" (
+        builtins.map (extraDir: ''
+          mkdir -p ${extraDir} || true
+          chown ${primaryUser}:users ${extraDir}
+        '') primaryUserExtraDirs
+      );
     };
   };
 }
