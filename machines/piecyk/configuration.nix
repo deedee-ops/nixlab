@@ -152,6 +152,10 @@ rec {
       docwatcher = {
         enable = true;
         watchDir = "${homeDir}/Sync/docwatcher-costs";
+        localdir = {
+          enable = true;
+          targetDir = "/tank/data/private/Memories/Private/Firma/%Y/%m/koszty";
+        };
         rclone = {
           enable = true;
           target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
@@ -162,7 +166,7 @@ rec {
           consumeDir = "${homeDir}/Sync/paperless-consume";
         };
         ssh = {
-          enable = true;
+          enable = false;
           host = "nas";
           targetDir = "/volume3/private/Memories/Private/Firma/%Y/%m/koszty";
         };

@@ -7,6 +7,7 @@ SCP_CMD="${scp_cmd:-scp}"
 SSH_CMD="${ssh_cmd:-ssh}"
 SWAKS_CMD="${swaks_cmd:-swaks}"
 
+LOCALDIR_ENABLE="${LOCALDIR_ENABLE:-false}"
 MAIL_ENABLE="${MAIL_ENABLE:-false}"
 RCLONE_ENABLE="${RCLONE_ENABLE:-false}"
 PAPERLESS_ENABLE="${PAPERLESS_ENABLE:-false}"
@@ -27,6 +28,15 @@ function ensure_file_is_copied() {
       prev_size="${current_size}"
     fi
   done
+}
+
+function handle_localdir() {
+  if [ "$LOCALDIR_ENABLE" != "true" ]; then
+    return
+  fi
+  PARSED_DIR="$(date +"$LOCALDIR_TARGET")"
+  mkdir -p "$PARSED_DIR"
+  cp "$1" "${PARSED_DIR}/"
 }
 
 function handle_mail() {
@@ -80,6 +90,7 @@ while read -r event file; do
 
   pathfile="${WATCH_DIR}/${file}"
 
+  handle_localdir "$pathfile"
   handle_mail "$pathfile"
   handle_paperless "$pathfile"
   handle_rclone "$pathfile"

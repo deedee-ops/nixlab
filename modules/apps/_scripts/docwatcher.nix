@@ -15,6 +15,21 @@ in
       type = lib.types.str;
       description = "Directory to be watched for new documents.";
     };
+    localdir = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "syncing to local dir";
+          targetDir = lib.mkOption {
+            type = lib.types.str;
+            description = "Path where document should be copied.";
+          };
+        };
+      };
+      default = {
+        enable = false;
+      };
+      description = "Send watched documents to paperless.";
+    };
     mail = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -129,6 +144,7 @@ in
       Service = {
         Environment =
           [
+            "LOCALDIR_ENABLE=${if cfg.localdir.enable then "true" else "false"}"
             "MAIL_ENABLE=${if cfg.mail.enable then "true" else "false"}"
             "RCLONE_ENABLE=${if cfg.rclone.enable then "true" else "false"}"
             "PAPERLESS_ENABLE=${if cfg.paperless.enable then "true" else "false"}"
@@ -145,6 +161,9 @@ in
               ]
             }:$PATH"
           ]
+          ++ (lib.optionals cfg.localdir.enable [
+            "LOCALDIR_TARGET=${builtins.replaceStrings [ "%" ] [ "%%" ] cfg.localdir.targetDir}"
+          ])
           ++ (lib.optionals cfg.rclone.enable [
             "RCLONE_TARGET=${cfg.rclone.target}"
           ])
