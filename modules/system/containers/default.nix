@@ -12,6 +12,7 @@ _: {
     ./crypt
     ./echo-server
     ./davis
+    ./filebrowser
     ./firefly-iii
     ./firefoxsync
     ./flaresolverr

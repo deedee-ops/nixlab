@@ -217,6 +217,20 @@ rec {
       webdavDir = "${mediaPath}/webdav";
       webdavDirBackup = false;
     };
+    filebrowser = {
+      enable = true;
+      subdomain = "nas";
+      sources = {
+        "/tank/data" = {
+          path = "/tank/data";
+          name = "data";
+        };
+        "/tank/media" = {
+          path = "/tank/media";
+          name = "media";
+        };
+      };
+    };
     firefoxsync.enable = true;
     firefly-iii.enable = true;
     forgejo = {
@@ -234,6 +248,7 @@ rec {
     # immich = {
     #   enable = true;
     #   dataPath = "${mediaPath}/immich";
+    #   photosPath = "${mediaPath}/photos";
     # };
     maddy.enable = true;
     mail-archive.enable = true;
