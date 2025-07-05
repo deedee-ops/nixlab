@@ -6,6 +6,7 @@
 }:
 let
   cfg = config.myHomeApps.atuin;
+  homeDir = config.home.homeDirectory;
 in
 {
   options.myHomeApps.atuin = {
@@ -55,6 +56,7 @@ in
 
       settings =
         {
+          db_path = "/persist${homeDir}/.local/share/atuin/history.db";
           dialect = "uk";
           auto_sync = true;
           update_check = false;
