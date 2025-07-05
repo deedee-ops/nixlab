@@ -11,6 +11,9 @@ in
 {
   options.mySystemApps.incus = {
     enable = lib.mkEnableOption "incus app";
+    backup = lib.mkEnableOption "data backup" // {
+      default = true;
+    };
     dataDir = lib.mkOption {
       type = lib.types.str;
       description = "Path to directory containing data.";
@@ -75,6 +78,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for incus are disabled!") ];
     assertions = [
       {
         assertion = (!cfg.enableUI) || config.mySystemApps.authelia.enable;
@@ -157,16 +161,24 @@ in
       );
     };
 
-    services.nginx.virtualHosts.incus = lib.mkIf cfg.enableUI (
-      svc.mkNginxVHost {
-        host = "incus";
-        proxyPass = "https://127.0.0.1:8443";
-        extraConfig = ''
-          proxy_ssl_certificate     ${config.sops.secrets."${cfg.incusUICrtSopsSecret}".path};
-          proxy_ssl_certificate_key ${config.sops.secrets."${cfg.incusUIKeySopsSecret}".path};
-        '';
-      }
-    );
+    services = {
+      nginx.virtualHosts.incus = lib.mkIf cfg.enableUI (
+        svc.mkNginxVHost {
+          host = "incus";
+          proxyPass = "https://127.0.0.1:8443";
+          extraConfig = ''
+            proxy_ssl_certificate     ${config.sops.secrets."${cfg.incusUICrtSopsSecret}".path};
+            proxy_ssl_certificate_key ${config.sops.secrets."${cfg.incusUIKeySopsSecret}".path};
+          '';
+        }
+      );
+      restic.backups = lib.mkIf cfg.backup (
+        svc.mkRestic {
+          name = "incus";
+          paths = [ cfg.dataDir ];
+        }
+      );
+    };
 
     mySystemApps.homepage = lib.mkIf cfg.enableUI {
       services.Apps.Incus = svc.mkHomepage "incus" // {
