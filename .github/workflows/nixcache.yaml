@@ -16,6 +16,9 @@ name: nix cache
 
 permissions: {}
 
+concurrency:
+  group: nixcache
+
 jobs:
   lint-build-and-push:
     runs-on: deedee
