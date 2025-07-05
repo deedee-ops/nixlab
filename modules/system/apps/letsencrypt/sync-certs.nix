@@ -42,7 +42,7 @@ in
     systemd = {
       services.sync-certs = {
         description = "Sync certificates";
-        path = [ pkgs.curl ];
+        path = [ pkgs.openssh ];
         serviceConfig.Type = "simple";
         script = lib.optionalString (cfg.syncCerts.unifi != null) ''
           ${lib.getExe syncCerts} unifi ${config.security.acme.certs."${cfg.syncCerts.unifi}".directory}
