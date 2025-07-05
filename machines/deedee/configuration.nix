@@ -127,6 +127,15 @@ rec {
       };
     };
 
+    usb = {
+      autoMountDisks = {
+        G0M024766 = {
+          target = "/mnt/target";
+          autoUmount = false;
+        };
+      };
+    };
+
     zfs.snapshots = {
       "tank/backups" = { };
       "tank/data" = { };
@@ -227,6 +236,69 @@ rec {
           email = "ajgon@${mySystem.rootDomain}";
         }
       ];
+    };
+    borgmatic = {
+      enable = true;
+      sourceVolumes = [ "/tank" ];
+      targetVolumes = [ "/mnt/target" ];
+      cacheDir = "/tank/media/_caches/borgmatic";
+      repositories = {
+        backups = {
+          source_directories = [ "/tank/backups" ];
+          repositories = [
+            {
+              path = "/mnt/target/backups";
+              label = "usb-backups";
+            }
+          ];
+          encryption_passphrase = "\${BORGMATIC_BACKUPS_ENCRYPTION_PASSPHRASE}";
+          healthchecks = {
+            ping_url = "\${BORGMATIC_BACKUPS_HC_PING_URL}";
+          };
+        };
+        legacy = {
+          source_directories = [ "/tank/data/legacy" ];
+          repositories = [
+            {
+              path = "/mnt/target/legacy";
+              label = "usb-legacy";
+            }
+            {
+              path = "\${BORGMATIC_LEGACY_REPO_BORGBASE_EU}";
+              label = "borgbase-legacy";
+            }
+          ];
+          encryption_passphrase = "\${BORGMATIC_LEGACY_ENCRYPTION_PASSPHRASE}";
+          healthchecks = {
+            ping_url = "\${BORGMATIC_LEGACY_HC_PING_URL}";
+          };
+        };
+        nas = {
+          source_directories = [
+            "/tank/media/music/_Mix"
+            "/tank/data/materials"
+            "/tank/data/private"
+          ];
+          repositories = [
+            {
+              path = "/mnt/target/nas";
+              label = "usb-nas";
+            }
+            {
+              path = "\${BORGMATIC_NAS_REPO_BORGBASE_EU}";
+              label = "borgbase-nas-eu";
+            }
+            {
+              path = "\${BORGMATIC_NAS_REPO_BORGBASE_US}";
+              label = "borgbase-nas-us";
+            }
+          ];
+          encryption_passphrase = "\${BORGMATIC_NAS_ENCRYPTION_PASSPHRASE}";
+          healthchecks = {
+            ping_url = "\${BORGMATIC_NAS_HC_PING_URL}";
+          };
+        };
+      };
     };
     coredns.enable = true;
     crypt.enable = true;

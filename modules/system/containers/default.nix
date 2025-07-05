@@ -6,6 +6,7 @@ _: {
     ./bazarr
     ./beszel
     ./bitmagnet
+    ./borgmatic
     ./caddy
     ./calibre-web-automated
     ./coredns

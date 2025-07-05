@@ -20,6 +20,7 @@ _: {
     ./power.nix
     ./ssh.nix
     ./time.nix
+    ./usb.nix
     ./user.nix
     ./zfs.nix
 
