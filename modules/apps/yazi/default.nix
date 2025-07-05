@@ -20,7 +20,7 @@ in
       enable = true;
       enableZshIntegration = true;
       keymap = {
-        manager = {
+        mgr = {
           prepend_keymap = [
             {
               on = "d";
@@ -31,7 +31,7 @@ in
         };
       };
       settings = {
-        manager = {
+        mgr = {
           ratio = [
             1
             3
