@@ -33,6 +33,9 @@ in
           pkgs.imapsync
           pkgs.dnsutils
         ];
+        environment = {
+          TMPDIR = "/tmp";
+        };
         serviceConfig.Type = "simple";
         script = ''
           DOVECOT_IP="$(${lib.getExe' pkgs.dnsutils "dig"} +short -p 5533 mail-archive-dovecot.docker @127.0.0.1)"
@@ -46,7 +49,12 @@ in
           --user2 "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/DESTINATION_USER".path})" \
           --passfile2 "${config.sops.secrets."${cfg.sopsSecretPrefix}/DESTINATION_PASS".path}" \
           --usecache \
-          --exclude 'INBOX|Sent|Drafts|Junk|Trash'
+          --exclude 'INBOX|Sent|Drafts|Junk|Trash' \
+          --nofoldersizes \
+          --tmpdir "${cfg.dataDir}/imapsync" \
+          --logdir "${cfg.dataDir}/imapsync" \
+          --logfile log.txt \
+          --pidfile "${cfg.dataDir}/imapsync/imapsync.pid"
         '';
       };
 
