@@ -125,7 +125,7 @@ in
 
     virtualisation.oci-containers.containers.borgmatic = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/borgmatic-collective/borgmatic:2.0.6@sha256:cdd517a40a7eed8f34411c83e773da45601f936197132147d6a9fcfbe92a8aba";
+        image = "ghcr.io/borgmatic-collective/borgmatic:2.0.7@sha256:5b44db485bc56f063dcca0c50af46165a3c9de18814665a95e7cbb2e3c29d83f";
         environment = {
           BACKUP_CRON = "0 2 * * *";
         };
