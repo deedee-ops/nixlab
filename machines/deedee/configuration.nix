@@ -4,6 +4,7 @@ let
   dataPath = "/tank/data";
   mediaPath = "/tank/media";
 
+  musicPath = "${mediaPath}/music";
   videoPath = "${mediaPath}/video";
   youtubePath = "${mediaPath}/youtube";
 
@@ -392,6 +393,10 @@ rec {
           owner = "states";
         }
       ];
+    };
+    navidrome = {
+      inherit musicPath;
+      enable = true;
     };
     paperless-ngx.enable = true;
     pinchflat = {
