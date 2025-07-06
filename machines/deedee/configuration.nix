@@ -4,6 +4,9 @@ let
   dataPath = "/tank/data";
   mediaPath = "/tank/media";
 
+  videoPath = "${mediaPath}/video";
+  youtubePath = "${mediaPath}/youtube";
+
   # CAREFUL! THIS WILL WIPE WHOLE DATA ON TANK ZFS IF SET TO TRUE DURING PROVISION!
   resetTankDisk = false;
 in
@@ -347,6 +350,10 @@ rec {
     #   dataPath = "${mediaPath}/immich";
     #   photosPath = "${mediaPath}/photos";
     # };
+    jellyfin = {
+      inherit videoPath youtubePath;
+      enable = true;
+    };
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;
@@ -387,6 +394,10 @@ rec {
       ];
     };
     paperless-ngx.enable = true;
+    pinchflat = {
+      enable = true;
+      downloadsPath = youtubePath;
+    };
     registry = {
       enable = true;
       enableUI = true;
