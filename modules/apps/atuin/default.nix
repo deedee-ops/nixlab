@@ -56,7 +56,6 @@ in
 
       settings =
         {
-          db_path = "/persist${homeDir}/.local/share/atuin/history.db";
           dialect = "uk";
           auto_sync = true;
           update_check = false;
@@ -80,6 +79,9 @@ in
             enabled = cfg.useDaemon;
             sync_frequency = 60;
           };
+        }
+        // lib.optionalAttrs osConfig.mySystem.impermanence.enable {
+          db_path = "${osConfig.mySystem.impermanence.persistPath}${homeDir}/.local/share/atuin/history.db";
         }
         // lib.optionalAttrs (cfg.syncAddress != null) {
           key_path = config.sops.secrets."${cfg.sopsSecretPrefix}/encrypted_key".path;
