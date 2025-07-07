@@ -178,8 +178,7 @@ let
     }
     // lib.optionalAttrs (config.stylix.polarity == "dark") { "ui.systemUsesDarkTheme" = 1; }
     // lib.optionalAttrs (cfg.syncServerUrl != null) {
-      "identity.sync.tokenserver.uri" = "${cfg.syncServerUrl}/token/1.0/sync/1.5";
-      "identity.sync.useOAuthForSyncToken" = false;
+      "identity.sync.tokenserver.uri" = "${cfg.syncServerUrl}/1.0/sync/1.5";
     }
     // lib.optionalAttrs (cfg.startupPage != null) {
       "browser.startup.page" = 1;

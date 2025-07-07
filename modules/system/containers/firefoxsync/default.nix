@@ -6,55 +6,52 @@
 }:
 let
   cfg = config.mySystemApps.firefoxsync;
-  secretEnvs = [
-    "FIREFOXSYNC__POSTGRES_PASSWORD"
-    "FIREFOXSYNC__SECRET"
-  ];
 in
 {
+  imports = [
+    ./mysql.nix
+  ];
+
   options.mySystemApps.firefoxsync = {
     enable = lib.mkEnableOption "firefoxsync container";
-    backup = lib.mkEnableOption "postgresql backup" // {
+    backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
-    sopsSecretPrefix = lib.mkOption {
+    dataDir = lib.mkOption {
       type = lib.types.str;
-      description = "Prefix for sops secret, under which all ENVs will be appended.";
-      default = "system/apps/firefoxsync/env";
+      description = "Path to directory containing data.";
+      default = "/var/lib/firefoxsync";
+    };
+    envFileSopsSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "Sops secret name containing firefoxsync envs.";
+      default = "system/apps/firefoxsync/envfile";
     };
   };
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for firefoxsync are disabled!") ];
-
-    sops.secrets = svc.mkContainerSecretsSops {
-      inherit (cfg) sopsSecretPrefix;
-      inherit secretEnvs;
-
-      containerName = "firefoxsync";
-    };
-
-    mySystemApps.postgresql.userDatabases = [
-      {
-        username = "firefoxsync";
-        passwordFile = config.sops.secrets."${cfg.sopsSecretPrefix}/FIREFOXSYNC__POSTGRES_PASSWORD".path;
-        databases = [ "firefoxsync" ];
-      }
-    ];
+    sops.secrets."${cfg.envFileSopsSecret}" = { };
 
     virtualisation.oci-containers.containers.firefoxsync = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/firefoxsync:1.9.1@sha256:54d5c01c55dc01312a9ff496537ad7f3c607c0dfcb4195254d0241a0fd86a104";
+        image = "ghcr.io/porelli/firefox-sync:syncstorage-rs-mysql-latest@sha256:a7ecba788f6b08fdbfcbb3d941ad9a0930a586d084bf70ddb88b293ddcedf91e";
+        dependsOn = [ "firefoxsync-mysql" ];
         environment = {
-          FIREFOXSYNC__PUBLIC_URL = "https://firefoxsync.${config.mySystem.rootDomain}";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes = svc.mkContainerSecretsVolumes {
-          inherit (cfg) sopsSecretPrefix;
-          inherit secretEnvs;
+          SYNC_HOST = "0.0.0.0";
+          SYNC_HUMAN_LOGS = "1";
+          SYNC_TOKENSERVER__ENABLED = "true";
+          SYNC_TOKENSERVER__RUN_MIGRATIONS = "true";
+          SYNC_TOKENSERVER__NODE_TYPE = "mysql";
+          SYNC_TOKENSERVER__FXA_EMAIL_DOMAIN = "api.accounts.firefox.com";
+          SYNC_TOKENSERVER__FXA_OAUTH_SERVER_URL = "https://oauth.accounts.firefox.com/v1";
+          SYNC_TOKENSERVER__ADDITIONAL_BLOCKING_THREADS_FOR_FXA_REQUESTS = "2";
+          RUST_LOG = "info";
         };
+        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
       };
       opts = {
-        # contacting with firefox servers to authorize
+        # accessing auth server
         allowPublic = true;
       };
     };
@@ -62,10 +59,19 @@ in
     services = {
       nginx.virtualHosts.firefoxsync = svc.mkNginxVHost {
         host = "firefoxsync";
-        proxyPass = "http://firefoxsync.docker:3000";
+        proxyPass = "http://firefoxsync.docker:8000";
         useAuthelia = false;
       };
-      postgresqlBackup = lib.mkIf cfg.backup { databases = [ "firefoxsync" ]; };
+      restic.backups = lib.mkIf cfg.backup (
+        svc.mkRestic {
+          name = "firefoxsync";
+          paths = [ cfg.dataDir ];
+        }
+      );
     };
+
+    environment.persistence."${config.mySystem.impermanence.persistPath}" =
+      lib.mkIf config.mySystem.impermanence.enable
+        { directories = [ cfg.dataDir ]; };
   };
 }
