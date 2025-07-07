@@ -12,6 +12,7 @@ in
     insight.enable = lib.mkEnableOption "koinsight container" // {
       default = cfg.enable;
     };
+    insight.exposePort = lib.mkEnableOption "application port direct access";
   };
 
   config = lib.mkIf (cfg.enable && cfg.insight.enable) {
@@ -24,7 +25,7 @@ in
         environment = {
           HOSTNAME = "0.0.0.0";
         };
-        ports = [ "8082:3000" ];
+        ports = lib.optionals cfg.insight.exposePort [ "8082:3000" ];
         volumes = [ "${cfg.dataDir}/insight:/app/data" ];
       };
       opts = {

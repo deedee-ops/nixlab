@@ -4,6 +4,7 @@ let
   dataPath = "/tank/data";
   mediaPath = "/tank/media";
 
+  booksPath = "${mediaPath}/books";
   musicPath = "${mediaPath}/music";
   videoPath = "${mediaPath}/video";
   youtubePath = "${mediaPath}/youtube";
@@ -304,6 +305,11 @@ rec {
         };
       };
     };
+    calibre-web-automated = {
+      inherit booksPath;
+
+      enable = true;
+    };
     coredns.enable = true;
     crypt.enable = true;
     davis = {
@@ -355,6 +361,7 @@ rec {
       inherit videoPath youtubePath;
       enable = true;
     };
+    koreader.enable = true;
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;

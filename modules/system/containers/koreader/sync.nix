@@ -12,6 +12,7 @@ in
     sync.enable = lib.mkEnableOption "koreader sync container" // {
       default = !cfg.enable;
     };
+    sync.exposePort = lib.mkEnableOption "application port direct access";
   };
 
   config = lib.mkIf (cfg.enable && cfg.sync.enable) {
@@ -20,7 +21,7 @@ in
     virtualisation.oci-containers.containers.koreader-sync = svc.mkContainer {
       cfg = {
         image = "koreader/kosync:1.0.1.3@sha256:5129931e8e5066a109d9baa23e3a9c3568e0fea284ca57c50e372b6434b0e827";
-        ports = [ "8081:7200" ];
+        ports = lib.optionals cfg.sync.exposePort [ "8081:7200" ];
         volumes = [ "${cfg.dataDir}/sync:/var/lib/redis" ];
         extraOptions = [
           "--mount"

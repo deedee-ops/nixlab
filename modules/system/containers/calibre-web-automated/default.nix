@@ -18,6 +18,7 @@ in
       description = "Path to directory containing data.";
       default = "/var/lib/calibre-web-automated";
     };
+    exposePort = lib.mkEnableOption "application port direct access";
     booksPath = lib.mkOption {
       type = lib.types.str;
       description = "Path to directory containing books.";
@@ -34,7 +35,7 @@ in
           PUID = "65000";
           PGID = "65000";
         };
-        ports = [ "8083:8083" ];
+        ports = lib.optionals cfg.exposePort [ "8083:8083" ];
         volumes = [
           "${./patch-cbz.sh}:/custom-cont-init.d/patch-cbz.sh"
           "${cfg.dataDir}/config:/config"
