@@ -55,7 +55,7 @@ in
           );
         in
         {
-          image = "ghcr.io/twin/gatus:v5.19.0@sha256:12362572b78c1bb6f234248de33392a393f7e604d94779e3086ec2dbba1bedf3";
+          image = "ghcr.io/twin/gatus:v5.20.0@sha256:e655d13d0cb89c64a2e53a853bbca9556a7238e788bc4a08c19aa5fb7938d0da";
           user = "65000:65000";
           volumes = [ "${configFile}:/config/config.yaml" ];
         };
