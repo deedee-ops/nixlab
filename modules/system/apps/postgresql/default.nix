@@ -29,6 +29,12 @@ in
       default = false;
       example = true;
     };
+    enableVectorchord = lib.mkOption {
+      type = lib.types.bool;
+      description = "Enable vectorchord extension.";
+      default = false;
+      example = true;
+    };
     initSQL = lib.mkOption {
       type = lib.types.attrsOf lib.types.str;
       description = "Per-database list of init SQL scripts, where key is databases name.";
@@ -95,13 +101,21 @@ in
             {
               password_encryption = "scram-sha-256";
               max_connections = 500;
+              shared_preload_libraries =
+                (lib.optionals cfg.enablePgVectoRs [ "vectors.so" ])
+                ++ (lib.optionals cfg.enableVectorchord [ "vchord.so" ]);
             }
-            // lib.optionalAttrs cfg.enablePgVectoRs {
-              shared_preload_libraries = [ "vectors.so" ];
+            // lib.optionalAttrs (cfg.enablePgVectoRs || cfg.enableVectorchord) {
               search_path = "\"$user\", public, vectors";
             };
 
-          extensions = ps: (lib.optionals cfg.enablePgVectoRs [ ps.pgvecto-rs ]);
+          extensions =
+            ps:
+            (lib.optionals cfg.enablePgVectoRs [ ps.pgvecto-rs ])
+            ++ (lib.optionals cfg.enableVectorchord [
+              ps.pgvector
+              ps.vectorchord
+            ]);
         };
 
         postgresqlBackup = lib.mkIf cfg.backup {
@@ -123,7 +137,7 @@ in
 
     users.users.postgres.extraGroups = [ "abc" ];
 
-    systemd.services.postgresql.postStart =
+    systemd.services.postgresql-setup.postStart = lib.mkAfter (
       ''
         # hack to force password regeneration when recovery mode changes
         # ${if config.mySystem.recoveryMode then "recovery" else "main"}
@@ -150,7 +164,8 @@ in
         builtins.map (db: ''
           psql -d ${db} -f "${(pkgs.writeText "init-${db}.sql" (builtins.getAttr db cfg.initSQL))}"
         '') (builtins.attrNames cfg.initSQL)
-      );
+      )
+    );
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

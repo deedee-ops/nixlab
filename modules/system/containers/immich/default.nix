@@ -114,7 +114,7 @@ in
       ];
 
       postgresql = {
-        enablePgVectoRs = true;
+        enableVectorchord = true;
         userDatabases = [
           {
             username = "immich";
@@ -124,18 +124,15 @@ in
         ];
         initSQL = {
           immich = ''
-            CREATE EXTENSION IF NOT EXISTS unaccent;
-            CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-            CREATE EXTENSION IF NOT EXISTS vectors;
-            CREATE EXTENSION IF NOT EXISTS cube;
-            CREATE EXTENSION IF NOT EXISTS earthdistance;
-            CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
+            ALTER DATABASE immich OWNER TO immich;
             ALTER SCHEMA public OWNER TO immich;
-            ALTER SCHEMA vectors OWNER TO immich;
-            GRANT SELECT ON TABLE pg_vector_index_stat TO immich;
 
-            ALTER EXTENSION vectors UPDATE;
+            CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
+            CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+
+            ALTER EXTENSION vchord UPDATE;
+            REINDEX INDEX face_index;
+            REINDEX INDEX clip_index;
           '';
         };
       };
@@ -147,7 +144,10 @@ in
       nginx.virtualHosts.immich = svc.mkNginxVHost {
         host = "immich";
         proxyPass = "http://immich-server.docker:2283";
-        autheliaIgnorePaths = [ "/api" ];
+        autheliaIgnorePaths = [
+          "/.well-known"
+          "/api"
+        ];
         customCSP = ''
           default-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline' data:
           mediastream: blob: wss: https://static.immich.cloud https://tiles.immich.cloud

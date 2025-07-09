@@ -352,11 +352,11 @@ rec {
       };
       subdomain = "deedee";
     };
-    # immich = {
-    #   enable = true;
-    #   dataPath = "${mediaPath}/immich";
-    #   photosPath = "${mediaPath}/photos";
-    # };
+    immich = {
+      enable = true;
+      dataPath = "${mediaPath}/immich";
+      photosPath = "${mediaPath}/photos";
+    };
     jellyfin = {
       inherit videoPath youtubePath;
       enable = true;
