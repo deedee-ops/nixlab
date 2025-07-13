@@ -6,6 +6,7 @@ let
 
   booksPath = "${mediaPath}/books";
   musicPath = "${mediaPath}/music";
+  torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
   youtubePath = "${mediaPath}/youtube";
 
@@ -242,6 +243,10 @@ rec {
         }
       ];
     };
+    bazarr = {
+      inherit videoPath;
+      enable = true;
+    };
     borgmatic = {
       enable = true;
       sourceVolumes = [ "/tank" ];
@@ -344,6 +349,11 @@ rec {
       enable = true;
       enableRunner = true;
     };
+    gluetun = {
+      enable = true;
+      externalDomain = "deedee.airdns.org";
+      forwardedPort = 17307;
+    };
     homepage = {
       enable = true;
       title = "deedee";
@@ -410,9 +420,23 @@ rec {
       enable = true;
       downloadsPath = youtubePath;
     };
+    prowlarr.enable = true;
+    qbittorrent = {
+      enable = true;
+      downloadsPath = torrentsPath;
+    };
+    radarr = {
+      inherit mediaPath;
+      enable = true;
+    };
+    recyclarr.enable = true;
     registry = {
       enable = true;
       enableUI = true;
+    };
+    sonarr = {
+      inherit mediaPath;
+      enable = true;
     };
     syncthing.enable = true;
     tailscale = {
