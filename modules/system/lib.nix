@@ -150,6 +150,8 @@
           routeThroughVPN = false;
           useHostNetwork = false;
           customNetworks = [ ];
+          sopsSecretPrefix = null;
+          secretEnvs = [ ];
         } // opts;
       in
       (lib.recursiveUpdate {
@@ -158,6 +160,18 @@
           TZ = config.mySystem.time.timeZone;
         };
       } cfg)
+      # ugly hack to pass secrets as env variables by concatenating them to image name, as image name is only non-escaped attribute
+      // (lib.optionalAttrs (args.sopsSecretPrefix != null && (builtins.length args.secretEnvs > 0)) {
+        image = builtins.concatStringsSep " " (
+          lib.lists.flatten (
+            builtins.map (env: [
+              "-e"
+              "${env}=$(cat ${config.sops.secrets."${args.sopsSecretPrefix}/${env}".path})"
+            ]) args.secretEnvs
+          )
+          ++ [ cfg.image ]
+        );
+      })
       // {
         dependsOn = (lib.optionals args.routeThroughVPN [ "gluetun" ]) ++ (cfg.dependsOn or [ ]);
         extraOptions =

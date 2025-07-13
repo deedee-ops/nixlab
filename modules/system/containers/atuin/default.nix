@@ -7,6 +7,7 @@
 let
   cfg = config.mySystemApps.atuin;
   secretEnvs = [
+    "ATUIN_DB_URI"
     "ATUIN__POSTGRES_PASSWORD"
   ];
 in
@@ -43,20 +44,25 @@ in
 
     virtualisation.oci-containers.containers.atuin = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/atuin:18.6.1@sha256:fba3933ba301acb120605cb7eebec385c65c973025592baac5be22486646dd32";
+        image = "ghcr.io/atuinsh/atuin:v18.6.1@sha256:c7a20162716125c8dd82183f8e27df05c70cde055928ed6fde90b2d52c32028f";
+        cmd = [
+          "server"
+          "start"
+        ];
         environment = {
-          ATUIN__POSTGRES_DATABASE = "atuin";
-          ATUIN__POSTGRES_HOST = "host.docker.internal";
-          ATUIN__POSTGRES_SSLMODE = "disable";
-          ATUIN__POSTGRES_USERNAME = "atuin";
+          ATUIN_CONFIG_DIR = "/config";
           ATUIN_HOST = "0.0.0.0";
-          ATUIN_OPEN_REGISTRATION = "true";
+          ATUIN_OPEN_REGISTRATION = "false";
           RUST_LOG = "info,atuin_server=debug";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes = svc.mkContainerSecretsVolumes {
-          inherit (cfg) sopsSecretPrefix;
-          inherit secretEnvs;
         };
+        extraOptions = [
+          "--mount"
+          "type=tmpfs,destination=/config,tmpfs-mode=1777"
+        ];
+      };
+      opts = {
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
       };
     };
 

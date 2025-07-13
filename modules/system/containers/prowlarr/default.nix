@@ -49,7 +49,7 @@ in
 
     virtualisation.oci-containers.containers.prowlarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/prowlarr-devel:1.35.1.5034@sha256:8a9a1445d5014bed84005c64b800e132a3c459a4729a5895653af3c156195998";
+        image = "ghcr.io/home-operations/prowlarr:2.0.1@sha256:e9e0cf64a1ab90ca61688de85bb732d7c3e5142d40a2d9af6172551252cb31c3";
         environment = {
           PROWLARR__APP__INSTANCENAME = "Prowlarr";
           PROWLARR__APP__THEME = "dark";
@@ -62,15 +62,10 @@ in
           PROWLARR__POSTGRES__MAINDB = "prowlarr";
           PROWLARR__POSTGRES__USER = "prowlarr";
           PROWLARR__UPDATE__BRANCH = "develop";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ builtins.map (
-            def: "${def}:/config/Definitions/Custom/${builtins.baseNameOf def}:ro"
-          ) cfg.customDefinitions;
+        };
+        volumes = builtins.map (
+          def: "${def}:/config/Definitions/Custom/${builtins.baseNameOf def}:ro"
+        ) cfg.customDefinitions;
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/config,tmpfs-mode=1777"
@@ -79,6 +74,9 @@ in
       opts = {
         # downloading metadata
         allowPublic = true;
+
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
       };
     };
 

@@ -42,13 +42,15 @@ in
 
     virtualisation.oci-containers.containers.jellyfin = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/jellyfin:10.10.7@sha256:cfa1ad960832dcad5c8e0697ed1f6b14a17d5dc36a4d34c86774dfdc8f1a8ff7";
+        image = "ghcr.io/jellyfin/jellyfin:10.10.7@sha256:c008e3a734af5bfd76101e7785f3b8a03a0cc0834d40a779a28074fb333f03af";
+        user = "65000:65000";
         environment = {
           DOTNET_SYSTEM_IO_DISABLEFILELOCKING = "true";
         };
         ports = [ "8096:8096" ];
         volumes = [
           "${cfg.dataDir}/config:/config"
+          "/var/cache/jellyfin/cache:/cache"
           "/var/cache/jellyfin/transcode:/transcode"
           "/var/cache/jellyfin/internal-ip:/secrets/JELLYFIN_PublishedServerUrl:ro" # hack to dynamically pass current machine IP to env
           "${cfg.videoPath}:/data/video"
@@ -108,8 +110,8 @@ in
     systemd.services.docker-jellyfin = {
       path = [ pkgs.iproute2 ];
       preStart = lib.mkAfter ''
-        mkdir -p "${cfg.dataDir}/config" /var/cache/jellyfin/transcode
-        chown 65000:65000 "${cfg.dataDir}/config" /var/cache/jellyfin /var/cache/jellyfin/transcode
+        mkdir -p "${cfg.dataDir}/config" /var/cache/jellyfin/transcode /var/cache/jellyfin/cache
+        chown 65000:65000 "${cfg.dataDir}/config" /var/cache/jellyfin /var/cache/jellyfin/transcode /var/cache/jellyfin/cache
         ip -f inet addr show ${config.mySystem.networking.rootInterface} | grep -Po 'inet \K[\d.]+' > "/var/cache/jellyfin/internal-ip"
         chown 65000:65000 "/var/cache/jellyfin/internal-ip"
       '';

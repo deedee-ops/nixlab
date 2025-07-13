@@ -53,7 +53,8 @@ in
 
     virtualisation.oci-containers.containers.radarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/radarr-devel:5.23.0.9907@sha256:9084a3ec5cdbd53efd67d4b98b8f14bb9f8dd088455eb08d1d250bf9127b14be";
+        image = "ghcr.io/home-operations/radarr:5.27.1.10122@sha256:e6e4fb8383b9f232a5f7d6d7c1eadd03501685468c382131643ba8aed03098ba";
+        user = "65000:65000";
         environment = {
           RADARR__APP__INSTANCENAME = "Radarr";
           RADARR__APP__THEME = "dark";
@@ -66,20 +67,18 @@ in
           RADARR__POSTGRES__MAINDB = "radarr";
           RADARR__POSTGRES__USER = "radarr";
           RADARR__UPDATE__BRANCH = "develop";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ [
-            "${cfg.dataDir}/config:/config"
-            "${cfg.mediaPath}:/data"
-          ];
+        };
+        volumes = [
+          "${cfg.dataDir}/config:/config"
+          "${cfg.mediaPath}:/data"
+        ];
       };
       opts = {
         # downloading metadata
         allowPublic = true;
+
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
       };
     };
 

@@ -50,7 +50,8 @@ in
 
     virtualisation.oci-containers.containers.bazarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/bazarr:1.5.1@sha256:9d5fd3e4023efec7a01fe4f5005992ee81a689fa3be00ceaca77a7ecf1ae3e68";
+        image = "ghcr.io/home-operations/bazarr:1.5.2@sha256:dbc87e5ce9e199709188e152e82b3ff5d33e6521a1b3d61e465aa75b4b739e7f";
+        user = "65000:65000";
         environment =
           {
             BAZARR__ANALYTICS_ENABLED = "false";
@@ -59,11 +60,7 @@ in
             JELLYFIN_URL = "http://jellyfin:8096";
           };
         volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ [
+          [
             "${cfg.dataDir}/config:/config"
             "${cfg.videoPath}:/data/video"
           ]
@@ -74,6 +71,9 @@ in
       opts = {
         # downloading subtitles
         allowPublic = true;
+
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
       };
     };
 

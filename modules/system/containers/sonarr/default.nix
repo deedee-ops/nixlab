@@ -53,7 +53,8 @@ in
 
     virtualisation.oci-containers.containers.sonarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/sonarr-devel:4.0.14.2938@sha256:437cb20e3cc7557937589d396083c7a415ba1fcd027618c13c3bbe53942f8777";
+        image = "ghcr.io/home-operations/sonarr:4.0.15@sha256:ca6c735014bdfb04ce043bf1323a068ab1d1228eea5bab8305ca0722df7baf78";
+        user = "65000:65000";
         environment = {
           SONARR__APP__INSTANCENAME = "Sonarr";
           SONARR__APP__THEME = "dark";
@@ -66,21 +67,19 @@ in
           SONARR__POSTGRES__MAINDB = "sonarr";
           SONARR__POSTGRES__USER = "sonarr";
           SONARR__UPDATE__BRANCH = "develop";
-        }; # // svc.mkContainerSecretsEnv { inherit secretEnvs; };
-        volumes =
-          svc.mkContainerSecretsVolumes {
-            inherit (cfg) sopsSecretPrefix;
-            inherit secretEnvs;
-          }
-          ++ [
-            "${cfg.dataDir}/config:/config"
-            "${cfg.mediaPath}:/data"
-            "${./refresh-series.sh}:/scripts/refresh-series.sh"
-          ];
+        };
+        volumes = [
+          "${cfg.dataDir}/config:/config"
+          "${cfg.mediaPath}:/data"
+          "${./refresh-series.sh}:/scripts/refresh-series.sh"
+        ];
       };
       opts = {
         # downloading metadata
         allowPublic = true;
+
+        inherit (cfg) sopsSecretPrefix;
+        inherit secretEnvs;
       };
     };
 

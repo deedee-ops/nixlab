@@ -29,20 +29,32 @@ in
 
     virtualisation.oci-containers.containers.navidrome = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/navidrome:0.55.2@sha256:fa133b23ad649cf6eb9d5bb94cd819135fbc991274b113061efe9096f8edf9eb";
+        image = "ghcr.io/navidrome/navidrome:0.57.0@sha256:88af64a1a7b06e86c379b9753adc3427035a848595d6e932f092772c467d70a4";
+        user = "65000:65000";
         environment = {
           ND_BASEURL = "/";
           ND_COVERARTPRIORITY = "folder.*, cover.*, front.*";
+          ND_DATAFOLDER = "/config";
           ND_DEFAULTLANGUAGE = "en";
           ND_ENABLEINSIGHTSCOLLECTOR = "false";
+          ND_LOGLEVEL = "info";
+          ND_MUSICFOLDER = "/data";
           ND_PID_ALBUM = "folder";
+          ND_PORT = "3000";
           ND_REVERSEPROXYUSERHEADER = "Remote-User";
           ND_REVERSEPROXYWHITELIST = "172.16.0.0/12";
+          ND_SCANINTERVAL = "1m";
           ND_SCANNER_GROUPALBUMRELEASES = "true";
+          ND_SESSIONTIMEOUT = "30m";
+          ND_TRANSCODINGCACHESIZE = "100MB";
         };
         volumes = [
           "${cfg.dataDir}/config:/config"
           "${cfg.musicPath}:/data:ro"
+        ];
+        extraOptions = [
+          "--mount"
+          "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
         ];
       };
       opts = {
