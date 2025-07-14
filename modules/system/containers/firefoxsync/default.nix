@@ -35,7 +35,7 @@ in
 
     virtualisation.oci-containers.containers.firefoxsync = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/porelli/firefox-sync:syncstorage-rs-mysql-latest@sha256:a7ecba788f6b08fdbfcbb3d941ad9a0930a586d084bf70ddb88b293ddcedf91e";
+        image = "ghcr.io/porelli/firefox-sync:syncstorage-rs-mysql-latest@sha256:c5e06bf29ecc174e8b1d8d80bd19f6548fbd792333014d5e97a546bc9b072633";
         dependsOn = [ "firefoxsync-mysql" ];
         environment = {
           SYNC_HOST = "0.0.0.0";
