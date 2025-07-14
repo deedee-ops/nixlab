@@ -1,6 +1,7 @@
 {
   system,
   lib,
+  faketty,
   stdenv,
   makeRustPlatform,
   fenix,
@@ -24,7 +25,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.28";
+  rev = "v0.7.29";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -33,11 +34,11 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-T2g9OMQxnLAyBdYz6TVKkpd/9c75Cmse6dN3Kh1N2ug="; # 1
+    hash = "sha256-XrcdYGz0Br604QlK811X8od+ugQrVPriokL9X5box9Y="; # 1
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
-    hash = "sha256-eMytE/047KbwLtcVaDt3xraekcMh7yWPc8Ie8XpttdE="; # 2
+    hash = "sha256-Ulb0FV4Kyk5wfk/A3TvM8F8cuaP6uJTRWhbBY/q9gI0="; # 2
   };
 
   # Fixed Output Derivation
@@ -54,36 +55,27 @@ let
       pnpm_10.configHook
       gnused
       nodejs_22
+      faketty
     ];
 
     buildPhase = ''
       runHook preBuild
-      # patch out cargo build, we'll do it in next step
-      sed -E -i"" 's@"dependsOn":(.*), "cargo-build-transit"@"dependsOn":\1@g' turbo.json
-
-      pnpm turbo --filter @retrom/client-web build:desktop
+      sed -i"" -E 's@"parallel":(.*)@"parallel":\1"sync":{"applyChanges":true},@' nx.json
+      sed -i"" 's@nxCloudId@test@g' nx.json
+      faketty pnpm nx build:desktop retrom-client-web
       runHook postBuild
     '';
 
     installPhase = ''
       runHook preInstall
-      mkdir -p $out/packages/client/web
-      mkdir -p $out/packages/codegen
-      mkdir -p $out/plugins/retrom-plugin-config/
-      mkdir -p $out/plugins/retrom-plugin-installer/
-      mkdir -p $out/plugins/retrom-plugin-standalone/
-
-      cp -r packages/client/web/dist $out/packages/client/web/
-      cp -r packages/codegen/dist $out/packages/codegen/
-      cp -r plugins/retrom-plugin-config/dist $out/plugins/retrom-plugin-config/
-      cp -r plugins/retrom-plugin-installer/dist $out/plugins/retrom-plugin-installer/
-      cp -r plugins/retrom-plugin-standalone/dist $out/plugins/retrom-plugin-standalone/
+      find packages -name dist -exec sh -c 'mkdir -p '"$out"'/$(dirname {}); cp -r {} '"$out"'/$(dirname {})/' \;
+      find plugins -name dist -exec sh -c 'mkdir -p '"$out"'/$(dirname {}); cp -r {} '"$out"'/$(dirname {})/' \;
       runHook postInstall
     '';
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-g3slotKSIDOR8ZDEGMZ8vH7x0A5oTkjRZskQJdxxAD8="; # 4
+    outputHash = "sha256-/r5U+Y0rRr35UAptBpwKr52Gr76b8w9iw972k6CoBW8="; # 4
   };
 in
 (makeRustPlatform {
@@ -97,7 +89,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-qdUriOCtg5a+JTNCUgHLJWvtt//SGWZvP+jxranH9pc="; # 3
+    cargoHash = "sha256-QLQDj6rz/FJX4Hrb6nFAU8wZwV7cRY4WEpajWen/axA="; # 3
     useFetchCargoVendor = true;
 
     # buildType = "debug";
