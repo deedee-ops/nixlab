@@ -435,6 +435,10 @@ rec {
       enable = true;
     };
     recyclarr.enable = true;
+    redlib = {
+      enable = true;
+      overrideDNS = true;
+    };
     registry = {
       enable = true;
       enableUI = true;

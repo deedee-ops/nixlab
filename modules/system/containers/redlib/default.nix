@@ -10,6 +10,7 @@ in
 {
   options.mySystemApps.redlib = {
     enable = lib.mkEnableOption "redlib container";
+    overrideDNS = lib.mkEnableOption "DNS bypassing";
     envFileSopsSecret = lib.mkOption {
       type = lib.types.str;
       description = "Sops secret name containing redlib envs.";
@@ -55,6 +56,9 @@ in
             "redlib"
             "--ipv4-only"
           ];
+        }
+        // lib.optionalAttrs cfg.overrideDNS {
+          extraOptions = [ "--dns=9.9.9.9" ];
         };
       opts = {
         # proxying to reddit
