@@ -81,6 +81,7 @@ in
           "modify-secret"
           "node-shell"
           "ns"
+          "oidc-login"
           "popeye"
           "resource-capacity"
         ];
