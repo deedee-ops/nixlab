@@ -135,7 +135,12 @@ rec {
 
     usb = {
       autoMountDisks = {
+        # both disks should never be attached at the same time
         G0M024766 = {
+          target = "/mnt/target";
+          autoUmount = false;
+        };
+        G11009409 = {
           target = "/mnt/target";
           autoUmount = false;
         };
