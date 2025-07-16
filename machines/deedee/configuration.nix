@@ -6,6 +6,7 @@ let
 
   booksPath = "${mediaPath}/books";
   musicPath = "${mediaPath}/music";
+  romsPath = "${mediaPath}/retrom";
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
   youtubePath = "${mediaPath}/youtube";
@@ -442,6 +443,10 @@ rec {
     registry = {
       enable = true;
       enableUI = true;
+    };
+    retrom = {
+      inherit romsPath;
+      enable = true;
     };
     sonarr = {
       inherit mediaPath;
