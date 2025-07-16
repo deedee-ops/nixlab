@@ -13,7 +13,7 @@ in
     virtualisation.oci-containers.containers = {
       firefoxsync-mysql = svc.mkContainer {
         cfg = {
-          image = "docker.io/library/mariadb:lts@sha256:ee8fadc8e4b4244b636a1d7543dd8c8471a2d66d8de3033312bd3ab33f28db5e";
+          image = "docker.io/library/mariadb:lts@sha256:acf55e2d6262087ef9e0abb2552f907657e9773c3d3d99176c4092eddfade9dd";
           environment = {
             MARIADB_AUTO_UPGRADE = "true";
           };
