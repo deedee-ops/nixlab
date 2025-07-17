@@ -1,5 +1,4 @@
 {
-  osConfig,
   config,
   lib,
   pkgs,
@@ -45,12 +44,6 @@ in
           run mkdir -p ${config.xdg.stateHome}/zsh || true
         '';
       };
-
-      # hack to persist .zcompdump file
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [
-          ".config/zsh"
-        ];
     };
 
     programs.zsh = {
@@ -65,7 +58,7 @@ in
 
       sessionVariables.PROMPT_HOSTNAME_COLOR = cfg.promptColor;
 
-      completionInit = "autoload -U compinit && compinit -u";
+      completionInit = "autoload -U compinit && compinit -u -d \"${config.xdg.cacheHome}/zsh/.compdump-$USER\"";
 
       initContent = lib.mkMerge [
         (lib.mkOrder 550 ''

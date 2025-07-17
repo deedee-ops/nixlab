@@ -25,7 +25,10 @@ in
     };
   };
 
-  programs.zsh.enable = true;
+  programs.zsh = {
+    enable = true;
+    enableGlobalCompInit = false;
+  };
 
   system.activationScripts = {
     create-extra-dirs = {
