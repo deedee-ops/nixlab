@@ -169,7 +169,7 @@
       execWheelOnly = true;
       extraConfig = lib.mkAfter ''
         Defaults lecture="never"
-        Defaults env_keep += "TERM TERMINFO"
+        Defaults env_keep += "HOME TERM TERMINFO"
       '';
     };
 

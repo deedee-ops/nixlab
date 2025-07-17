@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -61,11 +62,18 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    myHomeApps.shellInitScriptContents = builtins.concatStringsSep "\n" (
-      builtins.map (key: ''
-        ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
-      '') cfg.privateKeys
-    );
+    myHomeApps.shellInitScriptContents =
+      ''
+        if [ "$USER" = "${osConfig.mySystem.primaryUser}" ]; then
+      ''
+      + builtins.concatStringsSep "\n" (
+        builtins.map (key: ''
+          ${lib.getExe pkgs.gnupg} --list-secret-keys ${key.id} > /dev/null || gpg --batch --import ${key.path}
+        '') cfg.privateKeys
+      )
+      + ''
+        fi
+      '';
 
     home = {
       activation.gpg = lib.mkIf cfg.enableYubikey (

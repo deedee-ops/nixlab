@@ -38,4 +38,35 @@ in
       );
     };
   };
+
+  # preserve primary user home directory ownership
+  systemd = {
+    services."preserve-${primaryUser}-home-ownership" = {
+      script =
+        if config.mySystem.impermanence.enable then
+          ''
+            chown -R ${primaryUser}:users ${config.mySystem.impermanence.persistPath}${
+              config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory
+            }
+          ''
+        else
+          ''
+            chown -R ${primaryUser}:users ${
+              config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory
+            }
+          '';
+      serviceConfig = {
+        Type = "oneshot";
+        User = "root";
+      };
+    };
+    timers."preserve-${primaryUser}-home-ownership" = {
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "*:0/5";
+        Persistent = true;
+        Unit = "preserve-${primaryUser}-home-ownership.service";
+      };
+    };
+  };
 }

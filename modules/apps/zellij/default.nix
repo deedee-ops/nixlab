@@ -1,4 +1,5 @@
 {
+  osConfig,
   config,
   lib,
   ...
@@ -50,10 +51,12 @@ in
 
     programs.zsh.initContent = lib.mkIf cfg.autoStart (
       lib.mkOrder 100 ''
-        export ZELLIJ_AUTO_ATTACH="${if cfg.singleInstance then "true" else "false"}";
-        export ZELLIJ_AUTO_EXIT="true";
+        if [ "$USER" = "${osConfig.mySystem.primaryUser}" ]; then
+          export ZELLIJ_AUTO_ATTACH="${if cfg.singleInstance then "true" else "false"}";
+          export ZELLIJ_AUTO_EXIT="true";
 
-        eval "$(${lib.getExe config.programs.zellij.package} setup --generate-auto-start zsh)"
+          eval "$(${lib.getExe config.programs.zellij.package} setup --generate-auto-start zsh)"
+        fi
       ''
     );
   };

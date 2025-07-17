@@ -48,46 +48,53 @@ in
       '';
     };
 
-    programs.atuin = {
-      enable = true;
+    programs = {
+      atuin = {
+        enable = true;
 
-      enableZshIntegration = true;
-      flags = [ "--disable-up-arrow" ];
+        enableZshIntegration = true;
+        flags = [ "--disable-up-arrow" ];
 
-      settings =
-        {
-          dialect = "uk";
-          auto_sync = true;
-          update_check = false;
-          search_mode = "fuzzy";
-          filter_mode = "host";
-          style = "compact";
-          invert = false;
-          inline_height = 16;
-          show_preview = true;
-          show_help = false;
-          show_tabs = false;
-          exit_mode = "return-original";
-          store_failed = true;
-          secrets_filter = true;
-          enter_accept = false;
+        settings =
+          {
+            dialect = "uk";
+            auto_sync = true;
+            update_check = false;
+            search_mode = "fuzzy";
+            filter_mode = "host";
+            style = "compact";
+            invert = false;
+            inline_height = 16;
+            show_preview = true;
+            show_help = false;
+            show_tabs = false;
+            exit_mode = "return-original";
+            store_failed = true;
+            secrets_filter = true;
+            enter_accept = false;
 
-          sync.records = true;
-          dotfiles.enabled = false;
+            sync.records = true;
+            dotfiles.enabled = false;
 
-          daemon = {
-            enabled = cfg.useDaemon;
-            sync_frequency = 60;
+            daemon = {
+              enabled = cfg.useDaemon;
+              sync_frequency = 60;
+              socket_path = "${config.xdg.dataHome}/atuin/atuin.sock";
+            };
+          }
+          // lib.optionalAttrs osConfig.mySystem.impermanence.enable {
+            db_path = "${osConfig.mySystem.impermanence.persistPath}${homeDir}/.local/share/atuin/history.db";
+          }
+          // lib.optionalAttrs (cfg.syncAddress != null) {
+            key_path = config.sops.secrets."${cfg.sopsSecretPrefix}/encrypted_key".path;
+            sync_address = cfg.syncAddress;
+            sync_frequency = "0";
           };
-        }
-        // lib.optionalAttrs osConfig.mySystem.impermanence.enable {
-          db_path = "${osConfig.mySystem.impermanence.persistPath}${homeDir}/.local/share/atuin/history.db";
-        }
-        // lib.optionalAttrs (cfg.syncAddress != null) {
-          key_path = config.sops.secrets."${cfg.sopsSecretPrefix}/encrypted_key".path;
-          sync_address = cfg.syncAddress;
-          sync_frequency = "0";
-        };
+      };
+      zsh.initContent = lib.mkOrder 999 ''
+        # add atuin path to $PATH so it will be available for root as well
+        export PATH="$PATH:${config.programs.atuin.package}/bin"
+      '';
     };
 
     systemd.user.services.atuin = lib.mkIf cfg.useDaemon {
