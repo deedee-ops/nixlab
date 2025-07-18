@@ -72,7 +72,7 @@ rec {
       enable = true;
       hostId = "d732cc87";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/disk/by-id/nvme-Patriot_M.2_P300_256GB_P300NDBB24031803163" ];
+      systemDiskDevs = [ "/dev/disk/by-id/nvme-WD_Blue_SN570_500GB_22319R490212" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
@@ -117,7 +117,7 @@ rec {
       completelyDisableIPV6 = true;
       hostname = "deedee";
       mainInterface = {
-        name = "eno1";
+        name = "enp100s0";
         bridge = true;
         bridgeMAC = "02:00:0a:64:14:01";
       };
