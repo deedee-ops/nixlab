@@ -37,6 +37,8 @@ in
           TMPDIR = "/tmp";
         };
         serviceConfig.Type = "simple";
+        after = [ "docker-mail-archive-dovecot.service" ];
+        requires = [ "docker-mail-archive-dovecot.service" ];
         script = ''
           DOVECOT_IP="$(${lib.getExe' pkgs.dnsutils "dig"} +short -p 5533 mail-archive-dovecot.docker @127.0.0.1)"
 
