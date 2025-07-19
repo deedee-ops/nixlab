@@ -1,6 +1,7 @@
 {
   config,
   osConfig,
+  pkgs,
   lib,
   ...
 }:
@@ -110,9 +111,12 @@ in
         WantedBy = [ "default.target" ];
       };
 
-      Service = {
-        ExecStart = "${lib.getExe config.programs.atuin.package} daemon";
-      };
+      Service.ExecStart = lib.getExe (
+        pkgs.writeShellScriptBin "atuin-daemon.sh" ''
+          rm -rf "${config.programs.atuin.settings.daemon.socket_path}"
+          ${lib.getExe config.programs.atuin.package} daemon
+        ''
+      );
     };
   };
 }

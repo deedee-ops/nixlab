@@ -421,6 +421,7 @@ rec {
       inherit musicPath;
       enable = true;
     };
+    netbox.enable = true;
     paperless-ngx.enable = true;
     pinchflat = {
       enable = true;
