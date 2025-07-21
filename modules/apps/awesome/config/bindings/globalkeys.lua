@@ -45,7 +45,7 @@ local globalkeys = gears.table.join(
     )
   end, { description = "", group = "media" }),
   awful.key({}, "XF86Favorites", function()
-    awful.util.spawn("sh -c 'sleep 1 && " .. RC.vars.xsetPath .. " dpms force off'")
+    awesome.quit()
   end, { description = "", group = "media" }),
   awful.key({ RC.vars.modkey, "Shift" }, "x", function()
     awful.util.spawn(RC.vars.xkillPath)
