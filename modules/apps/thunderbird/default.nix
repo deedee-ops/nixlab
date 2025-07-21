@@ -8,6 +8,7 @@
 let
   cfg = config.myHomeApps.thunderbird;
   policies = {
+    # to get name, check `applications.gecko.id` in manifest.json
     ExtensionSettings = {
       "*".installation_mode = "blocked"; # blocks all addons except the ones specified below
 
@@ -33,6 +34,10 @@ let
       };
       "thunderai@micz.it" = {
         install_url = "https://services.addons.thunderbird.net/thunderbird/downloads/latest/thunderai/addon-988699-latest.xpi";
+        installation_mode = "force_installed";
+      };
+      "accountcolors@gazhay" = {
+        install_url = "https://github.com/Vigilans/accountcolors/releases/latest/download/accountcolors.zip";
         installation_mode = "force_installed";
       };
     };
