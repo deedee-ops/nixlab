@@ -11,6 +11,7 @@ _: {
     ./calibre-web-automated
     ./coredns
     ./crypt
+    ./dawarich
     ./echo-server
     ./davis
     ./filebrowser

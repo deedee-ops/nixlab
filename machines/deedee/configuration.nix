@@ -332,6 +332,7 @@ rec {
       webdavDir = "${mediaPath}/webdav";
       webdavDirBackup = false;
     };
+    dawarich.enable = true;
     filebrowser = {
       enable = true;
       subdomain = "nas";
