@@ -5,6 +5,7 @@ let
   mediaPath = "/tank/media";
 
   booksPath = "${mediaPath}/books";
+  geodataPath = "${mediaPath}/geo";
   musicPath = "${mediaPath}/music";
   romsPath = "${mediaPath}/retrom";
   torrentsPath = "${mediaPath}/torrents";
@@ -423,6 +424,10 @@ rec {
     };
     netbox.enable = true;
     paperless-ngx.enable = true;
+    photon = {
+      enable = true;
+      geodataPath = "${geodataPath}/photon";
+    };
     pinchflat = {
       enable = true;
       downloadsPath = youtubePath;

@@ -39,6 +39,7 @@ _: {
     ./open-webui
     ./outline
     ./paperless-ngx
+    ./photon
     ./pinchflat
     ./piped
     ./prowlarr
