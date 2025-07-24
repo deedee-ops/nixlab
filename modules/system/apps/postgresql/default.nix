@@ -29,6 +29,12 @@ in
       default = false;
       example = true;
     };
+    enablePostGIS = lib.mkOption {
+      type = lib.types.bool;
+      description = "Enable PostGIS extension.";
+      default = false;
+      example = true;
+    };
     enableVectorchord = lib.mkOption {
       type = lib.types.bool;
       description = "Enable vectorchord extension.";
@@ -115,7 +121,8 @@ in
             ++ (lib.optionals cfg.enableVectorchord [
               ps.pgvector
               ps.vectorchord
-            ]);
+            ])
+            ++ (lib.optionals cfg.enablePostGIS [ ps.postgis ]);
         };
 
         postgresqlBackup = lib.mkIf cfg.backup {
