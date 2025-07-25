@@ -20,13 +20,17 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.ssh = lib.attrsets.recursiveUpdate {
-      enable = true;
-      package = pkgs.openssh;
+    programs = {
+      ssh = lib.attrsets.recursiveUpdate {
+        enable = true;
+        package = pkgs.openssh;
 
-      addKeysToAgent = "8h";
-      userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
-    } cfg.appendOptions;
+        addKeysToAgent = "8h";
+        userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
+      } cfg.appendOptions;
+
+      git.extraConfig.core.sshCommand = "${lib.getExe config.programs.ssh.package} -F ${config.xdg.configHome}/ssh/config";
+    };
 
     services.ssh-agent = {
       enable = true;
@@ -38,6 +42,12 @@ in
           run mkdir -p ${config.xdg.stateHome}/ssh || true
         '';
       };
+
+      shellAliases.ssh = "${lib.getExe config.programs.ssh.package} -F ${config.xdg.configHome}/ssh/config";
     };
+
+    # hack to move ssh config from ~/.ssh/config to ~/.config/ssh/config
+    home.file.".ssh/config".enable = false;
+    xdg.configFile."ssh/config".text = config.home.file.".ssh/config".text;
   };
 }
