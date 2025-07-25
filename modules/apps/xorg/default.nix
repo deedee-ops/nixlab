@@ -18,6 +18,7 @@ in
 
   options.myHomeApps.xorg = {
     mapRightCtrlToAltGr = lib.mkEnableOption "forcefuly map right Ctrl to AltGr";
+    muteSoundOnStart = lib.mkEnableOption "mute sound device on xorg start";
     terminal = lib.mkOption {
       type = lib.types.package;
       description = "Default terminal package.";

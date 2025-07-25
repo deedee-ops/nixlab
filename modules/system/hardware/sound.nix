@@ -5,6 +5,7 @@ in
 {
   options.myHardware.sound = {
     enable = lib.mkEnableOption "sound";
+    muteOnStart = lib.mkEnableOption "mute default sink on desktop start";
   };
 
   config = lib.mkIf cfg.enable {
@@ -43,5 +44,20 @@ in
       };
     };
     users.users."${config.mySystem.primaryUser}".extraGroups = [ "audio" ];
+    systemd.user.services.wireplumber.postStart = lib.mkAfter ''
+      set +e
+
+      for ((i=1; i<=5; i++)); do
+          ${lib.getExe' config.services.pipewire.wireplumber.package "wpctl"} set-mute @DEFAULT_AUDIO_SINK@ 1
+          if [ $? -eq 0 ]; then
+              exit 0
+          fi
+          if [ $i -lt 5 ]; then
+              sleep 0.5
+          else
+              exit 1
+          fi
+      done
+    '';
   };
 }

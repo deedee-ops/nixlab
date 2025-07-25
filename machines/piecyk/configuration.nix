@@ -325,6 +325,7 @@ rec {
           };
         };
       };
+      muteSoundOnStart = true;
       terminal = pkgs.ghostty;
     };
     yt-dlp.enable = true;

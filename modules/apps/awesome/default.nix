@@ -228,7 +228,7 @@ in
             pkgs.writeShellScriptBin "volume.sh" (
               if osConfig.myHardware.sound.enable then
                 ''
-                  bin_wpctl = "${lib.getExe' pkgs.wireplumber "wpctl"}"
+                  bin_wpctl = "${lib.getExe' osConfig.services.pipewire.wireplumber.package "wpctl"}"
                 ''
                 + builtins.readFile ./scripts/volume.sh
               else
