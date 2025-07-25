@@ -419,6 +419,7 @@ rec {
         }
       ];
     };
+    n8n.enable = true;
     navidrome = {
       inherit musicPath;
       enable = true;

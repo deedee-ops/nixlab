@@ -35,6 +35,7 @@ _: {
     ./memos
     ./miniflux
     ./minio
+    ./n8n
     ./navidrome
     ./netbox
     ./open-webui
