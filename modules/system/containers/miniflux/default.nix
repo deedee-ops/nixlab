@@ -47,7 +47,7 @@ in
 
     virtualisation.oci-containers.containers.miniflux = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/miniflux/miniflux:2.2.10@sha256:0eab0c1f9566e32f81a33f318263aff9efdd9a1ebe287f3089501ab394c78c83";
+        image = "ghcr.io/miniflux/miniflux:2.2.10@sha256:ae3a397ca765d9011ce00f2bfeb1f29bf8e6199c38b2883d41ec80f66cd3be50";
         user = "65000:65000";
         environment =
           {
