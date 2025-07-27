@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.piped-proxy = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/piped-proxy:latest@sha256:104e7678415e0a212f26c03979cb010f105c1763d1c051b6cc8d6969e33296b1";
+        image = "ghcr.io/deedee-ops/piped-proxy:latest@sha256:15a8e669a0a2b6bb766bfc62c6115328ca1ce7346c8365b1ee162515febbcf7b";
         environment = {
           UDS = "1";
         };
