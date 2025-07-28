@@ -71,6 +71,7 @@ in
         Option         "AllowIndirectGLXProtocol" "off"
         Option         "TripleBuffer" "on"
         Option         "metamodes" "${cfg.metamodes}"
+        Option         "Interactive" "0"
       '';
     };
 
@@ -98,35 +99,32 @@ in
       '';
     };
 
-    mySystem.allowUnfree =
-      [
-        "cuda_cccl"
-        "cuda_cudart"
-        "cuda_nvcc"
-        "libcublas"
-        "libcufft"
-        "libnpp"
+    mySystem.allowUnfree = [
+      "cuda-merged"
+      "cuda_cccl"
+      "cuda_cudart"
+      "cuda_cuobjdump"
+      "cuda_cupti"
+      "cuda_cuxxfilt"
+      "cuda_gdb"
+      "cuda_nvcc"
+      "cuda_nvdisasm"
+      "cuda_nvml_dev"
+      "cuda_nvprune"
+      "cuda_nvrtc"
+      "cuda_nvtx"
+      "cuda_profiler_api"
+      "cuda_sanitizer_api"
+      "libcublas"
+      "libcufft"
+      "libcurand"
+      "libcusolver"
+      "libcusparse"
+      "libnpp"
+      "libnvjitlink"
 
-        "nvidia-settings"
-        "nvidia-x11"
-      ]
-      ++ lib.optionals (!cfg.useOpenDrivers) [
-        "cuda-merged"
-        "cuda_cuobjdump"
-        "cuda_cupti"
-        "cuda_cuxxfilt"
-        "cuda_gdb"
-        "cuda_nvdisasm"
-        "cuda_nvml_dev"
-        "cuda_nvprune"
-        "cuda_nvrtc"
-        "cuda_nvtx"
-        "cuda_profiler_api"
-        "cuda_sanitizer_api"
-        "libcurand"
-        "libcusolver"
-        "libcusparse"
-        "libnvjitlink"
-      ];
+      "nvidia-settings"
+      "nvidia-x11"
+    ];
   };
 }

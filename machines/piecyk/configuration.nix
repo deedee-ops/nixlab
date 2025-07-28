@@ -37,6 +37,8 @@ rec {
       forceCompileCUDA = false;
       metamodes = "DP-2: 3840x2160_120 +0+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On}, DP-0: 3840x2160_120 +3840+0 {ForceCompositionPipeline=On, ForceFullCompositionPipeline=On, AllowGSYNCCompatible=On}";
     };
+
+    rocm.enable = true;
   };
 
   mySystem = {
@@ -144,6 +146,7 @@ rec {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
         salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
       })
+      (pkgs.hashcat.override { cudaSupport = true; })
     ];
     theme.terminalFontSize = 10;
 

@@ -4,6 +4,7 @@ _: {
     ./bluetooth.nix
     ./nvidia.nix
     ./openrgb.nix
+    ./rocm.nix
     ./sound.nix
   ];
 }
