@@ -45,7 +45,10 @@ rec {
     purpose = "Main rig";
     filesystem = "zfs";
     primaryUser = "ajgon";
-    primaryUserExtraDirs = [ "/tank" ];
+    primaryUserExtraDirs = [
+      "/tank"
+      "/persist/games"
+    ];
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
@@ -335,6 +338,32 @@ rec {
     zathura.enable = true;
     zoom.enable = true;
     zsh.promptColor = "magenta";
+  };
+
+  myGames = {
+    wow =
+      let
+        mirror = "https://s3.rzegocki.dev/assets/games/wow";
+      in
+      {
+        enable = true;
+        installDir = "/persist/games/wow";
+        realmHost = config.myInfra.machines.azeroth.ip;
+        clientURL = "${mirror}/ChromieCraft_3.3.5a.zip";
+        HDPackURL = "${mirror}/additional_patches_for_335a.zip";
+        addonURLs = [
+          "${mirror}/AckisRecipeList.zip"
+          "${mirror}/Bagnon.zip"
+          "${mirror}/Cartographer.zip"
+          "${mirror}/EveryQuest.zip"
+          "${mirror}/Overachiever.zip"
+          "${mirror}/Quartz.zip"
+          "${mirror}/QuestHelper.zip"
+          "${mirror}/Questie.zip"
+          "${mirror}/Skada.zip"
+          "${mirror}/ZygorGuidesPlus.zip"
+        ];
+      };
   };
 
   myRetro = {

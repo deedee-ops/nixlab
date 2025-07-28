@@ -66,6 +66,11 @@ _: {
         ssh = null;
         host = "windows.home.arpa";
       };
+      azeroth = {
+        ip = "10.100.30.3";
+        ssh = null;
+        host = "azeroth.home.arpa";
+      };
       piecyk = {
         ip = "10.100.40.1";
         ssh = "piecyk.home.arpa:22";
