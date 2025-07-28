@@ -85,6 +85,9 @@ in
 
         # Sqlite3
         SQLITE_HISTORY = "${config.xdg.cacheHome}/sqlite_history";
+
+        # wine
+        WINEPREFIX = "${config.xdg.dataHome}/wine";
       };
     };
 

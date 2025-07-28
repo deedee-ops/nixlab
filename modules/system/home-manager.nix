@@ -15,6 +15,11 @@ in
       default = { };
       description = "Apps configuration which will be passed down to home manager";
     };
+    myGames = lib.mkOption {
+      type = lib.types.attrs;
+      default = { };
+      description = "Gaming configuration which will be passed down to home manager";
+    };
     myRetro = lib.mkOption {
       type = lib.types.attrs;
       default = { };
@@ -43,7 +48,7 @@ in
       };
 
       users."${config.mySystem.primaryUser}" = {
-        inherit (config) myHomeApps myRetro;
+        inherit (config) myGames myHomeApps myRetro;
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile
@@ -51,6 +56,7 @@ in
           inputs.sops-nix.homeManagerModules.sops
 
           ../apps
+          ../games
           ../retro
         ] ++ cfg.extraImports;
 
