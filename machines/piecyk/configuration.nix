@@ -149,6 +149,7 @@ rec {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
         salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
       })
+      (pkgs.callPackage ../../modules/pkgs/opensuperclone.nix { })
       (pkgs.hashcat.override { cudaSupport = true; })
     ];
     theme.terminalFontSize = 10;
