@@ -121,6 +121,7 @@ return {
           "actionlint",
           "ansible-language-server",
           "bash-language-server",
+          "gofumpt",
           "goimports",
           "golangci-lint-langserver",
           "golines",
