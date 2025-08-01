@@ -135,20 +135,6 @@ rec {
       };
     };
 
-    usb = {
-      autoMountDisks = {
-        # both disks should never be attached at the same time
-        G0M024766 = {
-          target = "/mnt/target";
-          autoUmount = false;
-        };
-        G11009409 = {
-          target = "/mnt/target";
-          autoUmount = false;
-        };
-      };
-    };
-
     zfs.snapshots = {
       "tank/backups" = { };
       "tank/data" = { };
@@ -209,7 +195,7 @@ rec {
     nfs = {
       enable = true;
       exports = ''
-        /tank/backups ${config.myInfra.machines.work.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
+        /tank/backups ${config.myInfra.machines.work.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000) ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=0,anongid=0)
         /tank/data    ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
         /tank/media   ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
       '';
@@ -257,29 +243,12 @@ rec {
     borgmatic = {
       enable = true;
       sourceVolumes = [ "/tank" ];
-      targetVolumes = [ "/mnt/target" ];
+      targetVolumes = [ ];
       cacheDir = "/tank/media/_caches/borgmatic";
       repositories = {
-        backups = {
-          source_directories = [ "/tank/backups" ];
-          repositories = [
-            {
-              path = "/mnt/target/backups";
-              label = "usb-backups";
-            }
-          ];
-          encryption_passphrase = "\${BORGMATIC_BACKUPS_ENCRYPTION_PASSPHRASE}";
-          healthchecks = {
-            ping_url = "\${BORGMATIC_BACKUPS_HC_PING_URL}";
-          };
-        };
         legacy = {
           source_directories = [ "/tank/data/legacy" ];
           repositories = [
-            {
-              path = "/mnt/target/legacy";
-              label = "usb-legacy";
-            }
             {
               path = "\${BORGMATIC_LEGACY_REPO_BORGBASE_EU}";
               label = "borgbase-legacy";
@@ -297,10 +266,6 @@ rec {
             "/tank/data/private"
           ];
           repositories = [
-            {
-              path = "/mnt/target/nas";
-              label = "usb-nas";
-            }
             {
               path = "\${BORGMATIC_NAS_REPO_BORGBASE_EU}";
               label = "borgbase-nas-eu";

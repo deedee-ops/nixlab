@@ -46,6 +46,7 @@ rec {
     filesystem = "zfs";
     primaryUser = "ajgon";
     primaryUserExtraDirs = [
+      "/mnt"
       "/tank"
       "/persist/games"
     ];
@@ -92,6 +93,11 @@ rec {
     };
 
     mounts = [
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.deedee.ip}:/tank/backups";
+        dest = "/tank/backups";
+      }
       {
         type = "nfs";
         src = "${config.myInfra.machines.deedee.ip}:/tank/data";
