@@ -136,17 +136,20 @@ in
           )
           ++ builtins.map (vol: "${vol}:${vol}:ro") cfg.sourceVolumes
           ++ [ "${cfg.cacheDir}:/config" ];
-        extraOptions = lib.lists.flatten (
-          builtins.map (vol: [
+        extraOptions =
+          [
             "--cap-add=CAP_CHOWN"
             "--cap-add=CAP_DAC_OVERRIDE"
             "--cap-add=CAP_FSETID"
             "--cap-add=CAP_SETGID"
             "--cap-add=CAP_SETUID"
-            "--mount"
-            "type=bind,source=${vol},target=${vol},bind-propagation=rshared"
-          ]) cfg.targetVolumes
-        );
+          ]
+          ++ lib.lists.flatten (
+            builtins.map (vol: [
+              "--mount"
+              "type=bind,source=${vol},target=${vol},bind-propagation=rshared"
+            ]) cfg.targetVolumes
+          );
       };
       opts = {
         # pushing to remote repos
