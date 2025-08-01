@@ -19,12 +19,13 @@ in
 
     home = {
       packages = [
+        pkgs.lua51Packages.lua # luarocks
+        pkgs.lua51Packages.luarocks # luarocks
         pkgs.nodejs # multiple LSPs
         pkgs.cargo # mason
         pkgs.deadnix # mason
         pkgs.go # mason
         pkgs.lua-language-server # mason
-        pkgs.luajitPackages.luarocks # mason
         pkgs.markdownlint-cli # mason
         pkgs.nixfmt-rfc-style # mason
         pkgs.python3 # mason
