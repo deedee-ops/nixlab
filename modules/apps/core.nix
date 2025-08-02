@@ -21,7 +21,7 @@
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [ ];
-      description = "Exrtra packages to install.";
+      description = "Extra packages to install.";
     };
     openPorts = lib.mkOption {
       type = lib.types.listOf lib.types.port;
