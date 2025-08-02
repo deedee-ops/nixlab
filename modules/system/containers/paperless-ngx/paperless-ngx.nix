@@ -60,6 +60,12 @@ in
             PAPERLESS_CONSUMER_SUBDIRS_AS_TAGS = "true";
             PAPERLESS_CONSUMPTION_DIR = "/data/consume";
             PAPERLESS_DATA_DIR = "/config";
+
+            # DMY will be parsed incorrectly for YYYY-MM-DD dates, while YMD is parsed correctly for DD-MM-YYYY
+            # given, that proper dateparser locale is set
+            PAPERLESS_DATE_ORDER = "YMD";
+            PAPERLESS_DATE_PARSER_LANGUAGES = "pl+en";
+
             PAPERLESS_DBHOST = "host.docker.internal";
             PAPERLESS_DBNAME = "paperless";
             PAPERLESS_DBPORT = "5432";
