@@ -50,6 +50,7 @@ in
           image = "n8n";
           pull = "never";
           environment = {
+            GENERIC_TIMEZONE = config.mySystem.time.timeZone;
             N8N_EDITOR_BASE_URL = "https://n8n.${config.mySystem.rootDomain}";
             N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS = "false";
             N8N_LISTEN_ADDRESS = "0.0.0.0";
