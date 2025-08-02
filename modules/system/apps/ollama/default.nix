@@ -5,14 +5,29 @@ in
 {
   options.mySystemApps.ollama = {
     enable = lib.mkEnableOption "ollama";
+    loadModels = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of models to download on start.";
+      default = [ ];
+    };
+    exposePort = lib.mkOption {
+      type = lib.types.bool;
+      description = "Expose ollama port, to be available outside of the machine.";
+      default = false;
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    services.ollama = {
-      enable = true;
-      user = "ollama";
-      group = "ollama";
-    };
+    services.ollama =
+      {
+        inherit (cfg) loadModels;
+        enable = true;
+        user = "ollama";
+        group = "ollama";
+      }
+      // lib.optionalAttrs cfg.exposePort {
+        host = "0.0.0.0";
+      };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable
@@ -33,5 +48,7 @@ in
     mySystem.allowUnfree = [
       "cudnn"
     ];
+
+    networking.firewall.allowedTCPPorts = lib.optionals cfg.exposePort [ 11434 ];
   };
 }
