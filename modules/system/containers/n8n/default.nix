@@ -50,10 +50,12 @@ in
           image = "n8n";
           pull = "never";
           environment = {
+            GENERIC_TIMEZONE = config.mySystem.time.timeZone;
             N8N_EDITOR_BASE_URL = "https://n8n.${config.mySystem.rootDomain}";
             N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS = "false";
             N8N_LISTEN_ADDRESS = "0.0.0.0";
             N8N_RUNNERS_ENABLED = "true";
+            WEBHOOK_URL = "https://n8n.${config.mySystem.rootDomain}";
 
             EXTERNAL_HOOK_FILES = "/home/node/.n8n/hooks.js";
             N8N_FORWARD_AUTH_HEADER = "Remote-Email";
@@ -76,11 +78,14 @@ in
               inherit secretEnvs;
             }
             ++ [
-              "${cfg.dataDir}:/home/node/.n8n"
+              "${cfg.dataDir}/n8n:/home/node/.n8n"
+              "${cfg.dataDir}/npm:/home/node/.npm"
             ];
           extraOptions = [
             "--mount"
             "type=tmpfs,destination=/home/node/.cache,tmpfs-mode=1777"
+            "--mount"
+            "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
           ];
         };
         opts = {
@@ -150,9 +155,10 @@ in
               ${lib.getExe pkgs.bash} "${
                 config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
               }" ${dockerBin} ${image}
-              chown 1000:1000 "${cfg.dataDir}"
-              cp ${autheliaHook} "${cfg.dataDir}/hooks.js"
-              chown 1000:1000 "${cfg.dataDir}/hooks.js"
+              mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm"
+              chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm"
+              cp ${autheliaHook} "${cfg.dataDir}/n8n/hooks.js"
+              chown 1000:1000 "${cfg.dataDir}/n8n/hooks.js"
               chown 1000:1000 ${
                 builtins.concatStringsSep " " (
                   builtins.map (env: config.sops.secrets."${cfg.sopsSecretPrefix}/${env}".path) secretEnvs
