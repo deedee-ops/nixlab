@@ -217,6 +217,11 @@ rec {
       };
     };
 
+    ollama = {
+      enable = true;
+      loadModels = [ "gemma3" ];
+      exposePort = true;
+    };
     postgresql.enable = true;
     redis.enable = true;
 
