@@ -142,6 +142,7 @@ in
       preStart = lib.mkAfter ''
         mkdir -p "${cfg.dataDir}/config" "${cfg.dataDir}/data/consume" "${cfg.dataDir}/data/media"
         chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data"
+        chmod 777 "${cfg.dataDir}/data/consume"
       '';
     };
 
