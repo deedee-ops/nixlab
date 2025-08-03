@@ -389,7 +389,21 @@ rec {
         }
       ];
     };
-    n8n.enable = true;
+    n8n = {
+      enable = true;
+      integrations = [
+        "paperless-ngx"
+        "syncthing"
+      ];
+      consumeDirs = [
+        "banks"
+        "invoices"
+      ];
+      targetPaths = {
+        business = "${dataPath}/private/Memories/Private/Firma/";
+        banks = "${dataPath}/private/Memories/Private/Banki/";
+      };
+    };
     navidrome = {
       inherit musicPath;
       enable = true;

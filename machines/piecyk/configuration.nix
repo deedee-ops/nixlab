@@ -150,6 +150,9 @@ rec {
   };
 
   myHomeApps = {
+    customURLs = {
+      "Income Invoices" = "https://n8n.rzegocki.dev/form/bc1561cd-5b46-41cd-942c-5d0693c27d4e";
+    };
     extraPackages = [
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
@@ -162,28 +165,6 @@ rec {
 
     scripts = {
       backupverify.enable = true;
-      docwatcher = {
-        enable = true;
-        watchDir = "${homeDir}/Sync/docwatcher-costs";
-        localdir = {
-          enable = true;
-          targetDir = "/tank/data/private/Memories/Private/Firma/%Y/%m/koszty";
-        };
-        rclone = {
-          enable = true;
-          target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
-        };
-        mail.enable = false;
-        paperless = {
-          enable = true;
-          consumeDir = "${homeDir}/Sync/paperless-consume";
-        };
-        ssh = {
-          enable = false;
-          host = "nas";
-          targetDir = "/volume3/private/Memories/Private/Firma/%Y/%m/koszty";
-        };
-      };
       pdfhelpers.enable = true;
     };
 

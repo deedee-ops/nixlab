@@ -114,6 +114,10 @@ in
           }),g" ${./config.xml} > ${cfg.dataDir}/config/config.xml
         fi
         chown 65000:65000 "${cfg.dataDir}/config" "${cfg.dataDir}/data" "${cfg.dataDir}/external"
+
+        # include external paths in prestart script to force syncthing to restart when they change
+        # so this will refresh bind mounts in a container
+        # ${builtins.toJSON cfg.extraPaths}
       '';
     };
 

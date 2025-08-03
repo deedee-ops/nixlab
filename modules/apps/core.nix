@@ -18,6 +18,14 @@
       default = { };
       description = "Extra custom options which will be merged with config.home.";
     };
+    customURLs = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = { };
+      description = "List of description/url pairs available as desktop shortcuts.";
+      example = {
+        "Homelab" = "https://homelab.example.com/";
+      };
+    };
     extraPackages = lib.mkOption {
       type = lib.types.listOf lib.types.package;
       default = [ ];
@@ -75,5 +83,17 @@
             ];
           };
     } config.myHomeApps.appendHome;
+
+    xdg.dataFile = lib.mapAttrs' (name: value: {
+      name = "applications/${name}.desktop";
+      value.text = ''
+        [Desktop Entry]
+        Encoding=UTF-8
+        Name=${name}
+        Type=Link
+        URL=${value}
+        Icon=text-html
+      '';
+    }) config.myHomeApps.customURLs;
   };
 }

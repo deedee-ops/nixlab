@@ -28,6 +28,32 @@ in
       description = "Prefix for sops secret, under which all ENVs will be appended.";
       default = "system/apps/n8n/env";
     };
+    integrations = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.enum [
+          "paperless-ngx"
+          "syncthing"
+        ]
+      );
+      description = "List of modules n8n should integrate to.";
+      default = [ ];
+    };
+    consumeDirs = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of directories, n8n will be monitoring in the workflows.";
+      default = [ ];
+    };
+    targetPaths = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      description = ''
+        List of directories, n8n will be writing data to.
+        Key is is path under `/target` in n8n host, value is path on host.
+      '';
+      default = { };
+      example = {
+        "receipts" = "/tank/receipts";
+      };
+    };
   };
 
   config =
@@ -80,7 +106,16 @@ in
             ++ [
               "${cfg.dataDir}/n8n:/home/node/.n8n"
               "${cfg.dataDir}/npm:/home/node/.npm"
-            ];
+            ]
+            ++ (lib.optionals (builtins.elem "paperless-ngx" cfg.integrations) [
+              "${config.mySystemApps.paperless-ngx.dataDir}/data/consume:/integrations/paperless"
+            ])
+            ++ (lib.optionals (builtins.elem "syncthing" cfg.integrations) [
+              "${cfg.dataDir}/consume:/consume"
+            ])
+            ++ (builtins.map (
+              targetPath: "${builtins.getAttr targetPath cfg.targetPaths}:/target/${targetPath}"
+            ) (builtins.attrNames cfg.targetPaths));
           extraOptions = [
             "--mount"
             "type=tmpfs,destination=/home/node/.cache,tmpfs-mode=1777"
@@ -151,20 +186,29 @@ in
             let
               dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
             in
-            lib.mkAfter ''
-              ${lib.getExe pkgs.bash} "${
-                config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
-              }" ${dockerBin} ${image}
-              mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm"
-              chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm"
-              cp ${autheliaHook} "${cfg.dataDir}/n8n/hooks.js"
-              chown 1000:1000 "${cfg.dataDir}/n8n/hooks.js"
-              chown 1000:1000 ${
-                builtins.concatStringsSep " " (
-                  builtins.map (env: config.sops.secrets."${cfg.sopsSecretPrefix}/${env}".path) secretEnvs
-                )
-              }
-            '';
+            lib.mkAfter (
+              ''
+                ${lib.getExe pkgs.bash} "${
+                  config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
+                }" ${dockerBin} ${image}
+                mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
+                chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
+                cp ${autheliaHook} "${cfg.dataDir}/n8n/hooks.js"
+                chown 1000:1000 "${cfg.dataDir}/n8n/hooks.js"
+                chown 1000:1000 ${
+                  builtins.concatStringsSep " " (
+                    builtins.map (env: config.sops.secrets."${cfg.sopsSecretPrefix}/${env}".path) secretEnvs
+                  )
+                }
+              ''
+              + (builtins.concatStringsSep "\n" (
+                builtins.map (consumeDir: "mkdir -p \"${cfg.dataDir}/consume/${consumeDir}\"") cfg.consumeDirs
+              ))
+              + ''
+
+                chmod -R a+rwX "${cfg.dataDir}/consume"
+              ''
+            );
         };
 
       environment.persistence."${config.mySystem.impermanence.persistPath}" =
@@ -186,9 +230,16 @@ in
         );
       };
 
-      mySystemApps.homepage = {
-        services.Apps.N8N = svc.mkHomepage "n8n" // {
-          description = "Automate everything";
+      mySystemApps = {
+        homepage = {
+          services.Apps.N8N = svc.mkHomepage "n8n" // {
+            description = "Automate everything";
+          };
+        };
+        syncthing.extraPaths = lib.optionalAttrs (builtins.elem "syncthing" cfg.integrations) {
+          "n8n/consume" = {
+            dest = "${cfg.dataDir}/consume";
+          };
         };
       };
     };
