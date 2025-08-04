@@ -284,7 +284,6 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
     };
-    workrave.enable = true;
     xorg = {
       autorandr = {
         profile = {
