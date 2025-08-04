@@ -50,6 +50,7 @@ _: {
     ./telegram
     ./thunderbird
     ./ticktick
+    ./todoist
     ./ulauncher
     ./whatsie
     ./workrave
