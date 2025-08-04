@@ -25,7 +25,7 @@
 }:
 let
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.30";
+  rev = "v0.7.31";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -34,7 +34,7 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-8JXR7QHULO8VLKb3mxuSerW4ysjDUOEBEjYm28ZYJF4="; # 1
+    hash = "sha256-EInNTqBOi9vQDxURx97JnDIMjDpIN4EZjg2yBn64HUQ="; # 1
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
@@ -77,7 +77,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-03CJzoUW67bXbluggWpyVDdDyiaCyhe3bVfDLTirWMY="; # 4
+    outputHash = "sha256-8OZ1+trErSaDPAmptpoQQPec96AB2IU0++O05yH0u5E="; # 4
   };
 in
 (makeRustPlatform {
@@ -91,7 +91,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-IGWiOa0cmcWFZDJS0qkOVMginQCTsrAFvUeOmo3WCJM="; # 3
+    cargoHash = "sha256-qzNC+OJufP7DXSTKDa/5vtpBMsGQFjLeO2ZFbqdEq2w="; # 3
 
     # buildType = "debug";
     cargoRoot = "packages/client";
