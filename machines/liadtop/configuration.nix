@@ -261,7 +261,7 @@ rec {
     teams.enable = true;
     telegram.enable = true;
     thunderbird.enable = true;
-    ticktick.enable = true;
+    todoist.enable = true;
     wakatime = {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
