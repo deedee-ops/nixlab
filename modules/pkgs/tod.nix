@@ -7,6 +7,7 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "tod";
+  # renovate: datasource=github-releases depName=tod-org/tod versioning=semver-coerced
   version = "0.10.0";
 
   src = fetchFromGitHub {
