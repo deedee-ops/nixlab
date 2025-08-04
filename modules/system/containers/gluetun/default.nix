@@ -58,24 +58,24 @@ in
     virtualisation.oci-containers.containers.gluetun = svc.mkContainer {
       cfg = {
         image = "ghcr.io/qdm12/gluetun:latest@sha256:183c74263a07f4c931979140ac99ff4fbc44dcb1ca5b055856ef580b0fafdf1c";
-        environment =
-          {
-            DOT = "off";
-            FIREWALL_VPN_INPUT_PORTS = forwardedPort;
-            SERVER_COUNTRIES = "Netherlands";
-            UPDATER_PERIOD = "24h";
-            VPN_INTERFACE = "wg0";
-            VPN_SERVICE_PROVIDER = "airvpn";
-            VPN_TYPE = "wireguard";
-          }
-          // svc.mkContainerSecretsEnv {
-            inherit secretEnvs;
-            suffix = "_SECRETFILE";
-          };
+        environment = {
+          DOT = "off";
+          FIREWALL_VPN_INPUT_PORTS = forwardedPort;
+          SERVER_COUNTRIES = "Netherlands";
+          UPDATER_PERIOD = "24h";
+          VPN_INTERFACE = "wg0";
+          VPN_SERVICE_PROVIDER = "airvpn";
+          VPN_TYPE = "wireguard";
+        }
+        // svc.mkContainerSecretsEnv {
+          inherit secretEnvs;
+          suffix = "_SECRETFILE";
+        };
         ports = [
           "${forwardedPort}:${forwardedPort}/tcp"
           "${forwardedPort}:${forwardedPort}/udp"
-        ] ++ extraPortsMap;
+        ]
+        ++ extraPortsMap;
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

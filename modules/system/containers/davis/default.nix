@@ -54,37 +54,36 @@ in
       cfg = {
         image = "ghcr.io/tchapi/davis-standalone:5.1.2@sha256:fe44cd11e7f73b237719a010982cebe68597caef22c61c4e1cf5508dafde9d64";
         dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
-        environment =
-          {
-            ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
-            APP_ENV = "prod";
-            APP_TIMEZONE = "${config.mySystem.time.timeZone}";
-            CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
-            CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
-            DATABASE_DRIVER = "sqlite";
-            DATABASE_URL = "sqlite:////config/davis-database.db";
-            INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
-            LOG_FILE_PATH = "/tmp/davis.log";
-            MAILER_DSN = "smtp://maddy:25";
-            TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
-            TRUSTED_PROXIES = "172.16.0.0/16";
-            UMASK = "0002";
-            WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
-            WEBDAV_HOMES_DIR = "/webdav";
-            WEBDAV_PUBLIC_DIR = "/data";
-            WEBDAV_TMP_DIR = "/tmp/webdav";
-          }
-          // (lib.optionalAttrs config.mySystemApps.lldap.enable {
-            AUTH_METHOD = "LDAP";
-            LDAP_AUTH_URL = "ldap://lldap:3890";
-            LDAP_AUTH_USER_AUTOCREATE = "true";
-            LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
-            LDAP_MAIL_ATTRIBUTE = "mail";
-          })
-          // (lib.optionalAttrs (!config.mySystemApps.lldap.enable) {
-            AUTH_REALM = "SabreDAV";
-            AUTH_METHOD = "Basic";
-          });
+        environment = {
+          ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
+          APP_ENV = "prod";
+          APP_TIMEZONE = "${config.mySystem.time.timeZone}";
+          CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
+          CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
+          DATABASE_DRIVER = "sqlite";
+          DATABASE_URL = "sqlite:////config/davis-database.db";
+          INVITE_FROM_ADDRESS = "${config.mySystem.notificationSender}";
+          LOG_FILE_PATH = "/tmp/davis.log";
+          MAILER_DSN = "smtp://maddy:25";
+          TRUSTED_HOSTS = "davis.${config.mySystem.rootDomain}";
+          TRUSTED_PROXIES = "172.16.0.0/16";
+          UMASK = "0002";
+          WEBDAV_ENABLED = if cfg.webdavEnable then "true" else "false";
+          WEBDAV_HOMES_DIR = "/webdav";
+          WEBDAV_PUBLIC_DIR = "/data";
+          WEBDAV_TMP_DIR = "/tmp/webdav";
+        }
+        // (lib.optionalAttrs config.mySystemApps.lldap.enable {
+          AUTH_METHOD = "LDAP";
+          LDAP_AUTH_URL = "ldap://lldap:3890";
+          LDAP_AUTH_USER_AUTOCREATE = "true";
+          LDAP_DN_PATTERN = "uid=%U,ou=people,${config.mySystemApps.lldap.baseDN}";
+          LDAP_MAIL_ATTRIBUTE = "mail";
+        })
+        // (lib.optionalAttrs (!config.mySystemApps.lldap.enable) {
+          AUTH_REALM = "SabreDAV";
+          AUTH_METHOD = "Basic";
+        });
         environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
         volumes = [
           "${cfg.dataDir}/config:/config"

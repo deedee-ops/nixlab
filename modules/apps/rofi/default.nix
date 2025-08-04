@@ -67,7 +67,8 @@ in
           pkgs.haskellPackages.greenclip
           pkgs.xdotool
           (pkgs.callPackage ./font.nix { })
-        ] ++ lib.optionals (cfg.passwordManager != null) [ pkgs.rofi-rbw ];
+        ]
+        ++ lib.optionals (cfg.passwordManager != null) [ pkgs.rofi-rbw ];
 
         activation = {
           greenclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -112,138 +113,136 @@ in
 
       myHomeApps.awesome = {
         forcedFloatingClients.name = [ "rofi - Passphrase:" ];
-        extraConfig =
-          ''
-            local home = os.getenv("HOME")
-            local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
-            local rofikeys = gears.table.join(
-              awful.key({ RC.vars.modkey }, "space", function()
-                awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
-              end, { description = "command runner", group = "apps" }),
-              awful.key({ RC.vars.modkey }, "Tab", function()
-                awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
-                  .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
-                  "-kb-accept-alt 'Return,KP_Enter'")
-              end, { description = "window switcher", group = "apps" }),
-              awful.key({ RC.vars.modkey, "Shift" }, "s", function()
-                awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
-              end, { description = "ssh shell", group = "apps" }),
-              awful.key({ RC.vars.modkey, "Shift" }, "v", function()
-                awful.util.spawn(
-                  "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
-                    .. xdg_config_home
-                    .. "/rofi/generic/config.rasi"
-                )
-              end, { description = "clipboard menu", group = "apps" }),
-          ''
-          + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
-            awful.key({ RC.vars.modkey, "Shift" }, "p", function()
+        extraConfig = ''
+          local home = os.getenv("HOME")
+          local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
+          local rofikeys = gears.table.join(
+            awful.key({ RC.vars.modkey }, "space", function()
+              awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
+            end, { description = "command runner", group = "apps" }),
+            awful.key({ RC.vars.modkey }, "Tab", function()
+              awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
+                .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
+                "-kb-accept-alt 'Return,KP_Enter'")
+            end, { description = "window switcher", group = "apps" }),
+            awful.key({ RC.vars.modkey, "Shift" }, "s", function()
+              awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
+            end, { description = "ssh shell", group = "apps" }),
+            awful.key({ RC.vars.modkey, "Shift" }, "v", function()
               awful.util.spawn(
-                "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
+                "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
                   .. xdg_config_home
-                  .. '/rofi/generic/config.rasi" --prompt="󱉼" '
-                  .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
+                  .. "/rofi/generic/config.rasi"
               )
-            end, { description = "password manager", group = "apps" }),
-          '')
-          + (lib.optionalString (cfg.todoCommand != null) ''
-            awful.key({ RC.vars.modkey }, "e", function()
-              awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
+            end, { description = "clipboard menu", group = "apps" }),
+        ''
+        + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
+          awful.key({ RC.vars.modkey, "Shift" }, "p", function()
+            awful.util.spawn(
+              "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
                 .. xdg_config_home
-                .. "/rofi/todo/todo.sh "
-                .. "-theme "
-                .. xdg_config_home
-                .. "/rofi/todo/config.rasi"
-              )
-            end, { description = "password manager", group = "apps" }),
-          '')
-          + ''
-              awful.key({ RC.vars.modkey, "Shift" }, "e", function()
-                awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
-              end, { description = "shutdown menu", group = "apps" })
+                .. '/rofi/generic/config.rasi" --prompt="󱉼" '
+                .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
             )
+          end, { description = "password manager", group = "apps" }),
+        '')
+        + (lib.optionalString (cfg.todoCommand != null) ''
+          awful.key({ RC.vars.modkey }, "e", function()
+            awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
+              .. xdg_config_home
+              .. "/rofi/todo/todo.sh "
+              .. "-theme "
+              .. xdg_config_home
+              .. "/rofi/todo/config.rasi"
+            )
+          end, { description = "password manager", group = "apps" }),
+        '')
+        + ''
+            awful.key({ RC.vars.modkey, "Shift" }, "e", function()
+              awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
+            end, { description = "shutdown menu", group = "apps" })
+          )
 
-            RC.globalkeys = gears.table.join(RC.globalkeys, rofikeys)
-            root.keys(RC.globalkeys)
-          '';
+          RC.globalkeys = gears.table.join(RC.globalkeys, rofikeys)
+          root.keys(RC.globalkeys)
+        '';
       };
 
-      xdg.configFile =
-        {
-          rofi = {
-            source = ./config;
-            recursive = true;
-          };
-
-          "rofi/generic/ssh.sh" = {
-            executable = true;
-            source = lib.getExe (
-              pkgs.writeShellScriptBin "rofi-ssh.sh" ''
-                host=$(cat "$HOME/.ssh/config" | grep Include | awk '{print $2}' | xargs cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | sort | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
-
-                if [ -n "$host" ]; then
-                  export DISABLE_MOTD=1
-                  # true && ... - it's a hack to invoke SSH command properly on ghostty
-                  ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "true && ${lib.getExe pkgs.openssh} $host"
-                fi
-              ''
-            );
-          };
-          "rofi/powermenu/powermenu.sh" = {
-            executable = true;
-            source = lib.getExe (
-              pkgs.writeShellScriptBin "rofi-powermenu.sh" (
-                ''
-                  convert_cmd="${lib.getExe' pkgs.imagemagick "convert"}"
-                  rofi_cmd="${lib.getExe rofiPackage}"
-                  scrot_cmd="${lib.getExe pkgs.scrot}"
-                  sed_cmd="${lib.getExe pkgs.gnused}"
-                  uptime_cmd="${lib.getExe' pkgs.coreutils "uptime"}"
-                ''
-                + builtins.readFile ./scripts/powermenu.sh
-              )
-            );
-          };
-          "rofi/window/focus-window.sh" = {
-            executable = true;
-            source = pkgs.writeShellScriptBin "rofi-focus-window.sh" ''
-              echo "
-              for _, c in ipairs(client.get()) do
-                if c.window == $1 then
-                  c:tags()[1]:view_only()
-                  client.focus = c
-                  c:raise()
-                end
-              end
-              " | ${lib.getExe' pkgs.awesome "awesome-client"}
-            '';
-          };
-          "greenclip.toml" = {
-            text = ''
-              [greenclip]
-                blacklisted_applications = []
-                enable_image_support = true
-                history_file = "${config.xdg.cacheHome}/greenclip/history"
-                image_cache_directory = "${config.xdg.cacheHome}/greenclip/image"
-                max_history_length = 500
-                max_selection_size_bytes = 0
-                static_history = []
-                trim_space_from_selection = true
-                use_primary_selection_as_input = false
-            '';
-          };
-        }
-        // lib.optionalAttrs (cfg.todoCommand != null) {
-          "rofi/todo/todo.sh" = {
-            executable = true;
-            source = lib.getExe (
-              pkgs.writeShellScriptBin "rofi-todo.sh" ''
-                if [ -n "$*" ]; then
-                  ${cfg.todoCommand} "$*" || ${lib.getExe' pkgs.libnotify "notify-send"} -u critical "Error adding TODO item"
-                fi
-              ''
-            );
-          };
+      xdg.configFile = {
+        rofi = {
+          source = ./config;
+          recursive = true;
         };
+
+        "rofi/generic/ssh.sh" = {
+          executable = true;
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "rofi-ssh.sh" ''
+              host=$(cat "$HOME/.ssh/config" | grep Include | awk '{print $2}' | xargs cat "$HOME/.ssh/config" | grep '^Host' | grep -vE '\*|\.' | awk '{print $2}' | sort | ${lib.getExe rofiPackage} -dmenu -p "ssh" -theme ${config.xdg.configHome}/rofi/generic/config.rasi)
+
+              if [ -n "$host" ]; then
+                export DISABLE_MOTD=1
+                # true && ... - it's a hack to invoke SSH command properly on ghostty
+                ${lib.getExe config.myHomeApps.xorg.terminal} -e ${lib.getExe pkgs.zsh} -ic "true && ${lib.getExe pkgs.openssh} $host"
+              fi
+            ''
+          );
+        };
+        "rofi/powermenu/powermenu.sh" = {
+          executable = true;
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "rofi-powermenu.sh" (
+              ''
+                convert_cmd="${lib.getExe' pkgs.imagemagick "convert"}"
+                rofi_cmd="${lib.getExe rofiPackage}"
+                scrot_cmd="${lib.getExe pkgs.scrot}"
+                sed_cmd="${lib.getExe pkgs.gnused}"
+                uptime_cmd="${lib.getExe' pkgs.coreutils "uptime"}"
+              ''
+              + builtins.readFile ./scripts/powermenu.sh
+            )
+          );
+        };
+        "rofi/window/focus-window.sh" = {
+          executable = true;
+          source = pkgs.writeShellScriptBin "rofi-focus-window.sh" ''
+            echo "
+            for _, c in ipairs(client.get()) do
+              if c.window == $1 then
+                c:tags()[1]:view_only()
+                client.focus = c
+                c:raise()
+              end
+            end
+            " | ${lib.getExe' pkgs.awesome "awesome-client"}
+          '';
+        };
+        "greenclip.toml" = {
+          text = ''
+            [greenclip]
+              blacklisted_applications = []
+              enable_image_support = true
+              history_file = "${config.xdg.cacheHome}/greenclip/history"
+              image_cache_directory = "${config.xdg.cacheHome}/greenclip/image"
+              max_history_length = 500
+              max_selection_size_bytes = 0
+              static_history = []
+              trim_space_from_selection = true
+              use_primary_selection_as_input = false
+          '';
+        };
+      }
+      // lib.optionalAttrs (cfg.todoCommand != null) {
+        "rofi/todo/todo.sh" = {
+          executable = true;
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "rofi-todo.sh" ''
+              if [ -n "$*" ]; then
+                ${cfg.todoCommand} "$*" || ${lib.getExe' pkgs.libnotify "notify-send"} -u critical "Error adding TODO item"
+              fi
+            ''
+          );
+        };
+      };
     };
 }

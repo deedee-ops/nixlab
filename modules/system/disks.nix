@@ -114,277 +114,277 @@ in
 
     networking.hostId = cfg.hostId;
 
-    disko.devices =
-      {
-        disk =
-          {
-            system = {
-              device = builtins.head cfg.systemDiskDevs;
+    disko.devices = {
+      disk = {
+        system = {
+          device = builtins.head cfg.systemDiskDevs;
 
-              type = "disk";
-              content = {
-                type = "gpt";
-                partitions =
-                  {
-                    boot = {
-                      name = "boot";
-                      size = "1M";
-                      type = "EF02";
-                    };
-                    esp = {
-                      name = "ESP";
-                      size = "512M";
-                      type = "EF00";
-                      content = {
-                        type = "filesystem";
-                        format = "vfat";
-                        mountpoint = "/boot";
-                      };
-                    };
-                    swap = lib.mkIf (cfg.swapSize != null) {
-                      size = "100%";
-                      content = {
-                        type = "swap"; # this also takes care of fstab entry so you don't need to configure `swapDevices` separately
-                        discardPolicy = "both";
-                        resumeDevice = true;
-                      };
-                    };
-                  }
-                  // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
-                    root = {
-                      content = {
-                        type = "lvm_pv";
-                        vg = "rpool";
-                      };
-                    } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
-                  }
-                  // lib.optionalAttrs (config.mySystem.filesystem == "btrfs") {
-                    root = {
-                      content = {
-                        type = "btrfs";
-                        extraArgs = [ "-f " ];
-                        subvolumes =
-                          {
-                            "/root" = {
-                              mountOptions = [
-                                "noatime"
-                                "compress=zstd"
-                              ];
-                              mountpoint = "/";
-                            };
-
-                          }
-                          // cfg.systemDatasets
-                          // lib.optionalAttrs config.mySystem.impermanence.enable {
-                            "${config.mySystem.impermanence.persistPath}" = {
-                              mountOptions = [
-                                "noatime"
-                                "compress=zstd"
-                              ];
-                              mountpoint = "${config.mySystem.impermanence.persistPath}";
-                            };
-                          };
-                      };
-                    } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
-                  }
-                  // lib.optionalAttrs (config.mySystem.filesystem == "zfs") {
-                    root = {
-                      name = "root";
-                      content = {
-                        type = "zfs";
-                        pool = "rpool";
-                      };
-                    } // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
-                  };
+          type = "disk";
+          content = {
+            type = "gpt";
+            partitions = {
+              boot = {
+                name = "boot";
+                size = "1M";
+                type = "EF02";
               };
-            };
-            cache = lib.mkIf (cfg.cacheDiskDev != null && (builtins.length cfg.tankDiskDevs > 0)) {
-              device = cfg.cacheDiskDev;
-
-              type = "disk";
-              content = {
-                type = "gpt";
-                partitions = {
-                  zfs = {
-                    size = "100%";
-                    content = {
-                      type = "zfs";
-                      pool = "tank";
-                    };
-                  };
-                };
-              };
-            };
-          }
-          // builtins.listToAttrs (
-            builtins.map (sd: {
-              name = "system" + builtins.replaceStrings [ "/" ] [ "_" ] sd;
-              value = {
-                device = sd;
-
-                type = "disk";
+              esp = {
+                name = "ESP";
+                size = "512M";
+                type = "EF00";
                 content = {
-                  type = "gpt";
-                  partitions = {
-                    zfs = {
-                      size = "100%";
-                      content = {
-                        type = "zfs";
-                        pool = "rpool";
-                      };
-                    };
-                  };
+                  type = "filesystem";
+                  format = "vfat";
+                  mountpoint = "/boot";
                 };
               };
-            }) (lib.lists.drop 1 cfg.systemDiskDevs)
-          )
-          // builtins.listToAttrs (
-            builtins.map (td: {
-              name = "tank" + builtins.replaceStrings [ "/" ] [ "_" ] td;
-              value = {
-                device = td;
-
-                type = "disk";
+              swap = lib.mkIf (cfg.swapSize != null) {
+                size = "100%";
                 content = {
-                  type = "gpt";
-                  partitions = {
-                    zfs = {
-                      size = "100%";
-                      content = {
-                        type = "zfs";
-                        pool = "tank";
-                      };
-                    };
-                  };
+                  type = "swap"; # this also takes care of fstab entry so you don't need to configure `swapDevices` separately
+                  discardPolicy = "both";
+                  resumeDevice = true;
                 };
               };
-            }) cfg.tankDiskDevs
-          );
-      }
-      // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
-        lvm_vg = {
-          rpool = {
-            type = "lvm_vg";
-            lvs =
-              {
-                thinpool = {
-                  size = "100%FREE";
-                  lvm_type = "thin-pool";
-                };
-                persist = {
-                  size = "1T"; # overprovision in most cases
-                  lvm_type = "thinlv";
-                  pool = "thinpool";
-                  content = {
-                    type = "filesystem";
-                    format = "ext4";
-                    mountpoint =
-                      if config.mySystem.impermanence.enable then "${config.mySystem.impermanence.persistPath}" else "/";
-                    mountOptions = [
-                      "defaults"
-                      "noatime"
-                    ];
-                  };
+            }
+            // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
+              root = {
+                content = {
+                  type = "lvm_pv";
+                  vg = "rpool";
                 };
               }
-              // lib.optionalAttrs config.mySystem.impermanence.enable {
-                nix = {
-                  size = "1T"; # overprovision in most cases
-                  lvm_type = "thinlv";
-                  pool = "thinpool";
-                  content = {
-                    type = "filesystem";
-                    format = "ext4";
-                    mountpoint = "/nix";
-                    mountOptions = [
-                      "defaults"
-                      "noatime"
-                    ];
-                  };
-                };
-              };
-          };
-        };
-      }
-      // lib.optionalAttrs (config.mySystem.filesystem == "ext4" && config.mySystem.impermanence.enable) {
-        nodev = {
-          "/" = {
-            fsType = "tmpfs";
-            mountOptions = [
-              "size=1G"
-              "mode=0755"
-            ];
-          };
-        };
-      }
-      // lib.optionalAttrs (config.mySystem.filesystem == "zfs") {
-        zpool =
-          {
-            rpool = {
-              type = "zpool";
-              rootFsOptions = {
-                compression = "lz4";
-                atime = "off";
-                "com.sun:auto-snapshot" = "false";
-              };
-              mountpoint = "/";
-              postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}$' || zfs snapshot rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}";
-              datasets =
-                cfg.systemDatasets
-                // lib.optionalAttrs
-                  (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "rpool")
-                  {
-                    persist = {
-                      type = "zfs_fs";
+              // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
+            }
+            // lib.optionalAttrs (config.mySystem.filesystem == "btrfs") {
+              root = {
+                content = {
+                  type = "btrfs";
+                  extraArgs = [ "-f " ];
+                  subvolumes = {
+                    "/root" = {
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd"
+                      ];
+                      mountpoint = "/";
+                    };
+
+                  }
+                  // cfg.systemDatasets
+                  // lib.optionalAttrs config.mySystem.impermanence.enable {
+                    "${config.mySystem.impermanence.persistPath}" = {
+                      mountOptions = [
+                        "noatime"
+                        "compress=zstd"
+                      ];
                       mountpoint = "${config.mySystem.impermanence.persistPath}";
                     };
                   };
-            };
-          }
-          // lib.optionalAttrs (builtins.length cfg.tankDiskDevs > 0) {
-            tank = {
-              type = "zpool";
-              mode = lib.mkIf (builtins.length cfg.tankDiskDevs > 1) {
-                topology = {
-                  type = "topology";
-                  vdev = [
-                    {
-                      mode =
-                        if builtins.length cfg.tankDiskDevs > 3 then
-                          "raidz2"
-                        else if builtins.length cfg.tankDiskDevs > 2 then
-                          "raidz1"
-                        else if builtins.length cfg.tankDiskDevs > 1 then
-                          "mirror"
-                        else
-                          "";
-                      members = builtins.map (td: ("tank" + builtins.replaceStrings [ "/" ] [ "_" ] td)) cfg.tankDiskDevs;
-                    }
-                  ];
-                } // lib.optionalAttrs (cfg.cacheDiskDev != null) { cache = [ "cache" ]; };
-              };
-
-              rootFsOptions = {
-                compression = "lz4";
-                atime = "off";
-                "com.sun:auto-snapshot" = "false";
-              };
-
-              mountpoint = "/tank";
-              datasets =
-                cfg.tankDatasets
-                // lib.optionalAttrs
-                  (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "tank")
-                  {
-                    persist = {
-                      type = "zfs_fs";
-                      # impermanence.nix user `fileSystems."/persist"....` stanza, which will collide with ZFS mount system,
-                      # and mail fail at boot. "legacy" delegates mounting to the OS, and allows to boot properly.
-                      mountpoint = "legacy";
-                    };
-                  };
+                };
+              }
+              // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
+            }
+            // lib.optionalAttrs (config.mySystem.filesystem == "zfs") {
+              root = {
+                name = "root";
+                content = {
+                  type = "zfs";
+                  pool = "rpool";
+                };
+              }
+              // lib.optionalAttrs (cfg.swapSize != null) { end = "-${cfg.swapSize}"; };
             };
           };
+        };
+        cache = lib.mkIf (cfg.cacheDiskDev != null && (builtins.length cfg.tankDiskDevs > 0)) {
+          device = cfg.cacheDiskDev;
+
+          type = "disk";
+          content = {
+            type = "gpt";
+            partitions = {
+              zfs = {
+                size = "100%";
+                content = {
+                  type = "zfs";
+                  pool = "tank";
+                };
+              };
+            };
+          };
+        };
+      }
+      // builtins.listToAttrs (
+        builtins.map (sd: {
+          name = "system" + builtins.replaceStrings [ "/" ] [ "_" ] sd;
+          value = {
+            device = sd;
+
+            type = "disk";
+            content = {
+              type = "gpt";
+              partitions = {
+                zfs = {
+                  size = "100%";
+                  content = {
+                    type = "zfs";
+                    pool = "rpool";
+                  };
+                };
+              };
+            };
+          };
+        }) (lib.lists.drop 1 cfg.systemDiskDevs)
+      )
+      // builtins.listToAttrs (
+        builtins.map (td: {
+          name = "tank" + builtins.replaceStrings [ "/" ] [ "_" ] td;
+          value = {
+            device = td;
+
+            type = "disk";
+            content = {
+              type = "gpt";
+              partitions = {
+                zfs = {
+                  size = "100%";
+                  content = {
+                    type = "zfs";
+                    pool = "tank";
+                  };
+                };
+              };
+            };
+          };
+        }) cfg.tankDiskDevs
+      );
+    }
+    // lib.optionalAttrs (config.mySystem.filesystem == "ext4") {
+      lvm_vg = {
+        rpool = {
+          type = "lvm_vg";
+          lvs = {
+            thinpool = {
+              size = "100%FREE";
+              lvm_type = "thin-pool";
+            };
+            persist = {
+              size = "1T"; # overprovision in most cases
+              lvm_type = "thinlv";
+              pool = "thinpool";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint =
+                  if config.mySystem.impermanence.enable then "${config.mySystem.impermanence.persistPath}" else "/";
+                mountOptions = [
+                  "defaults"
+                  "noatime"
+                ];
+              };
+            };
+          }
+          // lib.optionalAttrs config.mySystem.impermanence.enable {
+            nix = {
+              size = "1T"; # overprovision in most cases
+              lvm_type = "thinlv";
+              pool = "thinpool";
+              content = {
+                type = "filesystem";
+                format = "ext4";
+                mountpoint = "/nix";
+                mountOptions = [
+                  "defaults"
+                  "noatime"
+                ];
+              };
+            };
+          };
+        };
       };
+    }
+    // lib.optionalAttrs (config.mySystem.filesystem == "ext4" && config.mySystem.impermanence.enable) {
+      nodev = {
+        "/" = {
+          fsType = "tmpfs";
+          mountOptions = [
+            "size=1G"
+            "mode=0755"
+          ];
+        };
+      };
+    }
+    // lib.optionalAttrs (config.mySystem.filesystem == "zfs") {
+      zpool = {
+        rpool = {
+          type = "zpool";
+          rootFsOptions = {
+            compression = "lz4";
+            atime = "off";
+            "com.sun:auto-snapshot" = "false";
+          };
+          mountpoint = "/";
+          postCreateHook = "zfs list -t snapshot -H -o name | grep -E '^rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}$' || zfs snapshot rpool@${config.mySystem.impermanence.zfsRootBlankSnapshotName}";
+          datasets =
+            cfg.systemDatasets
+            //
+              lib.optionalAttrs
+                (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "rpool")
+                {
+                  persist = {
+                    type = "zfs_fs";
+                    mountpoint = "${config.mySystem.impermanence.persistPath}";
+                  };
+                };
+        };
+      }
+      // lib.optionalAttrs (builtins.length cfg.tankDiskDevs > 0) {
+        tank = {
+          type = "zpool";
+          mode = lib.mkIf (builtins.length cfg.tankDiskDevs > 1) {
+            topology = {
+              type = "topology";
+              vdev = [
+                {
+                  mode =
+                    if builtins.length cfg.tankDiskDevs > 3 then
+                      "raidz2"
+                    else if builtins.length cfg.tankDiskDevs > 2 then
+                      "raidz1"
+                    else if builtins.length cfg.tankDiskDevs > 1 then
+                      "mirror"
+                    else
+                      "";
+                  members = builtins.map (td: ("tank" + builtins.replaceStrings [ "/" ] [ "_" ] td)) cfg.tankDiskDevs;
+                }
+              ];
+            }
+            // lib.optionalAttrs (cfg.cacheDiskDev != null) { cache = [ "cache" ]; };
+          };
+
+          rootFsOptions = {
+            compression = "lz4";
+            atime = "off";
+            "com.sun:auto-snapshot" = "false";
+          };
+
+          mountpoint = "/tank";
+          datasets =
+            cfg.tankDatasets
+            //
+              lib.optionalAttrs
+                (config.mySystem.impermanence.enable && config.mySystem.impermanence.zfsPool == "tank")
+                {
+                  persist = {
+                    type = "zfs_fs";
+                    # impermanence.nix user `fileSystems."/persist"....` stanza, which will collide with ZFS mount system,
+                    # and mail fail at boot. "legacy" delegates mounting to the OS, and allows to boot properly.
+                    mountpoint = "legacy";
+                  };
+                };
+        };
+      };
+    };
   };
 }

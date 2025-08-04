@@ -38,7 +38,9 @@ let
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
-    hash = "sha256-Ulb0FV4Kyk5wfk/A3TvM8F8cuaP6uJTRWhbBY/q9gI0="; # 2
+
+    fetcherVersion = 2;
+    hash = "sha256-/BlhCyspe0DDT+E+n5C8T8gKDZoROCy2NaVGSwylMJ0="; # 2
   };
 
   # Fixed Output Derivation
@@ -90,7 +92,6 @@ in
       ;
 
     cargoHash = "sha256-IGWiOa0cmcWFZDJS0qkOVMginQCTsrAFvUeOmo3WCJM="; # 3
-    useFetchCargoVendor = true;
 
     # buildType = "debug";
     cargoRoot = "packages/client";

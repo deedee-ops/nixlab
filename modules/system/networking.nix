@@ -124,13 +124,12 @@ in
       resolvconf.enable = false;
       useDHCP = false;
       useHostResolvConf = false;
-      interfaces =
-        {
-          "${cfg.mainInterface.name}".wakeOnLan.enable = true;
-        }
-        // lib.optionalAttrs (cfg.secondaryInterface != null) {
-          "${cfg.secondaryInterface.name}".wakeOnLan.enable = true;
-        };
+      interfaces = {
+        "${cfg.mainInterface.name}".wakeOnLan.enable = true;
+      }
+      // lib.optionalAttrs (cfg.secondaryInterface != null) {
+        "${cfg.secondaryInterface.name}".wakeOnLan.enable = true;
+      };
 
       networkmanager.enable = cfg.wifiSupport;
     };
@@ -152,27 +151,25 @@ in
             {
               enable = true;
               links = {
-                "0000-bridge-inherit-mac" =
-                  {
-                    matchConfig.Type = "bridge";
-                  }
-                  // (
-                    if cfg.mainInterface.bridgeMAC == null then
-                      { linkConfig.MACAddressPolicy = "none"; }
-                    else
-                      { linkConfig.MACAddress = cfg.mainInterface.bridgeMAC; }
-                  );
+                "0000-bridge-inherit-mac" = {
+                  matchConfig.Type = "bridge";
+                }
+                // (
+                  if cfg.mainInterface.bridgeMAC == null then
+                    { linkConfig.MACAddressPolicy = "none"; }
+                  else
+                    { linkConfig.MACAddress = cfg.mainInterface.bridgeMAC; }
+                );
               };
               netdevs = {
                 "0001-uplink" = {
-                  netdevConfig =
-                    {
-                      Kind = "bridge";
-                      Name = "br0";
-                    }
-                    // lib.optionalAttrs (cfg.mainInterface.bridgeMAC == null) {
-                      MACAddress = "none";
-                    };
+                  netdevConfig = {
+                    Kind = "bridge";
+                    Name = "br0";
+                  }
+                  // lib.optionalAttrs (cfg.mainInterface.bridgeMAC == null) {
+                    MACAddress = "none";
+                  };
                   bridgeConfig = {
                     # VLANFiltering = true;
                     STP = false;
@@ -187,18 +184,18 @@ in
                 };
                 "1003-br0-up" = {
                   matchConfig.Name = "br0";
-                  networkConfig =
-                    {
-                      inherit (cfg.mainInterface) DNS;
+                  networkConfig = {
+                    inherit (cfg.mainInterface) DNS;
 
-                      DHCP = "ipv4";
-                    }
-                    // lib.optionalAttrs cfg.completelyDisableIPV6 {
-                      LinkLocalAddressing = "ipv4"; # disable ipv6
-                    };
+                    DHCP = "ipv4";
+                  }
+                  // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                    LinkLocalAddressing = "ipv4"; # disable ipv6
+                  };
                   dhcpV4Config = {
                     UseDomains = true;
-                  } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                  }
+                  // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
                   linkConfig.RequiredForOnline = "routable";
                 };
               };
@@ -206,43 +203,42 @@ in
           else
             {
               enable = true;
-              networks =
-                {
-                  "50-${cfg.mainInterface.name}" = {
-                    matchConfig.Name = cfg.mainInterface.name;
-                    networkConfig =
-                      {
-                        inherit (cfg.mainInterface) DNS;
+              networks = {
+                "50-${cfg.mainInterface.name}" = {
+                  matchConfig.Name = cfg.mainInterface.name;
+                  networkConfig = {
+                    inherit (cfg.mainInterface) DNS;
 
-                        DHCP = "ipv4";
-                      }
-                      // lib.optionalAttrs cfg.completelyDisableIPV6 {
-                        LinkLocalAddressing = "ipv4"; # disable ipv6
-                      };
-                    dhcpV4Config = {
-                      UseDomains = true;
-                    } // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
-                    linkConfig.RequiredForOnline = "routable";
+                    DHCP = "ipv4";
+                  }
+                  // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                    LinkLocalAddressing = "ipv4"; # disable ipv6
                   };
-                }
-                // lib.optionalAttrs (cfg.secondaryInterface != null) {
-                  "55-${cfg.secondaryInterface.name}" = {
-                    matchConfig.Name = cfg.secondaryInterface.name;
-                    networkConfig =
-                      {
-                        inherit (cfg.secondaryInterface) DNS;
-
-                        DHCP = "ipv4";
-                      }
-                      // lib.optionalAttrs cfg.completelyDisableIPV6 {
-                        LinkLocalAddressing = "ipv4"; # disable ipv6
-                      };
-                    dhcpV4Config = {
-                      UseDomains = true;
-                    } // lib.optionalAttrs (cfg.secondaryInterface.DNS != null) { UseDNS = false; };
-                    linkConfig.RequiredForOnline = "carrier";
-                  };
+                  dhcpV4Config = {
+                    UseDomains = true;
+                  }
+                  // lib.optionalAttrs (cfg.mainInterface.DNS != null) { UseDNS = false; };
+                  linkConfig.RequiredForOnline = "routable";
                 };
+              }
+              // lib.optionalAttrs (cfg.secondaryInterface != null) {
+                "55-${cfg.secondaryInterface.name}" = {
+                  matchConfig.Name = cfg.secondaryInterface.name;
+                  networkConfig = {
+                    inherit (cfg.secondaryInterface) DNS;
+
+                    DHCP = "ipv4";
+                  }
+                  // lib.optionalAttrs cfg.completelyDisableIPV6 {
+                    LinkLocalAddressing = "ipv4"; # disable ipv6
+                  };
+                  dhcpV4Config = {
+                    UseDomains = true;
+                  }
+                  // lib.optionalAttrs (cfg.secondaryInterface.DNS != null) { UseDNS = false; };
+                  linkConfig.RequiredForOnline = "carrier";
+                };
+              };
             }
         else
           lib.recursiveUpdate cfg.customNetworking { enable = true; };

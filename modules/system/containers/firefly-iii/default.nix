@@ -79,7 +79,8 @@ in
           REDIS_HOST = "host.docker.internal";
           REDIS_PASSWORD_FILE = "/secrets/REDIS_PASSWORD";
           REDIS_PORT = "6380";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/config,tmpfs-mode=1777"

@@ -107,12 +107,11 @@ in
 
       services.backup-snapshot = {
         description = "Nightly snapshot for backups";
-        path =
-          [
-            pkgs.busybox
-          ]
-          ++ (lib.optionals (config.mySystem.filesystem == "zfs") [ pkgs.zfs ])
-          ++ (lib.optionals (config.mySystem.filesystem == "ext4") [ pkgs.lvm2 ]);
+        path = [
+          pkgs.busybox
+        ]
+        ++ (lib.optionals (config.mySystem.filesystem == "zfs") [ pkgs.zfs ])
+        ++ (lib.optionals (config.mySystem.filesystem == "ext4") [ pkgs.lvm2 ]);
         serviceConfig.Type = "simple";
         script =
           (lib.optionalString (config.mySystem.filesystem == "zfs") ''

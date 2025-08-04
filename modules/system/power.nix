@@ -46,20 +46,19 @@ in
         Type = "oneshot";
       };
 
-      script =
-        ''
-          ${pkgs.powertop}/bin/powertop --auto-tune || true
-          sleep 2
+      script = ''
+        ${pkgs.powertop}/bin/powertop --auto-tune || true
+        sleep 2
 
-        ''
-        + (builtins.concatStringsSep "\n" (
-          builtins.map (device: ''
-            DEVICE="$(basename "$(dirname "$(grep -rl "${device}" /sys/bus/usb/devices/*/product)")")"
-            if [ "$DEVICE" != "." ]; then
-              echo 'on' > "/sys/bus/usb/devices/$DEVICE/power/control"
-            fi
-          '') cfg.powerUSBWhitelist
-        ));
+      ''
+      + (builtins.concatStringsSep "\n" (
+        builtins.map (device: ''
+          DEVICE="$(basename "$(dirname "$(grep -rl "${device}" /sys/bus/usb/devices/*/product)")")"
+          if [ "$DEVICE" != "." ]; then
+            echo 'on' > "/sys/bus/usb/devices/$DEVICE/power/control"
+          fi
+        '') cfg.powerUSBWhitelist
+      ));
     };
   };
 }

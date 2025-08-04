@@ -46,14 +46,13 @@ in
       cfg = {
         image = "ghcr.io/kieraneglin/pinchflat:v2025.6.6@sha256:4e975edf58f0861a5cbfe8fc6aac4851ff5a02dfc3f05ffeea4982e3084a5a4a";
         user = "65000:65000";
-        environment =
-          {
-            LOG_LEVEL = "info";
-            TZ_DATA_DIR = "/tmp/elixir_tz_data";
-          }
-          // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
-            JELLYFIN_URL = "http://jellyfin:8096";
-          };
+        environment = {
+          LOG_LEVEL = "info";
+          TZ_DATA_DIR = "/tmp/elixir_tz_data";
+        }
+        // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
+          JELLYFIN_URL = "http://jellyfin:8096";
+        };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

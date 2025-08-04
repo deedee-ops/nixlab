@@ -169,34 +169,32 @@ in
         locations = {
           "/" = {
             proxyWebsockets = true;
-            extraConfig =
-              ''
-                set $host_to_pass http://registry-ui.docker:8080;
-                proxy_pass $host_to_pass;
+            extraConfig = ''
+              set $host_to_pass http://registry-ui.docker:8080;
+              proxy_pass $host_to_pass;
 
-              ''
-              + baseConfig
-              + ''
-                auth_request /internal/authelia/authz;
-                auth_request_set $user $upstream_http_remote_user;
-                auth_request_set $groups $upstream_http_remote_groups;
-                auth_request_set $name $upstream_http_remote_name;
-                auth_request_set $email $upstream_http_remote_email;
-                proxy_set_header Remote-User $user;
-                proxy_set_header Remote-Groups $groups;
-                proxy_set_header Remote-Email $email;
-                proxy_set_header Remote-Name $name;
-                auth_request_set $redirection_url $upstream_http_location;
-                error_page 401 =302 $redirection_url;
-              '';
+            ''
+            + baseConfig
+            + ''
+              auth_request /internal/authelia/authz;
+              auth_request_set $user $upstream_http_remote_user;
+              auth_request_set $groups $upstream_http_remote_groups;
+              auth_request_set $name $upstream_http_remote_name;
+              auth_request_set $email $upstream_http_remote_email;
+              proxy_set_header Remote-User $user;
+              proxy_set_header Remote-Groups $groups;
+              proxy_set_header Remote-Email $email;
+              proxy_set_header Remote-Name $name;
+              auth_request_set $redirection_url $upstream_http_location;
+              error_page 401 =302 $redirection_url;
+            '';
           };
           "~* ^/v2.*$" = {
-            extraConfig =
-              ''
-                set $host_to_pass http://registry.docker:5000;
-                proxy_pass $host_to_pass;
-              ''
-              + baseConfig;
+            extraConfig = ''
+              set $host_to_pass http://registry.docker:5000;
+              proxy_pass $host_to_pass;
+            ''
+            + baseConfig;
           };
         };
       };

@@ -46,6 +46,7 @@
           })
         ];
       };
-    } // config.flakePart;
+    }
+    // config.flakePart;
   };
 }

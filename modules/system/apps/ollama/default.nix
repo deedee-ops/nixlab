@@ -18,16 +18,15 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    services.ollama =
-      {
-        inherit (cfg) loadModels;
-        enable = true;
-        user = "ollama";
-        group = "ollama";
-      }
-      // lib.optionalAttrs cfg.exposePort {
-        host = "0.0.0.0";
-      };
+    services.ollama = {
+      inherit (cfg) loadModels;
+      enable = true;
+      user = "ollama";
+      group = "ollama";
+    }
+    // lib.optionalAttrs cfg.exposePort {
+      host = "0.0.0.0";
+    };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

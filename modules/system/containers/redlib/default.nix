@@ -22,44 +22,43 @@ in
     sops.secrets."${cfg.envFileSopsSecret}" = { };
 
     virtualisation.oci-containers.containers.redlib = svc.mkContainer {
-      cfg =
-        {
-          image = "quay.io/redlib/redlib:latest@sha256:3908c592bba4a17d32516277504c42284600bd826cf1c1f9a309fdedc7bdd27a";
-          environment = {
-            REDLIB_BANNER = "";
-            REDLIB_DEFAULT_AUTOPLAY_VIDEOS = "off";
-            REDLIB_DEFAULT_BLUR_NSFW = "on";
-            REDLIB_DEFAULT_BLUR_SPOILER = "on";
-            REDLIB_DEFAULT_COMMENT_SORT = "confidence";
-            REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION = "off";
-            REDLIB_DEFAULT_FILTERS = "";
-            REDLIB_DEFAULT_FIXED_NAVBAR = "on";
-            REDLIB_DEFAULT_FRONT_PAGE = "default";
-            REDLIB_DEFAULT_HIDE_AWARDS = "on";
-            REDLIB_DEFAULT_HIDE_HLS_NOTIFICATION = "off";
-            REDLIB_DEFAULT_HIDE_SCORE = "off";
-            REDLIB_DEFAULT_HIDE_SIDEBAR_AND_SUMMARY = "off";
-            REDLIB_DEFAULT_LAYOUT = "compact";
-            REDLIB_DEFAULT_POST_SORT = "hot";
-            REDLIB_DEFAULT_SHOW_NSFW = "on";
-            REDLIB_DEFAULT_THEME = "dark";
-            REDLIB_DEFAULT_USE_HLS = "on";
-            REDLIB_DEFAULT_WIDE = "on";
-            REDLIB_PUSHSHIFT_FRONTEND = "undelete.pullpush.io";
-            REDLIB_ROBOTS_DISABLE_INDEXING = "on";
-            REDLIB_SFW_ONLY = "off";
-          };
-          environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
-        }
-        // lib.optionalAttrs config.mySystem.networking.completelyDisableIPV6 {
-          cmd = [
-            "redlib"
-            "--ipv4-only"
-          ];
-        }
-        // lib.optionalAttrs cfg.overrideDNS {
-          extraOptions = [ "--dns=9.9.9.9" ];
+      cfg = {
+        image = "quay.io/redlib/redlib:latest@sha256:3908c592bba4a17d32516277504c42284600bd826cf1c1f9a309fdedc7bdd27a";
+        environment = {
+          REDLIB_BANNER = "";
+          REDLIB_DEFAULT_AUTOPLAY_VIDEOS = "off";
+          REDLIB_DEFAULT_BLUR_NSFW = "on";
+          REDLIB_DEFAULT_BLUR_SPOILER = "on";
+          REDLIB_DEFAULT_COMMENT_SORT = "confidence";
+          REDLIB_DEFAULT_DISABLE_VISIT_REDDIT_CONFIRMATION = "off";
+          REDLIB_DEFAULT_FILTERS = "";
+          REDLIB_DEFAULT_FIXED_NAVBAR = "on";
+          REDLIB_DEFAULT_FRONT_PAGE = "default";
+          REDLIB_DEFAULT_HIDE_AWARDS = "on";
+          REDLIB_DEFAULT_HIDE_HLS_NOTIFICATION = "off";
+          REDLIB_DEFAULT_HIDE_SCORE = "off";
+          REDLIB_DEFAULT_HIDE_SIDEBAR_AND_SUMMARY = "off";
+          REDLIB_DEFAULT_LAYOUT = "compact";
+          REDLIB_DEFAULT_POST_SORT = "hot";
+          REDLIB_DEFAULT_SHOW_NSFW = "on";
+          REDLIB_DEFAULT_THEME = "dark";
+          REDLIB_DEFAULT_USE_HLS = "on";
+          REDLIB_DEFAULT_WIDE = "on";
+          REDLIB_PUSHSHIFT_FRONTEND = "undelete.pullpush.io";
+          REDLIB_ROBOTS_DISABLE_INDEXING = "on";
+          REDLIB_SFW_ONLY = "off";
         };
+        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
+      }
+      // lib.optionalAttrs config.mySystem.networking.completelyDisableIPV6 {
+        cmd = [
+          "redlib"
+          "--ipv4-only"
+        ];
+      }
+      // lib.optionalAttrs cfg.overrideDNS {
+        extraOptions = [ "--dns=9.9.9.9" ];
+      };
       opts = {
         # proxying to reddit
         allowPublic = true;

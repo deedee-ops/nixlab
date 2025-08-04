@@ -66,7 +66,8 @@ in
           SMTP_HOST = "maddy";
           SMTP_PORT = "25";
           SMTP_SECURITY = "off";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

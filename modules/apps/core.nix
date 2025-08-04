@@ -68,7 +68,8 @@
         pkgs.nh
         pkgs.pwgen
         pkgs.silver-searcher
-      ] ++ config.myHomeApps.extraPackages;
+      ]
+      ++ config.myHomeApps.extraPackages;
 
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}" =
         lib.mkIf osConfig.mySystem.impermanence.enable

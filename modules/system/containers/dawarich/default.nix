@@ -66,27 +66,26 @@ in
 
     virtualisation.oci-containers.containers =
       let
-        envs =
-          {
-            APPLICATION_HOSTS = "localhost,127.0.0.1,dawarich.${config.mySystem.rootDomain}";
-            APPLICATION_PROTOCOL = "http";
-            DATABASE_HOST = "host.docker.internal";
-            DATABASE_NAME = "dawarich";
-            DATABASE_PORT = "5432";
-            DATABASE_USERNAME = "dawarich";
-            DISABLE_TELEMETRY = "true";
-            MIN_MINUTES_SPENT_IN_CITY = "60";
-            PROMETHEUS_EXPORTER_ENABLED = "false";
-            RAILS_ENV = "production";
-            RAILS_LOG_TO_STDOUT = "true";
-            SELF_HOSTED = "true";
-            STORE_GEODATA = "true";
-            TIME_ZONE = config.mySystem.time.timeZone;
-          }
-          // lib.optionalAttrs cfg.internalPhoton {
-            PHOTON_API_HOST = "photon:2322";
-            PHOTON_API_USE_HTTPS = "false";
-          };
+        envs = {
+          APPLICATION_HOSTS = "localhost,127.0.0.1,dawarich.${config.mySystem.rootDomain}";
+          APPLICATION_PROTOCOL = "http";
+          DATABASE_HOST = "host.docker.internal";
+          DATABASE_NAME = "dawarich";
+          DATABASE_PORT = "5432";
+          DATABASE_USERNAME = "dawarich";
+          DISABLE_TELEMETRY = "true";
+          MIN_MINUTES_SPENT_IN_CITY = "60";
+          PROMETHEUS_EXPORTER_ENABLED = "false";
+          RAILS_ENV = "production";
+          RAILS_LOG_TO_STDOUT = "true";
+          SELF_HOSTED = "true";
+          STORE_GEODATA = "true";
+          TIME_ZONE = config.mySystem.time.timeZone;
+        }
+        // lib.optionalAttrs cfg.internalPhoton {
+          PHOTON_API_HOST = "photon:2322";
+          PHOTON_API_USE_HTTPS = "false";
+        };
       in
       {
         dawarich = svc.mkContainer {
