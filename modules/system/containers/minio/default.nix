@@ -93,7 +93,8 @@ in
         environment = {
           MINIO_BROWSER_REDIRECT_URL = "https://minio.${config.mySystem.rootDomain}";
           MINIO_UPDATE = "off";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
 
         volumes =
           svc.mkContainerSecretsVolumes {

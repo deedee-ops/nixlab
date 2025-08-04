@@ -65,13 +65,12 @@ in
           };
         };
 
-        xserver =
-          {
-            enable = true;
-          }
-          // lib.optionalAttrs (cfg.windowManager != null) {
-            windowManager."${cfg.windowManager}".enable = true;
-          };
+        xserver = {
+          enable = true;
+        }
+        // lib.optionalAttrs (cfg.windowManager != null) {
+          windowManager."${cfg.windowManager}".enable = true;
+        };
       };
 
       fonts.fontconfig.localConf = ''

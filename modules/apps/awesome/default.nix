@@ -94,16 +94,15 @@ in
 
   config = lib.mkIf (osConfig.mySystemApps.xorg.windowManager == "awesome") {
     xsession.windowManager.awesome.enable = true;
-    myHomeApps =
-      {
-        dunst.enable = cfg.useDunst;
-      }
-      // (builtins.listToAttrs (
-        builtins.map (term: {
-          name = term;
-          value.enable = config.myHomeApps.xorg.terminal.pname == term;
-        }) osConfig.mySystem.supportedTerminals
-      ));
+    myHomeApps = {
+      dunst.enable = cfg.useDunst;
+    }
+    // (builtins.listToAttrs (
+      builtins.map (term: {
+        name = term;
+        value.enable = config.myHomeApps.xorg.terminal.pname == term;
+      }) osConfig.mySystem.supportedTerminals
+    ));
 
     xdg = {
       configFile = {

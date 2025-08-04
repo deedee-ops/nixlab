@@ -64,7 +64,8 @@ in
           POSTGRES_USER = "bitmagnet";
           POSTGRES_HOST = "host.docker.internal";
           TMDB_ENABLED = "false";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

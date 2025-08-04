@@ -111,14 +111,13 @@ in
                 "${cfg.dataDir}/${alias}/config:/config"
                 "/run/udev:/run/udev:ro"
               ];
-              extraOptions =
-                [
-                  "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
-                  "--cap-add=CAP_NET_BIND_SERVICE"
-                ]
-                ++ lib.optionals (lib.strings.hasPrefix "/dev" coordinator.config.serial.port) [
-                  "--device=${coordinator.config.serial.port}"
-                ];
+              extraOptions = [
+                "--group-add=27" # dialout group in nixos, doesn't map 1:1 with container
+                "--cap-add=CAP_NET_BIND_SERVICE"
+              ]
+              ++ lib.optionals (lib.strings.hasPrefix "/dev" coordinator.config.serial.port) [
+                "--device=${coordinator.config.serial.port}"
+              ];
             };
             opts = {
               # access remote coordinator

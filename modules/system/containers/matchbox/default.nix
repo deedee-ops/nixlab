@@ -26,13 +26,12 @@ in
       cfg = {
         image = "quay.io/poseidon/matchbox:v0.11.0@sha256:06bcdae85335fd00e8277b007b55cfb49d96a0114628c0f70db2b92b079d246a";
         user = "65000:65000";
-        cmd =
-          [
-            "-address=0.0.0.0:8080"
-          ]
-          ++ lib.optionals cfg.exposeGRPC [
-            "-rpc-address=0.0.0.0:8081"
-          ];
+        cmd = [
+          "-address=0.0.0.0:8080"
+        ]
+        ++ lib.optionals cfg.exposeGRPC [
+          "-rpc-address=0.0.0.0:8081"
+        ];
         volumes = [
           "${cfg.dataDir}/config:/etc/matchbox:Z"
           "${cfg.dataDir}/data:/var/lib/matchbox:Z"

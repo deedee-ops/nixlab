@@ -89,18 +89,17 @@ in
       };
 
       home = {
-        packages =
-          [
-            package
-          ]
-          ++ lib.optionals patchPackage [
-            (pkgs.makeDesktopItem {
-              name = "thunderbird";
-              desktopName = "Thunderbird";
-              exec = lib.getExe package;
-              icon = "thunderbird";
-            })
-          ];
+        packages = [
+          package
+        ]
+        ++ lib.optionals patchPackage [
+          (pkgs.makeDesktopItem {
+            name = "thunderbird";
+            desktopName = "Thunderbird";
+            exec = lib.getExe package;
+            icon = "thunderbird";
+          })
+        ];
 
         persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
           lib.mkIf osConfig.mySystem.impermanence.enable [

@@ -82,7 +82,8 @@ in
             "--cap-add=CAP_SETGID"
             "--cap-add=CAP_SETUID"
             "--cap-add=CAP_SYS_CHROOT"
-          ] ++ lib.optionals cfg.useHostNetwork [ "--cap-add=CAP_NET_BIND_SERVICE" ];
+          ]
+          ++ lib.optionals cfg.useHostNetwork [ "--cap-add=CAP_NET_BIND_SERVICE" ];
         };
         opts = {
           inherit (cfg) useHostNetwork;

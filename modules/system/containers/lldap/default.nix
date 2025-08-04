@@ -75,7 +75,8 @@ in
           LLDAP_SMTP_OPTIONS__PORT = "25";
           LLDAP_SMTP_OPTIONS__SERVER = "maddy";
           LLDAP_SMTP_OPTIONS__SMTP_ENCRYPTION = "NONE";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

@@ -79,7 +79,8 @@ in
           WAKAPI_SENTRY_TRACING = "false";
           WAKAPI_QUICK_START = "false";
           WAKAPI_ENABLE_PPROF = "false";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

@@ -91,14 +91,13 @@ in
           FILEBROWSER_CONFIG = "/config/config.yaml";
         };
         environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
-        volumes =
-          [
-            "${configYaml}:/config/config.yaml:ro"
-            "${cfg.dataDir}:/home/filebrowser/data"
-          ]
-          ++ (builtins.map (name: "${name}:${(builtins.getAttr name cfg.sources).path}") (
-            builtins.attrNames cfg.sources
-          ));
+        volumes = [
+          "${configYaml}:/config/config.yaml:ro"
+          "${cfg.dataDir}:/home/filebrowser/data"
+        ]
+        ++ (builtins.map (name: "${name}:${(builtins.getAttr name cfg.sources).path}") (
+          builtins.attrNames cfg.sources
+        ));
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/home/filebrowser/tmp,tmpfs-mode=1777"

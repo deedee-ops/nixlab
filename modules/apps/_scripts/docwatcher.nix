@@ -142,45 +142,44 @@ in
       };
 
       Service = {
-        Environment =
-          [
-            "LOCALDIR_ENABLE=${if cfg.localdir.enable then "true" else "false"}"
-            "MAIL_ENABLE=${if cfg.mail.enable then "true" else "false"}"
-            "RCLONE_ENABLE=${if cfg.rclone.enable then "true" else "false"}"
-            "PAPERLESS_ENABLE=${if cfg.paperless.enable then "true" else "false"}"
-            "SSH_ENABLE=${if cfg.ssh.enable then "true" else "false"}"
-            "WATCH_DIR=${cfg.watchDir}"
-            "PATH=${
-              lib.makeBinPath [
-                pkgs.coreutils-full
-                pkgs.inotify-tools
-                pkgs.libnotify
-                pkgs.openssh
-                pkgs.rclone
-                pkgs.swaks
-              ]
-            }:$PATH"
-          ]
-          ++ (lib.optionals cfg.localdir.enable [
-            "LOCALDIR_TARGET=${builtins.replaceStrings [ "%" ] [ "%%" ] cfg.localdir.targetDir}"
-          ])
-          ++ (lib.optionals cfg.rclone.enable [
-            "RCLONE_TARGET=${cfg.rclone.target}"
-          ])
-          ++ (lib.optionals cfg.mail.enable [
-            "MAIL_FROM=\"${cfg.mail.from}\""
-            "MAIL_TO=${cfg.mail.to}"
-            "MAIL_SUBJECT=${cfg.mail.subject}"
-            "MAIL_BODY=${cfg.mail.body}"
-            "MAIL_SWAKS_CFG_PATH=${config.sops.secrets."${cfg.mail.swaksConfigSopsSecret}".path}"
-          ])
-          ++ (lib.optionals cfg.paperless.enable [
-            "PAPERLESS_CONSUME_DIR=${cfg.paperless.consumeDir}"
-          ])
-          ++ (lib.optionals cfg.ssh.enable [
-            "SSH_HOST=${cfg.ssh.host}"
-            "SSH_TARGET=${builtins.replaceStrings [ "%" ] [ "%%" ] cfg.ssh.targetDir}"
-          ]);
+        Environment = [
+          "LOCALDIR_ENABLE=${if cfg.localdir.enable then "true" else "false"}"
+          "MAIL_ENABLE=${if cfg.mail.enable then "true" else "false"}"
+          "RCLONE_ENABLE=${if cfg.rclone.enable then "true" else "false"}"
+          "PAPERLESS_ENABLE=${if cfg.paperless.enable then "true" else "false"}"
+          "SSH_ENABLE=${if cfg.ssh.enable then "true" else "false"}"
+          "WATCH_DIR=${cfg.watchDir}"
+          "PATH=${
+            lib.makeBinPath [
+              pkgs.coreutils-full
+              pkgs.inotify-tools
+              pkgs.libnotify
+              pkgs.openssh
+              pkgs.rclone
+              pkgs.swaks
+            ]
+          }:$PATH"
+        ]
+        ++ (lib.optionals cfg.localdir.enable [
+          "LOCALDIR_TARGET=${builtins.replaceStrings [ "%" ] [ "%%" ] cfg.localdir.targetDir}"
+        ])
+        ++ (lib.optionals cfg.rclone.enable [
+          "RCLONE_TARGET=${cfg.rclone.target}"
+        ])
+        ++ (lib.optionals cfg.mail.enable [
+          "MAIL_FROM=\"${cfg.mail.from}\""
+          "MAIL_TO=${cfg.mail.to}"
+          "MAIL_SUBJECT=${cfg.mail.subject}"
+          "MAIL_BODY=${cfg.mail.body}"
+          "MAIL_SWAKS_CFG_PATH=${config.sops.secrets."${cfg.mail.swaksConfigSopsSecret}".path}"
+        ])
+        ++ (lib.optionals cfg.paperless.enable [
+          "PAPERLESS_CONSUME_DIR=${cfg.paperless.consumeDir}"
+        ])
+        ++ (lib.optionals cfg.ssh.enable [
+          "SSH_HOST=${cfg.ssh.host}"
+          "SSH_TARGET=${builtins.replaceStrings [ "%" ] [ "%%" ] cfg.ssh.targetDir}"
+        ]);
         ExecStartPre = lib.getExe (
           pkgs.writeShellScriptBin "rclone-pre" ''
             [ ! -f "${config.xdg.configHome}/rclone/rclone.conf" ] && cp ${

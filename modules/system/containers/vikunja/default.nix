@@ -124,7 +124,8 @@ in
           VIKUNJA_SERVICE_PUBLICURL = "https://vikunja.${config.mySystem.rootDomain}";
           VIKUNJA_SERVICE_TIMEZONE = config.mySystem.time.timeZone;
           VIKUNJA_WEBHOOKS_ENABLED = "false";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

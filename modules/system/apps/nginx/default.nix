@@ -73,9 +73,6 @@ in
       recommendedOptimisation = true;
       recommendedProxySettings = true;
 
-      # zstd causes CPU spikes on workers - bug in nginx?
-      recommendedZstdSettings = false;
-
       # harden TLS
       recommendedTlsSettings = false; # OCSP stapling is PITA
       sslProtocols = "TLSv1.2 TLSv1.3";

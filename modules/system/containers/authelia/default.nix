@@ -188,18 +188,17 @@ in
         dependsOn = lib.optionals (cfg.authenticationBackend == "lldap") [ "lldap" ];
         user = "65000:65000";
         image = "ghcr.io/authelia/authelia:4.39.5@sha256:023e02e5203dfa0ebaee7a48b5bae34f393d1f9cada4a9df7fbf87eb1759c671";
-        environment =
-          {
-            AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
-            AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
-            AUTHELIA_STORAGE_POSTGRES_USERNAME = "authelia";
-            AUTHELIA_SESSION_REDIS_PASSWORD_FILE = "/secrets/AUTHELIA_SESSION_REDIS_PASSWORD";
-            X_AUTHELIA_CONFIG_FILTERS = "template";
-          }
-          // (lib.optionalAttrs (cfg.authenticationBackend == "lldap") {
-            AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = "/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD";
-          })
-          // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        environment = {
+          AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
+          AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
+          AUTHELIA_STORAGE_POSTGRES_USERNAME = "authelia";
+          AUTHELIA_SESSION_REDIS_PASSWORD_FILE = "/secrets/AUTHELIA_SESSION_REDIS_PASSWORD";
+          X_AUTHELIA_CONFIG_FILTERS = "template";
+        }
+        // (lib.optionalAttrs (cfg.authenticationBackend == "lldap") {
+          AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE = "/secrets/AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD";
+        })
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

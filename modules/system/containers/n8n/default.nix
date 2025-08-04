@@ -97,7 +97,8 @@ in
             N8N_DIAGNOSTICS_ENABLED = "false";
             N8N_VERSION_NOTIFICATIONS_ENABLED = "false";
             N8N_TEMPLATES_ENABLED = "false";
-          } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+          }
+          // svc.mkContainerSecretsEnv { inherit secretEnvs; };
           volumes =
             svc.mkContainerSecretsVolumes {
               inherit (cfg) sopsSecretPrefix;

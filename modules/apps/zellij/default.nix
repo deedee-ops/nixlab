@@ -24,29 +24,28 @@ in
     programs.zellij = {
       enable = true;
       enableZshIntegration = false; # broken for some reason
-      settings =
-        {
-          default_layout = "compact";
-          default_mode = "locked";
-          mouse_mode = true;
-          pane_frames = false;
-          scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
-          show_startup_tips = false;
-        }
-        // lib.optionalAttrs cfg.singleInstance {
-          keybinds = {
-            shared_among = {
-              _args = [
-                "normal"
-                "locked"
-              ];
-              bind = {
-                _args = [ "Ctrl d" ];
-                Detach = { };
-              };
+      settings = {
+        default_layout = "compact";
+        default_mode = "locked";
+        mouse_mode = true;
+        pane_frames = false;
+        scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
+        show_startup_tips = false;
+      }
+      // lib.optionalAttrs cfg.singleInstance {
+        keybinds = {
+          shared_among = {
+            _args = [
+              "normal"
+              "locked"
+            ];
+            bind = {
+              _args = [ "Ctrl d" ];
+              Detach = { };
             };
           };
         };
+      };
     };
 
     programs.zsh.initContent = lib.mkIf cfg.autoStart (

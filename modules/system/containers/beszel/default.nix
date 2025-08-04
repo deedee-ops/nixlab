@@ -106,7 +106,8 @@ in
             };
             volumes = [
               "${cfg.dataDir}/server:/beszel_data"
-            ] ++ lib.optionals (cfg.mode == "both") [ "/var/cache/beszel:/beszel_socket" ];
+            ]
+            ++ lib.optionals (cfg.mode == "both") [ "/var/cache/beszel:/beszel_socket" ];
 
             extraOptions = [
               "--add-host=authelia.${config.mySystem.rootDomain}:${config.mySystemApps.docker.network.private.hostIP}"
@@ -129,14 +130,13 @@ in
               KEY_FILE = "/secrets/key";
               LISTEN = if cfg.mode == "both" then "/beszel_socket/beszel.sock" else "45876";
             };
-            volumes =
-              [
-                "${config.sops.secrets."${cfg.agentKeySopsSecret}".path}:/secrets/key:ro"
-              ]
-              ++ (builtins.map (
-                name: "${builtins.getAttr name cfg.monitoredFilesystems}/.beszel:/extra-filesystems/${name}:ro"
-              ) (builtins.attrNames cfg.monitoredFilesystems))
-              ++ lib.optionals (cfg.mode == "both") [ "/var/cache/beszel:/beszel_socket" ];
+            volumes = [
+              "${config.sops.secrets."${cfg.agentKeySopsSecret}".path}:/secrets/key:ro"
+            ]
+            ++ (builtins.map (
+              name: "${builtins.getAttr name cfg.monitoredFilesystems}/.beszel:/extra-filesystems/${name}:ro"
+            ) (builtins.attrNames cfg.monitoredFilesystems))
+            ++ lib.optionals (cfg.mode == "both") [ "/var/cache/beszel:/beszel_socket" ];
           };
           opts = {
             useHostNetwork = true;

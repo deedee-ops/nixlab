@@ -50,22 +50,20 @@ in
     };
 
     services = {
-      tailscale =
-        {
-          enable = true;
-          disableTaildrop = true;
-        }
-        // lib.optionalAttrs cfg.autoProvision {
-          authKeyFile = config.sops.secrets."${cfg.authKeySopsSecret}".path;
-          extraUpFlags =
-            [
-              "--accept-dns=false"
-            ]
-            ++ (lib.optionals (builtins.length cfg.advertiseRoutes > 0) [
-              ("--advertise-routes=" + (builtins.concatStringsSep "," cfg.advertiseRoutes))
-            ]);
+      tailscale = {
+        enable = true;
+        disableTaildrop = true;
+      }
+      // lib.optionalAttrs cfg.autoProvision {
+        authKeyFile = config.sops.secrets."${cfg.authKeySopsSecret}".path;
+        extraUpFlags = [
+          "--accept-dns=false"
+        ]
+        ++ (lib.optionals (builtins.length cfg.advertiseRoutes > 0) [
+          ("--advertise-routes=" + (builtins.concatStringsSep "," cfg.advertiseRoutes))
+        ]);
 
-        };
+      };
 
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {

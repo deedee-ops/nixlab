@@ -66,20 +66,19 @@ in
         cfg = {
           image = "codeberg.org/forgejo/forgejo:12.0.1-rootless@sha256:d3cf45e6fa7cda0c329a02ce4d5c57cd5fae67f6d39bb5057b77c081938594df";
           dependsOn = lib.optionals config.mySystemApps.minio.enable [ "minio" ];
-          environment =
-            {
-              FORGEJO__actions__ENABLED = if cfg.enableRunner then "true" else "false";
-              FORGEJO__server__DOMAIN = "git.${config.mySystem.rootDomain}";
-              FORGEJO__server__SSH_DOMAIN = "git.${config.mySystem.rootDomain}";
-              FORGEJO__server__ROOT_URL = "https://git.${config.mySystem.rootDomain}";
-              FORGEJO__mailer__FROM = config.mySystem.notificationSender;
-              FORGEJO__storage__MINIO_ENDPOINT = "s3.${config.mySystem.rootDomain}";
-              FORGEJO__time__DEFAULT_UI_LOCATION = config.mySystem.time.timeZone;
-            }
-            // svc.mkContainerSecretsEnv {
-              inherit secretEnvs;
-              suffix = "__FILE";
-            };
+          environment = {
+            FORGEJO__actions__ENABLED = if cfg.enableRunner then "true" else "false";
+            FORGEJO__server__DOMAIN = "git.${config.mySystem.rootDomain}";
+            FORGEJO__server__SSH_DOMAIN = "git.${config.mySystem.rootDomain}";
+            FORGEJO__server__ROOT_URL = "https://git.${config.mySystem.rootDomain}";
+            FORGEJO__mailer__FROM = config.mySystem.notificationSender;
+            FORGEJO__storage__MINIO_ENDPOINT = "s3.${config.mySystem.rootDomain}";
+            FORGEJO__time__DEFAULT_UI_LOCATION = config.mySystem.time.timeZone;
+          }
+          // svc.mkContainerSecretsEnv {
+            inherit secretEnvs;
+            suffix = "__FILE";
+          };
           ports = [ "2222:2222" ];
           volumes =
             svc.mkContainerSecretsVolumes {

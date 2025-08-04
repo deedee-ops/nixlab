@@ -53,18 +53,14 @@ in
           forceSSL = true;
           locations = {
             "~ (/videoplayback|/api/v4/|/api/manifest/)" = {
-              extraConfig =
-                ytproxy
-                + ''
-                  add_header Cache-Control private always;
-                '';
+              extraConfig = ytproxy + ''
+                add_header Cache-Control private always;
+              '';
             };
             "/" = {
-              extraConfig =
-                ytproxy
-                + ''
-                  add_header Cache-Control "public, max-age=604800";
-                '';
+              extraConfig = ytproxy + ''
+                add_header Cache-Control "public, max-age=604800";
+              '';
             };
           };
         };

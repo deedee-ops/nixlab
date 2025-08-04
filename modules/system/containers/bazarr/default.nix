@@ -6,13 +6,12 @@
 }:
 let
   cfg = config.mySystemApps.bazarr;
-  secretEnvs =
-    [
-      "BAZARR__API_KEY"
-    ]
-    ++ lib.optionals config.mySystemApps.jellyfin.enable [
-      "JELLYFIN_API_KEY"
-    ];
+  secretEnvs = [
+    "BAZARR__API_KEY"
+  ]
+  ++ lib.optionals config.mySystemApps.jellyfin.enable [
+    "JELLYFIN_API_KEY"
+  ];
 in
 {
   # postgres setup in bazarr is utterly broken, so for now, sqlite3 is the only stable option
@@ -52,21 +51,19 @@ in
       cfg = {
         image = "ghcr.io/home-operations/bazarr:1.5.2@sha256:dbc87e5ce9e199709188e152e82b3ff5d33e6521a1b3d61e465aa75b4b739e7f";
         user = "65000:65000";
-        environment =
-          {
-            BAZARR__ANALYTICS_ENABLED = "false";
-          }
-          // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
-            JELLYFIN_URL = "http://jellyfin:8096";
-          };
-        volumes =
-          [
-            "${cfg.dataDir}/config:/config"
-            "${cfg.videoPath}:/data/video"
-          ]
-          ++ (lib.optionals config.mySystemApps.jellyfin.enable [
-            "${./refresh-jellyfin.sh}:/scripts/refresh-jellyfin.sh"
-          ]);
+        environment = {
+          BAZARR__ANALYTICS_ENABLED = "false";
+        }
+        // lib.optionalAttrs config.mySystemApps.jellyfin.enable {
+          JELLYFIN_URL = "http://jellyfin:8096";
+        };
+        volumes = [
+          "${cfg.dataDir}/config:/config"
+          "${cfg.videoPath}:/data/video"
+        ]
+        ++ (lib.optionals config.mySystemApps.jellyfin.enable [
+          "${./refresh-jellyfin.sh}:/scripts/refresh-jellyfin.sh"
+        ]);
       };
       opts = {
         # downloading subtitles

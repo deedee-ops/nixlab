@@ -79,7 +79,8 @@ in
           MEMOS__POSTGRES_HOST = "host.docker.internal";
           MEMOS__POSTGRES_SSLMODE = "disable";
           MEMOS__POSTGRES_USERNAME = "memos";
-        } // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes =
           svc.mkContainerSecretsVolumes {
             inherit (cfg) sopsSecretPrefix;

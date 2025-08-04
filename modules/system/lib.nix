@@ -58,77 +58,75 @@
       {
         inherit useACMEHost;
 
-        extraConfig =
-          ''
-            resolver 127.0.0.1:5533;
+        extraConfig = ''
+          resolver 127.0.0.1:5533;
 
-            ssl_certificate "${config.security.acme.certs."rsa-${useACMEHost}".directory}/fullchain.pem";
-            ssl_certificate_key "${config.security.acme.certs."rsa-${useACMEHost}".directory}/key.pem";
-          ''
-          + lib.optionalString useAuthelia ''
-            set $upstream_authelia http://authelia.docker:9091/api/authz/auth-request;
+          ssl_certificate "${config.security.acme.certs."rsa-${useACMEHost}".directory}/fullchain.pem";
+          ssl_certificate_key "${config.security.acme.certs."rsa-${useACMEHost}".directory}/key.pem";
+        ''
+        + lib.optionalString useAuthelia ''
+          set $upstream_authelia http://authelia.docker:9091/api/authz/auth-request;
 
-            ## Virtual endpoint created by nginx to forward auth requests.
-            location /internal/authelia/authz {
-                ## Essential Proxy Configuration
-                internal;
-                proxy_pass $upstream_authelia;
+          ## Virtual endpoint created by nginx to forward auth requests.
+          location /internal/authelia/authz {
+              ## Essential Proxy Configuration
+              internal;
+              proxy_pass $upstream_authelia;
 
-                ## Headers
-                ## The headers starting with X-* are required.
-                proxy_set_header X-Original-Method $request_method;
-                proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-                proxy_set_header X-Forwarded-For $remote_addr;
-                proxy_set_header Content-Length "";
-                proxy_set_header Connection "";
+              ## Headers
+              ## The headers starting with X-* are required.
+              proxy_set_header X-Original-Method $request_method;
+              proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+              proxy_set_header X-Forwarded-For $remote_addr;
+              proxy_set_header Content-Length "";
+              proxy_set_header Connection "";
 
-                ## Basic Proxy Configuration
-                proxy_pass_request_body off;
-                proxy_next_upstream error timeout invalid_header http_500 http_502 http_503; # Timeout if the real server is dead
-                proxy_redirect http:// $scheme://;
-                proxy_http_version 1.1;
-                proxy_cache_bypass $cookie_session;
-                proxy_no_cache $cookie_session;
-                proxy_buffers 4 32k;
-                client_body_buffer_size 128k;
+              ## Basic Proxy Configuration
+              proxy_pass_request_body off;
+              proxy_next_upstream error timeout invalid_header http_500 http_502 http_503; # Timeout if the real server is dead
+              proxy_redirect http:// $scheme://;
+              proxy_http_version 1.1;
+              proxy_cache_bypass $cookie_session;
+              proxy_no_cache $cookie_session;
+              proxy_buffers 4 32k;
+              client_body_buffer_size 128k;
 
-                ## Advanced Proxy Configuration
-                send_timeout 5m;
-                proxy_read_timeout 240;
-                proxy_send_timeout 240;
-                proxy_connect_timeout 240;
-            }
-          '';
-        locations =
-          {
-            "/" = {
-              proxyWebsockets = true;
-              extraConfig =
-                baseConfig
-                + lib.optionalString useAuthelia ''
-                  auth_request /internal/authelia/authz;
-                  auth_request_set $user $upstream_http_remote_user;
-                  auth_request_set $groups $upstream_http_remote_groups;
-                  auth_request_set $name $upstream_http_remote_name;
-                  auth_request_set $email $upstream_http_remote_email;
-                  proxy_set_header Remote-User $user;
-                  proxy_set_header Remote-Groups $groups;
-                  proxy_set_header Remote-Email $email;
-                  proxy_set_header Remote-Name $name;
-                  auth_request_set $redirection_url $upstream_http_location;
-                  error_page 401 =302 $redirection_url;
-                '';
-            };
+              ## Advanced Proxy Configuration
+              send_timeout 5m;
+              proxy_read_timeout 240;
+              proxy_send_timeout 240;
+              proxy_connect_timeout 240;
           }
-          // builtins.listToAttrs (
-            builtins.map (location: {
-              name = location;
-              value = {
-                proxyWebsockets = true;
-                extraConfig = baseConfig;
-              };
-            }) autheliaIgnorePaths
-          );
+        '';
+        locations = {
+          "/" = {
+            proxyWebsockets = true;
+            extraConfig =
+              baseConfig
+              + lib.optionalString useAuthelia ''
+                auth_request /internal/authelia/authz;
+                auth_request_set $user $upstream_http_remote_user;
+                auth_request_set $groups $upstream_http_remote_groups;
+                auth_request_set $name $upstream_http_remote_name;
+                auth_request_set $email $upstream_http_remote_email;
+                proxy_set_header Remote-User $user;
+                proxy_set_header Remote-Groups $groups;
+                proxy_set_header Remote-Email $email;
+                proxy_set_header Remote-Name $name;
+                auth_request_set $redirection_url $upstream_http_location;
+                error_page 401 =302 $redirection_url;
+              '';
+          };
+        }
+        // builtins.listToAttrs (
+          builtins.map (location: {
+            name = location;
+            value = {
+              proxyWebsockets = true;
+              extraConfig = baseConfig;
+            };
+          }) autheliaIgnorePaths
+        );
 
         serverName = if useHostAsServerName then host else "${host}.${config.mySystem.rootDomain}";
         forceSSL = !allowHTTP;
@@ -152,7 +150,8 @@
           customNetworks = [ ];
           sopsSecretPrefix = null;
           secretEnvs = [ ];
-        } // opts;
+        }
+        // opts;
       in
       (lib.recursiveUpdate {
         autoStart = !config.mySystem.recoveryMode;

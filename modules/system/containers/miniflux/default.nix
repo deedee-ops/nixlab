@@ -49,18 +49,17 @@ in
       cfg = {
         image = "ghcr.io/miniflux/miniflux:2.2.11@sha256:d8e0f95eaa319211642e22e7ee78f59b1c224071b40670635ad29c4f04e7b036";
         user = "65000:65000";
-        environment =
-          {
-            AUTH_PROXY_HEADER = "Remote-User";
-            CREATE_ADMIN = "1";
-            LISTEN_ADDR = "0.0.0.0:3000";
-            POLLING_PARSING_ERROR_LIMIT = "3";
-            RUN_MIGRATIONS = "1";
-          }
-          // lib.optionalAttrs config.mySystemApps.piped.enable {
-            YOUTUBE_EMBED_URL_OVERRIDE = "https://piped.${config.mySystem.rootDomain}/embed/";
-          }
-          // svc.mkContainerSecretsEnv { inherit secretEnvs; };
+        environment = {
+          AUTH_PROXY_HEADER = "Remote-User";
+          CREATE_ADMIN = "1";
+          LISTEN_ADDR = "0.0.0.0:3000";
+          POLLING_PARSING_ERROR_LIMIT = "3";
+          RUN_MIGRATIONS = "1";
+        }
+        // lib.optionalAttrs config.mySystemApps.piped.enable {
+          YOUTUBE_EMBED_URL_OVERRIDE = "https://piped.${config.mySystem.rootDomain}/embed/";
+        }
+        // svc.mkContainerSecretsEnv { inherit secretEnvs; };
         volumes = svc.mkContainerSecretsVolumes {
           inherit (cfg) sopsSecretPrefix;
           inherit secretEnvs;

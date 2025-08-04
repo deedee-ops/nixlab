@@ -103,17 +103,16 @@ in
           ensureDatabases = lib.flatten (builtins.map (opt: opt.databases) cfg.userDatabases);
           ensureUsers = builtins.map (opt: { name = opt.username; }) cfg.userDatabases;
 
-          settings =
-            {
-              password_encryption = "scram-sha-256";
-              max_connections = 500;
-              shared_preload_libraries =
-                (lib.optionals cfg.enablePgVectoRs [ "vectors.so" ])
-                ++ (lib.optionals cfg.enableVectorchord [ "vchord.so" ]);
-            }
-            // lib.optionalAttrs (cfg.enablePgVectoRs || cfg.enableVectorchord) {
-              search_path = "\"$user\", public, vectors";
-            };
+          settings = {
+            password_encryption = "scram-sha-256";
+            max_connections = 500;
+            shared_preload_libraries =
+              (lib.optionals cfg.enablePgVectoRs [ "vectors.so" ])
+              ++ (lib.optionals cfg.enableVectorchord [ "vchord.so" ]);
+          }
+          // lib.optionalAttrs (cfg.enablePgVectoRs || cfg.enableVectorchord) {
+            search_path = "\"$user\", public, vectors";
+          };
 
           extensions =
             ps:

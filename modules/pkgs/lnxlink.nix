@@ -27,19 +27,18 @@ buildPythonPackage rec {
     wheel
   ];
 
-  propagatedBuildInputs =
-    [
-      distro
-      inotify
-      paho-mqtt
-      psutil
-      pyaml
-      requests
-    ]
-    ++ lib.optionals dbusEnabled [
-      pygobject3
-      dasbus
-    ];
+  propagatedBuildInputs = [
+    distro
+    inotify
+    paho-mqtt
+    psutil
+    pyaml
+    requests
+  ]
+  ++ lib.optionals dbusEnabled [
+    pygobject3
+    dasbus
+  ];
 
   meta = {
     homepage = "https://github.com/bkbilly/lnxlink";

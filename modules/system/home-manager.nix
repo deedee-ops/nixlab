@@ -58,7 +58,8 @@ in
           ../apps
           ../games
           ../retro
-        ] ++ cfg.extraImports;
+        ]
+        ++ cfg.extraImports;
 
         nix.settings = nixConfig;
 

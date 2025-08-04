@@ -52,7 +52,8 @@ in
         trusted-users = allowedUsers;
 
         use-xdg-base-directories = true;
-      } // nixConfig;
+      }
+      // nixConfig;
     };
   };
 }
