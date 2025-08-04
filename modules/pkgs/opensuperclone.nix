@@ -15,6 +15,7 @@
 
 stdenv.mkDerivation (finalAttrs: {
   pname = "opensuperclone";
+  # renovate: datasource=github-releases depName=ISpillMyDrink/OpenSuperClone versioning=semver-coerced
   version = "2.5.0";
 
   src = fetchFromGitHub {
