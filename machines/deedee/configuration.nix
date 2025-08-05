@@ -444,6 +444,7 @@ rec {
       inherit mediaPath;
       enable = true;
     };
+    stirlingpdf.enable = true;
     syncthing.enable = true;
     tailscale = {
       enable = true;
