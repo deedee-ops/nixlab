@@ -54,7 +54,7 @@ in
 
     home = {
       activation = {
-        todoist = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        todoist = lib.hm.dag.entryAfter [ "sopsNix" ] ''
           sed -e 's@##PATH##@${config.xdg.configHome}/tod.cfg@g' \
               -e "s@##TOKEN##@$(cat ${config.sops.secrets."${cfg.apiKeySopsSecret}".path})@g" \
               -e "s@##TIMEZONE##@${osConfig.mySystem.time.timeZone}@g" \
