@@ -68,6 +68,7 @@ in
       nginx.virtualHosts.stirlingpdf = svc.mkNginxVHost {
         host = "pdf";
         proxyPass = "http://stirlingpdf.docker:8080";
+        autheliaIgnorePaths = [ "/api" ];
         extraConfig = ''
           sub_filter "</body>" "<script>jQuery('#footer, .go-pro-badge, .lead.fs-4').remove()</script></body>";
         '';
