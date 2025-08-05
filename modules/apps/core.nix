@@ -76,25 +76,44 @@
           {
             allowOther = true;
             directories = [
-              ".cache"
-              ".local"
+              # bindMounts for xdg directories cause INSANE performance degradation in many apps
+              # symlinks are with us since forever, they are always reliable and they don't need separate daemon
+              # however they need to be pre-created by nixos before home-manager kicks in, otherwise this whole
+              # fragile setup fails - see `modules/system/user.nix` file `cache-local` activation script
+              {
+                directory = ".cache";
+                method = "symlink";
+              }
+              {
+                directory = ".local";
+                method = "symlink";
+              }
               "Downloads"
               "Pictures"
               "Projects"
             ];
           };
+
     } config.myHomeApps.appendHome;
 
-    xdg.dataFile = lib.mapAttrs' (name: value: {
-      name = "applications/${name}.desktop";
-      value.text = ''
-        [Desktop Entry]
-        Encoding=UTF-8
-        Name=${name}
-        Type=Link
-        URL=${value}
-        Icon=text-html
-      '';
-    }) config.myHomeApps.customURLs;
+    xdg = {
+      dataFile = lib.mapAttrs' (name: value: {
+        name = "applications/${name}.desktop";
+        value.text = ''
+          [Desktop Entry]
+          Encoding=UTF-8
+          Name=${name}
+          Type=Link
+          URL=${value}
+          Icon=text-html
+        '';
+      }) config.myHomeApps.customURLs;
+    }
+    # this is a hack, to stop homeManager complaining about creating symlinks outside of $HOME
+    // lib.mkIf osConfig.mySystem.impermanence.enable {
+      cacheHome = "${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}/.cache";
+      dataHome = "${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}/.local/share";
+      stateHome = "${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}/.local/state";
+    };
   };
 }
