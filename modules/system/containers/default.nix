@@ -53,6 +53,7 @@ _: {
     ./retrom
     ./sonarr
     ./sshwifty
+    ./stirlingpdf
     ./syncthing
     ./talos-factory
     ./tftpd
