@@ -154,6 +154,7 @@ rec {
       "Income Invoices" = "https://n8n.rzegocki.dev/form/bc1561cd-5b46-41cd-942c-5d0693c27d4e";
     };
     extraPackages = [
+      pkgs.gimp
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
         salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
@@ -257,6 +258,16 @@ rec {
       whoogleSearch = {
         enable = true;
         url = "https://whoogle.rzegocki.dev";
+      };
+    };
+    freerdp = {
+      enable = true;
+      windowsHosts = {
+        "Windows 10 RDP" = {
+          host = config.myInfra.machines.windows.ip;
+          username = "ajgon";
+          passwordSopsSecret = "home/apps/freerdp/windows-10";
+        };
       };
     };
     mpv.enable = true;

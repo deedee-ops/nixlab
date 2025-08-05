@@ -10,6 +10,7 @@ _: {
     ./bat
     ./btop
     ./direnv
+    ./freerdp
     ./fzf
     ./git
     ./gnupg
