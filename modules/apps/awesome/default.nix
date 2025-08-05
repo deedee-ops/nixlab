@@ -64,10 +64,12 @@ in
     };
     floatingClients = lib.mkOption {
       type = clientSubmodule;
+      description = "Rules for windows which should be floating.";
       default = { };
     };
     forcedFloatingClients = lib.mkOption {
       type = clientSubmodule;
+      description = "Rules for windows which should be floating, always on top on always visible regardless of screen or tag.";
       default = { };
     };
     modKey = lib.mkOption {
@@ -174,7 +176,9 @@ in
                 )
               } },
               floatingRole = { ${
-                builtins.concatStringsSep "," (builtins.map (item: "\"${item}\"") cfg.floatingClients.role)
+                builtins.concatStringsSep "," (
+                  builtins.map (item: "\"${item}\"") ([ "GtkFileChooserDialog" ] ++ cfg.floatingClients.role)
+                )
               } },
 
               forcedFloatingInstance = { ${
