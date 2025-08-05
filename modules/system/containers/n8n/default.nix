@@ -32,6 +32,7 @@ in
       type = lib.types.listOf (
         lib.types.enum [
           "paperless-ngx"
+          "stirlingpdf"
           "syncthing"
         ]
       );
@@ -72,6 +73,7 @@ in
 
       virtualisation.oci-containers.containers.n8n = svc.mkContainer {
         cfg = {
+          dependsOn = cfg.integrations;
           user = "1000:1000";
           image = "n8n";
           pull = "never";
@@ -108,9 +110,6 @@ in
               "${cfg.dataDir}/n8n:/home/node/.n8n"
               "${cfg.dataDir}/npm:/home/node/.npm"
             ]
-            ++ (lib.optionals (builtins.elem "paperless-ngx" cfg.integrations) [
-              "${config.mySystemApps.paperless-ngx.dataDir}/data/consume:/integrations/paperless"
-            ])
             ++ (lib.optionals (builtins.elem "syncthing" cfg.integrations) [
               "${cfg.dataDir}/consume:/consume"
             ])
