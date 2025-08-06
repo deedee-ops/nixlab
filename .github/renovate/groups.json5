@@ -1,35 +1,35 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
     {
-      "description": ["Beszel Group"],
-      "groupName": "Beszel",
-      "automerge": false,
-      "matchPackagePatterns": [".*/beszel.*"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
+      description: ["Beszel Group"],
+      groupName: "Beszel",
+      automerge: false,
+      matchPackagePatterns: [".*/beszel.*"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
       },
-      "separateMinorPatch": true
+      separateMinorPatch: true,
     },
     {
-      "description": ["Immich Group"],
-      "groupName": "Immich",
-      "matchPackagePatterns": ["ghcr\\.io/immich-app"],
-      "matchDatasources": ["docker"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
+      description: ["Immich Group"],
+      groupName: "Immich",
+      matchPackagePatterns: ["ghcr\\.io/immich-app"],
+      matchDatasources: ["docker"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
       },
-      "separateMinorPatch": true
+      separateMinorPatch: true,
     },
     {
-      "description": ["Retrom Group"],
-      "groupName": "Retrom",
-      "automerge": false,
-      "matchPackagePatterns": [".*/retrom.*"],
-      "group": {
-        "commitMessageTopic": "{{{groupName}}} group"
+      description: ["Retrom Group"],
+      groupName: "Retrom",
+      automerge: false,
+      matchPackagePatterns: [".*/retrom.*"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
       },
-      "separateMinorPatch": true
+      separateMinorPatch: true,
     },
-  ]
+  ],
 }
