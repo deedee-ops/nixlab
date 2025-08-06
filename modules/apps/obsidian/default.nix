@@ -23,10 +23,16 @@ in
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
         lib.mkIf osConfig.mySystem.impermanence.enable (
           [
-            ".config/obsidian"
+            {
+              directory = ".config/obsidian";
+              method = "symlink";
+            }
           ]
           ++ lib.optionals (lib.hasPrefix "${config.home.homeDirectory}/" cfg.PKMpath) [
-            (builtins.replaceStrings [ "${config.home.homeDirectory}/" ] [ "" ] cfg.PKMpath)
+            {
+              directory = builtins.replaceStrings [ "${config.home.homeDirectory}/" ] [ "" ] cfg.PKMpath;
+              method = "symlink";
+            }
           ]
         );
 

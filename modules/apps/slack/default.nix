@@ -17,7 +17,12 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [ ".config/Slack" ];
+        lib.mkIf osConfig.mySystem.impermanence.enable [
+          {
+            directory = ".config/Slack";
+            method = "symlink";
+          }
+        ];
 
       packages = [
         slackPkg # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry

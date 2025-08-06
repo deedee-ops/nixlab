@@ -88,9 +88,18 @@
                 directory = ".local";
                 method = "symlink";
               }
-              "Downloads"
-              "Pictures"
-              "Projects"
+              {
+                directory = "Downloads";
+                method = "symlink";
+              }
+              {
+                directory = "Pictures";
+                method = "symlink";
+              }
+              {
+                directory = "Projects";
+                method = "symlink";
+              }
             ];
           };
 

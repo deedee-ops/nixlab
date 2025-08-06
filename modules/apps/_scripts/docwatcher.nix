@@ -128,7 +128,10 @@ in
 
     home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
       lib.mkIf (cfg.rclone.enable && osConfig.mySystem.impermanence.enable) [
-        ".config/rclone"
+        {
+          directory = ".config/rclone";
+          method = "symlink";
+        }
       ];
 
     systemd.user.services.docwatcher = {
