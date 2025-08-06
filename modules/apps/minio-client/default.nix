@@ -24,14 +24,13 @@ in
       packages = [
         pkgs.minio-client
       ];
-      activation = {
-        minio-client = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-          mkdir -p ${config.xdg.configHome}/minio
-          ln -sf ${
-            config.sops.secrets."${cfg.configSopsSecret}".path
-          } ${config.xdg.configHome}/minio/config.json
-        '';
-      };
     };
+
+    systemd.user.services.init-minio-client = lib.mkHomeActivationAfterSops "init-minio-client" ''
+      mkdir -p ${config.xdg.configHome}/minio
+      ln -sf ${
+        config.sops.secrets."${cfg.configSopsSecret}".path
+      } ${config.xdg.configHome}/minio/config.json
+    '';
   };
 }
