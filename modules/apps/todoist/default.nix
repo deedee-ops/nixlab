@@ -58,15 +58,11 @@ in
       rofi.todoCommand = "${lib.getExe tod} task quick-add --content";
     };
 
-    home = {
-      activation = {
-        todoist = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-          sed -e 's@##PATH##@${config.xdg.configHome}/tod.cfg@g' \
-              -e "s@##TOKEN##@$(cat ${config.sops.secrets."${cfg.apiKeySopsSecret}".path})@g" \
-              -e "s@##TIMEZONE##@${osConfig.mySystem.time.timeZone}@g" \
-              ${./tod.cfg} > "${config.xdg.configHome}/tod.cfg"
-        '';
-      };
-    };
+    systemd.user.services.init-todoist = lib.mkHomeActivationAfterSops "init-todoist" ''
+      sed -e 's@##PATH##@${config.xdg.configHome}/tod.cfg@g' \
+          -e "s@##TOKEN##@$(cat ${config.sops.secrets."${cfg.apiKeySopsSecret}".path})@g" \
+          -e "s@##TIMEZONE##@${osConfig.mySystem.time.timeZone}@g" \
+          ${./tod.cfg} > "${config.xdg.configHome}/tod.cfg"
+    '';
   };
 }

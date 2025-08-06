@@ -37,18 +37,6 @@ in
       "${cfg.sopsSecretPrefix}/password" = { };
     };
 
-    home.activation = lib.optionalAttrs (cfg.syncAddress != null) {
-      init-atuin = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-        # headless atuin is a nightmare
-        export ATUIN_SESSION=dummy
-
-        ${lib.getExe config.programs.atuin.package} login \
-        -u "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/username".path})" \
-        -p "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/password".path})" || true
-        ${lib.getExe config.programs.atuin.package} sync -f || true
-      '';
-    };
-
     programs = {
       atuin = {
         enable = true;
@@ -97,25 +85,37 @@ in
       '';
     };
 
-    systemd.user.services.atuin = lib.mkIf cfg.useDaemon {
-      Unit = {
-        After = [
-          "network.target"
-          "sops-nix.service"
-        ];
-        Description = "atuin daemon";
+    systemd.user.services = {
+      atuin = lib.mkIf cfg.useDaemon {
+        Unit = {
+          After = [
+            "network.target"
+            "sops-nix.service"
+          ];
+          Description = "atuin daemon";
+        };
+
+        Install = {
+          WantedBy = [ "default.target" ];
+        };
+
+        Service.ExecStart = lib.getExe (
+          pkgs.writeShellScriptBin "atuin-daemon.sh" ''
+            rm -rf "${config.programs.atuin.settings.daemon.socket_path}"
+            ${lib.getExe config.programs.atuin.package} daemon
+          ''
+        );
       };
 
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
+      init-atuin = lib.mkHomeActivationAfterSops "init-atuin" ''
+        # headless atuin is a nightmare
+        export ATUIN_SESSION=dummy
 
-      Service.ExecStart = lib.getExe (
-        pkgs.writeShellScriptBin "atuin-daemon.sh" ''
-          rm -rf "${config.programs.atuin.settings.daemon.socket_path}"
-          ${lib.getExe config.programs.atuin.package} daemon
-        ''
-      );
+        ${lib.getExe config.programs.atuin.package} login \
+        -u "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/username".path})" \
+        -p "$(cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/password".path})" || true
+        ${lib.getExe config.programs.atuin.package} sync -f || true
+      '';
     };
   };
 }

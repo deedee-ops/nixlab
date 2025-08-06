@@ -90,7 +90,7 @@ rec {
       specialArgs = {
         inherit nixConfig;
 
-        lib = inputs.nixpkgs.lib.extend (_: _: (import ./lib { inherit inputs nixConfig; }));
+        lib = inputs.nixpkgs.lib.extend (_: _: (import ./lib/system.nix { inherit inputs nixConfig; }));
       };
     in
     flake-parts.lib.mkFlake { inherit inputs specialArgs; } {

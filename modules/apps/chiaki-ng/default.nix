@@ -50,17 +50,16 @@ in
 
     home = {
       packages = [ cfg.package ];
-      activation = {
-        chiaki-ng = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-          mkdir -p ${config.xdg.configHome}/Chiaki ${config.xdg.dataHome}/Chiaki
-          # @todo ugly hack to make binary available for kiosk
-          cp ${lib.getExe cfg.package} ${config.xdg.dataHome}/Chiaki/chiaki-start
-          cp ${
-            config.sops.secrets."${cfg.configFileSopsSecret}".path
-          } ${config.xdg.configHome}/Chiaki/Chiaki.conf
-          chmod 700 ${config.xdg.dataHome}/Chiaki/chiaki-start
-        '';
-      };
     };
+
+    systemd.user.services.init-chiaki-ng = lib.mkHomeActivationAfterSops "init-chiaki-ng" ''
+      mkdir -p ${config.xdg.configHome}/Chiaki ${config.xdg.dataHome}/Chiaki
+      # @todo ugly hack to make binary available for kiosk
+      cp ${lib.getExe cfg.package} ${config.xdg.dataHome}/Chiaki/chiaki-start
+      cp ${
+        config.sops.secrets."${cfg.configFileSopsSecret}".path
+      } ${config.xdg.configHome}/Chiaki/Chiaki.conf
+      chmod 700 ${config.xdg.dataHome}/Chiaki/chiaki-start
+    '';
   };
 }

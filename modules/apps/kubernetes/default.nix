@@ -38,15 +38,6 @@ in
           export KREW_ROOT="${config.xdg.configHome}/krew";
           run ${pkgs.krew}/bin/krew update
         '';
-      }
-      // lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) {
-        # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
-        init-kubeconfig = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-          run ln -sf "${
-            config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
-          }" "${config.xdg.configHome}/kube/config"
-        '';
-
       };
 
       sessionVariables = {
@@ -108,5 +99,15 @@ in
         };
       };
     };
+
+    systemd.user.services.init-kubeconfig = lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) (
+      lib.mkHomeActivationAfterSops "init-kubeconfig" ''
+        # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
+
+        run ln -sf "${
+          config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
+        }" "${config.xdg.configHome}/kube/config"
+      ''
+    );
   };
 }

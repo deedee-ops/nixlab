@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  pkgs,
   nixConfig,
   ...
 }:
@@ -39,11 +40,15 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
+      sharedModules = [
+        inputs.sops-nix.homeManagerModules.sops
+      ];
+
       extraSpecialArgs = {
         inherit inputs;
 
         lib = inputs.nixpkgs.lib.extend (
-          _: _: inputs.home-manager.lib // (import ../../lib { inherit inputs nixConfig; })
+          _: _: inputs.home-manager.lib // (import ../../lib/home.nix { inherit lib pkgs; })
         );
       };
 

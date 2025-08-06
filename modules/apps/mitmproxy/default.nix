@@ -40,30 +40,28 @@ in
       packages = [
         pkgs.mitmproxy
       ];
-
-      activation = {
-        init-mitmproxy = lib.hm.dag.entryAfter [ "sopsNix" ] ''
-          mkdir -p "${config.xdg.configHome}/mitmproxy"
-          ln -sf "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.cer".path
-          }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.cer"
-          ln -sf "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.pem".path
-          }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.pem"
-          ln -sf "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca.pem".path
-          }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca.pem"
-          ln -sf "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-dhparam.pem".path
-          }" "${config.xdg.configHome}/mitmproxy/mitmproxy-dhparam.pem"
-          cat "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.p12-base64".path
-          }" | base64 -d > "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.p12"
-          cat "${
-            config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca.p12-base64".path
-          }" | base64 -d > "${config.xdg.configHome}/mitmproxy/mitmproxy-ca.p12"
-        '';
-      };
     };
+
+    systemd.user.services.init-mitmproxy = lib.mkHomeActivationAfterSops "init-mitmproxy" ''
+      mkdir -p "${config.xdg.configHome}/mitmproxy"
+      ln -sf "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.cer".path
+      }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.cer"
+      ln -sf "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.pem".path
+      }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.pem"
+      ln -sf "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca.pem".path
+      }" "${config.xdg.configHome}/mitmproxy/mitmproxy-ca.pem"
+      ln -sf "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-dhparam.pem".path
+      }" "${config.xdg.configHome}/mitmproxy/mitmproxy-dhparam.pem"
+      cat "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca-cert.p12-base64".path
+      }" | base64 -d > "${config.xdg.configHome}/mitmproxy/mitmproxy-ca-cert.p12"
+      cat "${
+        config.sops.secrets."${cfg.caCertsSopsSecret}/mitmproxy-ca.p12-base64".path
+      }" | base64 -d > "${config.xdg.configHome}/mitmproxy/mitmproxy-ca.p12"
+    '';
   };
 }

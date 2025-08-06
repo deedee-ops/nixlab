@@ -76,7 +76,7 @@ in
 
     home = {
       activation.gpg = lib.mkIf cfg.enableYubikey (
-        lib.hm.dag.entryAfter [ "sopsNix" ] ''
+        lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           export GNUPGHOME="${config.xdg.dataHome}/gnupg"
           run ${pkgs.gnupg}/bin/gpg-connect-agent "scd serialno" "learn --force" /bye
         ''
