@@ -28,10 +28,6 @@ in
         long, long, looooonggg time!
       '';
     };
-    metamodes = lib.mkOption {
-      type = lib.types.str;
-      description = "XServer metamodes configuration for displays.";
-    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -50,6 +46,7 @@ in
       };
 
       nvidia = {
+        forceFullCompositionPipeline = true;
         modesetting.enable = true;
         powerManagement.enable = true;
         open = cfg.useOpenDrivers;
@@ -59,21 +56,13 @@ in
     };
 
     environment.systemPackages = [
-      pkgs.libva-utils
       pkgs.libva
+      pkgs.libva-utils
       pkgs.nvidia-vaapi-driver
+      pkgs.nvtopPackages.full
     ];
 
-    services.xserver = {
-      videoDrivers = [ "nvidia" ];
-      screenSection = ''
-        Option         "ForceFullCompositionPipeline" "on"
-        Option         "AllowIndirectGLXProtocol" "off"
-        Option         "TripleBuffer" "on"
-        Option         "metamodes" "${cfg.metamodes}"
-        Option         "Interactive" "0"
-      '';
-    };
+    services.xserver.videoDrivers = [ "nvidia" ];
 
     # nvidia cards with old drivers my go haywire when device is put into sleep
     systemd.targets = lib.mkIf (config.hardware.nvidia.package.version < "570") {
