@@ -23,13 +23,19 @@ in
     programs = {
       ssh = lib.attrsets.recursiveUpdate {
         enable = true;
-        package = pkgs.openssh;
+        package = pkgs.symlinkJoin {
+          name = "ssh";
+          paths = [
+            (pkgs.writeShellScriptBin "ssh" ''
+              exec ${lib.getExe pkgs.openssh} -F ${config.xdg.configHome}/ssh/config "$@"
+            '')
+            pkgs.openssh
+          ];
+        };
 
         addKeysToAgent = "8h";
         userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
       } cfg.appendOptions;
-
-      git.extraConfig.core.sshCommand = "${lib.getExe config.programs.ssh.package} -F ${config.xdg.configHome}/ssh/config";
     };
 
     services.ssh-agent = {
@@ -42,8 +48,6 @@ in
           run mkdir -p ${config.xdg.stateHome}/ssh || true
         '';
       };
-
-      shellAliases.ssh = "${lib.getExe config.programs.ssh.package} -F ${config.xdg.configHome}/ssh/config";
     };
 
     # hack to move ssh config from ~/.ssh/config to ~/.config/ssh/config
