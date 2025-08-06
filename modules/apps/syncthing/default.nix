@@ -28,7 +28,12 @@ in
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}" =
         lib.mkIf osConfig.mySystem.impermanence.enable
           {
-            directories = [ "Sync" ];
+            directories = [
+              {
+                directory = "Sync";
+                method = "symlink";
+              }
+            ];
             files = [ ".config/syncthingtray.ini" ];
           };
     };

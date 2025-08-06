@@ -26,7 +26,10 @@ in
     }" =
       lib.mkIf config.mySystem.impermanence.enable {
         directories = [
-          ".config/OpenRGB"
+          {
+            directory = ".config/OpenRGB";
+            method = "symlink";
+          }
         ];
       };
 

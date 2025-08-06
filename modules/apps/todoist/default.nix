@@ -25,7 +25,10 @@ in
     home = {
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
         lib.mkIf osConfig.mySystem.impermanence.enable [
-          ".config/Todoist"
+          {
+            directory = ".config/Todoist";
+            method = "symlink";
+          }
         ];
 
       packages = [

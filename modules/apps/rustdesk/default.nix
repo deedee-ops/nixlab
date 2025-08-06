@@ -16,7 +16,12 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [ ".config/rustdesk" ];
+        lib.mkIf osConfig.mySystem.impermanence.enable [
+          {
+            directory = ".config/rustdesk";
+            method = "symlink";
+          }
+        ];
 
       packages = [
         pkgs.rustdesk # for quicklaunch entry
