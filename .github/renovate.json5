@@ -1,6 +1,6 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
     "config:recommended",
     ":dependencyDashboard",
     ":disableRateLimiting",
@@ -16,47 +16,47 @@
     "github>deedee-ops/nixlab//.github/renovate/labels.json5",
     "github>deedee-ops/nixlab//.github/renovate/semanticCommits.json5",
   ],
-  "gitAuthor": "robodexo2000 <150604236+robodexo2000[bot]@users.noreply.github.com>",
-  "dependencyDashboardTitle": "Renovate Dashboard 🤖",
-  "suppressNotifications": [
-    "prEditedNotification",
-    "prIgnoreNotification",
-  ],
-  "commitBodyTable": true,
-  "rebaseWhen": "auto",
-  "nix": {
-    "enabled": true,
+  gitAuthor: "robodexo2000 <150604236+robodexo2000[bot]@users.noreply.github.com>",
+  dependencyDashboardTitle: "Renovate Dashboard 🤖",
+  suppressNotifications: ["prEditedNotification", "prIgnoreNotification"],
+  commitBodyTable: true,
+  rebaseWhen: "auto",
+  nix: {
+    enabled: true,
   },
-  "lockFileMaintenance": {
-    "enabled": true,
-    "automerge": true,
-    "schedule": [
-      "before 4am on Sunday",
-    ],
+  lockFileMaintenance: {
+    enabled: true,
+    automerge: true,
+    schedule: ["before 4am on Sunday"],
   },
-  "customManagers": [
+  customManagers: [
     {
-      "customType": "regex",
-      "fileMatch": [
-        "^modules/.*\\.nix$",
+      customType: "regex",
+      fileMatch: ["^modules/.*\\.nix$"],
+      matchStrings: [
+        'image *= *"(?<depName>.*?):(?<currentValue>.*?)(@(?<currentDigest>sha256:[a-f0-9]+))?"',
       ],
-      "matchStrings": [
-        "image *= *\"(?<depName>.*?):(?<currentValue>.*?)(@(?<currentDigest>sha256:[a-f0-9]+))?\"",
-      ],
-      "datasourceTemplate": "docker",
+      datasourceTemplate: "docker",
     },
     {
-      "customType": "regex",
-      "description": "Process custom dependencies",
-      "fileMatch": [
-        "^.*\\.nix$",
+      customType: "regex",
+      description: "Process custom dependencies",
+      fileMatch: ["^.*\\.nix$"],
+      matchStrings: [
+        'datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?( extractVersion=(?<extractVersion>\\S+))?\n[^"]+"(?:.*?:|)(?<currentValue>[^@"]+)?(?:@(?<currentDigest>sha256:[0-9a-f]+))?"',
       ],
-      "matchStrings": [
-        "datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)( versioning=(?<versioning>\\S+))?( extractVersion=(?<extractVersion>\\S+))?\n[^\"]+\"(?:.*?:|)(?<currentValue>[^@\"]+)?(?:@(?<currentDigest>sha256:[0-9a-f]+))?\""
+      datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}docker{{/if}}",
+      versioningTemplate: "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
+      extractVersionTemplate: "{{#if extractVersion}}{{{extractVersion}}}{{/if}}",
+    },
+    {
+      customType: "regex",
+      description: "Process custom github links",
+      fileMatch: ["^.*\\.nix$"],
+      matchStrings: [
+        'datasource=(?<datasource>\\S+) depName=(?<depName>[0-9a-zA-Z/.-]+)[",]*\\n[^\\n]+?[/-](?<currentValue>(v|tb-|\\d+\\.)[\\d.][^/-]+)',
       ],
-      "datasourceTemplate": "{{#if datasource}}{{{datasource}}}{{else}}docker{{/if}}",
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver-coerced{{/if}}",
-      "extractVersionTemplate": "{{#if extractVersion}}{{{extractVersion}}}{{/if}}"
+      datasourceTemplate: "{{#if datasource}}{{{datasource}}}{{else}}github-releases{{/if}}",
     },
   ],
 }

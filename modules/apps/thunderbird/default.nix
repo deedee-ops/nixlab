@@ -19,12 +19,14 @@ let
       };
       "tbkeys@addons.thunderbird.net" = {
         # tbkeys
-        install_url = "https://github.com/wshanks/tbkeys/releases/latest/download/tbkeys.xpi";
+        # renovate: datasource=github-releases depName=wshanks/tbkeys
+        install_url = "https://github.com/wshanks/tbkeys/releases/download/v2.4.1/tbkeys.xpi";
         installation_mode = "force_installed";
       };
       "quickmove@mozilla.kewis.ch" = {
         # Quick folder move
-        install_url = "https://addons.thunderbird.net/thunderbird/downloads/latest/quick-folder-move/latest.xpi";
+        # renovate: datasource=github-releases depName=kewisch/quickmove-extension
+        install_url = "https://addons.thunderbird.net/thunderbird/downloads/file/1038431/quick_folder_move-3.3.0-tb.xpi";
         installation_mode = "force_installed";
       };
       "{f6d05f0c-39a8-5c4d-96dd-4852202a8244}" = {
@@ -33,11 +35,13 @@ let
         installation_mode = "force_installed";
       };
       "thunderai@micz.it" = {
-        install_url = "https://services.addons.thunderbird.net/thunderbird/downloads/latest/thunderai/addon-988699-latest.xpi";
+        # renovate: datasource=github-releases depName=micz/ThunderAI
+        install_url = "https://addons.thunderbird.net/thunderbird/downloads/file/1040072/thunderai_chatgpt_gemini_ollama_in_your_emails-3.6.0-tb.xpi";
         installation_mode = "force_installed";
       };
       "accountcolors@gazhay" = {
-        install_url = "https://github.com/Vigilans/accountcolors/releases/latest/download/accountcolors.zip";
+        # renovate: datasource=github-releases depName=Vigilans/accountcolors
+        install_url = "https://github.com/Vigilans/accountcolors/releases/download/tb-140/accountcolors.zip";
         installation_mode = "force_installed";
       };
     };

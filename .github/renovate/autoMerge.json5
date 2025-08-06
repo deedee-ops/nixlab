@@ -1,22 +1,22 @@
 {
-  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "packageRules": [
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  packageRules: [
     {
-      "description": "Auto merge GitHub Actions",
-      "matchManagers": ["github-actions"],
-      "matchDatasources": ["github-tags"],
-      "automerge": true,
-      "ignoreTests": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["minor", "patch", "digest"]
+      description: "Auto merge GitHub Actions",
+      matchManagers: ["github-actions"],
+      matchDatasources: ["github-tags"],
+      automerge: true,
+      ignoreTests: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["minor", "patch", "digest"],
     },
     {
-      "description": "Auto merge patch and digest docker images",
-      "matchDatasources": ["docker"],
-      "automerge": true,
-      "ignoreTests": true,
-      "automergeType": "branch",
-      "matchUpdateTypes": ["patch", "digest"]
-    }
-  ]
+      description: "Auto merge patch and digest docker images",
+      matchDatasources: ["docker"],
+      automerge: true,
+      ignoreTests: true,
+      automergeType: "branch",
+      matchUpdateTypes: ["patch", "digest"],
+    },
+  ],
 }
