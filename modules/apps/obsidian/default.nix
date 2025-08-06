@@ -47,7 +47,7 @@ in
 
     myHomeApps = {
       awesome = {
-        autorun = [ (lib.getExe pkgs.obsidian) ];
+        autorun = [ "${lib.getExe pkgs.wmctrl} -x -a obsidian || ${lib.getExe pkgs.obsidian}" ];
         awfulRules = [
           {
             rule = {

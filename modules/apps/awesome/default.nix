@@ -119,19 +119,13 @@ in
 
         "awesome/autorun.sh" = {
           executable = true;
-          text = ''
-            #!${lib.getExe' pkgs.coreutils "env"} ${lib.getExe pkgs.bash}
+          source = lib.getExe (
+            pkgs.writeShellScriptBin "autorun.sh" ''
+              ${builtins.concatStringsSep "\n" (builtins.map (app: "${app} &") cfg.autorun)}
 
-            run() {
-              if ! ${lib.getExe' pkgs.procps "pgrep"} -f "/nix/store/.*/$(basename "$1")"; then
-                "$@" &
-              fi
-            }
-
-            ${builtins.concatStringsSep "\n" (builtins.map (app: "run ${app}") cfg.autorun)}
-
-            ${lib.getExe config.services.betterlockscreen.package} -u ${config.xdg.dataHome}/wallpapers --fx dimpixel
-          '';
+              ${lib.getExe config.services.betterlockscreen.package} -u ${config.xdg.dataHome}/wallpapers --fx dimpixel
+            ''
+          );
         };
 
         "awesome/main/user-variables.lua" = {
