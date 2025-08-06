@@ -106,6 +106,7 @@
     } config.myHomeApps.appendHome;
 
     xdg = {
+      enable = true;
       dataFile = lib.mapAttrs' (name: value: {
         name = "applications/${name}.desktop";
         value.text = ''

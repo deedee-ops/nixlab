@@ -75,6 +75,8 @@ in
         pkgs.xclip # pbcopy and pbpaste
       ];
 
+      pointerCursor.dotIcons.enable = false;
+
       sessionVariables = {
         XCOMPOSECACHE = "${config.xdg.cacheHome}/X11/xcompose";
       };
