@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   pkgs,
   lib,
   ...
@@ -42,14 +41,6 @@ in
     };
 
     home = {
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [
-          {
-            directory = ".config/ticktick";
-            method = "symlink";
-          }
-        ];
-
       packages = [
         pkgs.ticktick # for quicklaunch entry
       ];

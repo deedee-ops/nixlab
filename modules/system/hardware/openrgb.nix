@@ -20,19 +20,6 @@ in
     services.hardware.openrgb.enable = true;
     boot.kernelParams = [ "acpi_enforce_resources=lax" ]; # g.skill RAM has problems when this is not set
 
-    home-manager.users."${config.mySystem.primaryUser
-    }".home.persistence."${config.mySystem.impermanence.persistPath}${
-      config.home-manager.users."${config.mySystem.primaryUser}".home.homeDirectory
-    }" =
-      lib.mkIf config.mySystem.impermanence.enable {
-        directories = [
-          {
-            directory = ".config/OpenRGB";
-            method = "symlink";
-          }
-        ];
-      };
-
     mySystemApps.xorg.userAutorun = {
       apply-openrgb-profile = "${lib.getExe config.services.hardware.openrgb.package} -p ${cfg.profile}";
     };

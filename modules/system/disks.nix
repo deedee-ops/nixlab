@@ -34,11 +34,22 @@ in
               mountpoint = "/nix";
               type = "zfs_fs";
             };
+            home = {
+              mountpoint = "/home";
+              type = "zfs_fs";
+            };
           }
         else if config.mySystem.filesystem == "btrfs" then
           {
             "/nix" = {
               mountpoint = "/nix";
+              mountOptions = [
+                "noatime"
+                "compress=zstd"
+              ];
+            };
+            "/home" = {
+              mountpoint = "/home";
               mountOptions = [
                 "noatime"
                 "compress=zstd"
@@ -51,6 +62,10 @@ in
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
+        };
+        home = {
+          mountpoint = "/home";
+          type = "zfs_fs";
         };
       };
     };

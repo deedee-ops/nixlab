@@ -306,9 +306,6 @@ in
         LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
         NVD_BACKEND = "direct";
       };
-
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [ ".mozilla" ];
     };
 
     xdg.mimeApps = {

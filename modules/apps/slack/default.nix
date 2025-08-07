@@ -1,13 +1,11 @@
 {
   config,
-  osConfig,
   pkgs,
   lib,
   ...
 }:
 let
   cfg = config.myHomeApps.slack;
-  slackPkg = pkgs.slack;
 in
 {
   options.myHomeApps.slack = {
@@ -16,22 +14,14 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [
-          {
-            directory = ".config/Slack";
-            method = "symlink";
-          }
-        ];
-
       packages = [
-        slackPkg # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry
+        pkgs.slack # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry
       ];
     };
 
     myHomeApps = {
       awesome = {
-        autorun = [ (lib.getExe slackPkg) ];
+        autorun = [ (lib.getExe pkgs.slack) ];
         awfulRules = [
           {
             rule = {
