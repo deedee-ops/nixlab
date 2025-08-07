@@ -44,8 +44,9 @@ in
 
     myHomeApps = {
       awesome = {
+        # on first run todoist dies for some odd reason, so let's run it twice
         autorun = [
-          (lib.getExe todoistPkg)
+          "${lib.getExe pkgs.bash} -c '${lib.getExe todoistPkg}; ${lib.getExe todoistPkg}'"
         ];
         awfulRules = [
           {

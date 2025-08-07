@@ -66,6 +66,11 @@ in
         };
 
         xserver = {
+          displayManager = {
+            setupCommands = ''
+              . ${config.home-manager.users."${config.mySystem.primaryUser}".xsession.profilePath}
+            '';
+          };
           enable = true;
         }
         // lib.optionalAttrs (cfg.windowManager != null) {
@@ -86,16 +91,22 @@ in
         ACTION=="add", SUBSYSTEM=="backlight", RUN+="${lib.getExe' pkgs.coreutils-full "chgrp"} video $sys$devpath/brightness", RUN+="${lib.getExe' pkgs.coreutils-full "chmod"} g+w $sys$devpath/brightness"
       '';
 
-      environment.persistence."${config.mySystem.impermanence.persistPath}" =
-        lib.mkIf config.mySystem.impermanence.enable
-          { directories = [ "/var/lib/sddm" ]; };
-
-      environment.systemPackages = [
-        pkgs.kdePackages.qtmultimedia
-        sddm-astronaut
-        # https://github.com/nix-community/home-manager/issues/3113
-        pkgs.dconf
-      ];
+      environment = {
+        etc."profile.local".text = lib.mkAfter ''
+          export XCOMPOSECACHE="${
+            config.home-manager.users."${config.mySystem.primaryUser}".xdg.cacheHome
+          }/X11/xcompose"
+        '';
+        persistence."${config.mySystem.impermanence.persistPath}" =
+          lib.mkIf config.mySystem.impermanence.enable
+            { directories = [ "/var/lib/sddm" ]; };
+        systemPackages = [
+          pkgs.kdePackages.qtmultimedia
+          sddm-astronaut
+          # https://github.com/nix-community/home-manager/issues/3113
+          pkgs.dconf
+        ];
+      };
 
       programs.i3lock.enable =
         config.home-manager.users."${config.mySystem.primaryUser}".services.betterlockscreen.enable; # fixes various issues like PAM

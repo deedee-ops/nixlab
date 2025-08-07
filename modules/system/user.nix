@@ -31,9 +31,14 @@ in
     enable = true;
     enableGlobalCompInit = false;
   };
-  environment.etc."zshenv.local".text = ''
+  environment.etc."zshenv.local".text = lib.mkAfter ''
     if [ "$USER" = "${config.mySystem.primaryUser}" ]; then
       source ${config.home-manager.users."${config.mySystem.primaryUser}".xdg.configHome}/zsh/.zshenv
+    fi
+
+    # ensure root has user commands available as well
+    if [ "$USER" = "root" ] || [ "$(id -u)" = "0" ]; then
+      export PATH="$PATH:/etc/profiles/per-user/${primaryUser}/bin"
     fi
   '';
 
