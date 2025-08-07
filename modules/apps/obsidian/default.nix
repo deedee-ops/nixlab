@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   pkgs,
   lib,
   ...
@@ -20,22 +19,6 @@ in
 
   config = lib.mkIf cfg.enable {
     home = {
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable (
-          [
-            {
-              directory = ".config/obsidian";
-              method = "symlink";
-            }
-          ]
-          ++ lib.optionals (lib.hasPrefix "${config.home.homeDirectory}/" cfg.PKMpath) [
-            {
-              directory = builtins.replaceStrings [ "${config.home.homeDirectory}/" ] [ "" ] cfg.PKMpath;
-              method = "symlink";
-            }
-          ]
-        );
-
       packages = [
         pkgs.obsidian # for quicklaunch entry
       ];

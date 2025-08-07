@@ -1,6 +1,5 @@
 {
   config,
-  osConfig,
   lib,
   pkgs,
   ...
@@ -125,14 +124,6 @@ in
       "${cfg.rclone.rcloneConfigSopsSecret}" = { };
       "${cfg.mail.swaksConfigSopsSecret}" = { };
     };
-
-    home.persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-      lib.mkIf (cfg.rclone.enable && osConfig.mySystem.impermanence.enable) [
-        {
-          directory = ".config/rclone";
-          method = "symlink";
-        }
-      ];
 
     systemd.user.services.docwatcher = {
       Unit = {

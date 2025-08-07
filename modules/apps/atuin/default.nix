@@ -7,7 +7,6 @@
 }:
 let
   cfg = config.myHomeApps.atuin;
-  homeDir = config.home.homeDirectory;
 in
 {
   options.myHomeApps.atuin = {
@@ -69,9 +68,6 @@ in
             sync_frequency = 60;
             socket_path = "${config.xdg.dataHome}/atuin/atuin.sock";
           };
-        }
-        // lib.optionalAttrs osConfig.mySystem.impermanence.enable {
-          db_path = "${osConfig.mySystem.impermanence.persistPath}${homeDir}/.local/share/atuin/history.db";
         }
         // lib.optionalAttrs (cfg.syncAddress != null) {
           key_path = config.sops.secrets."${cfg.sopsSecretPrefix}/encrypted_key".path;

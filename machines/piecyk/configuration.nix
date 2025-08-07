@@ -74,12 +74,6 @@ rec {
         "/dev/disk/by-id/nvme-Patriot_P300_1TB_AA000000000000000047"
         "/dev/disk/by-id/nvme-KINGSTON_SA2000M81000G_50026B7683D02486"
       ];
-      systemDatasets = {
-        nix = {
-          type = "zfs_fs";
-          mountpoint = "/nix";
-        };
-      };
     };
 
     grub.enable = true;

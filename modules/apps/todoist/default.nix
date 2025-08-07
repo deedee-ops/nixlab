@@ -23,14 +23,6 @@ in
     sops.secrets."${cfg.apiKeySopsSecret}" = { };
 
     home = {
-      persistence."${osConfig.mySystem.impermanence.persistPath}${config.home.homeDirectory}".directories =
-        lib.mkIf osConfig.mySystem.impermanence.enable [
-          {
-            directory = ".config/Todoist";
-            method = "symlink";
-          }
-        ];
-
       packages = [
         pkgs.todoist-electron
       ];
