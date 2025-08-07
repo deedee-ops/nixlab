@@ -169,7 +169,7 @@
       execWheelOnly = true;
       extraConfig = lib.mkAfter ''
         Defaults lecture="never"
-        Defaults env_keep += "HOME TERM TERMINFO"
+        Defaults env_keep += "HOME PATH XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME TERM TERMINFO ZDOTDIR"
       '';
     };
 
