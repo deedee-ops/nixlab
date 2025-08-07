@@ -18,7 +18,7 @@ in
       package = pkgs.thunderbird-latest.overrideAttrs (attr: {
         buildCommand = attr.buildCommand + ''
           wrapProgram "$executablePath" \
-            --set 'HOME' '${config.home.homeDirectory}/.config'
+            --set 'HOME' '${config.xdg.configHome}'
         '';
       });
 
@@ -30,6 +30,11 @@ in
       packages = [
         config.programs.thunderbird.package # for quicklaunch entry
       ];
+      file = {
+        ".config/.thunderbird".source =
+          config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/thunderbird";
+        ".mozilla/native-messaging-hosts".enable = lib.mkForce false;
+      };
     };
 
     myHomeApps.awesome = {
