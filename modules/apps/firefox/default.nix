@@ -246,6 +246,12 @@ in
 
     programs.firefox = {
       enable = true;
+      package = pkgs.firefox.overrideAttrs (a: {
+        buildCommand = a.buildCommand + ''
+          wrapProgram "$executablePath" \
+            --set 'HOME' '${config.xdg.configHome}'
+        '';
+      });
 
       policies = {
         DisableTelemetry = true;
@@ -295,6 +301,37 @@ in
     };
 
     home = {
+      file =
+        builtins.listToAttrs (
+          lib.lists.flatten (
+            builtins.map
+              (file: [
+                {
+                  name = ".mozilla/firefox/${file}";
+                  value.enable = false;
+                }
+                {
+                  name = ".config/mozilla/firefox/${file}";
+                  value.text = config.home.file.".mozilla/firefox/${file}".text;
+                }
+              ])
+              [
+                "profiles.ini"
+                "default/.keep"
+                "default/user.js"
+              ]
+          )
+        )
+        // {
+          ".mozilla/firefox/default/search.json.mozlz4".enable = lib.mkForce false;
+          ".config/mozilla/firefox/default/search.json.mozlz4" = {
+            inherit (config.home.file.".mozilla/firefox/default/search.json.mozlz4") source;
+            force = true;
+          };
+          ".config/.mozilla".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/mozilla";
+          ".mozilla/native-messaging-hosts".enable = lib.mkForce false;
+        };
+
       packages = lib.mkIf osConfig.myHardware.nvidia.enable [ pkgs.ffmpeg-full ];
 
       sessionVariables = {
