@@ -22,6 +22,13 @@ let
     ''
     + builtins.readFile ./ticktask.sh
   );
+
+  ticktickPkg = pkgs.ticktick.overrideAttrs (oldAttrs: {
+    postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
+      wrapProgram "$out/bin/${oldAttrs.pname}" \
+        --set 'HOME' '${config.xdg.configHome}'
+    '';
+  });
 in
 {
   options.myHomeApps.ticktick = {
@@ -42,13 +49,13 @@ in
 
     home = {
       packages = [
-        pkgs.ticktick # for quicklaunch entry
+        ticktickPkg # for quicklaunch entry
       ];
     };
 
     myHomeApps = {
       awesome = {
-        autorun = [ (lib.getExe' pkgs.ticktick "ticktick") ];
+        autorun = [ (lib.getExe' ticktickPkg "ticktick") ];
         awfulRules = [
           {
             rule = {

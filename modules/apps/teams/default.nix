@@ -15,6 +15,7 @@ in
   config =
     let
       teamsPkg = pkgs.writeShellScriptBin "teams" ''
+        export HOME="${config.xdg.configHome}"
         ${lib.getExe pkgs.wmctrl} -x -a teams-pwa || ${lib.getExe pkgs.ungoogled-chromium} --app="https://teams.microsoft.com/" --class="teams-pwa" --user-data-dir="${config.xdg.stateHome}/teams"
       '';
     in

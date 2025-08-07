@@ -6,6 +6,12 @@
 }:
 let
   cfg = config.myHomeApps.obsidian;
+  obsidianPkg = pkgs.obsidian.overrideAttrs (oldAttrs: {
+    postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
+      wrapProgram "$out/bin/obsidian" \
+        --set 'HOME' '${config.xdg.configHome}'
+    '';
+  });
 in
 {
   options.myHomeApps.obsidian = {
@@ -20,7 +26,7 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        pkgs.obsidian # for quicklaunch entry
+        obsidianPkg # for quicklaunch entry
       ];
 
       activation.init-obsidian = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -30,7 +36,7 @@ in
 
     myHomeApps = {
       awesome = {
-        autorun = [ "${lib.getExe pkgs.wmctrl} -x -a obsidian || ${lib.getExe pkgs.obsidian}" ];
+        autorun = [ "${lib.getExe pkgs.wmctrl} -x -a obsidian || ${lib.getExe obsidianPkg}" ];
         awfulRules = [
           {
             rule = {
