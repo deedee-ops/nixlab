@@ -31,19 +31,13 @@ in
     enable = true;
     enableGlobalCompInit = false;
   };
+  environment.etc."zshenv.local".text = ''
+    if [ "$USER" = "${config.mySystem.primaryUser}" ]; then
+      source ${config.home-manager.users."${config.mySystem.primaryUser}".xdg.configHome}/zsh/.zshenv
+    fi
+  '';
 
   system.activationScripts = {
-    # when using impermanence, .cache and .local symlinks must be created before even home-manager kicks in
-    # otherwise it will silently fail
-    cache-local = lib.mkIf config.mySystem.impermanence.enable {
-      deps = [ "users" ];
-      text = ''
-        mkdir -p "/home/${config.mySystem.primaryUser}"
-        chown ${primaryUser}:users "/home/${config.mySystem.primaryUser}"
-        ln -sf "${config.mySystem.impermanence.persistPath}${primaryUserHomeDir}/.cache" "${primaryUserHomeDir}/.cache";
-        ln -sf "${config.mySystem.impermanence.persistPath}${primaryUserHomeDir}/.local" "${primaryUserHomeDir}/.local";
-      '';
-    };
     create-extra-dirs = {
       deps = [ "users" ];
       text = lib.concatStringsSep "\n" (

@@ -34,6 +34,10 @@ in
 
     xsession = {
       enable = true;
+
+      profilePath = "${config.xdg.configHome}/X11/xprofile";
+      scriptPath = "${config.xdg.configHome}/X11/xsession";
+
       initExtra =
         (lib.optionalString cfg.trackpadSupport ''
           ${lib.getExe (pkgs.callPackage ../../pkgs/libinput-three-finger-drag.nix { })} &
