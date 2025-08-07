@@ -15,8 +15,8 @@ in
   config = lib.mkIf cfg.enable {
     programs.thunderbird = {
       enable = true;
-      package = pkgs.thunderbird-latest.overrideAttrs (a: {
-        buildCommand = a.buildCommand + ''
+      package = pkgs.thunderbird-latest.overrideAttrs (attr: {
+        buildCommand = attr.buildCommand + ''
           wrapProgram "$executablePath" \
             --set 'HOME' '${config.home.homeDirectory}/.config'
         '';
@@ -27,7 +27,9 @@ in
     };
 
     home = {
-      packages = [ config.programs.thunderbird.package ];
+      packages = [
+        config.programs.thunderbird.package # for quicklaunch entry
+      ];
     };
 
     myHomeApps.awesome = {

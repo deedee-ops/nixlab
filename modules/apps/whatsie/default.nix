@@ -6,6 +6,12 @@
 }:
 let
   cfg = config.myHomeApps.whatsie;
+  whatsiePkg = pkgs.whatsie.overrideAttrs (oldAttrs: {
+    postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
+      wrapProgram "$out/bin/whatsie" \
+        --set 'HOME' '${config.xdg.configHome}'
+    '';
+  });
 in
 {
   options.myHomeApps.whatsie = {
@@ -15,12 +21,12 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        pkgs.whatsie # for quicklaunch entry
+        whatsiePkg # for quicklaunch entry
       ];
     };
 
     myHomeApps.awesome = {
-      autorun = [ (lib.getExe pkgs.whatsie) ];
+      autorun = [ (lib.getExe whatsiePkg) ];
       awfulRules = [
         {
           rule = {

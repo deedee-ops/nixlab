@@ -5,7 +5,14 @@
   ...
 }:
 let
+  binaryName = "Discord";
   cfg = config.myHomeApps.discord;
+  discordPkg = pkgs.discord.overrideAttrs (oldAttrs: {
+    postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
+      wrapProgram "$out/opt/${binaryName}/${binaryName}" \
+        --set 'HOME' '${config.xdg.configHome}'
+    '';
+  });
 in
 {
   options.myHomeApps.discord = {
@@ -15,13 +22,13 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        pkgs.discord # for quicklaunch entry
+        discordPkg # for quicklaunch entry
       ];
     };
 
     myHomeApps = {
       awesome = {
-        autorun = [ (lib.getExe pkgs.discord) ];
+        autorun = [ (lib.getExe discordPkg) ];
         awfulRules = [
           {
             rule = {

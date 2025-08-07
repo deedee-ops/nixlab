@@ -6,6 +6,12 @@
 }:
 let
   cfg = config.myHomeApps.slack;
+  slackPkg = pkgs.slack.overrideAttrs (oldAttrs: {
+    postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
+      wrapProgram "$out/bin/slack" \
+        --set 'HOME' '${config.xdg.configHome}'
+    '';
+  });
 in
 {
   options.myHomeApps.slack = {
@@ -15,13 +21,13 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        pkgs.slack # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry
+        slackPkg # slack needs direct installation to register uri shortcuts for signing in, also: quicklaunch entry
       ];
     };
 
     myHomeApps = {
       awesome = {
-        autorun = [ (lib.getExe pkgs.slack) ];
+        autorun = [ (lib.getExe slackPkg) ];
         awfulRules = [
           {
             rule = {

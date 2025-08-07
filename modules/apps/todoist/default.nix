@@ -7,7 +7,21 @@
 }:
 let
   cfg = config.myHomeApps.todoist;
-  tod = pkgs.callPackage ../../pkgs/tod.nix { };
+  todPkg = pkgs.callPackage ../../pkgs/tod.nix { };
+  todoistPkg = pkgs.symlinkJoin {
+    name = "todoist-electron";
+    paths = [
+      (pkgs.writeShellScriptBin "todoist-electron" ''
+        export HOME="${config.xdg.configHome}"
+        exec ${lib.getExe pkgs.todoist-electron} "%@"
+      '')
+      pkgs.todoist-electron
+    ];
+    postBuild = ''
+      sed -i"" -E "s@Exec=[^ ]+@Exec=$out/bin/todoist-electron@" $out/share/applications/todoist.desktop
+    '';
+    meta.mainProgram = "todoist-electron";
+  };
 in
 {
   options.myHomeApps.todoist = {
@@ -24,15 +38,14 @@ in
 
     home = {
       packages = [
-        pkgs.todoist-electron
+        todoistPkg # for quicklaunch entry
       ];
     };
 
     myHomeApps = {
       awesome = {
-        # on first run todoist dies for some odd reason, so let's run it twice
         autorun = [
-          "${lib.getExe pkgs.bash} -c '${lib.getExe pkgs.todoist-electron}; ${lib.getExe pkgs.todoist-electron}'"
+          (lib.getExe todoistPkg)
         ];
         awfulRules = [
           {
@@ -47,7 +60,7 @@ in
         ];
       };
       allowUnfree = [ "todoist-electron" ];
-      rofi.todoCommand = "${lib.getExe tod} task quick-add --content";
+      rofi.todoCommand = "${lib.getExe todPkg} task quick-add --content";
     };
 
     systemd.user.services.init-todoist = lib.mkHomeActivationAfterSops "init-todoist" ''

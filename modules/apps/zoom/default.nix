@@ -15,6 +15,7 @@ in
   config =
     let
       zoomwrapper = pkgs.writeShellScriptBin "zoom-wrapper" ''
+        export HOME="${config.xdg.configHome}"
         TARGET="https://app.zoom.us/wc/$(echo "$@" | awk -F/ '{ print $NF }' | grep -Eo '(^|=)[0-9]{10,}' | tr -d '=')/join"
         ZOOM_PASSWORD="$(echo "$@" | grep -Eo '[?&]pwd=[^&]+' | tr '&' '?')"
 
