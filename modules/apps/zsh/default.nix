@@ -44,6 +44,7 @@ in
           run mkdir -p ${config.xdg.stateHome}/zsh || true
         '';
       };
+      file.".zshenv".enable = false; # handled by modules/system/user.nix
     };
 
     programs.zsh = {
