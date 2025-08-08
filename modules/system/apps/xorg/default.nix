@@ -92,11 +92,13 @@ in
       '';
 
       environment = {
-        etc."profile.local".text = lib.mkAfter ''
-          export XCOMPOSECACHE="${
-            config.home-manager.users."${config.mySystem.primaryUser}".xdg.cacheHome
-          }/X11/xcompose"
-        '';
+        etc = {
+          "profile.local".text = lib.mkAfter ''
+            . "${
+              config.home-manager.users."${config.mySystem.primaryUser}".home.profileDirectory
+            }/etc/profile.d/hm-session-vars.sh"
+          '';
+        };
         persistence."${config.mySystem.impermanence.persistPath}" =
           lib.mkIf config.mySystem.impermanence.enable
             { directories = [ "/var/lib/sddm" ]; };

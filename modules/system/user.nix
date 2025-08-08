@@ -57,15 +57,9 @@ in
   # preserve primary user home directory ownership
   systemd = {
     services."preserve-${primaryUser}-home-ownership" = {
-      script =
-        if config.mySystem.impermanence.enable then
-          ''
-            chown -R ${primaryUser}:users ${config.mySystem.impermanence.persistPath}${primaryUserHomeDir}
-          ''
-        else
-          ''
-            chown -R ${primaryUser}:users ${primaryUserHomeDir}
-          '';
+      script = ''
+        chown -R ${primaryUser}:users ${primaryUserHomeDir}
+      '';
       serviceConfig = {
         Type = "oneshot";
         User = "root";
