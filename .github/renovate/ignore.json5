@@ -1,4 +1,10 @@
 {
   $schema: "https://docs.renovatebot.com/renovate-schema.json",
   ignorePaths: ["modules/system/containers/crypt/*.nix"],
+  packageRules: [
+    {
+      matchPackageNames: ["actions/create-github-app-token"],
+      allowedVersions: "!/2.1.0/",
+    },
+  ],
 }
