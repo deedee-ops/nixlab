@@ -56,8 +56,9 @@ in
         inherit (config) myGames myHomeApps myRetro;
 
         imports = [
-          inputs.krewfile.homeManagerModules.krewfile
           inputs.impermanence.nixosModules.home-manager.impermanence
+          inputs.krewfile.homeManagerModules.krewfile
+          inputs.nix-flatpak.homeManagerModules.nix-flatpak
           inputs.sops-nix.homeManagerModules.sops
 
           ../apps

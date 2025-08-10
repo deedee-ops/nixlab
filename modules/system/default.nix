@@ -8,6 +8,7 @@ _: {
     ./backup.nix
     ./btrfs.nix
     ./disks.nix
+    ./flatpak.nix
     ./grub.nix
     ./healthcheck.nix
     ./home-manager.nix

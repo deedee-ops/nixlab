@@ -61,6 +61,7 @@ rec {
       "USB Keyboard"
       "HD 350BT"
     ];
+    flatpakEnable = true;
 
     alerts = {
       pushover.enable = true;
@@ -332,6 +333,7 @@ rec {
   };
 
   myGames = {
+    retrodeck.enable = true;
     wow =
       let
         mirror = "https://s3.rzegocki.dev/assets/games/wow";
