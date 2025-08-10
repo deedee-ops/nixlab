@@ -70,7 +70,7 @@ in
     lib.mkIf cfg.enable {
       virtualisation.oci-containers.containers.tftpd = svc.mkContainer {
         cfg = {
-          image = "registry.gitlab.com/kalaksi-containers/tftpd:1.6@sha256:41f614ba418aaba5efe1a6a3a166f66c4414f9dfcbc0b579f9dce91d667f5e0d";
+          image = "registry.gitlab.com/kalaksi-containers/tftpd:1.6@sha256:a09bec29195006f7a800ac0509a5290aadefe228b70908805b19fbb4ecaf86a0";
           environment = {
             TFTPD_BIND_ADDRESS = "0.0.0.0:" + (lib.optionalString (!cfg.useHostNetwork) "10") + "69";
           };
