@@ -29,6 +29,15 @@ in
             (pkgs.writeShellScriptBin "ssh" ''
               exec ${lib.getExe pkgs.openssh} -F ${config.xdg.configHome}/ssh/config "$@"
             '')
+            (pkgs.writeShellScriptBin "scp" ''
+              exec ${lib.getExe' pkgs.openssh "scp"} -F ${config.xdg.configHome}/ssh/config "$@"
+            '')
+            (pkgs.writeShellScriptBin "sftp" ''
+              exec ${lib.getExe' pkgs.openssh "sftp"} -F ${config.xdg.configHome}/ssh/config "$@"
+            '')
+            (pkgs.writeShellScriptBin "ssh-copy-id" ''
+              exec ${lib.getExe' pkgs.openssh "ssh-copy-id"} -F ${config.xdg.configHome}/ssh/config "$@"
+            '')
             pkgs.openssh
           ];
         };
