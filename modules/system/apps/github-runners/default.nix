@@ -26,6 +26,12 @@ let
       pkgs.which
     ];
     noDefaultLabels = true;
+    # hacky fix, for new actions requiring node24 runtime
+    package = pkgs.github-runner.overrideAttrs {
+      preInstallCheck = ''
+        ln -s ${pkgs.nodejs_24} $out/lib/externals/node24
+      '';
+    };
     replace = true;
   };
 
