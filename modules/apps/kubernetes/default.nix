@@ -103,8 +103,10 @@ in
     systemd.user.services.init-kubeconfig = lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) (
       lib.mkHomeActivationAfterSops "init-kubeconfig" ''
         # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
+        # it also can't be symlinked, because sops-nix daemon periodically restores it
 
-        run ln -sf "${
+        rm -rf "${config.xdg.configHome}/kube/config" || true
+        cp "${
           config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
         }" "${config.xdg.configHome}/kube/config"
       ''
