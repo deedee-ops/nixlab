@@ -25,7 +25,7 @@ in
 
     virtualisation.oci-containers.containers.wallos = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/ellite/wallos:4.1.0@sha256:5e12fcae43a9a72fbb155b699110a6e582108bc8f8a8b8553d5f0ac6717ff81a";
+        image = "ghcr.io/ellite/wallos:4.1.1@sha256:a1de777eb1d4863f7c8790bfa2e01a11760d0a1db067c135c5a581d27522e75c";
         volumes = [
           "${cfg.dataDir}/config:/var/www/html/db"
           "${cfg.dataDir}/data:/var/www/html/images/uploads"
