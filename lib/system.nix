@@ -39,7 +39,7 @@ in
               ++ osConfig.home-manager.users."${osConfig.mySystem.primaryUser}".myHomeApps.allowUnfree
             );
           cudaSupport = osConfig.myHardware.nvidia.enable && osConfig.myHardware.nvidia.forceCompileCUDA;
-          rocmSupport = osConfig.myHardware.rocm.enable;
+          rocmSupport = osConfig.myHardware.rocm.enable && !osConfig.myHardware.nvidia.forceCompileCUDA;
         };
       };
       modules = baseModules ++ hardwareModules ++ profileModules;
