@@ -134,7 +134,10 @@ rec {
     # opensnitch.enable = true;
     # plymouth.enable = true;
 
-    ollama.enable = true;
+    ollama = {
+      enable = true;
+      enableCUDA = true;
+    };
 
     xorg = {
       enable = true;

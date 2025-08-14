@@ -1,4 +1,8 @@
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 let
   cfg = config.mySystemApps.ollama;
 in
@@ -10,6 +14,7 @@ in
       description = "List of models to download on start.";
       default = [ ];
     };
+    enableCUDA = lib.mkEnableOption "NVIDIA CUDA";
     exposePort = lib.mkOption {
       type = lib.types.bool;
       description = "Expose ollama port, to be available outside of the machine.";
@@ -26,6 +31,9 @@ in
     }
     // lib.optionalAttrs cfg.exposePort {
       host = "0.0.0.0";
+    }
+    // lib.optionalAttrs cfg.enableCUDA {
+      acceleration = "cuda";
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
