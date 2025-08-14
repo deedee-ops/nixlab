@@ -64,7 +64,8 @@ in
         # Minio
         MC_CONFIG_DIR = "${config.xdg.configHome}/minio";
 
-        # NPM
+        # node and NPM
+        NODE_REPL_HISTORY = "${config.xdg.stateHome}/node_repl_history";
         NPM_CONFIG_USERCONFIG = "${config.xdg.configHome}/npm/npmrc";
 
         # Postgres
