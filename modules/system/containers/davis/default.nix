@@ -52,7 +52,7 @@ in
 
     virtualisation.oci-containers.containers.davis = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/tchapi/davis-standalone:5.1.2@sha256:fe44cd11e7f73b237719a010982cebe68597caef22c61c4e1cf5508dafde9d64";
+        image = "ghcr.io/tchapi/davis-standalone:5.1.3@sha256:d11ade7311fc9e47ba43979fa25987216b77920ff30c4f25f9bfe168dc46b0a5";
         dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
         environment = {
           ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
