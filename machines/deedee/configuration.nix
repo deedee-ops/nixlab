@@ -198,6 +198,10 @@ rec {
         /tank/backups ${config.myInfra.machines.work.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000) ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=0,anongid=0)
         /tank/data    ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
         /tank/media   ${config.myInfra.machines.piecyk.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
+        /tank/data/retro/batocera  ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
+        /tank/data/retro/bios      ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
+        /tank/data/retro/roms      ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
+        /tank/data/retro/saves     ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
       '';
     };
 
