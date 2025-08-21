@@ -57,6 +57,7 @@ in
   # preserve primary user home directory ownership
   systemd = {
     services."preserve-${primaryUser}-home-ownership" = {
+      onFailure = lib.mkForce [ ]; # sometimes it fails, it's fine
       script = ''
         chown -R ${primaryUser}:users ${primaryUserHomeDir}
       '';
