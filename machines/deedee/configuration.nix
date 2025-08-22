@@ -395,6 +395,7 @@ rec {
     };
     n8n = {
       enable = true;
+      enablePatches = false;
       integrations = [
         "paperless-ngx"
         "syncthing"
