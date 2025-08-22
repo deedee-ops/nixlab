@@ -147,7 +147,7 @@ in
         proxyPass = "http://forgejo.docker:3000";
         autheliaIgnorePaths = [
           "~* ^/[^/]+/[^/]+/(info|git-upload-pack).*$"
-          "/api/actions"
+          "/api"
         ];
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "forgejo" ]; };
