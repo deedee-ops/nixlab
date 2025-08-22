@@ -15,6 +15,9 @@ in
 {
   options.mySystemApps.n8n = {
     enable = lib.mkEnableOption "n8n container";
+    enablePatches = lib.mkEnableOption "n8n container improvements" // {
+      default = true;
+    };
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
@@ -75,8 +78,7 @@ in
         cfg = {
           dependsOn = cfg.integrations;
           user = "1000:1000";
-          image = "n8n";
-          pull = "never";
+          image = if cfg.enablePatches then "n8n" else image;
           environment = {
             GENERIC_TIMEZONE = config.mySystem.time.timeZone;
             N8N_EDITOR_BASE_URL = "https://n8n.${config.mySystem.rootDomain}";
@@ -99,6 +101,9 @@ in
             N8N_DIAGNOSTICS_ENABLED = "false";
             N8N_VERSION_NOTIFICATIONS_ENABLED = "false";
             N8N_TEMPLATES_ENABLED = "false";
+          }
+          // lib.optionalAttrs cfg.enablePatches {
+            pull = "never";
           }
           // svc.mkContainerSecretsEnv { inherit secretEnvs; };
           volumes =
@@ -187,10 +192,12 @@ in
               dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
             in
             lib.mkAfter (
-              ''
+              (lib.optionalString cfg.enablePatches ''
                 ${lib.getExe pkgs.bash} "${
                   config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
                 }" ${dockerBin} ${image}
+              '')
+              + ''
                 mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
                 chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
                 cp ${autheliaHook} "${cfg.dataDir}/n8n/hooks.js"
