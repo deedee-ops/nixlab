@@ -36,8 +36,6 @@ rec {
       useOpenDrivers = true;
       forceCompileCUDA = false;
     };
-
-    rocm.enable = true;
   };
 
   mySystem = {
@@ -134,6 +132,10 @@ rec {
     # opensnitch.enable = true;
     # plymouth.enable = true;
 
+    llamacpp = {
+      enable = true;
+      enableCUDA = true;
+    };
     ollama = {
       enable = true;
       enableCUDA = true;

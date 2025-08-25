@@ -8,6 +8,7 @@ _: {
     ./github-runners
     ./incus
     ./letsencrypt
+    ./llamacpp
     ./mosquitto
     ./nfs
     ./nginx
