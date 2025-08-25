@@ -15,7 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.flaresolverr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/flaresolverr/flaresolverr:v3.3.25@sha256:68160ec125e5cde23bc45549a443da0da0223cf4f0de7571ed2c6851cf6e1561";
+        image = "ghcr.io/flaresolverr/flaresolverr:v3.4.0@sha256:ab535d1fef5d7f1654c2756949798442ae4bbecee99d4338128aa137fd8eca0e";
         environment = {
           LOG_LEVEL = "info";
         };
