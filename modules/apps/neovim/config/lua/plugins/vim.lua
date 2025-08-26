@@ -12,4 +12,7 @@ return {
     "dhruvasagar/vim-table-mode", -- markdown tables
     event = "VeryLazy",
   },
+  {
+    "towolf/vim-helm", -- vim helm code highlight
+  },
 }

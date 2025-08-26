@@ -37,6 +37,7 @@ in
         pkgs.yamllint # mason
         pkgs.buf # null-ls
         pkgs.cue # null-ls
+        pkgs.helm-ls # null-ls
         pkgs.ripgrep # telescope
         pkgs.fd # telescope-filebrowser
         pkgs.gnumake # telescope-fzf
