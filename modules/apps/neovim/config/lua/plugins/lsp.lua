@@ -33,6 +33,9 @@ return {
       -- vim.lsp.enable("lua_ls")
       --
       -- vim.lsp.enable("nil_ls")
+      vim.lsp.config("helm_ls", {
+        cmd = "helm_ls",
+      })
       vim.lsp.config("nil_ls", {
         settings = {
           ["nil"] = {
@@ -127,6 +130,7 @@ return {
           "golines",
           "gopls",
           "hadolint",
+          "helm-ls",
           "json-lsp",
           -- "lua-language-server", -- installed by nix
           "luacheck",
