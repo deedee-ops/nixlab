@@ -407,6 +407,7 @@ rec {
       targetPaths = {
         business = "${dataPath}/private/Memories/Private/Firma";
         banks = "${dataPath}/private/Memories/Private/Banki";
+        flats = "${dataPath}/private/Mieszkania";
       };
     };
     navidrome = {
