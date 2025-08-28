@@ -17,7 +17,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.coredns = svc.mkContainer {
       cfg = {
-        image = "registry.k8s.io/coredns/coredns:v1.12.2@sha256:af8c8d35a5d184b386c4a6d1a012c8b218d40d1376474c7d071bb6c07201f47d";
+        image = "registry.k8s.io/coredns/coredns:v1.12.3@sha256:1391544c978029fcddc65068f6ad67f396e55585b664ecccd7fefba029b9b706";
         cmd = [
           "-conf"
           "/etc/coredns/Corefile"
