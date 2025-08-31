@@ -20,7 +20,7 @@ in
 
   config = lib.mkIf cfg.enable {
     boot.loader = {
-      systemd-boot.enable = false;
+      systemd-boot.enable = lib.mkForce false;
       efi.canTouchEfiVariables = true;
       grub = {
         enable = true;
