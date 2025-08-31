@@ -46,6 +46,11 @@ _: {
         ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
+      dexter = {
+        ip = "10.100.40.3";
+        ssh = "dexter.home.arpa:22";
+        host = "dexter.home.arpa";
+      };
       leelee = {
         ip = "10.100.30.3";
         ssh = "leelee.home.arpa:22";

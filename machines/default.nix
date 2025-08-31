@@ -8,6 +8,7 @@
 {
   imports = [
     ./deedee
+    ./dexter
     ./leelee
     ./liadtop
     ./monkey
