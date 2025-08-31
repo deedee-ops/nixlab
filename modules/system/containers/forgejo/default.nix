@@ -64,7 +64,7 @@ in
     virtualisation.oci-containers.containers = {
       forgejo = svc.mkContainer {
         cfg = {
-          image = "codeberg.org/forgejo/forgejo:12.0.1-rootless@sha256:d3cf45e6fa7cda0c329a02ce4d5c57cd5fae67f6d39bb5057b77c081938594df";
+          image = "codeberg.org/forgejo/forgejo:12.0.2-rootless@sha256:eaf9b09bc07fe248c224b6b311ed16b619245ca41707a42045b805a3d0382d10";
           dependsOn = lib.optionals config.mySystemApps.minio.enable [ "minio" ];
           environment = {
             FORGEJO__actions__ENABLED = if cfg.enableRunner then "true" else "false";
