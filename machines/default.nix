@@ -11,7 +11,6 @@
     ./dexter
     ./leelee
     ./liadtop
-    ./monkey
   ];
 
   options = {
