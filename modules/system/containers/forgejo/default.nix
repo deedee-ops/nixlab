@@ -125,7 +125,7 @@ in
               "daemon"
             ];
             dependsOn = [ "forgejo-dind" ];
-            image = "data.forgejo.org/forgejo/runner:10.0.0@sha256:e1acf554cced4dd9cb37a5b5b6ff2ec1fd3a665a3264416c9491c209d98546eb";
+            image = "data.forgejo.org/forgejo/runner:10.0.1@sha256:78b5c645b3c37e68f55e64760245a945f1b43d6d73bf9010bbf744a2fd4460bb";
             environment = {
               DOCKER_HOST = "tcp://forgejo-dind:2375";
             };
