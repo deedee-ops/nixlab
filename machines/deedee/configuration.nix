@@ -109,7 +109,7 @@ rec {
       enable = true;
       machineId = "bf52c8ab338949159f545637a879e23c";
       persistPath = "/persist";
-      zfsPool = "tank";
+      zfsPool = "rpool";
     };
 
     networking = {
