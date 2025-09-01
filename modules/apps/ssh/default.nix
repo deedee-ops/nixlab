@@ -23,6 +23,7 @@ in
     programs = {
       ssh = lib.attrsets.recursiveUpdate {
         enable = true;
+        enableDefaultConfig = false;
         package = pkgs.symlinkJoin {
           name = "ssh";
           paths = [
@@ -42,8 +43,11 @@ in
           ];
         };
 
-        addKeysToAgent = "8h";
-        userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
+        matchBlocks."*" = {
+          addKeysToAgent = "8h";
+          controlPath = "${config.xdg.stateHome}/ssh/master-%r@%n:%p";
+          userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
+        };
       } cfg.appendOptions;
     };
 

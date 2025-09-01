@@ -14,9 +14,9 @@ rustPlatform.buildRustPackage rec {
     owner = "tod-org";
     repo = "tod";
     rev = "v${version}";
-    hash = "sha256-AyR6EPyV3596/CSaT6UeqQRloqt8OGxLHzmaaapErl8=";
+    hash = "sha256-f3av8yjIYThi3d3+eV49jkpF9pHwFqvMnUba4oLWkFI=";
   };
-  cargoHash = "sha256-bCrvy09iagsRblLRsTBAHMuERy+uRrlk9KYd9LS2Rmw=";
+  cargoHash = "sha256-qJuraS1Sh6s6vYujlsImUjALztSKZcfEl3dl9x2K6zg=";
 
   nativeBuildInputs = [ openssl ];
 
