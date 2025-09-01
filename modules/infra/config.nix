@@ -76,11 +76,6 @@ _: {
         ssh = null;
         host = "azeroth.home.arpa";
       };
-      monkey = {
-        ip = "10.210.10.10";
-        ssh = "monkey.home.arpa:22";
-        host = "monkey.home.arpa";
-      };
     };
   };
 
