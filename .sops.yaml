@@ -9,7 +9,7 @@ keys:
       - &deedee age15j2q7j9nx0eklslk93zstedzkhhm3r6kqfd7pgcesne6c9yeldzqdvm0v8
       - &dexter age1kq9wp5dc38x9k9srfsgvxqcyqn82sfdj25tyhryxslr0eetyhc4sfhhdg0
       - &leelee age1f2dmyxwyn9gy75ccpk27yaax4ce7nu2nua4muwuk2rrtt7nm33yqe9zzrj
-      - &monkey age1lfx84pz5u2hcdmtkpc7hw0kw080065c3fhvatghqzpp9fla3my2s5kd45x
+      - &meemee age1jvlrjcy0fh4tspzv5z4cxulmhrd5c5htkd8juuxpmn3vnk3xtsdqeggxhg
 
 creation_rules:
   - path_regex: local/.*\.sops\.yaml$
@@ -31,16 +31,12 @@ creation_rules:
       - age:
           - *ajgon
           - *leelee
+  - path_regex: meemee/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *meemee
   - path_regex: liadtop/.*\.sops\.yaml$
-    key_groups:
-      - age:
-          - *ajgon
-  - path_regex: monkey/.*\.sops\.yaml$
-    key_groups:
-      - age:
-          - *ajgon
-          - *monkey
-  - path_regex: piecyk/.*\.sops\.yaml$
     key_groups:
       - age:
           - *ajgon

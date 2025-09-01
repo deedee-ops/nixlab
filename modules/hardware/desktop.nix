@@ -1,5 +1,4 @@
-{ config, ... }:
-{
+_: {
   boot = {
     initrd = {
       availableKernelModules = [
@@ -22,21 +21,6 @@
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
   };
-
-  # power
-  services.logind.settings.Login =
-    if ((config.systemd.targets ? suspend) && !config.systemd.targets.suspend.enable) then
-      {
-        HandlePowerKey = "poweroff";
-        IdleAction = "poweroff";
-        IdleActionSec = "5m";
-      }
-    else
-      {
-        HandlePowerKey = "suspend";
-        IdleAction = "suspend";
-        IdleActionSec = "5m";
-      };
 
   myHardware = {
     openrgb = {
