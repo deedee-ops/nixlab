@@ -12,7 +12,6 @@
     ./leelee
     ./liadtop
     ./monkey
-    ./piecyk
   ];
 
   options = {

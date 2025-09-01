@@ -76,11 +76,6 @@ _: {
         ssh = null;
         host = "azeroth.home.arpa";
       };
-      piecyk = {
-        ip = "10.100.40.1";
-        ssh = "piecyk.home.arpa:22";
-        host = "piecyk.home.arpa";
-      };
       monkey = {
         ip = "10.210.10.10";
         ssh = "monkey.home.arpa:22";

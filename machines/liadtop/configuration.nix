@@ -195,15 +195,6 @@ rec {
             port = 51008;
             user = "ajgon";
           };
-          piecyk = {
-            forwardAgent = true;
-            host = "piecyk";
-            hostname = "piecyk.home.arpa";
-            identitiesOnly = true;
-            identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = 22;
-            user = "ajgon";
-          };
 
           # public
           github = {
