@@ -27,7 +27,22 @@ in
       '';
     };
   };
-  config = lib.mkIf cfg.powerSaveMode {
+  config = {
+    services.logind.settings.Login =
+      if ((config.systemd.targets ? suspend) && !config.systemd.targets.suspend.enable) then
+        {
+          HandlePowerKey = "poweroff";
+          IdleAction = "poweroff";
+          IdleActionSec = "5m";
+        }
+      else
+        {
+          HandlePowerKey = "suspend";
+          IdleAction = "suspend";
+          IdleActionSec = "5m";
+        };
+  }
+  // (lib.mkIf cfg.powerSaveMode {
     powerManagement.enable = true;
 
     services.tlp = {
@@ -60,5 +75,5 @@ in
         '') cfg.powerUSBWhitelist
       ));
     };
-  };
+  });
 }
