@@ -6,16 +6,16 @@
 }:
 let
   cfg = config.mySystemApps.open-webui;
-  image =
-    if config.myHardware.nvidia.enable then
-      "ghcr.io/open-webui/open-webui:cuda@sha256:72e3a276586471d5188fb9277d012eeefb91e3e47e971cbc8d98396590dadf36"
-    else
-      "ghcr.io/open-webui/open-webui:main@sha256:4450eb013528cbb49d8c4ea83602fb918be7dc01cabd492f8302184b78b793f2";
 in
 {
   options.mySystemApps.open-webui = {
     enable = lib.mkEnableOption "open-webui container";
     standalone = lib.mkEnableOption "standalone mode - exposes port directly, and disables nginx.";
+    subdomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Subdomain for ${config.mySystem.rootDomain}.";
+      default = "open-webui";
+    };
     dataDir = lib.mkOption {
       type = lib.types.str;
       description = "Path to directory containing data.";
@@ -33,9 +33,9 @@ in
 
     virtualisation.oci-containers.containers.open-webui = svc.mkContainer {
       cfg = {
-        inherit image;
+        image = "ghcr.io/open-webui/open-webui:main@sha256:4450eb013528cbb49d8c4ea83602fb918be7dc01cabd492f8302184b78b793f2";
         environment = {
-          WEBUI_AUTH = "False";
+          WEBUI_AUTH = "True";
           OLLAMA_BASE_URL = "http://host.docker.internal:${builtins.toString config.services.ollama.port}";
         };
         ports = lib.optionals cfg.standalone [ "8080:8080" ];
@@ -44,6 +44,9 @@ in
         extraOptions = [
           "--cap-add=all"
         ];
+      }
+      // lib.optionalAttrs config.myHardware.nvidia.enable {
+        image = "ghcr.io/open-webui/open-webui:cuda@sha256:0e48f41dad86b08faacdce2d4b312bbd91b3007ab497c8eed87b215f88d931d0";
       };
 
       opts = {
@@ -62,7 +65,7 @@ in
 
       nginx = lib.mkIf (!cfg.standalone) {
         virtualHosts.open-webui = svc.mkNginxVHost {
-          host = "ai";
+          host = cfg.subdomain;
           proxyPass = "http://open-webui.docker:8080";
         };
       };
@@ -74,6 +77,7 @@ in
 
     mySystemApps.homepage = lib.mkIf (!cfg.standalone) {
       services.Apps.open-webui = svc.mkHomepage "open-webui" // {
+        href = "https://${cfg.subdomain}.${config.mySystem.rootDomain}";
         description = "Front-end for AI models.";
       };
     };
