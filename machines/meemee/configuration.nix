@@ -83,6 +83,21 @@ _: rec {
       pruneAll = true;
     };
 
+    letsencrypt = {
+      enable = true;
+      useProduction = true;
+      domains = [
+        mySystem.rootDomain
+        "*.${mySystem.rootDomain}"
+      ];
+    };
+
+    nginx = {
+      inherit (mySystem) rootDomain;
+
+      enable = true;
+    };
+
     ollama = {
       enable = true;
       loadModels = [
@@ -90,6 +105,13 @@ _: rec {
         "gpt-oss:20b"
       ];
       exposePort = true;
+    };
+
+    # containers
+    coredns.enable = true;
+    open-webui = {
+      enable = true;
+      subdomain = "ai";
     };
   };
 
