@@ -65,7 +65,7 @@ in
 
     virtualisation.oci-containers.containers.syncthing = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/syncthing/syncthing:2.0.4@sha256:8e02699453429588f09883a7b3c1c849d6bf74ebb3c79aa4c45da6bbce854540";
+        image = "ghcr.io/syncthing/syncthing:2.0.6@sha256:0a98e790c827ab614e46c4598f91f455f1b4f96f1abbd7654fb57fdc0dc720fa";
         user = "65000:65000";
         environment = {
           STHOMEDIR = "/config";
