@@ -109,8 +109,10 @@ _: rec {
 
     # containers
     coredns.enable = true;
+    comfyui.subdomain = "comfy";
     open-webui = {
       enable = true;
+      generateImages = true;
       subdomain = "ai";
     };
   };

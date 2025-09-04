@@ -9,6 +9,7 @@ _: {
     ./borgmatic
     ./caddy
     ./calibre-web-automated
+    ./comfyui
     ./coredns
     ./crypt
     ./dawarich

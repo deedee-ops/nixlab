@@ -16,6 +16,7 @@ in
       description = "Subdomain for ${config.mySystem.rootDomain}.";
       default = "open-webui";
     };
+    generateImages = lib.mkEnableOption "generate images via stable diffusion";
     dataDir = lib.mkOption {
       type = lib.types.str;
       description = "Path to directory containing data.";
@@ -31,12 +32,30 @@ in
       }
     ];
 
+    mySystemApps.comfyui = lib.optionalAttrs cfg.generateImages {
+      enable = true;
+      models = {
+        "checkpoints/flux1-schnell-fp8.safetensors" =
+          "https://huggingface.co/Comfy-Org/flux1-schnell/resolve/main/flux1-schnell-fp8.safetensors?download=true";
+        "vae/ae.safetensors" =
+          "https://huggingface.co/black-forest-labs/FLUX.1-schnell/blob/main/ae.safetensors?download=true";
+        "clip/clip_l.safetensors" =
+          "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors?download=true";
+        "clip/t5xxl_fp8_e4m3fn.safetensors" =
+          "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn.safetensors?download=true";
+      };
+    };
+
     virtualisation.oci-containers.containers.open-webui = svc.mkContainer {
       cfg = {
         image = "ghcr.io/open-webui/open-webui:main@sha256:06f4cae7f8873ebcee7952d9993e457c1b083c6bea67b10bc356db7ac71c28e2";
         environment = {
           WEBUI_AUTH = "True";
           OLLAMA_BASE_URL = "http://host.docker.internal:${builtins.toString config.services.ollama.port}";
+        }
+        // lib.optionalAttrs cfg.generateImages {
+          ENABLE_IMAGE_GENERATION = "True";
+          COMFYUI_BASE_URL = "http://comfyui:8188";
         };
         ports = lib.optionals cfg.standalone [ "8080:8080" ];
         volumes = [ "${cfg.dataDir}/data:/app/backend/data" ];
@@ -67,6 +86,9 @@ in
         virtualHosts.open-webui = svc.mkNginxVHost {
           host = cfg.subdomain;
           proxyPass = "http://open-webui.docker:8080";
+          extraConfig = ''
+            proxy_read_timeout 3600s;
+          '';
         };
       };
     };
