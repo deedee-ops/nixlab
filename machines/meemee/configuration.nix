@@ -110,6 +110,7 @@ _: rec {
     # containers
     coredns.enable = true;
     comfyui.subdomain = "comfy";
+    jupyter.enable = true;
     open-webui = {
       enable = true;
       generateImages = true;

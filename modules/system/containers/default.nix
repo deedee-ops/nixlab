@@ -27,6 +27,7 @@ _: {
     ./homepage
     ./immich
     ./jellyfin
+    ./jupyter
     ./kms
     ./koreader
     ./lldap
