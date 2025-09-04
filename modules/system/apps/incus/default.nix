@@ -19,6 +19,7 @@ in
       description = "Path to directory containing data.";
       default = "/var/lib/incus";
     };
+    enablePassthrough = lib.mkEnableOption "VM passthrough";
     defaultStoragePool = lib.mkOption {
       type = lib.types.attrs;
       description = "Default storage pool configuration for incus.";
@@ -75,16 +76,22 @@ in
       description = "If set to true, it will install base image, compatible with nixos-anywhere.";
       default = false;
     };
+    subdomain = lib.mkOption {
+      type = lib.types.str;
+      description = "Subdomain for ${config.mySystem.rootDomain}.";
+      default = "incus";
+    };
   };
 
   config = lib.mkIf cfg.enable {
-    warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for incus are disabled!") ];
-    assertions = [
-      {
-        assertion = (!cfg.enableUI) || config.mySystemApps.authelia.enable;
-        message = "To use incus UI, authelia container needs to be enabled.";
-      }
+    warnings = [
+      (lib.mkIf (!cfg.backup) "WARNING: Backups for incus are disabled!")
+      (lib.mkIf (
+        cfg.enableUI && !config.mySystemApps.authelia.enable
+      ) "To use incus UI, authelia container should be enabled.")
     ];
+
+    mySystem.vmPassthrough = cfg.enablePassthrough;
 
     sops.secrets = {
       "${cfg.incusUICrtSopsSecret}" = {
@@ -98,6 +105,13 @@ in
         restartUnits = [ "nginx.service" ];
       };
     };
+
+    boot.kernelModules = lib.optionals config.mySystem.vmPassthrough [
+      "vfio_virqfd"
+      "vfio_pci"
+      "vfio_iommu_type1"
+      "vfio"
+    ];
 
     virtualisation.incus = {
       enable = true;
@@ -164,7 +178,7 @@ in
     services = {
       nginx.virtualHosts.incus = lib.mkIf cfg.enableUI (
         svc.mkNginxVHost {
-          host = "incus";
+          host = cfg.subdomain;
           proxyPass = "https://127.0.0.1:8443";
           extraConfig = ''
             proxy_ssl_certificate     ${config.sops.secrets."${cfg.incusUICrtSopsSecret}".path};
@@ -182,6 +196,7 @@ in
 
     mySystemApps.homepage = lib.mkIf cfg.enableUI {
       services.Apps.Incus = svc.mkHomepage "incus" // {
+        href = "https://${cfg.subdomain}.${config.mySystem.rootDomain}";
         container = null;
         description = "Virtual machines manager";
       };
