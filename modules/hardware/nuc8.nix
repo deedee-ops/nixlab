@@ -1,4 +1,5 @@
-_: {
+{ config, lib, ... }:
+{
   boot = {
     initrd = {
       availableKernelModules = [
@@ -13,6 +14,11 @@ _: {
       kernelModules = [ ];
     };
     kernelModules = [ "kvm-intel" ];
+    kernelParams = lib.optionals config.mySystem.vmPassthrough [
+      "intel_iommu=on"
+      "iommu=pt"
+    ];
+
     extraModulePackages = [ ];
     loader = {
       systemd-boot.enable = true;

@@ -14,7 +14,7 @@ _: rec {
   myHardware = {
     nvidia = {
       enable = true;
-      useOpenDrivers = true;
+      useOpenDrivers = false; # TODO: enable back, after replacing 1050Ti with new GPU
       forceCompileCUDA = true;
     };
   };
@@ -81,6 +81,25 @@ _: rec {
       enable = true;
       rootless = false;
       pruneAll = true;
+    };
+
+    incus = {
+      enable = true;
+      enableUI = true;
+      enablePassthrough = true;
+      subdomain = "incus-gpu";
+      initializeBaseNixOSVM = true;
+      defaultStoragePool = {
+        config = {
+          source = "rpool/vms";
+        };
+        driver = "zfs";
+      };
+      defaultNIC = {
+        nictype = "bridged";
+        parent = "br0";
+        type = "nic";
+      };
     };
 
     letsencrypt = {

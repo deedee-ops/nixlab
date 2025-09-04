@@ -131,6 +131,8 @@
       ];
       internal = true;
     };
+
+    vmPassthrough = lib.mkEnableOption "VM passthrough";
   };
 
   config = {

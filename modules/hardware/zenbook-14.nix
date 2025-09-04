@@ -22,6 +22,10 @@ in
       kernelModules = [ ];
     };
     kernelModules = [ "kvm-amd" ];
+    kernelParams = lib.optionals config.mySystem.vmPassthrough [
+      "amd_iommu=on"
+      "iommu=pt"
+    ];
     extraModulePackages = [ ];
     # https://discourse.nixos.org/t/asus-zenbook-no-sound-output/29326
     # https://github.com/farfaaa/asus_zenbook_UM3402YA
