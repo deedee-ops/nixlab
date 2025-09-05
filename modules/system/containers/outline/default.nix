@@ -72,7 +72,10 @@ in
         }
       ];
 
-      redis.servers.outline = 6383;
+      redis = {
+        enable = true;
+        servers.outline = 6383;
+      };
     };
 
     virtualisation.oci-containers.containers.outline = svc.mkContainer {

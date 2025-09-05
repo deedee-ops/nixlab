@@ -71,7 +71,10 @@ in
         }
       ];
 
-      redis.servers.vikunja = 6384;
+      redis = {
+        enable = true;
+        servers.vikunja = 6384;
+      };
     };
 
     virtualisation.oci-containers.containers.vikunja = svc.mkContainer {

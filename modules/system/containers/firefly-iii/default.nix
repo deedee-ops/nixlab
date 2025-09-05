@@ -45,7 +45,10 @@ in
           databases = [ "firefly" ];
         }
       ];
-      redis.servers.firefly-iii = 6380;
+      redis = {
+        enable = true;
+        servers.firefly-iii = 6380;
+      };
     };
 
     virtualisation.oci-containers.containers.firefly-iii = svc.mkContainer {
