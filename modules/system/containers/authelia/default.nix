@@ -180,7 +180,10 @@ in
           databases = [ "authelia" ];
         }
       ];
-      redis.servers.authelia = 6379;
+      redis = {
+        enable = true;
+        servers.authelia = 6379;
+      };
     };
 
     virtualisation.oci-containers.containers.authelia = svc.mkContainer {

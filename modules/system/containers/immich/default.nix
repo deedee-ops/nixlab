@@ -139,7 +139,10 @@ in
         };
       };
 
-      redis.servers.immich = 6382;
+      redis = {
+        enable = true;
+        servers.immich = 6382;
+      };
     };
 
     services = {

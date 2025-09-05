@@ -61,7 +61,10 @@ in
           '';
         };
       };
-      redis.servers.dawarich = 6386;
+      redis = {
+        enable = true;
+        servers.dawarich = 6386;
+      };
     };
 
     virtualisation.oci-containers.containers =

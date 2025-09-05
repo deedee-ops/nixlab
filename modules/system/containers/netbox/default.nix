@@ -104,7 +104,10 @@ in
           databases = [ "netbox" ];
         }
       ];
-      redis.servers.netbox = 6385;
+      redis = {
+        enable = true;
+        servers.netbox = 6385;
+      };
     };
   };
 }

@@ -38,7 +38,10 @@ in
           databases = [ "paperless" ];
         }
       ];
-      redis.servers.paperless-ngx = 6381;
+      redis = {
+        enable = true;
+        servers.paperless-ngx = 6381;
+      };
     };
 
     virtualisation.oci-containers.containers.paperless-ngx = svc.mkContainer {
