@@ -55,7 +55,7 @@ in
 
     virtualisation.oci-containers.containers.retrom = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/jmberesford/retrom-service:0.7.35@sha256:fcfa95c5f139ef843a74ae4e5e09fa24bdb52905ddb619dee89fd3fb0a5d4197";
+        image = "ghcr.io/jmberesford/retrom-service:v0.7.36@sha256:9e0524a1455457c30b9618434fd789760d201d04d85cd16ec8b4b6e91cbaf45a";
         user = "1000:1000";
         volumes = [
           "${cfg.dataDir}/config:/app/config"
