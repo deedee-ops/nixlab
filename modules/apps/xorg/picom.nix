@@ -7,7 +7,7 @@
       fade = false;
       shadow = false;
       backend = "xrender";
-      vSync = false;
+      vSync = osConfig.myHardware.i915.enable;
 
       settings = {
         "blur-background" = false;

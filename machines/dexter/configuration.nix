@@ -29,6 +29,7 @@ rec {
       enable = true;
       trust = [ config.myInfra.devices.headphones.mac ];
     };
+    i915.enable = true;
     sound.enable = true;
   };
 

@@ -8,7 +8,7 @@
 let
   cfg = config.myHomeApps.firefox;
   settings =
-    lib.optionalAttrs osConfig.myHardware.nvidia.enable {
+    lib.optionalAttrs (osConfig.myHardware.nvidia.enable || osConfig.myHardware.i915.enable) {
       # hardware accelerated video decoding
       "media.ffmpeg.vaapi.enabled" = true;
       "media.rdd-ffmpeg.enabled" = true;
@@ -247,10 +247,20 @@ in
     programs.firefox = {
       enable = true;
       package = pkgs.firefox.overrideAttrs (a: {
-        buildCommand = a.buildCommand + ''
-          wrapProgram "$executablePath" \
-            --set 'HOME' '${config.xdg.configHome}'
-        '';
+        buildCommand =
+          a.buildCommand
+          + (
+            ''
+              wrapProgram "$executablePath" \
+            ''
+            + (lib.optionalString osConfig.myHardware.i915.enable ''
+              --set 'LIBVA_DRIVER_NAME' 'i965' \
+              --set 'LIBVA_DRIVERS_PATH' '${pkgs.intel-vaapi-driver}/lib/dri/' \
+            '')
+            + ''
+              --set 'HOME' '${config.xdg.configHome}'
+            ''
+          );
       });
 
       policies = {
@@ -341,6 +351,10 @@ in
         MOZ_DISABLE_RDD_SANDBOX = "1";
         LIBVA_DRIVER_NAME = "nvidia";
         LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
+        NVD_BACKEND = "direct";
+      }
+      // lib.optionalAttrs osConfig.myHardware.i915.enable {
+        MOZ_DISABLE_RDD_SANDBOX = "1";
         NVD_BACKEND = "direct";
       };
     };
