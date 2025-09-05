@@ -100,7 +100,7 @@ in
       virtualisation.oci-containers.containers.beszel-hub = lib.mkIf isHub (
         svc.mkContainer {
           cfg = {
-            image = "ghcr.io/henrygd/beszel/beszel:0.12.6@sha256:5340581edeb38dcb956d780975b21e6b81929ad5b50bf45d7431b57b2c08ef58";
+            image = "ghcr.io/henrygd/beszel/beszel:0.12.7@sha256:330a48f09f6cc32476a99978ee90717c73084e57b44dd1fbc905d7bb7ece39fa";
             environment = {
               SHARE_ALL_SYSTEMS = "true";
             };
@@ -123,7 +123,7 @@ in
         svc.mkContainer {
           cfg = {
             dependsOn = [ "socket-proxy" ];
-            image = "ghcr.io/henrygd/beszel/beszel-agent:0.12.6@sha256:a2d7e4fe6ec5c67e5d645529893c2a7d2317178bf00f30a5b559e78ebf7c0e96";
+            image = "ghcr.io/henrygd/beszel/beszel-agent:0.12.7@sha256:c5e10925a28633594548497ded3c9a9a04892b93f96ab37a3eec7c1190676d80";
             environment = {
               DOCKER_HOST = "tcp://127.0.0.1:2375";
               FILESYSTEM = cfg.rootFs;
