@@ -33,6 +33,11 @@ in
 {
   options.myHomeApps.ticktick = {
     enable = lib.mkEnableOption "ticktick";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = if config.myHomeApps.awesome.singleScreen then 6 else 1;
+    };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
       description = "Prefix for sops secret, under which all ENVs will be appended.";
@@ -63,7 +68,7 @@ in
             };
             properties = {
               screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-              tag = if config.myHomeApps.awesome.singleScreen then " 4 " else " 1 ";
+              tag = " ${builtins.toString cfg.desktopNumber} ";
             };
           }
         ];

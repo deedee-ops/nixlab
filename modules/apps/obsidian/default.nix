@@ -16,6 +16,11 @@ in
 {
   options.myHomeApps.obsidian = {
     enable = lib.mkEnableOption "obsidian";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = 8;
+    };
     PKMpath = lib.mkOption {
       type = lib.types.str;
       description = "Path to PKM";
@@ -44,7 +49,7 @@ in
             };
             properties = {
               screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-              tag = if config.myHomeApps.whatsie.enable then " 6 " else " 7 ";
+              tag = " ${builtins.toString cfg.desktopNumber} ";
             };
           }
           {

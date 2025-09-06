@@ -10,6 +10,11 @@ in
 {
   options.myHomeApps.teams = {
     enable = lib.mkEnableOption "teams";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = 9;
+    };
   };
 
   config =
@@ -29,7 +34,7 @@ in
             };
             properties = {
               screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-              tag = if config.myHomeApps.whatsie.enable then " 7 " else " 8 ";
+              tag = " ${builtins.toString cfg.desktopNumber} ";
             };
           }
         ];

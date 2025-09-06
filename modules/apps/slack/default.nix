@@ -16,6 +16,11 @@ in
 {
   options.myHomeApps.slack = {
     enable = lib.mkEnableOption "slack";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = 9;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -35,7 +40,7 @@ in
             };
             properties = {
               screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-              tag = " 4 ";
+              tag = " ${builtins.toString cfg.desktopNumber} ";
             };
           }
         ];
