@@ -55,7 +55,7 @@ in
           elif [ "$region" = "us" ]; then
             BASE_RESTIC_REPO="rest:https://p51to40o.repo.borgbase.com/"
           elif [ "$region" = "local" ]; then
-            BASE_RESTIC_REPO="/mnt/local/deedee/"
+            BASE_RESTIC_REPO="/tank/backups/"
           else
             usage
           fi
