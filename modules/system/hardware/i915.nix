@@ -28,7 +28,11 @@ in
 
     environment = {
       sessionVariables = libvaConfig;
-      systemPackages = [ pkgs.intel-gpu-tools ];
+      systemPackages = [
+        pkgs.intel-gpu-tools
+        pkgs.libva
+        pkgs.libva-utils
+      ];
     };
 
     home-manager.users."${config.mySystem.primaryUser}".home.sessionVariables = libvaConfig;

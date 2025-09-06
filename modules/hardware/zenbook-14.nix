@@ -21,7 +21,10 @@ in
       ];
       kernelModules = [ ];
     };
-    kernelModules = [ "kvm-amd" ];
+    kernelModules = [
+      "amdgpu"
+      "kvm-amd"
+    ];
     kernelParams = lib.optionals config.mySystem.vmPassthrough [
       "amd_iommu=on"
       "iommu=pt"
