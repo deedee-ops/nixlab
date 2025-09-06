@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   ...
@@ -28,6 +29,8 @@ in
       enable = true;
       user = "ollama";
       group = "ollama";
+
+      package = inputs.nixpkgs-stable.legacyPackages.x86_64-linux.ollama;
     }
     // lib.optionalAttrs cfg.exposePort {
       host = "0.0.0.0";
