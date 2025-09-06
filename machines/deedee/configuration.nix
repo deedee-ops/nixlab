@@ -28,6 +28,8 @@ rec {
     };
   };
 
+  myHardware.i915.enable = true;
+
   mySystem = {
     recoveryMode = false;
     purpose = "Homelab";
