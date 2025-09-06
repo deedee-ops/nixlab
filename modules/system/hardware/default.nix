@@ -5,7 +5,7 @@ _: {
     ./i915.nix
     ./nvidia.nix
     ./openrgb.nix
-    ./rocm.nix
+    ./radeon.nix
     ./sound.nix
   ];
 }

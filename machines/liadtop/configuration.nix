@@ -34,6 +34,7 @@ rec {
       };
     };
     bluetooth.enable = true;
+    radeon.enable = true;
     sound.enable = true;
   };
 
