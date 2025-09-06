@@ -31,6 +31,11 @@ in
 {
   options.myHomeApps.planify = {
     enable = lib.mkEnableOption "planify";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = if config.myHomeApps.awesome.singleScreen then 6 else 1;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -50,7 +55,7 @@ in
           };
           properties = {
             screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-            tag = if config.myHomeApps.awesome.singleScreen then " 4 " else " 1 ";
+            tag = " ${builtins.toString cfg.desktopNumber} ";
           };
         }
       ];

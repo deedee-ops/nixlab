@@ -16,6 +16,11 @@ in
 {
   options.myHomeApps.whatsie = {
     enable = lib.mkEnableOption "whatsie";
+    desktopNumber = lib.mkOption {
+      type = lib.types.int;
+      description = "Virtual desktop number.";
+      default = 0;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -34,7 +39,7 @@ in
           };
           properties = {
             screen = if config.myHomeApps.awesome.singleScreen then 1 else 2;
-            tag = " 9 ";
+            tag = " ${builtins.toString cfg.desktopNumber} ";
           };
         }
       ];
