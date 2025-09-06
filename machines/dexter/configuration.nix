@@ -272,6 +272,7 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.rzegocki.dev";
     };
+    whatsapp.enable = true;
     xorg = {
       autorandr = {
         profile = {
