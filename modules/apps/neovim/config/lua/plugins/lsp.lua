@@ -118,7 +118,6 @@ return {
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "williamboman/mason.nvim" },
-    event = "VeryLazy",
     config = function()
       require("mason-tool-installer").setup({
         ensure_installed = {
@@ -144,6 +143,7 @@ return {
         },
         run_on_start = true,
         auto_update = true,
+        start_delay = 5000,
       })
     end,
   },
