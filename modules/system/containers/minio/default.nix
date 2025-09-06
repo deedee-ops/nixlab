@@ -160,7 +160,6 @@ in
               fi
               sleep 1
             done
-
           ''
           + (lib.concatStringsSep "\n" (
             builtins.map (
@@ -211,6 +210,9 @@ in
               ''
             ) cfg.buckets
           ))
+          + ''
+            exit 0
+          ''
         );
       };
 
