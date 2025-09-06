@@ -53,6 +53,7 @@ _: {
     ./ticktick
     ./todoist
     ./ulauncher
+    ./whatsapp
     ./whatsie
     ./workrave
     ./yazi
