@@ -78,13 +78,19 @@ in
         };
       };
 
-      fonts.fontconfig.localConf = ''
-        <?xml version="1.0"?>
-        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
-        <fontconfig>
-          <dir>${sddm-astronaut}/share/sddm/themes/sddm-astronaut-theme/Fonts</dir>
-        </fontconfig>
-      '';
+      fonts = {
+        fontconfig.localConf = ''
+          <?xml version="1.0"?>
+          <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+          <fontconfig>
+            <dir>${sddm-astronaut}/share/sddm/themes/sddm-astronaut-theme/Fonts</dir>
+          </fontconfig>
+        '';
+        packages = [
+          pkgs.corefonts
+          pkgs.vista-fonts
+        ];
+      };
 
       # allow members of video group to adjust backlights
       services.udev.extraRules = ''
@@ -109,6 +115,11 @@ in
           pkgs.dconf
         ];
       };
+
+      mySystem.allowUnfree = [
+        "corefonts"
+        "vista-fonts"
+      ];
 
       programs.i3lock.enable =
         config.home-manager.users."${config.mySystem.primaryUser}".services.betterlockscreen.enable; # fixes various issues like PAM
