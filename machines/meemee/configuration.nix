@@ -14,7 +14,7 @@ _: rec {
   myHardware = {
     nvidia = {
       enable = true;
-      useOpenDrivers = false; # TODO: enable back, after replacing 1050Ti with new GPU
+      useOpenDrivers = true;
       forceCompileCUDA = true;
     };
   };

@@ -54,12 +54,13 @@ in
       target,
       nixosConfig,
       sshUser ? "root",
+      remoteBuild ? false,
     }:
     {
       hostname = target;
       interactiveSudo = true;
       profiles.system = {
-        inherit sshUser;
+        inherit sshUser remoteBuild;
 
         user = "root";
         path = inputs.deploy-rs.lib.${system}.activate.nixos nixosConfig;

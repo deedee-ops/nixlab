@@ -15,7 +15,12 @@ in
       description = "List of models to download on start.";
       default = [ ];
     };
-    enableCUDA = lib.mkEnableOption "NVIDIA CUDA";
+    enableCUDA = lib.mkEnableOption "NVIDIA CUDA" // {
+      default = config.myHardware.nvidia.enable && config.myHardware.nvidia.forceCompileCUDA;
+    };
+    enableROCM = lib.mkEnableOption "AMD ROCM" // {
+      default = config.myHardware.radeon.enable && config.myHardware.radeon.forceCompileROCM;
+    };
     exposePort = lib.mkOption {
       type = lib.types.bool;
       description = "Expose ollama port, to be available outside of the machine.";
@@ -24,6 +29,13 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !(cfg.enableCUDA && cfg.enableROCM);
+        message = "CUDA and ROCM cannot be enabled at the same time.";
+      }
+    ];
+
     services.ollama = {
       inherit (cfg) loadModels;
       enable = true;
@@ -37,6 +49,9 @@ in
     }
     // lib.optionalAttrs cfg.enableCUDA {
       acceleration = "cuda";
+    }
+    // lib.optionalAttrs cfg.enableROCM {
+      acceleration = "rocm";
     };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
