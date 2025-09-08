@@ -27,16 +27,18 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.photon = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/rtuszik/photon-docker:0.7.2@sha256:6cf6d57e1d85766cc2ef79bac16b039e3bde6e0888af9d0e32ff023db7588391";
+        image = "ghcr.io/rtuszik/photon-docker:1.0.0@sha256:c6c8bdda89baddb2f39a01fcac9df4ddfb6758b7bc181d0d30a4b0531860d029";
         environment = {
           UPDATE_STRATEGY = "PARALLEL";
           UPDATE_INTERVAL = "30d";
         };
-        volumes = [ "${cfg.geodataPath}:/photon/photon_data" ];
+        volumes = [ "${cfg.geodataPath}:/photon/data" ];
         extraOptions = [
           "--cap-add=CAP_CHOWN"
-          "--cap-add=CAP_FOWNER"
           "--cap-add=CAP_DAC_OVERRIDE"
+          "--cap-add=CAP_FOWNER"
+          "--cap-add=CAP_SETGID"
+          "--cap-add=CAP_SETUID"
         ];
       };
       opts = {
