@@ -16,6 +16,7 @@ rec {
       target = "meemee.home.arpa";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.meemee;
+      remoteBuild = true;
     };
   };
 }
