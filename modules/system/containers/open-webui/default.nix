@@ -48,7 +48,7 @@ in
 
     virtualisation.oci-containers.containers.open-webui = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/open-webui/open-webui:main@sha256:339d0124e280778148cd763e0e10f9f86a777828196df8b98b210815025c959a";
+        image = "ghcr.io/open-webui/open-webui:main@sha256:2e78a2f9f6f62173ae28d2203f3c9bcdadc614023380ebbe903ea9fab772535e";
         environment = {
           WEBUI_AUTH = "True";
           OLLAMA_BASE_URL = "http://host.docker.internal:${builtins.toString config.services.ollama.port}";
