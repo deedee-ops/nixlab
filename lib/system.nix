@@ -22,6 +22,7 @@ in
         inputs.nix-index-database.nixosModules.nix-index
         inputs.sops-nix.nixosModules.sops
         inputs.stylix.nixosModules.stylix
+        inputs.ucodenix.nixosModules.default
       ],
       hardwareModules ? [ ],
       profileModules ? [ ],

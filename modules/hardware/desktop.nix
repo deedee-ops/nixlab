@@ -15,6 +15,7 @@
     kernelModules = [ "kvm-amd" ];
     kernelParams = [
       "amd_pstate=passive"
+      "microcode.amd_sha_check=off"
     ]
     ++ lib.optionals config.mySystem.vmPassthrough [
       "amd_iommu=on"
@@ -40,6 +41,11 @@
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
+  };
+
+  services.ucodenix = {
+    enable = true;
+    cpuModelId = "00870F10";
   };
 
   myHardware = {
