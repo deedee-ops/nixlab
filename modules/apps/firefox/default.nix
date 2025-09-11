@@ -332,12 +332,14 @@ in
               ]
           )
         )
-        // {
+        // lib.optionalAttrs cfg.whoogleSearch.enable {
           ".mozilla/firefox/default/search.json.mozlz4".enable = lib.mkForce false;
           ".config/mozilla/firefox/default/search.json.mozlz4" = {
             inherit (config.home.file.".mozilla/firefox/default/search.json.mozlz4") source;
             force = true;
           };
+        }
+        // {
           ".config/.mozilla".source = config.lib.file.mkOutOfStoreSymlink "${config.xdg.configHome}/mozilla";
           ".mozilla/native-messaging-hosts".enable = lib.mkForce false;
         };
