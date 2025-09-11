@@ -333,6 +333,23 @@ rec {
       enable = true;
       enableRunner = true;
     };
+    gatus = {
+      enable = true;
+      endpoints = [
+        {
+          name = "unifi";
+          url = "https://unifi.${mySystem.rootDomain}";
+          interval = "30s";
+          conditions = [ "[STATUS] < 300" ];
+          alerts = [
+            {
+              type = "email";
+              enabled = true;
+            }
+          ];
+        }
+      ];
+    };
     gluetun = {
       enable = true;
       externalDomain = "deedee.airdns.org";

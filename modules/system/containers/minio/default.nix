@@ -216,10 +216,17 @@ in
         );
       };
 
-    mySystemApps.homepage = {
-      services.Apps.Minio = svc.mkHomepage "minio" // {
-        description = "S3-compatible storage";
+    mySystemApps = {
+      gatus.vhostsMonitoring.conditionsOverride = {
+        "s3" = [ "[STATUS] == 403" ];
+      };
+
+      homepage = {
+        services.Apps.Minio = svc.mkHomepage "minio" // {
+          description = "S3-compatible storage";
+        };
       };
     };
+
   };
 }

@@ -110,7 +110,7 @@ in
     mySystemApps = {
       gatus.endpoints = [
         {
-          name = "qbittorrent";
+          name = "qbittorrent-vpn";
           url = "tcp://${config.mySystemApps.gluetun.externalDomain}:${builtins.toString config.mySystemApps.gluetun.forwardedPort}";
           interval = "30s";
           conditions = [ "[CONNECTED] == true" ];
