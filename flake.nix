@@ -81,6 +81,9 @@ rec {
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    ucodenix = {
+      url = "github:e-tho/ucodenix";
+    };
   };
 
   outputs =
