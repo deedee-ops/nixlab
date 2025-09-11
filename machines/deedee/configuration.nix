@@ -335,6 +335,7 @@ rec {
     };
     gatus = {
       enable = true;
+      alertEmails = [ "admin@${mySystem.rootDomain}" ];
       endpoints = [
         {
           name = "unifi";

@@ -7,10 +7,76 @@
 }:
 let
   cfg = config.mySystemApps.gatus;
+  secretEnvs = [ "OIDC_SECRET_RAW" ];
+
+  vhostNames = builtins.filter (
+    name:
+    (builtins.match "^[a-z0-9.-]+$" (
+      builtins.toString (builtins.getAttr name config.services.nginx.virtualHosts).serverName
+    )) != null
+  ) (builtins.attrNames config.services.nginx.virtualHosts);
+  endpoints =
+    cfg.endpoints
+    ++ (lib.optionals cfg.vhostsMonitoring.enable (
+      builtins.map (
+        name:
+        let
+          value = builtins.getAttr name config.services.nginx.virtualHosts;
+        in
+        {
+          inherit name;
+
+          url = (if value.addSSL then "https" else "http") + "://${value.serverName}/";
+          interval = "5m";
+          conditions =
+            if (builtins.hasAttr name cfg.vhostsMonitoring.conditionsOverride) then
+              (builtins.getAttr name cfg.vhostsMonitoring.conditionsOverride)
+            else
+              [ "[STATUS] < 300" ];
+          alerts = [
+            {
+              type = "email";
+              enabled = true;
+            }
+          ];
+        }
+      ) vhostNames
+    ));
+
+  configFile = pkgs.writeText "config" (
+    builtins.toJSON {
+      inherit endpoints;
+
+      alerting = {
+        email = {
+          from = config.mySystem.notificationSender;
+          host = "maddy";
+          port = 25;
+          to = builtins.concatStringsSep "," cfg.alertEmails;
+        };
+      };
+
+      security = {
+        oidc = {
+          issuer-url = "https://authelia.${config.mySystem.rootDomain}";
+          redirect-url = "https://gatus.${config.mySystem.rootDomain}/authorization-code/callback";
+          client-id = "gatus";
+          client-secret = "@@OIDC_SECRET_RAW@@";
+          scopes = [ "openid" ];
+        };
+      };
+    }
+  );
+
 in
 {
   options.mySystemApps.gatus = {
     enable = lib.mkEnableOption "gatus container";
+    sopsSecretPrefix = lib.mkOption {
+      type = lib.types.str;
+      description = "Prefix for sops secret, under which all ENVs will be appended.";
+      default = "system/apps/gatus/env";
+    };
     alertEmails = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "List of emails receiving gatus alerts";
@@ -60,63 +126,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets = svc.mkContainerSecretsSops {
+      inherit (cfg) sopsSecretPrefix;
+      inherit secretEnvs;
+
+      containerName = "gatus";
+    };
+
     virtualisation.oci-containers.containers.gatus = svc.mkContainer {
-      cfg =
-        let
-          vhostNames = builtins.filter (
-            name:
-            (builtins.match "^[a-z0-9.-]+$" (
-              builtins.toString (builtins.getAttr name config.services.nginx.virtualHosts).serverName
-            )) != null
-          ) (builtins.attrNames config.services.nginx.virtualHosts);
-          endpoints =
-            cfg.endpoints
-            ++ (lib.optionals cfg.vhostsMonitoring.enable (
-              builtins.map (
-                name:
-                let
-                  value = builtins.getAttr name config.services.nginx.virtualHosts;
-                in
-                {
-                  inherit name;
-
-                  url = (if value.addSSL then "https" else "http") + "://${value.serverName}/";
-                  interval = "30s";
-                  conditions =
-                    if (builtins.hasAttr name cfg.vhostsMonitoring.conditionsOverride) then
-                      (builtins.getAttr name cfg.vhostsMonitoring.conditionsOverride)
-                    else
-                      [ "[STATUS] < 300" ];
-                  alerts = [
-                    {
-                      type = "email";
-                      enabled = true;
-                    }
-                  ];
-                }
-              ) vhostNames
-            ));
-
-          configFile = pkgs.writeText "config" (
-            builtins.toJSON {
-              inherit endpoints;
-
-              alerting = {
-                email = {
-                  from = config.mySystem.notificationSender;
-                  host = "maddy";
-                  port = 25;
-                  to = builtins.concatStringsSep "," cfg.alertEmails;
-                };
-              };
-            }
-          );
-        in
-        {
-          image = "ghcr.io/twin/gatus:v5.23.2@sha256:041514059279f102d8e549a7c7c9f813ae9a0bf505c6d7c37aea9201af0bec3a";
-          user = "65000:65000";
-          volumes = [ "${configFile}:/config/config.yaml" ];
-        };
+      cfg = {
+        image = "ghcr.io/twin/gatus:v5.23.2@sha256:041514059279f102d8e549a7c7c9f813ae9a0bf505c6d7c37aea9201af0bec3a";
+        user = "65000:65000";
+        volumes = [ "/run/gatus/config.yaml:/config/config.yaml" ];
+      };
       opts = {
         # allow monitoring external sources
         allowPublic = true;
@@ -130,17 +152,50 @@ in
       };
     };
 
-    mySystemApps.homepage = {
-      services.Apps.Gatus = svc.mkHomepage "gatus" // {
-        description = "Services monitoring";
-        widget = {
-          type = "gatus";
-          url = "http://gatus:8080";
-          fields = [
-            "up"
-            "down"
-            "uptime"
+    systemd.services.docker-gatus = {
+      preStart = lib.mkAfter ''
+        mkdir -p /run/gatus
+        sed "s,@@OIDC_SECRET_RAW@@,$(cat ${
+          config.sops.secrets."${cfg.sopsSecretPrefix}/OIDC_SECRET_RAW".path
+        }),g" ${configFile} > /run/gatus/config.yaml
+        chown 65000:65000 /run/gatus /run/gatus/config.yaml
+      '';
+    };
+
+    mySystemApps = {
+      authelia.oidcClients = [
+        {
+          client_id = "gatus";
+          client_name = "gatus";
+          client_secret = "$pbkdf2-sha512$310000$JhhXnIo9eKxoiWr6inq0RA$F8RsVYb.CiBdbN7wH5q7tYLOGgx1yYcnz0fGRpPF./ix3BtSFj5P3CYnkI4XdkIyGRkUkQNb7hQhMU461zov4A"; # unencrypted version in SOPS
+          consent_mode = "implicit";
+          public = false;
+          authorization_policy = "two_factor";
+          redirect_uris = [
+            "https://gatus.${config.mySystem.rootDomain}/authorization-code/callback"
           ];
+          scopes = [
+            "openid"
+            "profile"
+            "email"
+          ];
+          userinfo_signed_response_alg = "none";
+          token_endpoint_auth_method = "client_secret_basic";
+        }
+      ];
+
+      homepage = {
+        services.Apps.Gatus = svc.mkHomepage "gatus" // {
+          description = "Services monitoring";
+          widget = {
+            type = "gatus";
+            url = "http://gatus:8080";
+            fields = [
+              "up"
+              "down"
+              "uptime"
+            ];
+          };
         };
       };
     };
