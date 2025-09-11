@@ -16,22 +16,46 @@ in
       description = "List of emails receiving gatus alerts";
       default = [ ];
     };
+    vhostsMonitoring = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "vhosts monitoring" // {
+            default = true;
+          };
+          conditionsOverride = lib.mkOption {
+            type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+            description = "Custom set of conditions for given vhosts.";
+            default = { };
+            example = {
+              "s3" = [ "[STATUS] == 403" ];
+            };
+          };
+        };
+      };
+      default = {
+        enable = true;
+        conditionsOverride = { };
+      };
+    };
+
     endpoints = lib.mkOption {
       type = lib.types.listOf lib.types.attrs;
       description = "List of gatus endpoints";
       default = [ ];
-      example = {
-        name = "redis";
-        url = "tcp://redis:6397";
-        interval = "30s";
-        conditions = [ "[CONNECTED] == true" ];
-        alerts = [
-          {
-            type = "email";
-            enabled = true;
-          }
-        ];
-      };
+      example = [
+        {
+          name = "redis";
+          url = "tcp://redis:6397";
+          interval = "30s";
+          conditions = [ "[CONNECTED] == true" ];
+          alerts = [
+            {
+              type = "email";
+              enabled = true;
+            }
+          ];
+        }
+      ];
     };
   };
 
@@ -39,9 +63,43 @@ in
     virtualisation.oci-containers.containers.gatus = svc.mkContainer {
       cfg =
         let
+          vhostNames = builtins.filter (
+            name:
+            (builtins.match "^[a-z0-9.-]+$" (
+              builtins.toString (builtins.getAttr name config.services.nginx.virtualHosts).serverName
+            )) != null
+          ) (builtins.attrNames config.services.nginx.virtualHosts);
+          endpoints =
+            cfg.endpoints
+            ++ (lib.optionals cfg.vhostsMonitoring.enable (
+              builtins.map (
+                name:
+                let
+                  value = builtins.getAttr name config.services.nginx.virtualHosts;
+                in
+                {
+                  inherit name;
+
+                  url = (if value.addSSL then "https" else "http") + "://${value.serverName}/";
+                  interval = "30s";
+                  conditions =
+                    if (builtins.hasAttr name cfg.vhostsMonitoring.conditionsOverride) then
+                      (builtins.getAttr name cfg.vhostsMonitoring.conditionsOverride)
+                    else
+                      [ "[STATUS] < 300" ];
+                  alerts = [
+                    {
+                      type = "email";
+                      enabled = true;
+                    }
+                  ];
+                }
+              ) vhostNames
+            ));
+
           configFile = pkgs.writeText "config" (
             builtins.toJSON {
-              inherit (cfg) endpoints;
+              inherit endpoints;
 
               alerting = {
                 email = {
