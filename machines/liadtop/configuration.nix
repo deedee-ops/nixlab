@@ -229,10 +229,6 @@ rec {
       enable = true;
       startupPage = "https://www.rzegocki.dev/";
       syncServerUrl = "https://firefoxsync.rzegocki.dev";
-      whoogleSearch = {
-        enable = true;
-        url = "https://whoogle.rzegocki.dev";
-      };
     };
     mpv.enable = true;
     obsidian.enable = true;

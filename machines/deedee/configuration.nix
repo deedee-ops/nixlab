@@ -478,7 +478,6 @@ rec {
     };
     tika.enable = true;
     wakapi.enable = true;
-    whoogle.enable = true;
   };
 
   myHomeApps = {
