@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs-stable,
   ...
 }:
 let
@@ -41,8 +40,6 @@ in
       enable = true;
       user = "ollama";
       group = "ollama";
-
-      package = pkgs-stable.ollama;
     }
     // lib.optionalAttrs cfg.exposePort {
       host = "0.0.0.0";
