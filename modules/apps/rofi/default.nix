@@ -2,10 +2,13 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
   ...
 }:
 let
   cfg = config.myHomeApps.rofi;
+  rbwPkg = pkgs-stable.rbw; # TODO: rbw 1.14.x introduces major regression, wait for fix
+  rofiRbwPkg = pkgs.rofi-rbw.override { rbw = rbwPkg; };
 in
 {
   options.myHomeApps.rofi = {
@@ -68,7 +71,7 @@ in
           pkgs.xdotool
           (pkgs.callPackage ./font.nix { })
         ]
-        ++ lib.optionals (cfg.passwordManager != null) [ pkgs.rofi-rbw ];
+        ++ lib.optionals (cfg.passwordManager != null) [ rofiRbwPkg ];
 
         activation = {
           greenclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -80,7 +83,7 @@ in
       programs = {
         rbw = lib.mkIf (cfg.passwordManager == "bitwarden") {
           enable = true;
-          package = pkgs.rbw;
+          package = rbwPkg;
           settings = {
             inherit (cfg.bitwarden) email base_url;
             lock_timeout = 14400; # 4h
@@ -139,7 +142,7 @@ in
         + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
           awful.key({ RC.vars.modkey, "Shift" }, "p", function()
             awful.util.spawn(
-              "${lib.getExe pkgs.rofi-rbw} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
+              "${lib.getExe rofiRbwPkg} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
                 .. xdg_config_home
                 .. '/rofi/generic/config.rasi" --prompt="󱉼" '
                 .. '--keybindings="Control+b:type:username,Control+c:type:password,Control+t:type:totp"'
