@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  pkgs-stable,
   ...
 }:
 let
@@ -80,7 +81,7 @@ in
       programs = {
         rbw = lib.mkIf (cfg.passwordManager == "bitwarden") {
           enable = true;
-          package = pkgs.rbw;
+          package = pkgs-stable.rbw; # TODO: rbw 1.14.x introduces major regression, wait for fix
           settings = {
             inherit (cfg.bitwarden) email base_url;
             lock_timeout = 14400; # 4h
