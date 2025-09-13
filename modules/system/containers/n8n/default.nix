@@ -67,6 +67,15 @@ in
     lib.mkIf cfg.enable {
       warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for n8n are disabled!") ];
 
+      assertions = [
+        {
+          assertion = builtins.all (
+            integration: config.mySystemApps."${integration}".enable
+          ) cfg.integrations;
+          message = "One of the enabled n8n integrations is not set up.";
+        }
+      ];
+
       sops.secrets = svc.mkContainerSecretsSops {
         inherit (cfg) sopsSecretPrefix;
         inherit secretEnvs;

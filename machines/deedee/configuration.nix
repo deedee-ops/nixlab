@@ -418,11 +418,15 @@ rec {
       enablePatches = false;
       integrations = [
         "paperless-ngx"
+        "stirlingpdf"
         "syncthing"
       ];
       consumeDirs = [
         "banks"
+        "bitwarden"
+        "eol"
         "invoices"
+        "taxes"
       ];
       targetPaths = {
         business = "${dataPath}/private/Memories/Private/Firma";
