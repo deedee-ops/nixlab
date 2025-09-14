@@ -10,12 +10,19 @@ in
 {
   options.mySystemApps.whoogle = {
     enable = lib.mkEnableOption "whoogle container";
+    envFileSopsSecret = lib.mkOption {
+      type = lib.types.str;
+      description = "Sops secret name containing redlib envs.";
+      default = "system/apps/whoogle/envfile";
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    sops.secrets."${cfg.envFileSopsSecret}" = { };
+
     virtualisation.oci-containers.containers.whoogle = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/benbusby/whoogle-search:0.9.3@sha256:101817619c10e91b0775a013de0a66ff50c18e6ad877524730dd31d47c9e28eb";
+        image = "ghcr.io/benbusby/whoogle-search:latest@sha256:e17736eabda073a1924349ba57b359cab9de54c777dc8eb12ac4c45d3421557d";
         # disable tor
         cmd = [
           "/bin/sh"
@@ -35,8 +42,8 @@ in
 
           # https://github.com/benbusby/whoogle-search/issues/1211
           WHOOGLE_USE_CLIENT_USER_AGENT = "0";
-          WHOOGLE_USER_AGENT = "Mozilla/3.0 (compatible; MSIE 3.0; Windows NT 5.0)";
         };
+        environmentFiles = [ config.sops.secrets."${cfg.envFileSopsSecret}".path ];
         extraOptions = [
           "--mount"
           "type=tmpfs,destination=/whoogle/app/static/build,tmpfs-mode=1777"
