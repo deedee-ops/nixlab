@@ -232,6 +232,7 @@ rec {
     redis.enable = true;
 
     # containers
+    airtrail.enable = true;
     atuin.enable = true;
     authelia = {
       enable = true;
