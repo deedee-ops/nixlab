@@ -416,7 +416,7 @@ rec {
     };
     n8n = {
       enable = true;
-      enablePatches = false;
+      enablePatches = true;
       integrations = [
         "paperless-ngx"
         "stirlingpdf"
@@ -432,6 +432,7 @@ rec {
       targetPaths = {
         business = "${dataPath}/private/Memories/Private/Firma";
         banks = "${dataPath}/private/Memories/Private/Banki";
+        externalBackups = "${dataPath}/private/Memories/Syncs";
         flats = "${dataPath}/private/Mieszkania";
       };
     };

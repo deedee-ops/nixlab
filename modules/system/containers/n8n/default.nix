@@ -96,7 +96,6 @@ in
             N8N_RUNNERS_ENABLED = "true";
             WEBHOOK_URL = "https://n8n.${config.mySystem.rootDomain}";
 
-            EXTERNAL_HOOK_FILES = "/home/node/.n8n/hooks.js";
             N8N_FORWARD_AUTH_HEADER = "Remote-Email";
 
             # email
@@ -143,89 +142,35 @@ in
         };
       };
 
-      systemd.services.docker-n8n =
-        let
-          # https://kb.jarylchng.com/i/n8n-and-authelia-bypass-n8n-native-login-page-usin-sNRmS-7j5u1/
-          autheliaHook = pkgs.writeText "hooks.js" ''
-            const { dirname, resolve } = require('path')
-            const Layer = require('router/lib/layer')
-            const { issueCookie } = require(resolve(dirname(require.resolve('n8n')), 'auth/jwt'))
-            const ignoreAuthRegexp = /^\/(assets|healthz|webhook|rest\/oauth2-credential)/
-            module.exports = {
-                n8n: {
-                    ready: [
-                        async function ({ app }, config) {
-                            const { stack } = app.router
-                            const index = stack.findIndex((l) => l.name === 'cookieParser')
-                            stack.splice(index + 1, 0, new Layer('/', {
-                                strict: false,
-                                end: false
-                            }, async (req, res, next) => {
-                                // skip if URL is ignored
-                                if (ignoreAuthRegexp.test(req.url)) return next()
+      systemd.services.docker-n8n = {
+        preStart =
+          let
+            dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
+          in
+          lib.mkAfter (
+            (lib.optionalString cfg.enablePatches ''
+              ${lib.getExe pkgs.bash} "${
+                config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
+              }" ${dockerBin} ${image}
+            '')
+            + ''
+              mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
+              chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
+              chown 1000:1000 ${
+                builtins.concatStringsSep " " (
+                  builtins.map (env: config.sops.secrets."${cfg.sopsSecretPrefix}/${env}".path) secretEnvs
+                )
+              }
+            ''
+            + (builtins.concatStringsSep "\n" (
+              builtins.map (consumeDir: "mkdir -p \"${cfg.dataDir}/consume/${consumeDir}\"") cfg.consumeDirs
+            ))
+            + ''
 
-                                // skip if user management is not set up yet
-                                if (!config.get('userManagement.isInstanceOwnerSetUp', false)) return next()
-
-                                // skip if cookie already exists
-                                if (req.cookies?.['n8n-auth']) return next()
-
-                                // if N8N_FORWARD_AUTH_HEADER is not set, skip
-                                if (!process.env.N8N_FORWARD_AUTH_HEADER) return next()
-
-                                // if N8N_FORWARD_AUTH_HEADER header is not found, skip
-                                const email = req.headers[process.env.N8N_FORWARD_AUTH_HEADER.toLowerCase()]
-                                if (!email) return next()
-
-                                // search for user with email
-                                const user = await this.dbCollections.User.findOneBy({email})
-                                if (!user) {
-                                    res.statusCode = 401
-                                    res.end(`User ''${email} not found, please have an admin invite the user first.`)
-                                    return
-                                }
-
-                                // issue cookie if all is OK
-                                issueCookie(res, user)
-                                return next()
-                            }))
-                        },
-                    ],
-                },
-            }
-          '';
-        in
-        {
-          preStart =
-            let
-              dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
-            in
-            lib.mkAfter (
-              (lib.optionalString cfg.enablePatches ''
-                ${lib.getExe pkgs.bash} "${
-                  config.sops.secrets."${cfg.sopsSecretPrefix}/N8N_ENTRYPOINT_PATCHES".path
-                }" ${dockerBin} ${image}
-              '')
-              + ''
-                mkdir -p "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
-                chown 1000:1000 "${cfg.dataDir}" "${cfg.dataDir}/n8n" "${cfg.dataDir}/npm" "${cfg.dataDir}/consume"
-                cp ${autheliaHook} "${cfg.dataDir}/n8n/hooks.js"
-                chown 1000:1000 "${cfg.dataDir}/n8n/hooks.js"
-                chown 1000:1000 ${
-                  builtins.concatStringsSep " " (
-                    builtins.map (env: config.sops.secrets."${cfg.sopsSecretPrefix}/${env}".path) secretEnvs
-                  )
-                }
-              ''
-              + (builtins.concatStringsSep "\n" (
-                builtins.map (consumeDir: "mkdir -p \"${cfg.dataDir}/consume/${consumeDir}\"") cfg.consumeDirs
-              ))
-              + ''
-
-                chmod -R a+rwX "${cfg.dataDir}/consume"
-              ''
-            );
-        };
+              chmod -R a+rwX "${cfg.dataDir}/consume"
+            ''
+          );
+      };
 
       environment.persistence."${config.mySystem.impermanence.persistPath}" =
         lib.mkIf config.mySystem.impermanence.enable
@@ -247,6 +192,27 @@ in
       };
 
       mySystemApps = {
+        authelia.oidcClients = [
+          {
+            client_id = "n8n";
+            client_name = "n8n";
+            client_secret = "$pbkdf2-sha512$310000$giYGSLs3qt.IIHfFeR0NIA$rqwQ/1UkgkyNKg4uO0lPZy5hjPKUuPvezgXMlIWxHQEl23RFMcRur7JGdRCHxcotxiBjA2yp6BAwWlpdpKu8IQ"; # unencrypted version in SOPS
+            consent_mode = "implicit";
+            public = false;
+            authorization_policy = "two_factor";
+            redirect_uris = [
+              "https://n8n.${config.mySystem.rootDomain}/rest/sso/oidc/callback"
+            ];
+            scopes = [
+              "openid"
+              "profile"
+              "email"
+            ];
+            userinfo_signed_response_alg = "none";
+            token_endpoint_auth_method = "client_secret_post";
+          }
+        ];
+
         homepage = {
           services.Apps.N8N = svc.mkHomepage "n8n" // {
             description = "Automate everything";
