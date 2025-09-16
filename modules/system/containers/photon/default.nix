@@ -27,7 +27,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.photon = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/rtuszik/photon-docker:1.0.0@sha256:c6c8bdda89baddb2f39a01fcac9df4ddfb6758b7bc181d0d30a4b0531860d029";
+        image = "ghcr.io/rtuszik/photon-docker:1.0.1@sha256:d01bf1dfce83bd05d7ea05e756192c648bf2bb99b6f1044963b938f5867555b1";
         environment = {
           UPDATE_STRATEGY = "PARALLEL";
           UPDATE_INTERVAL = "30d";
