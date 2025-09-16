@@ -21,7 +21,6 @@ in
     virtualisation.oci-containers.containers.immich-machine-learning = svc.mkContainer {
       cfg = {
         image = "ghcr.io/immich-app/immich-machine-learning:v1.142.0@sha256:5e9cc6b9717e34f3cdc591aa860d6d29c990405ef87ad057ef95f73096ae6f29";
-        user = "65000:65000";
         dependsOn = [ "immich-server" ];
         environment = dockerEnv;
         volumes =
@@ -40,13 +39,11 @@ in
           "type=tmpfs,destination=/tmp,tmpfs-mode=1777"
         ];
       };
-    };
-
-    systemd.services.docker-immich-machine-learning = {
-      preStart = lib.mkAfter ''
-        mkdir -p /var/cache/immich
-        chown 65000:65000 /var/cache/immich
-      '';
+      opts = {
+        # downloading models
+        allowPublic = true;
+        readOnlyRootFilesystem = false;
+      };
     };
   };
 }
