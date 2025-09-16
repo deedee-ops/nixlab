@@ -9,6 +9,7 @@ let
   secretEnvs = [
     "AIRTRAIL__POSTGRES_PASSWORD"
     "DB_URL"
+    "INTEGRATIONS_AERO_DATA_BOX_KEY"
     "OAUTH_CLIENT_SECRET"
   ];
 in
