@@ -52,12 +52,13 @@ in
 
     virtualisation.oci-containers.containers.davis = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/tchapi/davis-standalone:5.1.3@sha256:d11ade7311fc9e47ba43979fa25987216b77920ff30c4f25f9bfe168dc46b0a5";
+        image = "ghcr.io/tchapi/davis-standalone:5.2.0@sha256:fbf979409df57aa39a46201e05b37aca3feb47ea11f18b4e4c6e01d21aae6ea6";
         dependsOn = lib.optionals config.mySystemApps.lldap.enable [ "lldap" ];
         environment = {
           ADMIN_AUTH_BYPASS = if config.mySystemApps.authelia.enable then "true" else "false";
           APP_ENV = "prod";
           APP_TIMEZONE = "${config.mySystem.time.timeZone}";
+          BIRTHDAY_REMINDER_OFFSET = "false";
           CALDAV_ENABLED = if cfg.caldavEnable then "true" else "false";
           CARDDAV_ENABLED = if cfg.carddavEnable then "true" else "false";
           DATABASE_DRIVER = "sqlite";
