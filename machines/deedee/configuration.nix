@@ -357,6 +357,10 @@ rec {
       externalDomain = "deedee.airdns.org";
       forwardedPort = 17307;
     };
+    grist = {
+      enable = true;
+      orgName = "deedee";
+    };
     homepage = {
       enable = true;
       title = "deedee";
@@ -387,30 +391,42 @@ rec {
           backup = true;
           public = true;
           owner = "assets";
+          versioned = false;
         }
         {
           name = "forgejo";
           backup = true;
           public = false;
           owner = "forgejo";
+          versioned = false;
+        }
+        {
+          name = "grist";
+          backup = true;
+          public = false;
+          owner = "grist";
+          versioned = true;
         }
         {
           name = "nix";
           backup = false;
           public = true;
           owner = "nixcache";
+          versioned = false;
         }
         {
           name = "registry";
           backup = false;
           public = false;
           owner = "registry";
+          versioned = false;
         }
         {
           name = "states";
           backup = true;
           public = false;
           owner = "states";
+          versioned = false;
         }
       ];
     };
@@ -418,6 +434,7 @@ rec {
       enable = true;
       enablePatches = true;
       integrations = [
+        "grist"
         "paperless-ngx"
         "stirlingpdf"
         "syncthing"

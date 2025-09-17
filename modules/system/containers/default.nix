@@ -24,6 +24,7 @@ _: {
     ./gatus
     ./gluetun
     ./gose
+    ./grist
     ./home-assistant
     ./homepage
     ./immich

@@ -41,6 +41,11 @@ in
               default = null;
               description = "Owner of the bucket, if not specified - it will default to root user.";
             };
+            versioned = lib.mkOption {
+              type = lib.types.bool;
+              default = false;
+              description = "Enable files versioning.";
+            };
           };
         }
       );
@@ -171,7 +176,7 @@ in
                     exit 0
                   fi
 
-                  mc mb minio/${bucket.name}
+                  mc mb ${if bucket.versioned then "--with-versioning" else ""} minio/${bucket.name}
                 ''
                 + lib.optionalString (bucket.owner != null) ''
                   cat <<EOFPOLICY > /tmp/policy.json

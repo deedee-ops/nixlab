@@ -34,6 +34,7 @@ in
     integrations = lib.mkOption {
       type = lib.types.listOf (
         lib.types.enum [
+          "grist"
           "paperless-ngx"
           "stirlingpdf"
           "syncthing"
