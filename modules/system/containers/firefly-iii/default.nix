@@ -17,6 +17,7 @@ in
 {
   options.mySystemApps.firefly-iii = {
     enable = lib.mkEnableOption "firefly-iii container";
+    enableHomepageWidget = lib.mkEnableOption "firefly-iii homepage widget";
     backup = lib.mkEnableOption "postgresql backup" // {
       default = true;
     };
@@ -139,19 +140,24 @@ in
     };
 
     mySystemApps.homepage = {
-      services.Apps.FireflyIII = svc.mkHomepage "firefly" // {
-        container = "firefly-iii";
-        description = "Personal finance management";
-        widget = {
-          type = "firefly";
-          url = "http://firefly-iii:8080";
-          key = "@@FIREFLYIII_API_KEY@@";
-          fields = [
-            "networth"
-            "budget"
-          ];
+      services.Apps.FireflyIII =
+        svc.mkHomepage "firefly"
+        // {
+          container = "firefly-iii";
+          description = "Personal finance management";
+        }
+        // lib.optionalAttrs cfg.enableHomepageWidget {
+          widget = {
+            type = "firefly";
+            url = "http://firefly-iii:8080";
+            key = "@@FIREFLYIII_API_KEY@@";
+            fields = [
+              "networth"
+              "budget"
+            ];
+          };
+
         };
-      };
       secrets.FIREFLYIII_API_KEY = config.sops.secrets."${cfg.sopsSecretPrefix}/HOMEPAGE_API_KEY".path;
     };
   };
