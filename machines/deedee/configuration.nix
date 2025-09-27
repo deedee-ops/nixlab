@@ -374,6 +374,7 @@ rec {
       };
       subdomain = "deedee";
     };
+    huntarr.enable = true;
     immich = {
       enable = true;
       dataPath = "${mediaPath}/immich";

@@ -27,6 +27,7 @@ _: {
     ./grist
     ./home-assistant
     ./homepage
+    ./huntarr
     ./immich
     ./jellyfin
     ./jupyter
