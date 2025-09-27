@@ -20,6 +20,15 @@ in
     rootless = lib.mkEnableOption "rootless docker" // {
       default = true;
     };
+    ensureMountedFS = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Gives a list of mountpoints, which must be available, before docker starts.";
+      default = [ ];
+      example = [
+        "/tank/data"
+        "/tank/media"
+      ];
+    };
     extraNetworks = lib.mkOption {
       type = lib.types.listOf (
         lib.types.submodule {
@@ -199,22 +208,32 @@ in
       interfaces."docker0".allowedUDPPorts = [ 53 ];
     };
 
-    systemd.services.docker.postStart =
-      let
-        dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
-      in
-      lib.mkAfter (
-        ''
-          ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
-          ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
-        ''
-        + (builtins.concatStringsSep "\n" (
+    systemd.services.docker = {
+      preStart = lib.mkAfter (
+        builtins.concatStringsSep "\n" (
           builtins.map (
-            network:
-            "${dockerBin} network inspect ${network.name} >/dev/null 2>&1 || ${dockerBin} network create ${network.name} --subnet ${network.subnet} --internal"
-          ) cfg.extraNetworks
-        ))
+            path:
+            "while [ ! -d \"${path}\" ] || [ -z \"$(${lib.getExe' pkgs.coreutils-full "ls"} -A \"${path}\")\" ]; do echo \"Waiting for ${path} to be available...\"; sleep 5; done"
+          ) cfg.ensureMountedFS
+        )
       );
+      postStart =
+        let
+          dockerBin = lib.getExe pkgs."${config.virtualisation.oci-containers.backend}";
+        in
+        lib.mkAfter (
+          ''
+            ${dockerBin} network inspect ${cfg.network.private.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.private.name} --subnet ${cfg.network.private.subnet} --internal
+            ${dockerBin} network inspect ${cfg.network.public.name} >/dev/null 2>&1 || ${dockerBin} network create ${cfg.network.public.name} --subnet ${cfg.network.public.subnet}
+          ''
+          + (builtins.concatStringsSep "\n" (
+            builtins.map (
+              network:
+              "${dockerBin} network inspect ${network.name} >/dev/null 2>&1 || ${dockerBin} network create ${network.name} --subnet ${network.subnet} --internal"
+            ) cfg.extraNetworks
+          ))
+        );
+    };
 
     environment.persistence."${config.mySystem.impermanence.persistPath}" =
       lib.mkIf config.mySystem.impermanence.enable

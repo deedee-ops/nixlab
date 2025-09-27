@@ -148,6 +148,11 @@ rec {
       enable = true;
       rootless = false;
       pruneAll = true;
+      ensureMountedFS = [
+        backupsPath
+        dataPath
+        mediaPath
+      ];
     };
 
     github-runners = {
