@@ -27,7 +27,7 @@ let
           inherit name;
 
           url = (if value.addSSL then "https" else "http") + "://${value.serverName}/";
-          interval = "5m";
+          interval = "30s";
           conditions =
             if (builtins.hasAttr name cfg.vhostsMonitoring.conditionsOverride) then
               (builtins.getAttr name cfg.vhostsMonitoring.conditionsOverride)
