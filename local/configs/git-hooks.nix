@@ -55,7 +55,7 @@
               yamllint.enable = true;
 
               actionlint.enable = true;
-              commitizen.enable = false;
+              commitizen.enable = true;
 
               # custom hooks
               gitleaks = {
