@@ -22,13 +22,12 @@ in
       });
 
       settings = {
-        theme = "catppuccin-mocha";
+        theme = "Catppuccin Mocha";
         background-opacity = config.stylix.opacity.terminal;
         font-size = config.stylix.fonts.sizes.terminal;
         font-family = config.stylix.fonts.monospace.name;
-        window-decoration = false;
+        window-decoration = "none";
         gtk-single-instance = true;
-        gtk-adwaita = false;
 
         scrollback-limit = config.myHomeApps.theme.terminalScrollBuffer;
         confirm-close-surface = false;
