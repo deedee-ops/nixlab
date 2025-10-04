@@ -45,6 +45,7 @@ rec {
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
+    disableModules = [ "uvcvideo" ];
 
     alerts = {
       pushover.enable = true;
