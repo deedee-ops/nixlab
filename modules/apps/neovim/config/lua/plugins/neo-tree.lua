@@ -8,6 +8,7 @@ return {
   },
   config = function()
     require("neo-tree").setup({
+      log_level = "info",
       filesystem = {
         filtered_items = {
           visible = true,
