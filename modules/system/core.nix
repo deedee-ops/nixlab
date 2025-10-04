@@ -13,6 +13,13 @@
       default = [ ];
     };
 
+    disableModules = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "Modules to blacklist.";
+      default = [ ];
+      example = [ "uvcvideo" ];
+    };
+
     crossBuildSystems = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "List of systems, which will be enabled for qemu crossbuild on this machine.";
@@ -143,6 +150,8 @@
     boot = {
       kernelModules = config.mySystem.extraModules;
       binfmt.emulatedSystems = config.mySystem.crossBuildSystems;
+
+      blacklistedKernelModules = config.mySystem.disableModules;
     };
 
     # terminfo for terminals I use
