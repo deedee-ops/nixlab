@@ -57,7 +57,7 @@ in
     virtualisation.oci-containers.containers = {
       registry = svc.mkContainer {
         cfg = {
-          image = "public.ecr.aws/docker/library/registry:3.0.0@sha256:491add1c62291ba36613f60a5d61d22a13f23839e69d3c3a25da114da327a7e6";
+          image = "public.ecr.aws/docker/library/registry:3.0.0@sha256:cd92709b4191c5779cd7215ccd695db6c54652e7a62843197e367427efb84d0e";
           user = "65000:65000";
           environment = {
             OTEL_TRACES_EXPORTER = "none";
