@@ -57,7 +57,7 @@ in
 
     virtualisation.oci-containers.containers.gluetun = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/qdm12/gluetun:latest@sha256:978bc313eb67568022d1e2511f97b3ae6c7fdb0f011c34caa74bf611d18d6f1a";
+        image = "ghcr.io/qdm12/gluetun:latest@sha256:a599f0e5ae7df4fa933d2802b0676ce59122383d6e772ac9f01ef414cf5c252f";
         environment = {
           DOT = "off";
           FIREWALL_VPN_INPUT_PORTS = forwardedPort;
