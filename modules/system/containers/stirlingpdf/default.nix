@@ -39,15 +39,17 @@ in
 
     virtualisation.oci-containers.containers.stirlingpdf = svc.mkContainer {
       cfg = {
-        image = "docker.stirlingpdf.com/stirlingtools/stirling-pdf:1.4.0@sha256:e03d391d74aa642fb00ae4d7416d7c9e686c96d124e18dbd4d57575256a85d58";
+        image = "docker.stirlingpdf.com/stirlingtools/stirling-pdf:1.5.0@sha256:bfe2b8dd378c4f3d5fc1d2fc7649a357d0916b3a713022aa70ac3f08d6302cbc";
         user = "65000:65000";
         environment = {
           ALLOW_GOOGLE_VISIBILITY = "false";
-          SYSTEM_ENABLEANALYTICS = "false";
           DISABLE_ADDITIONAL_FEATURES = "true";
-          SYSTEM_DEFAULTLOCALE = "en-US";
           DISABLE_PIXEL = "true";
           LANGS = "en_GB";
+          SYSTEM_DEFAULTLOCALE = "en-US";
+          SYSTEM_ENABLEANALYTICS = "false";
+          SYSTEM_ENABLEPOSTHOG = "false";
+          SYSTEM_ENABLESCARF = "false";
         };
         volumes = [
           "/var/cache/stirlingpdf/training:/usr/share/tessdata"
