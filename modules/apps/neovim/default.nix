@@ -34,6 +34,7 @@ in
         pkgs.statix # mason
         pkgs.unzip # mason
         pkgs.wget # mason
+        pkgs.yamlfmt # mason
         pkgs.yamllint # mason
         pkgs.buf # null-ls
         pkgs.cue # null-ls

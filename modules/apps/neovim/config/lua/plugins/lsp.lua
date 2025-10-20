@@ -16,6 +16,7 @@ return {
           "gopls",
           "helm_ls",
           "jsonls",
+          "jsonnet_ls",
           -- "lua_ls", -- installed by nix
           "nil_ls",
           "yamlls",
@@ -106,11 +107,13 @@ return {
           formatting.golines.with({
             extra_args = { "-m", "160", "-t", "2" },
           }), -- golang
+          formatting.jsonnetfmt, -- jsonnet
           formatting.nixfmt, -- nix
           formatting.prettierd.with({
             extra_filetypes = { "json5" },
           }), -- json
           formatting.stylua, -- lua
+          formatting.yamlfmt, -- yaml
         },
       })
     end,
@@ -132,6 +135,8 @@ return {
           "hadolint",
           "helm-ls",
           "json-lsp",
+          "jsonnet-language-server",
+          "jsonnetfmt",
           -- "lua-language-server", -- installed by nix
           "luacheck",
           "nil",
@@ -139,6 +144,7 @@ return {
           "prettierd",
           "stylua",
           "yaml-language-server",
+          "yamlfmt",
           "yamllint",
         },
         run_on_start = true,
