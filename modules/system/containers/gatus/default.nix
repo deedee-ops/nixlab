@@ -135,7 +135,7 @@ in
 
     virtualisation.oci-containers.containers.gatus = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/twin/gatus:v5.27.2@sha256:fc9deba937f25f21973f3245217a4d8499339bf9b5f20be83ccdcf1789184901";
+        image = "ghcr.io/twin/gatus:v5.28.0@sha256:99d1953e9f48ca7fd7feb4417f88379bfc63d6bb7ee1f87d775e01e905f94fe6";
         user = "65000:65000";
         volumes = [ "/run/gatus/config.yaml:/config/config.yaml" ];
       };
