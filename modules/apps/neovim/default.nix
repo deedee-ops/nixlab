@@ -44,7 +44,9 @@ in
         pkgs.gnumake # telescope-fzf
         pkgs.gcc # tree-sitter
         pkgs.tree-sitter # tree-sitter
-        pkgs.sops # vim-sops
+
+        # sops bash/zsh completions are broken, so disable them
+        (pkgs.sops.overrideAttrs { postInstall = ""; }) # vim-sops
       ];
       activation.init-neovim-state = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         if ! [ -f "${config.xdg.stateHome}/nvim/lazy/state.json" ]; then
