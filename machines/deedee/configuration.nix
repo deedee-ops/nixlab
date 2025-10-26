@@ -144,6 +144,7 @@ rec {
   };
 
   mySystemApps = {
+    ddclient.enable = true;
     docker = {
       enable = true;
       rootless = false;

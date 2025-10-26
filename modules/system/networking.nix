@@ -71,6 +71,11 @@ in
         "149.112.112.10"
       ];
     };
+    nextdnsID = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      default = null;
+      description = "If set, nextdns endpoint with this ID will be used as a resolver, if null - nextdns will be disabled";
+    };
     customNetworking = lib.mkOption {
       type = lib.types.nullOr lib.types.attrs;
       description = "Custom systemd.network config. If not set, DHCP4 on default interface will be configured.";
@@ -132,12 +137,21 @@ in
       };
 
       networkmanager.enable = cfg.wifiSupport;
+    }
+    // lib.optionalAttrs (cfg.nextdnsID != null) {
+      nameservers = [
+        "45.90.28.0#${cfg.nextdnsID}.dns.nextdns.io"
+        "45.90.30.0#${cfg.nextdnsID}.dns.nextdns.io"
+      ];
     };
 
     services = {
       resolved = {
         enable = lib.mkDefault true;
         fallbackDns = cfg.fallbackDNS;
+      }
+      // lib.optionalAttrs (cfg.nextdnsID != null) {
+        dnsovertls = "true";
       };
     };
 
