@@ -1,10 +1,7 @@
 _: {
   myInfra = rec {
     cidrs = {
-      trusted = "10.100.0.0/16";
-      untrusted = "10.200.0.0/16";
-      iot = "10.210.0.0/16";
-      wireguard = "10.250.1.0/24";
+      trusted = "192.168.2.0/24";
     };
 
     devices = {
@@ -15,64 +12,54 @@ _: {
         mac = "00:1b:66:c7:ba:81";
       };
       ps5 = {
-        ip = "10.210.10.11";
-      };
-      slzb06m-top = {
-        ip = "10.210.20.1";
-      };
-      slzb06m-bottom = {
-        ip = "10.210.20.3";
+        ip = "192.168.4.10";
       };
     };
 
     machines = {
       gateway = {
+        # internet gateway
         ip = "192.168.100.1";
         ssh = null;
         host = null;
       };
       unifi = {
-        ip = "10.100.1.1";
+        ip = "192.168.1.1";
         ssh = null;
         host = null;
       };
       nas = {
-        ip = "10.100.10.1";
+        ip = "192.168.42.10";
         ssh = "nas.home.arpa:51008";
         host = "nas.home.arpa";
       };
       deedee = {
-        ip = "10.100.20.1";
+        ip = "192.168.2.100";
         ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
-      dexter = {
-        ip = "10.100.40.3";
-        ssh = "dexter.home.arpa:22";
-        host = "dexter.home.arpa";
-      };
-      leelee = {
-        ip = "10.100.30.3";
-        ssh = "leelee.home.arpa:22";
-        host = "leelee.home.arpa";
-      };
       kvm-deedee = {
-        ip = "10.100.20.3";
+        ip = "192.168.2.101";
         ssh = null;
         host = null;
       };
+      dexter = {
+        ip = "192.168.2.200";
+        ssh = "dexter.home.arpa:22";
+        host = "dexter.home.arpa";
+      };
       work = {
-        ip = "10.100.30.1";
+        ip = "192.168.2.210";
         ssh = null;
         host = null;
       };
       windows = {
-        ip = "10.100.30.2";
+        ip = "192.168.2.211";
         ssh = null;
         host = "windows.home.arpa";
       };
       azeroth = {
-        ip = "10.100.30.3";
+        ip = "192.168.2.212";
         ssh = null;
         host = "azeroth.home.arpa";
       };
