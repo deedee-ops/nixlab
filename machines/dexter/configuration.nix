@@ -98,6 +98,7 @@ rec {
       firewallEnable = true;
       completelyDisableIPV6 = true;
       hostname = "dexter";
+      nextdnsID = "1ff226";
       mainInterface = {
         name = "enp100s0";
         bridge = true;
