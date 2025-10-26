@@ -149,11 +149,15 @@ rec {
     aichat.enable = true;
     git = {
       appendOptions = {
-        userName = "Igor Rzegocki";
-        userEmail = "igor@rzegocki.pl";
-        signing = {
-          key = "igor@rzegocki.pl";
-          signByDefault = true;
+        settings = {
+          user = {
+            name = "Igor Rzegocki";
+            email = "igor@rzegocki.pl";
+          };
+          signing = {
+            key = "igor@rzegocki.pl";
+            signByDefault = true;
+          };
         };
       };
     };

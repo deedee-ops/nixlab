@@ -500,7 +500,7 @@ rec {
     tailscale = {
       enable = true;
       autoProvision = true; # see option description in tailscale.nix
-      advertiseRoutes = [ "10.100.0.0/16" ];
+      advertiseRoutes = [ config.myInfra.cidrs.trusted ];
     };
     tika.enable = true;
     wakapi.enable = true;

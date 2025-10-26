@@ -19,32 +19,92 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    programs.git = lib.attrsets.recursiveUpdate {
-      enable = true;
-      lfs.enable = true;
+    programs = {
+      git = lib.attrsets.recursiveUpdate {
+        enable = true;
+        lfs.enable = true;
 
-      aliases = {
-        pf = "push --force-with-lease --force-if-includes";
-        tags = "tag -l";
-        branches = "branch -a";
-        remotes = "remote -v";
-        reb = "!r() { git rebase -i HEAD~$1; }; r";
-        ci = "commit";
-        cins = "commit --no-gpg-sign";
-        co = "checkout";
-        st = "status";
-        br = "branch";
-        sh = "show --stat --oneline";
-        lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
-        ls = "log --show-signature";
-        lf = "log --pretty=fuller";
-        sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && while test -f .git/rebase-merge/interactive; do git commit --amend -S --no-edit && git rebase --continue; done' -";
-        wip = "!git add -A && git commit -m \"WIP\" -an --no-gpg-sign";
-        amend = "commit --amend -a --no-edit";
-      };
+        settings = {
+          alias = {
+            pf = "push --force-with-lease --force-if-includes";
+            tags = "tag -l";
+            branches = "branch -a";
+            remotes = "remote -v";
+            reb = "!r() { git rebase -i HEAD~$1; }; r";
+            ci = "commit";
+            cins = "commit --no-gpg-sign";
+            co = "checkout";
+            st = "status";
+            br = "branch";
+            sh = "show --stat --oneline";
+            lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+            ls = "log --show-signature";
+            lf = "log --pretty=fuller";
+            sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && while test -f .git/rebase-merge/interactive; do git commit --amend -S --no-edit && git rebase --continue; done' -";
+            wip = "!git add -A && git commit -m \"WIP\" -an --no-gpg-sign";
+            amend = "commit --amend -a --no-edit";
+          };
+          color = {
+            ui = "auto";
+            branch = {
+              current = "yellow reverse";
+              local = "yellow";
+              remote = "green";
+            };
+            diff = {
+              meta = "yellow bold";
+              frag = "magenta bold";
+              old = "red bold";
+              new = "green bold";
+            };
+            status = {
+              added = "yellow";
+              changed = "green";
+              untracked = "cyan";
+            };
+          };
+          core = {
+            editor = "vim";
+          };
+          init = {
+            defaultBranch = "master";
+          };
+          pull = {
+            rebase = true;
+          };
+          push = {
+            default = "simple";
+            followTags = true;
+          };
+          rerere = {
+            enabled = true;
+          };
+          transfer = {
+            fsckobjects = true;
+          };
+        };
+
+        ignores = [
+          "*.pyc"
+          "*.sublime-workspace"
+          "*.swo"
+          "*.swp"
+          "*~"
+          ".DS_Store"
+          ".Spotlight-V100"
+          ".Trashes"
+          "._*"
+          ".idea"
+          "Desktop.ini"
+          "Thumbs.db"
+          "gems.tags"
+          "tags"
+        ];
+      } cfg.appendOptions;
 
       delta = with config.lib.stylix.colors.withHashtag; {
         enable = true;
+        enableGitIntegration = true;
         options = {
           side-by-side = true;
           line-numbers = true;
@@ -74,68 +134,11 @@ in
         };
       };
 
-      ignores = [
-        "*.pyc"
-        "*.sublime-workspace"
-        "*.swo"
-        "*.swp"
-        "*~"
-        ".DS_Store"
-        ".Spotlight-V100"
-        ".Trashes"
-        "._*"
-        ".idea"
-        "Desktop.ini"
-        "Thumbs.db"
-        "gems.tags"
-        "tags"
-      ];
-
-      extraConfig = {
-        color = {
-          ui = "auto";
-          branch = {
-            current = "yellow reverse";
-            local = "yellow";
-            remote = "green";
-          };
-          diff = {
-            meta = "yellow bold";
-            frag = "magenta bold";
-            old = "red bold";
-            new = "green bold";
-          };
-          status = {
-            added = "yellow";
-            changed = "green";
-            untracked = "cyan";
-          };
-        };
-        core = {
-          editor = "vim";
-        };
-        init = {
-          defaultBranch = "master";
-        };
-        pull = {
-          rebase = true;
-        };
-        push = {
-          default = "simple";
-          followTags = true;
-        };
-        rerere = {
-          enabled = true;
-        };
-        transfer = {
-          fsckobjects = true;
-        };
+      lazygit = {
+        enable = true;
       };
-    } cfg.appendOptions;
+    };
 
     stylix.targets.lazygit.enable = true;
-    programs.lazygit = {
-      enable = true;
-    };
   };
 }
