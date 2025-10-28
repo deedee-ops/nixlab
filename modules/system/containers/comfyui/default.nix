@@ -42,7 +42,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.comfyui = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/ajgon/comfyui:v0.3.66@sha256:59cbaa8b1c0afc80c09358e7b6bb07b2107c0474ad3bf42abfac650ba123d678";
+        image = "ghcr.io/ajgon/comfyui:v0.3.67@sha256:b32b23c9f578ece8455bd536ffe39f8907640e51cba876de3a0885cb7a28e084";
         environment = {
           NVIDIA_VISIBLE_DEVICES = "all";
         };
