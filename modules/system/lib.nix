@@ -22,6 +22,7 @@
         autheliaIgnorePaths ? [ ],
         customCSP ? null,
         allowHTTP ? false,
+        healthcheckEndpoint ? "/",
         extraConfig ? "",
       }:
       let
@@ -30,7 +31,7 @@
           extraConfig
           + ''
 
-            set $host_to_pass ${proxyPass};
+            set $host_to_pass ${proxyPass}; # backend
             proxy_pass $host_to_pass;
 
             proxy_set_header Host $host;
@@ -96,8 +97,7 @@
               proxy_read_timeout 240;
               proxy_send_timeout 240;
               proxy_connect_timeout 240;
-          }
-        '';
+          }'';
         locations = {
           "/" = {
             proxyWebsockets = true;
@@ -115,6 +115,19 @@
                 proxy_set_header Remote-Name $name;
                 auth_request_set $redirection_url $upstream_http_location;
                 error_page 401 =302 $redirection_url;
+              '';
+          };
+        }
+        // lib.optionalAttrs (healthcheckEndpoint != null) {
+          "/monitoring-health" = {
+            extraConfig =
+              (builtins.replaceStrings [ "; # backend" ] [ "${healthcheckEndpoint};" ] baseConfig)
+              + ''
+
+                sub_filter_types *;
+                sub_filter_once off;
+                sub_filter '.*' ''';
+                more_set_headers 'Content-Length: 0';
               '';
           };
         }
