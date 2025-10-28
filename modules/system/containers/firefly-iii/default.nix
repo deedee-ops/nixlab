@@ -114,6 +114,7 @@ in
       nginx.virtualHosts.firefly-iii = svc.mkNginxVHost {
         host = "firefly";
         proxyPass = "http://firefly-iii.docker:8080";
+        healthcheckEndpoint = "/health";
       };
       postgresqlBackup = lib.mkIf cfg.backup { databases = [ "firefly" ]; };
     };

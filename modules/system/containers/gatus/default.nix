@@ -26,7 +26,20 @@ let
         {
           inherit name;
 
-          url = (if value.addSSL then "https" else "http") + "://${value.serverName}/";
+          url =
+            (if value.addSSL then "https" else "http")
+            + "://${value.serverName}/"
+            + (
+              if
+                (
+                  (builtins.elem name (builtins.attrNames config.mySystemApps.nginx.extraRedirects))
+                  || (builtins.elem name (builtins.attrNames config.mySystemApps.nginx.extraVHosts))
+                )
+              then
+                "/"
+              else
+                "monitoring-health"
+            );
           interval = "30s";
           conditions =
             if (builtins.hasAttr name cfg.vhostsMonitoring.conditionsOverride) then
