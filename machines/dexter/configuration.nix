@@ -61,7 +61,7 @@ rec {
       hostId = "afe7d4b1";
       swapSize = "4G";
       systemDiskDevs = [
-        "/dev/disk/by-id/nvme-WD_Blue_SN570_500GB_22319R470205"
+        "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897"
       ];
     };
 
@@ -100,9 +100,9 @@ rec {
       hostname = "dexter";
       nextdnsID = "1ff226";
       mainInterface = {
-        name = "enp100s0";
+        name = "enp89s0";
         bridge = true;
-        bridgeMAC = "02:00:0a:64:28:03";
+        bridgeMAC = "02:00:c0:a8:02:c8";
       };
     };
 
