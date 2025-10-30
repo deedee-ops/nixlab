@@ -60,7 +60,10 @@ rec {
       ];
     };
 
-    grub.enable = true;
+    grub = {
+      enable = true;
+      efiInstallAsRemovable = true;
+    };
 
     impermanence = {
       enable = true;

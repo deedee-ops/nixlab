@@ -16,13 +16,19 @@ in
 {
   options.mySystem.grub = {
     enable = lib.mkEnableOption "grub bootloader";
+    efiInstallAsRemovable = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "If you have issues with grub not being detected by EFI, set this to true.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     boot.loader = {
       systemd-boot.enable = lib.mkForce false;
-      efi.canTouchEfiVariables = true;
+      efi.canTouchEfiVariables = lib.mkForce (!cfg.efiInstallAsRemovable);
       grub = {
+        inherit (cfg) efiInstallAsRemovable;
         enable = true;
         efiSupport = true;
         device = "nodev";
