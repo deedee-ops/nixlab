@@ -197,7 +197,7 @@ rec {
         "*.${mySystem.rootDomain}"
         "*.crypt.${mySystem.rootDomain}"
       ];
-      syncCerts.unifi = "wildcard.${mySystem.rootDomain}";
+      # syncCerts.unifi = "wildcard.${mySystem.rootDomain}";
     };
 
     nfs = {
