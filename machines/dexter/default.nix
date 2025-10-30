@@ -5,7 +5,7 @@ rec {
       osConfig = self.nixosConfigurations.dexter.config;
 
       system = "x86_64-linux";
-      hardwareModules = [ ../../modules/hardware/nuc12.nix ];
+      hardwareModules = [ ../../modules/hardware/ms-01.nix ];
       profileModules = [
         ./configuration.nix
       ];
