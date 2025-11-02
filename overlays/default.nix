@@ -1,4 +1,7 @@
-_: {
+{ inputs, ... }:
+{
+  headplane = inputs.headplane.overlays.default;
+
   nixpkgs-overlays = _final: prev: {
     gdome2 = prev.gdome2.overrideAttrs (oldAttrs: {
       patches = oldAttrs.patches ++ [

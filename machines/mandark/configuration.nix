@@ -22,6 +22,8 @@ rec {
     filesystem = "ext4";
     primaryUser = "ajgon";
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
+    rootDomain = "rzegocki.dev";
+    notificationEmail = "mandark@${mySystem.rootDomain}";
 
     networking.enable = false;
 
@@ -35,21 +37,45 @@ rec {
     };
   };
 
-  mySystemApps =
-    let
-      externalDomain = "relay.rzegocki.dev";
-    in
-    {
-      ddclient = {
-        enable = true;
-        domains = [ externalDomain ];
-      };
-      rustdesk = {
-        enable = true;
-        backup = false;
-        relayHost = externalDomain;
-      };
+  mySystemApps = {
+    ddclient = {
+      enable = true;
+      subdomains = [
+        "headscale"
+        "relay"
+      ];
     };
+
+    headscale = {
+      enable = true;
+      backup = false;
+      nameservers = [
+        "45.90.28.206"
+        "45.90.30.206"
+      ];
+    };
+
+    letsencrypt = {
+      enable = true;
+      useProduction = true;
+      domains = [
+        mySystem.rootDomain
+        "*.${mySystem.rootDomain}"
+      ];
+    };
+
+    nginx = {
+      inherit (mySystem) rootDomain;
+
+      enable = true;
+    };
+
+    rustdesk = {
+      enable = true;
+      backup = false;
+      relayHost = "relay.${mySystem.rootDomain}";
+    };
+  };
 
   myHomeApps = {
     gnupg.enable = false;

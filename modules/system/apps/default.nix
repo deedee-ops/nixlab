@@ -6,6 +6,7 @@ _: {
     ./ddclient
     ./docker
     ./github-runners
+    ./headscale
     ./incus
     ./letsencrypt
     ./llamacpp
