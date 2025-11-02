@@ -9,6 +9,7 @@ keys:
       - &deedee age15j2q7j9nx0eklslk93zstedzkhhm3r6kqfd7pgcesne6c9yeldzqdvm0v8
       - &leelee age1f2dmyxwyn9gy75ccpk27yaax4ce7nu2nua4muwuk2rrtt7nm33yqe9zzrj
       - &meemee age1jvlrjcy0fh4tspzv5z4cxulmhrd5c5htkd8juuxpmn3vnk3xtsdqeggxhg
+      - &mandark age15sf9evgkvx4uzk4mgf43rfree6w68cudw8mt0daljmd55230gaxqjgk6rx
 
 creation_rules:
   - path_regex: local/.*\.sops\.yaml$
@@ -30,6 +31,11 @@ creation_rules:
       - age:
           - *ajgon
           - *meemee
+  - path_regex: mandark/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *mandark
 
   # desktops
   - path_regex: dexter/.*\.sops\.yaml$

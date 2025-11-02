@@ -10,7 +10,7 @@ let
 in
 {
   options.mySystemApps.rustdesk = {
-    enable = lib.mkEnableOption "squid app";
+    enable = lib.mkEnableOption "rustdesk app";
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
@@ -18,19 +18,32 @@ in
       type = lib.types.str;
       description = "Relay Host advertised to the clients.";
     };
+    sopsSecretPrefix = lib.mkOption {
+      type = lib.types.str;
+      description = "Prefix for sops secret, containing public and private key data.";
+      default = "system/apps/rustdesk";
+    };
   };
 
   config = lib.mkIf cfg.enable {
     warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for rustdesk are disabled!") ];
 
-    users = {
-      users.rustdesk = {
-        isSystemUser = true;
+    sops.secrets = {
+      "${cfg.sopsSecretPrefix}/private_key" = {
+        owner = "rustdesk";
         group = "rustdesk";
-        uid = 995;
+        restartUnits = [
+          "rustdesk-signal.service"
+          "rustdesk-relay.service"
+        ];
       };
-      groups.rustdesk = {
-        gid = 994;
+      "${cfg.sopsSecretPrefix}/public_key" = {
+        owner = "rustdesk";
+        group = "rustdesk";
+        restartUnits = [
+          "rustdesk-signal.service"
+          "rustdesk-relay.service"
+        ];
       };
     };
 
@@ -40,8 +53,8 @@ in
 
         enable = true;
         openFirewall = true;
-
       };
+
       restic.backups = lib.mkIf cfg.backup (
         svc.mkRestic {
           name = "rustdesk";
@@ -50,17 +63,31 @@ in
       );
     };
 
+    system.activationScripts = lib.mkIf (!config.mySystem.impermanence.enable) {
+      create-rustdesk-dir = {
+        deps = [ "users" ];
+        text = ''
+          mkdir -p ${dataDir}
+
+          cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/private_key".path} > ${dataDir}/id_ed25519
+          cat ${config.sops.secrets."${cfg.sopsSecretPrefix}/public_key".path} > ${dataDir}/id_ed25519.pub
+
+          chown -R rustdesk:rustdesk ${dataDir}
+          chmod 700 ${dataDir}
+          chmod 400 ${dataDir}/*
+        '';
+      };
+    };
+
     systemd.services = lib.mkIf (!config.mySystem.recoveryMode) {
       rustdesk-signal = {
         serviceConfig = {
           WorkingDirectory = lib.mkForce dataDir;
-          StateDirectory = lib.mkForce "";
         };
       };
       rustdesk-relay = {
         serviceConfig = {
           WorkingDirectory = lib.mkForce dataDir;
-          StateDirectory = lib.mkForce "";
         };
       };
     };

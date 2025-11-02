@@ -11,6 +11,7 @@
     ./dexter
     ./leelee
     ./liadtop
+    ./mandark
   ];
 
   options = {

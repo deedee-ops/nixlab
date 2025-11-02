@@ -45,6 +45,11 @@ in
           };
         };
       };
+      default = {
+        bridge = false;
+        bridgeMAC = null;
+        DNS = null;
+      };
     };
     secondaryInterface = lib.mkOption {
       type = lib.types.nullOr (
