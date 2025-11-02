@@ -361,7 +361,7 @@
       file:
       builtins.fromJSON (
         builtins.readFile (
-          pkgs.runCommandNoCC "converted-yaml.json" { } ''${lib.getExe pkgs.yj} < "${file}" > "$out"''
+          pkgs.runCommand "converted-yaml.json" { } ''${lib.getExe pkgs.yj} < "${file}" > "$out"''
         )
       );
 

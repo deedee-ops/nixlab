@@ -29,7 +29,7 @@ in
       usev4 = "webv4, webv4=https://cloudflare.com/cdn-cgi/trace, webv4-skip='ip='";
       usev6 = "disabled";
       protocol = "cloudflare";
-      zone = "${config.mySystem.rootDomain}";
+      zone = lib.lists.last (builtins.match "(.*\\.|)([^.]+\\.[^.]+)$" (builtins.head cfg.domains));
       extraConfig = "ttl=1";
       username = "token";
       passwordFile = config.sops.secrets."${cfg.cloudflareTokenSopsSecret}".path;
