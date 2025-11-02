@@ -41,7 +41,7 @@ in
       pkgs.libva
       pkgs.libva-utils
       pkgs.libvdpau-va-gl
-      pkgs.vaapiVdpau
+      pkgs.libva-vdpau-driver
     ];
 
     services.xserver.videoDrivers = [ "amdgpu" ];
