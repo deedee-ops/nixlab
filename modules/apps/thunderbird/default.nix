@@ -32,6 +32,11 @@ in
     };
 
     home = {
+      activation = {
+        zsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          run mkdir -p ${config.xdg.configHome}/thunderbird || true
+        '';
+      };
       packages = [
         config.programs.thunderbird.package # for quicklaunch entry
       ];
