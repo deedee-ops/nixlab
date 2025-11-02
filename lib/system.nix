@@ -17,6 +17,7 @@ in
         ../modules/system
 
         inputs.disko.nixosModules.disko
+        inputs.headplane.nixosModules.headplane
         inputs.home-manager.nixosModules.home-manager
         inputs.impermanence.nixosModules.impermanence
         inputs.nix-index-database.nixosModules.nix-index
