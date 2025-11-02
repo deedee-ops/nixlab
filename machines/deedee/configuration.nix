@@ -144,7 +144,10 @@ rec {
   };
 
   mySystemApps = {
-    ddclient.enable = true;
+    ddclient = {
+      enable = true;
+      domains = [ "homelab.${mySystem.rootDomain}" ];
+    };
     docker = {
       enable = true;
       rootless = false;

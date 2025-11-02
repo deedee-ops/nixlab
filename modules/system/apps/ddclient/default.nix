@@ -10,6 +10,10 @@ in
       description = "Sops secret name containing cloudflare token.";
       default = "system/apps/ddclient/cloudflare_token";
     };
+    domains = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of domains assigned to IP of the machine.";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -18,6 +22,8 @@ in
     };
 
     services.ddclient = {
+      inherit (cfg) domains;
+
       enable = true;
       ssl = true;
       usev4 = "webv4, webv4=https://cloudflare.com/cdn-cgi/trace, webv4-skip='ip='";
@@ -25,7 +31,6 @@ in
       protocol = "cloudflare";
       zone = "${config.mySystem.rootDomain}";
       extraConfig = "ttl=1";
-      domains = [ "homelab.${config.mySystem.rootDomain}" ];
       username = "token";
       passwordFile = config.sops.secrets."${cfg.cloudflareTokenSopsSecret}".path;
     };
