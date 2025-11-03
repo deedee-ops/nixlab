@@ -20,7 +20,7 @@ in
 
     virtualisation.oci-containers.containers.immich-machine-learning = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/immich-app/immich-machine-learning:v2.2.1@sha256:590a76bba3d88ccf78b03cde0c0fb8788f7d76ae6caf90ad33a34b5b4cc35f11";
+        image = "ghcr.io/immich-app/immich-machine-learning:v2.2.2@sha256:586360014b2087448a5805e87cc6d6673d7314854fbc3368751114d297ab478c";
         dependsOn = [ "immich-server" ];
         environment = dockerEnv;
         volumes =
