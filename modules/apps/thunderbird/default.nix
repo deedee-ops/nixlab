@@ -33,7 +33,7 @@ in
 
     home = {
       activation = {
-        zsh = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        thunderbird = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           run mkdir -p ${config.xdg.configHome}/thunderbird || true
         '';
       };
