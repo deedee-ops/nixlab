@@ -49,6 +49,7 @@
                 excludes = [
                   ".*\.zsh"
                   ".envrc"
+                  "machines/mandark/nixos-infect"
                 ];
               };
               stylua.enable = true;
