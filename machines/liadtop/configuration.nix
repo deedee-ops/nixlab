@@ -78,7 +78,6 @@ rec {
       firewallEnable = true;
       completelyDisableIPV6 = true;
       hostname = "liadtop";
-      nextdnsID = "1ff226";
       mainInterface = {
         name = "wlp1s0";
         DNS = [
