@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substituters' | jq -r '.[]' | grep -v 'cache.nixos.org'); do
-  s3sub="$(echo "$sub" | sed -E 's@^([^:]+)://([^/]+)/([^?]+)\??(.*)$@s3://\3?endpoint=\2\&scheme=\1\&\4@g')"
+  s3sub="$(echo "$sub" | sed -E 's@^([^:]+)://([^/]+)/([^?]+)\??(.*)$@s3://\3?endpoint=\2\&scheme=\1\&\4\&compression=zstd@g')"
   for machine in $(nix --accept-flake-config flake show --json 2> /dev/null | jq -r '.nixosConfigurations | keys | .[]'); do
     drv=".#nixosConfigurations.$machine.config.system.build.toplevel"
 
