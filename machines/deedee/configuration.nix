@@ -1,8 +1,8 @@
 { config, lib, ... }:
 let
-  backupsPath = "/tank/backups";
-  dataPath = "/tank/data";
-  mediaPath = "/tank/media";
+  backupsPath = "/mnt/tank/backups";
+  mediaPath = "/mnt/tank/media";
+  privatePath = "/mnt/tank/private";
 
   booksPath = "${mediaPath}/books";
   geodataPath = "${mediaPath}/geo";
@@ -114,6 +114,24 @@ rec {
       zfsPool = "rpool";
     };
 
+    mounts = [
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/backups";
+        dest = "/mnt/tank/backups";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/old-media";
+        dest = "/mnt/tank/media";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/private/Dokumenty";
+        dest = "/mnt/tank/private/Dokumenty";
+      }
+    ];
+
     networking = {
       enable = true;
       firewallEnable = true;
@@ -154,7 +172,7 @@ rec {
       pruneAll = true;
       ensureMountedFS = [
         backupsPath
-        dataPath
+        privatePath
         mediaPath
       ];
     };
@@ -262,7 +280,7 @@ rec {
       enable = true;
     };
     borgmatic = {
-      enable = true;
+      enable = false;
       sourceVolumes = [ "/tank" ];
       targetVolumes = [ ];
       cacheDir = "/tank/media/_caches/borgmatic";
@@ -327,9 +345,9 @@ rec {
           path = backupsPath;
           name = "backups";
         };
-        "${dataPath}" = {
-          path = dataPath;
-          name = "data";
+        "${privatePath}" = {
+          path = privatePath;
+          name = "private";
         };
         "${mediaPath}" = {
           path = mediaPath;
@@ -457,10 +475,10 @@ rec {
         "taxes"
       ];
       targetPaths = {
-        business = "${dataPath}/private/Memories/Private/Firma";
-        banks = "${dataPath}/private/Memories/Private/Banki";
-        externalBackups = "${dataPath}/private/Memories/Syncs";
-        flats = "${dataPath}/private/Mieszkania";
+        business = "${privatePath}/Dokumenty/Firma";
+        banks = "${privatePath}/Dokumenty/Banki";
+        externalBackups = "${privatePath}/Dokumenty/tmp-sync";
+        flats = "${privatePath}/Dokumenty/Mieszkania";
       };
     };
     navidrome = {

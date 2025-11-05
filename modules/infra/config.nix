@@ -38,6 +38,11 @@ _: {
         ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
+      meemee = {
+        ip = "192.168.2.10";
+        ssh = "meemee.home.arpa:22";
+        host = "meemee.home.arpa";
+      };
       kvm-deedee = {
         ip = "192.168.2.101";
         ssh = null;
