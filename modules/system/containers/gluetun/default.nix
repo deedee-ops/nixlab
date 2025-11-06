@@ -57,7 +57,7 @@ in
 
     virtualisation.oci-containers.containers.gluetun = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/qdm12/gluetun:latest@sha256:74eeabaec71a3cca40f4eb9d02a9137945a4a3c1da697fc4a92088e625ba784c";
+        image = "ghcr.io/qdm12/gluetun:v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00";
         environment = {
           DOT = "off";
           FIREWALL_VPN_INPUT_PORTS = forwardedPort;
@@ -82,6 +82,10 @@ in
         };
         extraOptions = [
           "--cap-add=CAP_NET_ADMIN"
+          "--cap-add=CAP_CHOWN"
+          "--cap-add=CAP_DAC_OVERRIDE"
+          "--cap-add=CAP_SETGID"
+          "--cap-add=CAP_SETUID"
           "--device=/dev/net/tun"
         ];
       };
