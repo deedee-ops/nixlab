@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, ... }:
 let
   backupsPath = "/mnt/tank/backups";
   mediaPath = "/mnt/tank/media";
@@ -11,9 +11,6 @@ let
   torrentsPath = "${mediaPath}/torrents";
   videoPath = "${mediaPath}/video";
   youtubePath = "${mediaPath}/youtube";
-
-  # CAREFUL! THIS WILL WIPE WHOLE DATA ON TANK ZFS IF SET TO TRUE DURING PROVISION!
-  resetTankDisk = false;
 in
 rec {
   sops = {
@@ -27,8 +24,6 @@ rec {
       "credentials/system/ajgon" = { };
     };
   };
-
-  myHardware.i915.enable = true;
 
   mySystem = {
     recoveryMode = false;
@@ -75,32 +70,11 @@ rec {
       enable = true;
       hostId = "d732cc87";
       swapSize = "4G";
-      systemDiskDevs = [ "/dev/disk/by-id/nvme-WD_Blue_SN570_500GB_22319R490212" ];
+      systemDiskDevs = [ "/dev/vda" ];
       systemDatasets = {
         nix = {
           type = "zfs_fs";
           mountpoint = "/nix";
-        };
-      };
-      tankDiskDevs = lib.optionals resetTankDisk [
-        "/dev/disk/by-id/ata-WD_Blue_SA510_2.5_4TB_24404UD00701"
-      ];
-      tankDatasets = lib.optionalAttrs resetTankDisk {
-        backups = {
-          type = "zfs_fs";
-          options.acltype = "posix";
-        };
-        data = {
-          type = "zfs_fs";
-          options.acltype = "posix";
-        };
-        media = {
-          type = "zfs_fs";
-          options.acltype = "posix";
-        };
-        vms = {
-          type = "zfs_fs";
-          options.mountpoint = "none";
         };
       };
     };
@@ -138,7 +112,7 @@ rec {
       completelyDisableIPV6 = true;
       hostname = "deedee";
       mainInterface = {
-        name = "enp100s0";
+        name = "ens3";
         bridge = true;
         bridgeMAC = "02:00:0a:64:14:01";
       };
@@ -153,11 +127,6 @@ rec {
           "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
         ];
       };
-    };
-
-    zfs.snapshots = {
-      "tank/backups" = { };
-      "tank/data" = { };
     };
   };
 
@@ -193,23 +162,6 @@ rec {
       };
     };
 
-    incus = {
-      enable = true;
-      enableUI = true;
-      initializeBaseNixOSVM = true;
-      defaultStoragePool = {
-        config = {
-          source = "tank/vms";
-        };
-        driver = "zfs";
-      };
-      defaultNIC = {
-        nictype = "bridged";
-        parent = "br0";
-        type = "nic";
-      };
-    };
-
     letsencrypt = {
       enable = true;
       useProduction = true;
@@ -221,29 +173,16 @@ rec {
       # syncCerts.unifi = "wildcard.${mySystem.rootDomain}";
     };
 
-    nfs = {
-      enable = true;
-      exports = ''
-        /tank/backups ${config.myInfra.machines.work.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000) ${config.myInfra.machines.dexter.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=0,anongid=0)
-        /tank/data    ${config.myInfra.machines.dexter.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
-        /tank/media   ${config.myInfra.machines.dexter.ip}/32(insecure,rw,sync,no_subtree_check,all_squash,anonuid=65000,anongid=65000)
-        /tank/data/retro/batocera  ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
-        /tank/data/retro/bios      ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
-        /tank/data/retro/roms      ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
-        /tank/data/retro/saves     ${config.myInfra.cidrs.trusted}(insecure,rw,sync,no_subtree_check,all_squash,anonuid=1000,anongid=65000)
-      '';
-    };
-
     nginx = {
       inherit (mySystem) rootDomain;
 
       enable = true;
-      extraVHosts = {
-        obsidian = {
-          target = "http://minio.docker:9000/assets/obsidian$request_uri";
-          extraConfig = ''rewrite ^(.*)/$ https://obsidian.${mySystem.rootDomain}''$1/index.html break;'';
-        };
-      };
+      # extraVHosts = {
+      #   obsidian = {
+      #     target = "http://minio.docker:9000/assets/obsidian$request_uri";
+      #     extraConfig = ''rewrite ^(.*)/$ https://obsidian.${mySystem.rootDomain}''$1/index.html break;'';
+      #   };
+      # };
       extraRedirects = {
         gw = "http://${config.myInfra.machines.gateway.ip}";
         www = "https://deedee.${mySystem.rootDomain}";
@@ -279,55 +218,13 @@ rec {
       inherit videoPath;
       enable = true;
     };
-    borgmatic = {
-      enable = false;
-      sourceVolumes = [ "/tank" ];
-      targetVolumes = [ ];
-      cacheDir = "/tank/media/_caches/borgmatic";
-      repositories = {
-        legacy = {
-          source_directories = [ "/tank/data/legacy" ];
-          repositories = [
-            {
-              path = "\${BORGMATIC_LEGACY_REPO_BORGBASE_EU}";
-              label = "borgbase-legacy";
-            }
-          ];
-          encryption_passphrase = "\${BORGMATIC_LEGACY_ENCRYPTION_PASSPHRASE}";
-          healthchecks = {
-            ping_url = "\${BORGMATIC_LEGACY_HC_PING_URL}";
-          };
-        };
-        nas = {
-          source_directories = [
-            "/tank/media/music/_Mix"
-            "/tank/data/materials"
-            "/tank/data/private"
-          ];
-          repositories = [
-            {
-              path = "\${BORGMATIC_NAS_REPO_BORGBASE_EU}";
-              label = "borgbase-nas-eu";
-            }
-            {
-              path = "\${BORGMATIC_NAS_REPO_BORGBASE_US}";
-              label = "borgbase-nas-us";
-            }
-          ];
-          encryption_passphrase = "\${BORGMATIC_NAS_ENCRYPTION_PASSPHRASE}";
-          healthchecks = {
-            ping_url = "\${BORGMATIC_NAS_HC_PING_URL}";
-          };
-        };
-      };
-    };
     calibre-web-automated = {
       inherit booksPath;
 
       enable = true;
     };
     coredns.enable = true;
-    crypt.enable = true;
+    # crypt.enable = true; # because registry
     davis = {
       enable = true;
       carddavEnable = true;
@@ -384,10 +281,6 @@ rec {
       externalDomain = "deedee.airdns.org";
       forwardedPort = 17307;
     };
-    grist = {
-      enable = true;
-      orgName = "deedee";
-    };
     homepage = {
       enable = true;
       title = "deedee";
@@ -410,59 +303,11 @@ rec {
     maddy.enable = true;
     mail-archive.enable = true;
     miniflux.enable = true;
-    minio = {
-      enable = true;
-      dataPath = "${mediaPath}/s3";
-      buckets = [
-        {
-          name = "assets";
-          backup = true;
-          public = true;
-          owner = "assets";
-          versioned = false;
-        }
-        {
-          name = "forgejo";
-          backup = true;
-          public = false;
-          owner = "forgejo";
-          versioned = false;
-        }
-        {
-          name = "grist";
-          backup = true;
-          public = false;
-          owner = "grist";
-          versioned = true;
-        }
-        {
-          name = "nix";
-          backup = false;
-          public = true;
-          owner = "nixcache";
-          versioned = false;
-        }
-        {
-          name = "registry";
-          backup = false;
-          public = false;
-          owner = "registry";
-          versioned = false;
-        }
-        {
-          name = "states";
-          backup = true;
-          public = false;
-          owner = "states";
-          versioned = false;
-        }
-      ];
-    };
     n8n = {
       enable = true;
       enablePatches = true;
       integrations = [
-        "grist"
+        # "grist"
         "paperless-ngx"
         "stirlingpdf"
         "syncthing"

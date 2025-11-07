@@ -5,7 +5,7 @@ rec {
       osConfig = self.nixosConfigurations.deedee.config;
 
       system = "x86_64-linux";
-      hardwareModules = [ ../../modules/hardware/nuc12.nix ];
+      hardwareModules = [ ../../modules/hardware/vm-amd.nix ];
       profileModules = [
         ./configuration.nix
       ];
