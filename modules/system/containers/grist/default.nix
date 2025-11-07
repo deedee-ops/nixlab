@@ -49,7 +49,7 @@ in
 
     virtualisation.oci-containers.containers.grist = svc.mkContainer {
       cfg = {
-        image = "gristlabs/grist:1.7.5@sha256:bde50f4639b699cdeeb1ff58c4b7a79caa0e45098a9c8ed422fbb851be80f195";
+        image = "gristlabs/grist:1.7.6@sha256:9a232afd98cdf616a5eb2688abc2ed01b1c036cf2a2bcea2d295c5642943b706";
         dependsOn = lib.optionals config.mySystemApps.minio.enable [ "minio" ];
         environment = {
           APP_HOME_URL = "https://grist.${config.mySystem.rootDomain}";
