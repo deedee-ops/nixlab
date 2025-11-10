@@ -80,17 +80,17 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${config.myInfra.machines.deedee.ip}:/tank/backups";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/backups";
         dest = "/tank/backups";
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.deedee.ip}:/tank/data";
-        dest = "/tank/data";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/private";
+        dest = "/tank/private";
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.deedee.ip}:/tank/media";
+        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/old-media";
         dest = "/tank/media";
         opts = "ro";
       }
