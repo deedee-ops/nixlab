@@ -5,7 +5,6 @@ let
   privatePath = "/mnt/tank/private";
 
   booksPath = "${mediaPath}/books";
-  geodataPath = "${mediaPath}/geo";
   musicPath = "${mediaPath}/music";
   romsPath = "${mediaPath}/retrom";
   torrentsPath = "${mediaPath}/torrents";
@@ -233,7 +232,6 @@ rec {
       webdavDir = "${mediaPath}/webdav";
       webdavDirBackup = false;
     };
-    dawarich.enable = true;
     filebrowser = {
       enable = true;
       subdomain = "nas";
@@ -332,10 +330,6 @@ rec {
     };
     netbox.enable = true;
     paperless-ngx.enable = true;
-    photon = {
-      enable = true;
-      geodataPath = "${geodataPath}/photon";
-    };
     pinchflat = {
       enable = true;
       downloadsPath = youtubePath;
