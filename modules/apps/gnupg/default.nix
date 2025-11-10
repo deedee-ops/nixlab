@@ -28,7 +28,7 @@ in
     };
     pinentryPackage = lib.mkOption {
       type = lib.types.package;
-      default = pkgs.pinentry;
+      default = pkgs.pinentry-tty;
       description = "Pinentry package.";
     };
     publicKeys = lib.mkOption {
