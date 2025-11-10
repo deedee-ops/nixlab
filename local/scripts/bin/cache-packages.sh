@@ -5,6 +5,8 @@ for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substitut
   for machine in $(nix --accept-flake-config flake show --json 2> /dev/null | jq -r '.nixosConfigurations | keys | .[]'); do
     drv=".#nixosConfigurations.$machine.config.system.build.toplevel"
 
+    echo "Building and caching ${machine}..."
+
     nom build --accept-flake-config --fallback --no-link "$drv"
     nix --accept-flake-config store sign --key-file <(echo "${NIXCACHE_PRIVATE_KEY}") --recursive "$drv"
     nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${NIXCACHE_PUBLIC_KEY}"
@@ -12,6 +14,7 @@ for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substitut
   done
 
   drv=".#devShells.x86_64-linux.default"
+  echo "Building and caching devshell..."
   nom build --accept-flake-config --fallback --no-link "$drv"
   nix --accept-flake-config store sign --key-file <(echo "${NIXCACHE_PRIVATE_KEY}") --recursive "$drv"
   nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${NIXCACHE_PUBLIC_KEY}"
