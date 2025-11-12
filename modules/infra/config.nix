@@ -29,8 +29,8 @@ _: {
         host = null;
       };
       nas = {
-        ip = "192.168.42.10";
-        ssh = "nas.home.arpa:51008";
+        ip = "192.168.2.10";
+        ssh = "nas.home.arpa:22";
         host = "nas.home.arpa";
       };
       deedee = {
