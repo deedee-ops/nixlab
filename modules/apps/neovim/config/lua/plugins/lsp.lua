@@ -107,7 +107,7 @@ return {
           formatting.golines.with({
             extra_args = { "-m", "160", "-t", "2" },
           }), -- golang
-          formatting.jsonnetfmt, -- jsonnet
+          -- formatting.jsonnetfmt, -- jsonnet
           formatting.nixfmt, -- nix
           formatting.prettierd.with({
             extra_filetypes = { "json5" },
