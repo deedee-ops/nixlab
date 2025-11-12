@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -184,10 +185,12 @@ rec {
           deedee = {
             forwardAgent = true;
             host = "deedee";
-            hostname = "deedee.home.arpa";
+            hostname = lib.lists.head (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh);
             identitiesOnly = true;
             identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = 22;
+            port = lib.strings.toIntBase10 (
+              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh)
+            );
             user = "ajgon";
           };
           forgejo = {
@@ -202,10 +205,12 @@ rec {
           nas = {
             forwardAgent = false;
             host = "nas";
-            hostname = "nas.home.arpa";
+            hostname = lib.lists.head (lib.strings.splitString ":" config.myInfra.machines.nas.ssh);
             identitiesOnly = true;
             identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = 51008;
+            port = lib.strings.toIntBase10 (
+              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.nas.ssh)
+            );
             user = "ajgon";
           };
 
