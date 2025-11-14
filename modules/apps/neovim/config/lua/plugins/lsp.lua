@@ -19,6 +19,7 @@ return {
           "jsonnet_ls",
           -- "lua_ls", -- installed by nix
           "nil_ls",
+          "tofu_ls",
           "yamlls",
         },
       })
@@ -109,6 +110,7 @@ return {
           }), -- golang
           -- formatting.jsonnetfmt, -- jsonnet
           formatting.nixfmt, -- nix
+          formatting.opentofu_fmt, -- opentofu
           formatting.prettierd.with({
             extra_filetypes = { "json5" },
           }), -- json
@@ -129,6 +131,7 @@ return {
           "bash-language-server",
           "gofumpt",
           "goimports",
+          "golangci-lint",
           "golangci-lint-langserver",
           "golines",
           "gopls",
@@ -143,6 +146,7 @@ return {
           "nixpkgs-fmt",
           "prettierd",
           "stylua",
+          "tofu-ls",
           "yaml-language-server",
           "yamlfmt",
           "yamllint",

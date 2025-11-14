@@ -42,6 +42,7 @@ in
         pkgs.ripgrep # telescope
         pkgs.fd # telescope-filebrowser
         pkgs.gnumake # telescope-fzf
+        pkgs.opentofu # terraform
         pkgs.gcc # tree-sitter
         pkgs.tree-sitter # tree-sitter
 
