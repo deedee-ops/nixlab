@@ -50,8 +50,7 @@ rec {
       enable = true;
       backup = false;
       nameservers = [
-        "45.90.28.206"
-        "45.90.30.206"
+        "192.168.42.1"
       ];
     };
 
