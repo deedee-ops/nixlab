@@ -344,10 +344,10 @@ rec {
       enable = true;
     };
     recyclarr.enable = true;
-    registry = {
-      enable = true;
-      enableUI = true;
-    };
+    # registry = {
+    #   enable = true;
+    #   enableUI = true;
+    # };
     retrom = {
       inherit romsPath;
       enable = true;
