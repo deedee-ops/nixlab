@@ -119,6 +119,7 @@ rec {
         hardware = {
           incus = ./modules/hardware/incus.nix;
           ms-01 = ./modules/hardware/ms-01.nix;
+          vm-amd = ./modules/hardware/vm-amd.nix;
         };
       };
     };
