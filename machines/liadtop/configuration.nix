@@ -47,6 +47,26 @@ rec {
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
     disableModules = [ "uvcvideo" ];
+    trustedRootCertificates = [
+      ''
+        -----BEGIN CERTIFICATE-----
+        MIIClDCCAhqgAwIBAgIUOfIRdHEUj5dZX1nj+QCHnTSx/pMwCgYIKoZIzj0EAwIw
+        eTELMAkGA1UEBhMCUEwxFDASBgNVBAgMC21hbG9wb2xza2llMQ8wDQYDVQQHDAZL
+        cmFrb3cxEDAOBgNVBAoMB2hvbWVsYWIxEDAOBgNVBAMMB1Jvb3QgQ0ExHzAdBgkq
+        hkiG9w0BCQEWEGlnb3JAcnplZ29ja2kucGwwHhcNMjUxMTE3MjAyNDMxWhcNMzUx
+        MTE1MjAyNDMxWjB5MQswCQYDVQQGEwJQTDEUMBIGA1UECAwLbWFsb3BvbHNraWUx
+        DzANBgNVBAcMBktyYWtvdzEQMA4GA1UECgwHaG9tZWxhYjEQMA4GA1UEAwwHUm9v
+        dCBDQTEfMB0GCSqGSIb3DQEJARYQaWdvckByemVnb2NraS5wbDB2MBAGByqGSM49
+        AgEGBSuBBAAiA2IABP8xPh+ljvtqRZqdCegByaeqYe3gAc6kNxo3vEtp+dcwwZz6
+        w+liyGQUfDlResruYE2YZZfWVMjZv+GG1afM3jOFIhPYPBZo2bbBshBcXflfASQ8
+        d4EJSNMqUwC8OxuzsKNjMGEwHQYDVR0OBBYEFO+sxaxJd7J/Dohxd0y/Z6lWYE43
+        MB8GA1UdIwQYMBaAFO+sxaxJd7J/Dohxd0y/Z6lWYE43MA8GA1UdEwEB/wQFMAMB
+        Af8wDgYDVR0PAQH/BAQDAgEGMAoGCCqGSM49BAMCA2gAMGUCMQCetLE7ep2PmTix
+        WsTVZdp4hOxK0ewV+fHBQcV6Ra9rdPW/AAp4kNML1AdKjG+Kh3sCMGW7Oy8yuX4J
+        UiFH8cVR77uVAAP0OfMsKezfDUSIadbDZCJfzkkKwDYrZMQFw1BjqA==
+        -----END CERTIFICATE-----
+      ''
+    ];
 
     alerts = {
       pushover.enable = true;
