@@ -122,6 +122,12 @@
       default = "catppuccin-mocha";
     };
 
+    trustedRootCertificates = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "A list of trusted root certificates in PEM format.";
+      default = [ ];
+    };
+
     wallpaper = lib.mkOption {
       # type = lib.types.nullOr lib.types.path;
       type = lib.types.coercedTo lib.types.package toString lib.types.path;
@@ -159,15 +165,25 @@
       term: pkgs."${term}".terminfo
     ) config.mySystem.supportedTerminals;
 
-    # more file descriptors
-    security.pam.loginLimits = [
-      {
-        domain = "*";
-        item = "nofile";
-        type = "-";
-        value = "4096";
-      }
-    ];
+    security = {
+      # more file descriptors
+      pam.loginLimits = [
+        {
+          domain = "*";
+          item = "nofile";
+          type = "-";
+          value = "4096";
+        }
+      ];
+      pki.certificates = config.mySystem.trustedRootCertificates;
+      sudo = {
+        execWheelOnly = true;
+        extraConfig = lib.mkAfter ''
+          Defaults lecture="never"
+          Defaults env_keep += "HOME PATH XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME TERM TERMINFO ZDOTDIR"
+        '';
+      };
+    };
 
     services.udev.extraRules = config.mySystem.extraUdevRules;
 
@@ -175,14 +191,6 @@
       config.home-manager.users."${config.mySystem.primaryUser}".myHomeApps.openPorts;
     networking.firewall.allowedUDPPorts =
       config.home-manager.users."${config.mySystem.primaryUser}".myHomeApps.openPorts;
-
-    security.sudo = {
-      execWheelOnly = true;
-      extraConfig = lib.mkAfter ''
-        Defaults lecture="never"
-        Defaults env_keep += "HOME PATH XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_STATE_HOME TERM TERMINFO ZDOTDIR"
-      '';
-    };
 
     stylix = rec {
       enable = true;
