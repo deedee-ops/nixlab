@@ -38,6 +38,12 @@ in
       default = [ ];
       example = [ "192.168.0.0/16" ];
     };
+    customServer = lib.mkOption {
+      type = lib.types.nullOr lib.types.str;
+      description = "Custom tailscale server, or null for propertiary one.";
+      example = "headscale.example.com";
+      default = null;
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -58,10 +64,12 @@ in
         authKeyFile = config.sops.secrets."${cfg.authKeySopsSecret}".path;
         extraUpFlags = [
           "--accept-dns=false"
+          "--accept-routes"
         ]
         ++ (lib.optionals (builtins.length cfg.advertiseRoutes > 0) [
           ("--advertise-routes=" + (builtins.concatStringsSep "," cfg.advertiseRoutes))
-        ]);
+        ])
+        ++ [ (lib.optionalString (cfg.customServer != null) "--login-server=https://${cfg.customServer}") ];
 
       };
 
