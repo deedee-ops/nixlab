@@ -38,6 +38,11 @@ _: {
         ssh = "deedee.home.arpa:22";
         host = "deedee.home.arpa";
       };
+      mandark = {
+        ip = "164.92.204.134";
+        ssh = "relay.rzegocki.dev:22";
+        host = "relay.rzegocki.dev";
+      };
       meemee = {
         ip = "192.168.2.10";
         ssh = "meemee.home.arpa:22";

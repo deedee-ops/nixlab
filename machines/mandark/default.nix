@@ -14,8 +14,7 @@ rec {
 
     deploy.nodes.mandark = lib.mkDeployConfig {
       system = "x86_64-linux";
-      # target = "relay.rzegocki.dev";
-      target = "164.92.204.134";
+      target = "relay.rzegocki.dev";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.mandark;
       remoteBuild = false;

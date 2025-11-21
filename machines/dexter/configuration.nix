@@ -227,6 +227,17 @@ rec {
             port = 2222;
             user = "git";
           };
+          mandark = {
+            forwardAgent = true;
+            host = "mandark";
+            hostname = lib.lists.head (lib.strings.splitString ":" config.myInfra.machines.mandark.ssh);
+            identitiesOnly = true;
+            identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
+            port = lib.strings.toIntBase10 (
+              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh)
+            );
+            user = "ajgon";
+          };
           nas = {
             forwardAgent = false;
             host = "nas";

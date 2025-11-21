@@ -23,6 +23,23 @@ in
         "149.112.112.112"
       ];
     };
+    oidc = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          enable = lib.mkEnableOption "OIDC configuration for headplane";
+          clientId = lib.mkOption {
+            type = lib.types.str;
+            description = "Client ID";
+          };
+          issuer = lib.mkOption {
+            type = lib.types.str;
+            description = "Issuer host (without proto part)";
+            example = "auth.example.com";
+          };
+        };
+      };
+      default = { };
+    };
     sopsSecretPrefix = lib.mkOption {
       type = lib.types.str;
       description = "Prefix for sops secret, containing headscale and headplane secrets.";
@@ -93,16 +110,16 @@ in
               };
               proc.enabled = true;
             };
-            # oidc = {
-            #   client_id = "headplane";
-            #   client_secret_path =
-            #     config.sops.secrets."${cfg.sopsSecretPrefix}/headplane/oidc_client_secret".path;
-            #   disable_api_key_login = false;
-            #   headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
-            #   issuer = "https://oidc.example.com";
-            #   redirect_uri = "https://oidc.example.com/admin/oidc/callback";
-            #   token_endpoint_auth_method = "client_secret_basic";
-            # };
+            oidc = lib.optionalAttrs cfg.oidc.enable {
+              client_id = cfg.oidc.clientId;
+              client_secret_path =
+                config.sops.secrets."${cfg.sopsSecretPrefix}/headplane/oidc_client_secret".path;
+              disable_api_key_login = true;
+              headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
+              issuer = "https://${cfg.oidc.issuer}";
+              redirect_uri = "${config.services.headscale.settings.server_url}/admin/oidc/callback";
+              token_endpoint_auth_method = "client_secret_post";
+            };
           };
         };
 
@@ -128,6 +145,7 @@ in
                 proxy_set_header X-Real-IP $remote_addr;
                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
                 proxy_set_header X-Forwarded-Proto $scheme;
+                more_set_headers "Content-Security-Policy: default-src 'self' 'unsafe-eval' 'wasm-unsafe-eval' 'unsafe-inline' data: mediastream: blob: wss: https://*.${config.mySystem.rootDomain} ${lib.optionalString cfg.oidc.enable "https://${cfg.oidc.issuer}"};; object-src 'none';";
               '';
             };
       };
