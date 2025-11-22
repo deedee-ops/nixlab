@@ -21,44 +21,53 @@ concurrency:
 
 jobs:
   lint-build-and-push:
-    runs-on: deedee
+    runs-on: home-ops-runner
+    container: nixos/nix
     steps:
-      - name: Generate Token
-        uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2.2.0
-        id: app-token
-        with:
-          app-id: "${{ secrets.BOT_APP_ID }}"
-          private-key: "${{ secrets.BOT_APP_PRIVATE_KEY }}"
-
-      - name: Checkout
-        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
-        with:
-          token: "${{ steps.app-token.outputs.token }}"
-          persist-credentials: false
-
-      - name: Flake Check
-        run: nix --accept-flake-config flake check --fallback
-
       - name: Build and push to cache
+        run: |-
+          set -e
+
+          nix-channel --update
+          nix-env -iA gnused jq nh nix-output-monitor -f '<nixpkgs>'
+          cat <<EOF | tee -a "$NIX_SSL_CERT_FILE"
+          -----BEGIN CERTIFICATE-----
+          MIIClDCCAhqgAwIBAgIUOfIRdHEUj5dZX1nj+QCHnTSx/pMwCgYIKoZIzj0EAwIw
+          eTELMAkGA1UEBhMCUEwxFDASBgNVBAgMC21hbG9wb2xza2llMQ8wDQYDVQQHDAZL
+          cmFrb3cxEDAOBgNVBAoMB2hvbWVsYWIxEDAOBgNVBAMMB1Jvb3QgQ0ExHzAdBgkq
+          hkiG9w0BCQEWEGlnb3JAcnplZ29ja2kucGwwHhcNMjUxMTE3MjAyNDMxWhcNMzUx
+          MTE1MjAyNDMxWjB5MQswCQYDVQQGEwJQTDEUMBIGA1UECAwLbWFsb3BvbHNraWUx
+          DzANBgNVBAcMBktyYWtvdzEQMA4GA1UECgwHaG9tZWxhYjEQMA4GA1UEAwwHUm9v
+          dCBDQTEfMB0GCSqGSIb3DQEJARYQaWdvckByemVnb2NraS5wbDB2MBAGByqGSM49
+          AgEGBSuBBAAiA2IABP8xPh+ljvtqRZqdCegByaeqYe3gAc6kNxo3vEtp+dcwwZz6
+          w+liyGQUfDlResruYE2YZZfWVMjZv+GG1afM3jOFIhPYPBZo2bbBshBcXflfASQ8
+          d4EJSNMqUwC8OxuzsKNjMGEwHQYDVR0OBBYEFO+sxaxJd7J/Dohxd0y/Z6lWYE43
+          MB8GA1UdIwQYMBaAFO+sxaxJd7J/Dohxd0y/Z6lWYE43MA8GA1UdEwEB/wQFMAMB
+          Af8wDgYDVR0PAQH/BAQDAgEGMAoGCCqGSM49BAMCA2gAMGUCMQCetLE7ep2PmTix
+          WsTVZdp4hOxK0ewV+fHBQcV6Ra9rdPW/AAp4kNML1AdKjG+Kh3sCMGW7Oy8yuX4J
+          UiFH8cVR77uVAAP0OfMsKezfDUSIadbDZCJfzkkKwDYrZMQFw1BjqA==
+          -----END CERTIFICATE-----
+          EOF
+
+          mkdir -p ~/.config/nix
+          cat <<EOF | tee ~/.config/nix/nix.conf
+          builders-use-substitutes = true
+          download-buffer-size = 524288000
+          experimental-features = nix-command flakes
+          substituters = https://s3.ajgon.casa/nix?priority=30 https://cache.nixos.org
+          trusted-public-keys = homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          warn-dirty = false
+          extra-substituters = https://cache.garnix.io https://deploy-rs.cachix.org https://nix-community.cachix.org
+          extra-trusted-public-keys = cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+          EOF
+
+          git clone "https://github.com/$REPO" repo
+          cd repo
+
+          nix --accept-flake-config flake check --fallback
+          nix --accept-flake-config run .#cache-packages
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.NIX_STORE_AWS_ACCESS_KEY_ID }}"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
-
-        run: |
-          for sub in $(nix --accept-flake-config eval --json '.#nixlab.nixConfig.substituters' | jq -r '.[]' | grep -v 'cache.nixos.org'); do
-            s3sub="$(echo "$sub" | sed -E 's@^([^:]+)://([^/]+)/([^?]+)\??(.*)$@s3://\3?endpoint=\2\&scheme=\1\&\4@g')"
-            for machine in $(nix --accept-flake-config flake show --json 2> /dev/null | jq -r '.nixosConfigurations | keys | .[]'); do
-              drv=".#nixosConfigurations.$machine.config.system.build.toplevel"
-
-              nix --accept-flake-config build --fallback --no-link "$drv"
-              nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
-              nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
-              nix --accept-flake-config --refresh copy --to "$s3sub" "$drv"
-            done
-
-            drv=".#devShells.x86_64-linux.default"
-            nix --accept-flake-config build --fallback --no-link "$drv"
-            nix --accept-flake-config store sign --key-file <(echo "${{ secrets.NIX_STORE_PRIVATE_KEY }}") --recursive "$drv"
-            nix --accept-flake-config store verify --sigs-needed 1 --recursive "$drv" --option trusted-public-keys "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
-            nix --accept-flake-config --refresh copy --to "$s3sub" "$drv"
-          done
+          CI: "true"
+          REPO: "${{ github.repository }}"
