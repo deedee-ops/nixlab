@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   lint-build-and-push:
-    runs-on: deedee
+    runs-on: home-ops-runner
     steps:
       - name: Generate Token
         uses: actions/create-github-app-token@7e473efe3cb98aa54f8d4bac15400b15fad77d94 # v2.2.0
