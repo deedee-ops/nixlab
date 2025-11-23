@@ -243,7 +243,7 @@ rec {
 
     atuin = {
       enable = true;
-      syncAddress = "https://atuin.rzegocki.dev";
+      syncAddress = "https://atuin.ajgon.casa";
     };
     awesome = {
       enable = true;
