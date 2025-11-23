@@ -33,11 +33,6 @@ _: {
         ssh = "nas.home.arpa:22";
         host = "nas.home.arpa";
       };
-      deedee = {
-        ip = "192.168.2.100";
-        ssh = "deedee.home.arpa:22";
-        host = "deedee.home.arpa";
-      };
       mandark = {
         ip = "164.92.204.134";
         ssh = "relay.rzegocki.dev:22";
@@ -48,7 +43,7 @@ _: {
         ssh = "meemee.home.arpa:22";
         host = "meemee.home.arpa";
       };
-      kvm-deedee = {
+      kvm = {
         ip = "192.168.2.101";
         ssh = null;
         host = null;

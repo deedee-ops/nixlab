@@ -7,9 +7,8 @@
 }:
 {
   imports = [
-    ./deedee
     ./dexter
-    ./leelee
+    # ./leelee
     ./liadtop
     ./mandark
   ];

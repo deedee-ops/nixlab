@@ -207,17 +207,6 @@ rec {
         ];
         matchBlocks = {
           # private
-          deedee = {
-            forwardAgent = true;
-            host = "deedee";
-            hostname = lib.lists.head (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh);
-            identitiesOnly = true;
-            identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = lib.strings.toIntBase10 (
-              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh)
-            );
-            user = "ajgon";
-          };
           forgejo = {
             forwardAgent = false;
             host = "git.rzegocki.dev";
@@ -234,7 +223,7 @@ rec {
             identitiesOnly = true;
             identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
             port = lib.strings.toIntBase10 (
-              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.deedee.ssh)
+              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.mandark.ssh)
             );
             user = "ajgon";
           };
