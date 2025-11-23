@@ -364,7 +364,7 @@ rec {
       screenHeight = 2160;
     };
     retrom = {
-      enable = true;
+      enable = false;
       server = {
         hostname = "https://retrom-server.rzegocki.dev";
         port = 443;
