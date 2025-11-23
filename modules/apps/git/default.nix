@@ -40,7 +40,7 @@ in
             lg = "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
             ls = "log --show-signature";
             lf = "log --pretty=fuller";
-            sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i $1 && while test -f .git/rebase-merge/interactive; do git commit --amend -S --no-edit && git rebase --continue; done' -";
+            sign-rebase = "!GIT_SEQUENCE_EDITOR='sed -i -re s/^pick/e/' sh -c 'git rebase -i HEAD~$1 && while test -f .git/rebase-merge/interactive; do git commit --amend -S --no-edit -n && git rebase --continue; done' -";
             wip = "!git add -A && git commit -m \"WIP\" -an --no-gpg-sign";
             amend = "commit --amend -a --no-edit";
           };

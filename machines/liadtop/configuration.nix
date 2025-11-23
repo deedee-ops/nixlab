@@ -174,10 +174,10 @@ rec {
             name = "Igor Rzegocki";
             email = "igor@rzegocki.pl";
           };
-          signing = {
-            key = "igor@rzegocki.pl";
-            signByDefault = true;
-          };
+        };
+        signing = {
+          key = "igor@rzegocki.pl";
+          signByDefault = true;
         };
       };
     };
