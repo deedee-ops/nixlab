@@ -10,13 +10,21 @@
       automergeType: "branch",
       matchUpdateTypes: ["minor", "patch", "digest"],
     },
+    // {
+    //   description: "Auto merge patch and digest docker images",
+    //   matchDatasources: ["docker"],
+    //   automerge: true,
+    //   ignoreTests: true,
+    //   automergeType: "branch",
+    //   matchUpdateTypes: ["patch", "digest"],
+    // },
     {
-      description: "Auto merge patch and digest docker images",
+      description: "Auto merge all containers as they won't be used for a while",
       matchDatasources: ["docker"],
       automerge: true,
       ignoreTests: true,
       automergeType: "branch",
-      matchUpdateTypes: ["patch", "digest"],
+      matchUpdateTypes: ["major", "minor", "patch", "digest"],
     },
   ],
 }
