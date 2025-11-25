@@ -192,6 +192,10 @@ rec {
       ];
       rememberPasswordTime = 28800;
     };
+    kubernetes = {
+      enable = true;
+      kubeconfigSopsSecret = "home/apps/kubernetes/kubeconfig";
+    };
     minio-client.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;
