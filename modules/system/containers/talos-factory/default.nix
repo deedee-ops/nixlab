@@ -37,7 +37,7 @@ in
 
     virtualisation.oci-containers.containers.talos-factory = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/siderolabs/image-factory:v0.8.4@sha256:52cf32b5b5a197bfb40f3e2627bda9d24871e0a6aaf2db8fb6a5bd4e7bbc57eb";
+        image = "ghcr.io/siderolabs/image-factory:v0.9.0@sha256:d1d8f8337a0ae6bbb47eead3375d9b376dd4f6d2eed261cd00d2c981b1a30809";
         cmd = [
           "-external-url"
           "https://factory.${config.mySystem.rootDomain}"
