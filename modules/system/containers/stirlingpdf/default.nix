@@ -46,6 +46,7 @@ in
           DISABLE_ADDITIONAL_FEATURES = "true";
           DISABLE_PIXEL = "true";
           LANGS = "en_GB";
+          SHOW_SURVEY = "false";
           SYSTEM_DEFAULTLOCALE = "en-US";
           SYSTEM_ENABLEANALYTICS = "false";
           SYSTEM_ENABLEPOSTHOG = "false";
