@@ -24,8 +24,10 @@
   supportNvidia ? false,
 }:
 let
+  # nix build .#nixlab.retrom
+
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.43";
+  rev = "v0.7.44";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -34,7 +36,7 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-G9FnZJTrNIdPXL1OalmoHu0iF8aotc72AB4DMc/MhwM="; # 1
+    hash = "sha256-VhgSLZjqXBBixWZsZJNksWI6+c3DaZvuY9cx8s9cIYs="; # 1
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
@@ -77,7 +79,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-2IZ+S2wnowQj4EdNCQU3zNSiSPlwwsoG6ahulLY5GwQ="; # 4
+    outputHash = "sha256-R5ql5AH+rrbAgYv4Lf6npfnQhV39lrbvdyh1RHAW9ZM="; # 4
   };
 in
 (makeRustPlatform {
@@ -91,7 +93,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-b6pV25rFwMnQDHuLA+vCwDhMSZROkXfiorAvGgKMfN0="; # 2
+    cargoHash = "sha256-oOMvmXOWVm2F0glGMAsGCdnZYx/ttbXVMEURA2sBqFY="; # 2
 
     # buildType = "debug";
     cargoRoot = "packages/client";
