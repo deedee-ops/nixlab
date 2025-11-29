@@ -22,7 +22,7 @@ concurrency:
 jobs:
   lint-build-and-push:
     runs-on: home-ops-runner
-    container: nixos/nix
+    container: nixos/nix@sha256:0d9c872db1ca2f3eaa4a095baa57ed9b72c09d53a0905a4428813f61f0ea98db
     steps:
       - name: Build and push to cache
         run: |-
@@ -99,10 +99,12 @@ jobs:
           git clone "https://github.com/$REPO" repo
           cd repo
 
-          nix --accept-flake-config flake check --fallback
+          nix --accept-flake-config develop -c pre-commit run -a
           nix --accept-flake-config run .#cache-packages
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.NIX_STORE_AWS_ACCESS_KEY_ID }}"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
           CI: "true"
+          NIXCACHE_PRIVATE_KEY: "${{ secrets.NIX_STORE_PRIVATE_KEY }}"
+          NIXCACHE_PUBLIC_KEY: "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
           REPO: "${{ github.repository }}"
