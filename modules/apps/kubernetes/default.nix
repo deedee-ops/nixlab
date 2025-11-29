@@ -98,6 +98,10 @@ in
           };
         };
       };
+
+      zsh.initContent = lib.mkOrder 1000 ''
+        source <(${lib.getExe pkgs.kubectl} completion zsh)
+      '';
     };
 
     systemd.user.services.init-kubeconfig = lib.optionalAttrs (cfg.kubeconfigSopsSecret != null) (
