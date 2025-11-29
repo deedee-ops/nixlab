@@ -321,7 +321,7 @@ rec {
     todoist.enable = true;
     wakatime = {
       enable = true;
-      wakapi.url = "https://wakapi.rzegocki.dev";
+      wakapi.url = "https://wakapi.ajgon.casa";
     };
     xorg = {
       autorandr = { };
