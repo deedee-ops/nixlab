@@ -36,7 +36,7 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-VhgSLZjqXBBixWZsZJNksWI6+c3DaZvuY9cx8s9cIYs="; # 1
+    hash = "sha256-+fbGSpvKnAfuM8y3Kc/FDqPWn0JtoKJo+zx1BSLfNrQ="; # 1
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
@@ -79,7 +79,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-R5ql5AH+rrbAgYv4Lf6npfnQhV39lrbvdyh1RHAW9ZM="; # 4
+    outputHash = "sha256-F4QCc6F/epY2WYYkAIqTWjQmfrY7gLKfWNCSE+7zhJI="; # 4
   };
 in
 (makeRustPlatform {
@@ -93,7 +93,7 @@ in
       pnpmDeps
       ;
 
-    cargoHash = "sha256-oOMvmXOWVm2F0glGMAsGCdnZYx/ttbXVMEURA2sBqFY="; # 2
+    cargoHash = "sha256-h2Xze7CmvL8eLEWK/kyrDmgGv8itDSPMKYZTfpLY/vA="; # 2
 
     # buildType = "debug";
     cargoRoot = "packages/client";
