@@ -82,7 +82,7 @@ in
 
     virtualisation.oci-containers.containers.sshwifty = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/deedee-ops/sshwifty:0.4.1-beta-release@sha256:77ced430cb0d1d8637d35f8b3d0d9fa1a2f463e9d16652e7a9a8c850a7d891a9";
+        image = "ghcr.io/deedee-ops/sshwifty:0.4.2-beta-release@sha256:e84927956f657e7435e42ca810790435fb64e6b24a1c674b442310d54bd4da75";
         user = "65000:65000";
         volumes =
           svc.mkContainerSecretsVolumes {
