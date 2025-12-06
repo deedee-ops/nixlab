@@ -29,7 +29,7 @@ in
 
     virtualisation.oci-containers.containers.navidrome = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/navidrome/navidrome:0.58.5@sha256:648ebd45c50c58edc7ad9f0cc3b4411a1bece16c81f0b3630a0ab0a739c6d7ec";
+        image = "ghcr.io/navidrome/navidrome:0.59.0@sha256:4edc8a1de3e042f30b78a478325839f4395177eb8201c27543dccc0eba674f23";
         user = "65000:65000";
         environment = {
           ND_BASEURL = "/";
