@@ -29,16 +29,6 @@ jobs:
           set -e
 
           mkdir -p /root/.aws
-          cat <<EOF | tee /root/.aws/credentials
-          [default]
-          aws_access_key_id=${AWS_ACCESS_KEY_ID}
-          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
-          EOF
-
-          cat <<EOF | tee /root/.aws/config
-          [default]
-          region=us-west-2
-          EOF
 
           nix-channel --update
           nix-env -iA gnused jq nh nix-output-monitor -f '<nixpkgs>'
@@ -111,11 +101,16 @@ jobs:
           git clone "https://github.com/$REPO" repo
           cd repo
 
+          export AWS_CA_BUNDLE="${NIX_SSL_CERT_FILE}"
+
           nix --accept-flake-config develop -c pre-commit run -a
           nix --accept-flake-config run .#cache-packages
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.NIX_STORE_AWS_ACCESS_KEY_ID }}"
+          AWS_PROFILE: "default"
+          AWS_REGION: "us-east-1"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
+          AWS_SDK_LOAD_CONFIG: ""
           CI: "true"
           NIXCACHE_PRIVATE_KEY: "${{ secrets.NIX_STORE_PRIVATE_KEY }}"
           NIXCACHE_PUBLIC_KEY: "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
