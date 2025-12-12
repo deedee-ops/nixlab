@@ -246,7 +246,7 @@ in
 
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox.overrideAttrs (a: {
+      package = pkgs.firefox-bin.overrideAttrs (a: {
         buildCommand =
           a.buildCommand
           + (
@@ -370,5 +370,10 @@ in
         "x-scheme-handler/unknown" = "firefox.desktop";
       };
     };
+
+    myHomeApps.allowUnfree = [
+      "firefox-bin"
+      "firefox-bin-unwrapped"
+    ];
   };
 }
