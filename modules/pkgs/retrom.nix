@@ -27,7 +27,7 @@ let
   # nix build .#nixlab.retrom
 
   # renovate: datasource=github-releases depName=JMBeresford/retrom versioning=semver-coerced
-  rev = "v0.7.46";
+  rev = "v0.7.47";
 
   pname = "retrom";
   version = builtins.replaceStrings [ "v" ] [ "" ] rev;
@@ -36,13 +36,13 @@ let
 
     owner = "JMBeresford";
     repo = pname;
-    hash = "sha256-AU71014KmI9OnLezHHa4uXI3+Fb5mhEeuveA84Jz1wg=";
+    hash = "sha256-ul8l+4ik3AyQav1ZPs4ptLRBrFdvsrkglc8h2KMKWoY=";
   };
   pnpmDeps = pnpm_10.fetchDeps {
     inherit pname version src;
 
     fetcherVersion = 2;
-    hash = "sha256-1vY/1mzQpS4uU01irnfB63pL+QyxWJ+9UeWXWIpi9Cw=";
+    hash = "sha256-0LCoj41MMhZjn8BgeMOZO8IkOJjTfi/HvNmlYK/FyJ4=";
   };
 
   # Fixed Output Derivation
@@ -79,7 +79,7 @@ let
 
     outputHashAlgo = "sha256";
     outputHashMode = "recursive";
-    outputHash = "sha256-AxpYH8/oXk154KDgUpFXY1SYPOvyihHTr5e6XapYzUc=";
+    outputHash = "sha256-HGYw9qDos2bYhnFmm31ABaGVLLZa8f3IUf163Y2B7vg=";
   };
 in
 (makeRustPlatform {
