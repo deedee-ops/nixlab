@@ -28,8 +28,17 @@ jobs:
         run: |-
           set -e
 
-          echo -n "${AWS_ACCESS_KEY_ID}" | base64 | base64 | base64
-          exit 1
+          mkdir -p /root/.aws
+          cat <<EOF | tee /root/.aws/credentials
+          [default]
+          aws_access_key_id=${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+          EOF
+
+          cat <<EOF | tee /root/.aws/config
+          [default]
+          region=us-west-2
+          EOF
 
           nix-channel --update
           nix-env -iA gnused jq nh nix-output-monitor -f '<nixpkgs>'
