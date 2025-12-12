@@ -192,9 +192,6 @@ rec {
   };
 
   myHomeApps = {
-    customURLs = {
-      "Income Invoices" = "https://n8n.rzegocki.dev/form/bc1561cd-5b46-41cd-942c-5d0693c27d4e";
-    };
     extraPackages = [
       pkgs.gimp
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {

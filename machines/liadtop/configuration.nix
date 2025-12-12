@@ -43,6 +43,9 @@ rec {
     purpose = "Laptop";
     filesystem = "btrfs";
     primaryUser = "ajgon";
+    primaryUserExtraDirs = [
+      "/mnt"
+    ];
     primaryUserPasswordSopsSecret = "credentials/system/ajgon";
     notificationEmail = "homelab@rzegocki.dev";
     notificationSender = "deedee@rzegocki.dev";
@@ -163,7 +166,6 @@ rec {
       rootless = false;
       pruneAll = false;
     };
-    # plymouth.enable = true;
     tailscale = {
       enable = true;
       backup = false;
@@ -177,6 +179,7 @@ rec {
 
   myHomeApps = {
     extraPackages = [
+      pkgs.gimp
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
         salt = "AhWD78cPGFqrywQGIda9PYMdzQzGzTOHzRvGh2ztqplEGaNHkqKPAeXOwSrN76M1Po3d8aYtygVEiLTIN5fizA";
@@ -184,24 +187,7 @@ rec {
     ];
 
     scripts = {
-      docwatcher = {
-        enable = true;
-        watchDir = "${homeDir}/Sync/docwatcher-costs";
-        rclone = {
-          enable = true;
-          target = "'dropbox:Apps/wfirma.pl/OCR/Do Odczytu'";
-        };
-        mail.enable = false;
-        paperless = {
-          enable = true;
-          consumeDir = "${config.mySystem.impermanence.persistPath}${homeDir}/Sync/paperless-consume";
-        };
-        ssh = {
-          enable = true;
-          host = "nas";
-          targetDir = "/volume3/private/Memories/Private/Firma/%Y/%m/koszty";
-        };
-      };
+      backupverify.enable = true;
       pdfhelpers.enable = true;
     };
 
@@ -236,6 +222,7 @@ rec {
       kubeconfigSopsSecret = "home/apps/kubernetes/kubeconfig";
     };
     minio-client.enable = true;
+    mitmproxy.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;
     ssh = {
@@ -253,6 +240,17 @@ rec {
             identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
             port = 2222;
             user = "git";
+          };
+          mandark = {
+            forwardAgent = true;
+            host = "mandark";
+            hostname = lib.lists.head (lib.strings.splitString ":" config.myInfra.machines.mandark.ssh);
+            identitiesOnly = true;
+            identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
+            port = lib.strings.toIntBase10 (
+              lib.lists.last (lib.strings.splitString ":" config.myInfra.machines.mandark.ssh)
+            );
+            user = "ajgon";
           };
           nas = {
             forwardAgent = false;
@@ -322,6 +320,7 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.ajgon.casa";
     };
+    whatsapp.enable = true;
     xorg = {
       autorandr = { };
       mapRightCtrlToAltGr = true;
