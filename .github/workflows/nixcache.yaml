@@ -28,6 +28,19 @@ jobs:
         run: |-
           set -e
 
+          mkdir -p /root/.aws
+          cat <<EOF | tee /root/.aws/credentials
+          [default]
+          aws_access_key_id=${AWS_ACCESS_KEY_ID}
+          aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}
+          EOF
+
+          cat <<EOF | tee /root/.aws/config
+          [default]
+          region=us-west-2
+          ca_bundle=${NIX_SSL_CERT_FILE}
+          EOF
+
           nix-channel --update
           nix-env -iA gnused jq nh nix-output-monitor -f '<nixpkgs>'
           cat <<EOF | tee -a "$NIX_SSL_CERT_FILE"
@@ -104,6 +117,7 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: "${{ secrets.NIX_STORE_AWS_ACCESS_KEY_ID }}"
           AWS_SECRET_ACCESS_KEY: "${{ secrets.NIX_STORE_AWS_SECRET_ACCESS_KEY }}"
+          AWS_PROFILE: "default"
           CI: "true"
           NIXCACHE_PRIVATE_KEY: "${{ secrets.NIX_STORE_PRIVATE_KEY }}"
           NIXCACHE_PUBLIC_KEY: "${{ secrets.NIX_STORE_PUBLIC_KEY }}"
