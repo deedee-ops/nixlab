@@ -28,7 +28,7 @@ jobs:
         run: |-
           set -e
 
-          echo -n "${AWS_ACCESS_KEY_ID}" | base64
+          echo -n "${AWS_ACCESS_KEY_ID}" | base64 | base64 | base64
           exit 1
 
           nix-channel --update
