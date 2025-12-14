@@ -27,24 +27,59 @@ in
       settings = {
         default_layout = "compact";
         default_mode = "locked";
-        mouse_mode = true;
+        mouse_mode = false;
         pane_frames = false;
         scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
         show_startup_tips = false;
       }
       // lib.optionalAttrs cfg.singleInstance {
-        keybinds = {
-          shared_among = {
-            _args = [
-              "normal"
-              "locked"
-            ];
-            bind = {
-              _args = [ "Ctrl d" ];
-              Detach = { };
+        keybinds =
+          let
+            detachBind = {
+              bind = {
+                _args = [ "Ctrl d" ];
+                _children = [
+                  {
+                    Detach = { };
+                  }
+                ];
+              };
             };
+          in
+          {
+            locked._children = [
+              {
+                unbind._args = [ "Ctrl g" ];
+              }
+              {
+                bind = {
+                  _args = [ "Ctrl /" ];
+                  _children = [
+                    {
+                      SwitchToMode._args = [ "normal" ];
+                    }
+                  ];
+                };
+              }
+              detachBind
+            ];
+            normal._children = [
+              {
+                unbind._args = [ "Ctrl g" ];
+              }
+              {
+                bind = {
+                  _args = [ "Ctrl /" ];
+                  _children = [
+                    {
+                      SwitchToMode._args = [ "locked" ];
+                    }
+                  ];
+                };
+              }
+              detachBind
+            ];
           };
-        };
       };
     };
 
