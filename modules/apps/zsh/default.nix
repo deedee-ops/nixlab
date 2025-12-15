@@ -1,5 +1,6 @@
 {
   config,
+  osConfig,
   lib,
   pkgs,
   ...
@@ -99,6 +100,12 @@ in
         syncstatus = "watch -d grep -e Dirty: -e Writeback: /proc/meminfo";
         pbcopy = "xclip -selection clipboard";
         pbpaste = "xclip -selection clipboard -o";
+        claude = ''${
+          lib.getExe pkgs."${osConfig.virtualisation.oci-containers.backend}"
+        } run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
+        claude-go = ''${
+          lib.getExe pkgs."${osConfig.virtualisation.oci-containers.backend}"
+        } run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
       };
 
       plugins = [
