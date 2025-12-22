@@ -249,11 +249,11 @@ rec {
           # private
           forgejo = {
             forwardAgent = false;
-            host = "git.rzegocki.dev";
-            hostname = "git.rzegocki.dev";
+            host = "git.ajgon.casa";
+            hostname = "git.ajgon.casa";
             identitiesOnly = true;
             identityFile = [ config.sops.secrets."credentials/ssh/private_key".path ];
-            port = 2222;
+            port = 22;
             user = "git";
           };
           mandark = {
