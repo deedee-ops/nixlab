@@ -115,6 +115,7 @@ rec {
     headscale = {
       enable = true;
       backup = false;
+      enableApiKeyLogin = true;
       oidc = {
         enable = true;
         clientId = "8b45ae3e-0b3b-4b9c-a55b-90c89b1a25a4";

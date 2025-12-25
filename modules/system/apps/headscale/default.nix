@@ -23,6 +23,7 @@ in
         "149.112.112.112"
       ];
     };
+    enableApiKeyLogin = lib.mkEnableOption "login by API key";
     oidc = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -114,7 +115,7 @@ in
               client_id = cfg.oidc.clientId;
               client_secret_path =
                 config.sops.secrets."${cfg.sopsSecretPrefix}/headplane/oidc_client_secret".path;
-              disable_api_key_login = true;
+              disable_api_key_login = cfg.oidc.enable && !cfg.enableApiKeyLogin;
               headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
               issuer = "https://${cfg.oidc.issuer}";
               redirect_uri = "${config.services.headscale.settings.server_url}/admin/oidc/callback";
