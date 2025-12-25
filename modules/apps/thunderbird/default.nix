@@ -20,7 +20,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.thunderbird = {
       enable = true;
-      package = pkgs.thunderbird-latest.overrideAttrs (attr: {
+      package = pkgs.thunderbird-bin.overrideAttrs (attr: {
         buildCommand = attr.buildCommand + ''
           wrapProgram "$executablePath" \
             --set 'HOME' '${config.xdg.configHome}'
