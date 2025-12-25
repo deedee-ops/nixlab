@@ -95,7 +95,10 @@ in
   };
 
   config = lib.mkIf (osConfig.mySystemApps.xorg.windowManager == "awesome") {
-    xsession.windowManager.awesome.enable = true;
+    xsession.windowManager.awesome = {
+      enable = true;
+      package = pkgs.awesome-git;
+    };
     myHomeApps = {
       dunst.enable = cfg.useDunst;
     }

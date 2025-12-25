@@ -168,6 +168,7 @@ rec {
     };
     tailscale = {
       enable = true;
+      enableUI = true;
       backup = false;
     };
 

@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   svc,
   ...
 }:
@@ -14,6 +15,7 @@ in
     backup = lib.mkEnableOption "data backup" // {
       default = true;
     };
+    enableUI = lib.mkEnableOption "tailscale client UI";
     autoProvision = lib.mkEnableOption ''
       Auto provision with auth key. To so:
       - login to tailscale
@@ -51,8 +53,34 @@ in
 
     sops.secrets = lib.optionalAttrs cfg.autoProvision { "${cfg.authKeySopsSecret}" = { }; };
 
-    home-manager.users."${config.mySystem.primaryUser}".home.shellAliases = {
-      tailscale-up = "${lib.getExe config.services.tailscale.package} up --accept-routes --operator=${config.mySystem.primaryUser}";
+    home-manager.users."${config.mySystem.primaryUser}" = {
+      home.shellAliases = {
+        tailscale-up = "${lib.getExe config.services.tailscale.package} up --accept-routes --operator=${config.mySystem.primaryUser}";
+      };
+      systemd.user.services.tail-tray = lib.mkIf cfg.enableUI {
+        Unit = {
+          Description = "tail-tray";
+          Requires = [ "tray.target" ];
+          After = [
+            "graphical-session.target"
+            "tray.target"
+          ];
+          PartOf = "graphical-session.target";
+        };
+
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+
+        Service = {
+          ExecStart = lib.getExe pkgs.tail-tray;
+          Environment = [
+            "PATH=${lib.makeBinPath [ config.services.tailscale.package ]}"
+          ];
+          Restart = "on-failure";
+          RestartSec = 3;
+        };
+      };
     };
 
     services = {

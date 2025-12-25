@@ -1,5 +1,6 @@
 { inputs, ... }:
 {
+  awesomewm-git = inputs.awesomewm-git.overlays.default;
   headplane = inputs.headplane.overlays.default;
 
   nixpkgs-overlays = _final: prev: {

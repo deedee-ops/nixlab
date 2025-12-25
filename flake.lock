@@ -1,5 +1,42 @@
 {
   "nodes": {
+    "awesome-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763410122,
+        "narHash": "sha256-dGceJ5cAxDSUPCqXYAZgzEeC9hd7GQMYPex7nCZ8SEg=",
+        "owner": "awesomewm",
+        "repo": "awesome",
+        "rev": "41473c05ed9e85de66ffb805d872f2737c0458b6",
+        "type": "github"
+      },
+      "original": {
+        "owner": "awesomewm",
+        "repo": "awesome",
+        "type": "github"
+      }
+    },
+    "awesomewm-git": {
+      "inputs": {
+        "awesome-src": "awesome-src",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1764604802,
+        "narHash": "sha256-kLtDRu+/jP85/NBso037AwcZHO3b8QKXZ5R4gIjNj9g=",
+        "owner": "Souheab",
+        "repo": "awesomewm-git-nix-flake",
+        "rev": "b49cd47895472a5de5a5a3f1a4c1a1fc099dc905",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Souheab",
+        "repo": "awesomewm-git-nix-flake",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -662,6 +699,7 @@
     },
     "root": {
       "inputs": {
+        "awesomewm-git": "awesomewm-git",
         "deploy-rs": "deploy-rs",
         "disko": "disko",
         "fenix": "fenix",
