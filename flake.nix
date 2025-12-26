@@ -122,6 +122,9 @@ rec {
         retrom = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/retrom.nix) {
           inherit (inputs) fenix;
         };
+        nping = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/nping.nix) {
+          inherit (inputs) fenix;
+        };
         system = ./modules/system;
         hardware = {
           incus = ./modules/hardware/incus.nix;

@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   pkgs,
@@ -67,6 +68,10 @@
         pkgs.nh
         pkgs.pwgen
         pkgs.silver-searcher
+
+        (pkgs.callPackage ../pkgs/nping.nix {
+          inherit (inputs) fenix;
+        })
       ]
       ++ config.myHomeApps.extraPackages;
     } config.myHomeApps.appendHome;
