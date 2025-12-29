@@ -92,6 +92,10 @@ rec {
     ucodenix = {
       url = "github:e-tho/ucodenix";
     };
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

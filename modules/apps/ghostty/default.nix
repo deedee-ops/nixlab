@@ -45,6 +45,10 @@ in
         window-padding-y = 6;
 
         auto-update = "off";
+
+        keybind = [
+          "shift+insert=paste_from_clipboard"
+        ];
       };
     };
   };

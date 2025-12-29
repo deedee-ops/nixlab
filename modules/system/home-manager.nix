@@ -60,6 +60,7 @@ in
           inputs.krewfile.homeManagerModules.krewfile
           inputs.impermanence.nixosModules.home-manager.impermanence
           inputs.sops-nix.homeManagerModules.sops
+          inputs.vicinae.homeManagerModules.default
 
           ../apps
           ../games

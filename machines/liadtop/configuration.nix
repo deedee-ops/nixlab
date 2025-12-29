@@ -311,12 +311,19 @@ rec {
         email = "igor@rzegocki.pl";
         base_url = "https://vault.bitwarden.eu/";
       };
+      features = {
+        launcher = false;
+        clipboard = false;
+        windowSwitcher = false;
+        sshShell = false;
+      };
     };
     syncthing.enable = true;
     teams.enable = true;
     telegram.enable = true;
     thunderbird.enable = true;
     todoist.enable = true;
+    vicinae.enable = true;
     wakatime = {
       enable = true;
       wakapi.url = "https://wakapi.ajgon.casa";

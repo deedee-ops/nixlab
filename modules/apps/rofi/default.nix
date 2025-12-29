@@ -18,6 +18,43 @@ in
       description = "Password manager to integratae with rofi.";
       default = null;
     };
+    features = lib.mkOption {
+      description = "Enable/disable corresponding keybindings for given features.";
+      type = lib.types.submodule {
+        options = {
+          launcher = lib.mkEnableOption "launcher" // {
+            default = true;
+          };
+          windowSwitcher = lib.mkEnableOption "window switcher" // {
+            default = true;
+          };
+          sshShell = lib.mkEnableOption "ssh shell" // {
+            default = true;
+          };
+          clipboard = lib.mkEnableOption "clipboard" // {
+            default = true;
+          };
+          passwordManager = lib.mkEnableOption "password manager" // {
+            default = true;
+          };
+          todoQuickAdd = lib.mkEnableOption "TODO quick add menu" // {
+            default = true;
+          };
+          shutdownMenu = lib.mkEnableOption "shutdown menu" // {
+            default = true;
+          };
+        };
+      };
+      default = {
+        launcher = true;
+        windowSwitcher = true;
+        sshShell = true;
+        clipboard = true;
+        passwordManager = true;
+        todoQuickAdd = true;
+        shutdownMenu = true;
+      };
+    };
     bitwarden = lib.mkOption {
       type = lib.types.submodule {
         options = {
@@ -62,18 +99,31 @@ in
       };
     in
     lib.mkIf cfg.enable {
+      assertions = [
+        {
+          assertion =
+            !config.myHomeApps.rofi.features.launcher || !config.myHomeApps.vicinae.features.launcher;
+          message = "rofi launcher cannot be enabled if vicinae launcher is also there";
+        }
+        {
+          assertion =
+            !config.myHomeApps.rofi.features.clipboard || !config.myHomeApps.vicinae.features.clipboard;
+          message = "rofi clipboard cannot be enabled if vicinae clipboard is also there";
+        }
+      ];
+
       stylix.targets.rofi.enable = true;
       myHomeApps.gnupg.pinentryPackage = pinentryRofi;
 
       home = {
         packages = [
-          pkgs.haskellPackages.greenclip
           pkgs.xdotool
           (pkgs.callPackage ./font.nix { })
         ]
-        ++ lib.optionals (cfg.passwordManager != null) [ rofiRbwPkg ];
+        ++ lib.optionals (cfg.features.passwordManager && cfg.passwordManager != null) [ rofiRbwPkg ]
+        ++ lib.optionals cfg.features.clipboard [ pkgs.haskellPackages.greenclip ];
 
-        activation = {
+        activation = lib.mkIf cfg.features.clipboard {
           greenclip = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             run mkdir -p ${config.xdg.cacheHome}/greenclip || true
           '';
@@ -81,7 +131,7 @@ in
       };
 
       programs = {
-        rbw = lib.mkIf (cfg.passwordManager == "bitwarden") {
+        rbw = lib.mkIf (cfg.features.passwordManager && cfg.passwordManager == "bitwarden") {
           enable = true;
           package = rbwPkg;
           settings = {
@@ -97,7 +147,7 @@ in
         };
       };
 
-      systemd.user.services.greenclip = {
+      systemd.user.services.greenclip = lib.mkIf cfg.features.clipboard {
         Install = {
           WantedBy = [ "graphical-session.target" ];
         };
@@ -120,26 +170,34 @@ in
           local home = os.getenv("HOME")
           local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
           local rofikeys = gears.table.join(
-            awful.key({ RC.vars.modkey }, "space", function()
-              awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
-            end, { description = "command runner", group = "apps" }),
-            awful.key({ RC.vars.modkey }, "Tab", function()
-              awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
-                .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
-                "-kb-accept-alt 'Return,KP_Enter'")
-            end, { description = "window switcher", group = "apps" }),
-            awful.key({ RC.vars.modkey, "Shift" }, "s", function()
-              awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
-            end, { description = "ssh shell", group = "apps" }),
-            awful.key({ RC.vars.modkey, "Shift" }, "v", function()
-              awful.util.spawn(
-                "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
-                  .. xdg_config_home
-                  .. "/rofi/generic/config.rasi"
-              )
-            end, { description = "clipboard menu", group = "apps" }),
         ''
-        + (lib.optionalString (cfg.passwordManager == "bitwarden") ''
+        + (lib.optionalString cfg.features.launcher ''
+          awful.key({ RC.vars.modkey }, "space", function()
+            awful.util.spawn("${lib.getExe rofiPackage} -show drun -theme " .. xdg_config_home .. "/rofi/drun/config.rasi")
+          end, { description = "command runner", group = "apps" }),
+        '')
+        + (lib.optionalString cfg.features.windowSwitcher ''
+          awful.key({ RC.vars.modkey }, "Tab", function()
+            awful.util.spawn("${lib.getExe rofiPackage} -show window -theme " .. xdg_config_home .. "/rofi/drun/config.rasi -window-command '"
+              .. xdg_config_home .. "/rofi/window/focus-window.sh {window}' -kb-accept-entry ''' " ..
+              "-kb-accept-alt 'Return,KP_Enter'")
+          end, { description = "window switcher", group = "apps" }),
+        '')
+        + (lib.optionalString cfg.features.sshShell ''
+          awful.key({ RC.vars.modkey, "Shift" }, "s", function()
+            awful.util.spawn(xdg_config_home .. "/rofi/generic/ssh.sh")
+          end, { description = "ssh shell", group = "apps" }),
+        '')
+        + (lib.optionalString cfg.features.clipboard ''
+          awful.key({ RC.vars.modkey, "Shift" }, "v", function()
+            awful.util.spawn(
+              "${lib.getExe rofiPackage} -modi 'clipboard:greenclip print' -show clipboard -run-command '{cmd}' -theme "
+                .. xdg_config_home
+                .. "/rofi/generic/config.rasi"
+            )
+          end, { description = "clipboard menu", group = "apps" }),
+        '')
+        + (lib.optionalString (cfg.features.passwordManager && cfg.passwordManager == "bitwarden") ''
           awful.key({ RC.vars.modkey, "Shift" }, "p", function()
             awful.util.spawn(
               "${lib.getExe rofiRbwPkg} --selector-args=\"-kb-move-char-back ''' -kb-secondary-copy ''' -theme "
@@ -149,7 +207,7 @@ in
             )
           end, { description = "password manager", group = "apps" }),
         '')
-        + (lib.optionalString (cfg.todoCommand != null) ''
+        + (lib.optionalString (cfg.features.todoQuickAdd && cfg.todoCommand != null) ''
           awful.key({ RC.vars.modkey }, "e", function()
             awful.util.spawn("${lib.getExe rofiPackage} -show TODO -modi TODO:"
               .. xdg_config_home
@@ -160,12 +218,15 @@ in
             )
           end, { description = "password manager", group = "apps" }),
         '')
+        + (lib.optionalString cfg.features.shutdownMenu ''
+          awful.key({ RC.vars.modkey, "Shift" }, "e", function()
+            awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
+          end, { description = "shutdown menu", group = "apps" }),
+        '')
         + ''
-            awful.key({ RC.vars.modkey, "Shift" }, "e", function()
-              awful.util.spawn(xdg_config_home .. "/rofi/powermenu/powermenu.sh")
-            end, { description = "shutdown menu", group = "apps" })
+          awful.key({}, "", function()
+          end, {})
           )
-
           RC.globalkeys = gears.table.join(RC.globalkeys, rofikeys)
           root.keys(RC.globalkeys)
         '';
@@ -176,7 +237,8 @@ in
           source = ./config;
           recursive = true;
         };
-
+      }
+      // lib.optionalAttrs cfg.features.sshShell {
         "rofi/generic/ssh.sh" = {
           executable = true;
           source = lib.getExe (
@@ -191,6 +253,8 @@ in
             ''
           );
         };
+      }
+      // lib.optionalAttrs cfg.features.shutdownMenu {
         "rofi/powermenu/powermenu.sh" = {
           executable = true;
           source = lib.getExe (
@@ -206,6 +270,8 @@ in
             )
           );
         };
+      }
+      // lib.optionalAttrs cfg.features.windowSwitcher {
         "rofi/window/focus-window.sh" = {
           executable = true;
           source = pkgs.writeShellScriptBin "rofi-focus-window.sh" ''
@@ -220,6 +286,8 @@ in
             " | ${lib.getExe' pkgs.awesome "awesome-client"}
           '';
         };
+      }
+      // lib.optionalAttrs cfg.features.clipboard {
         "greenclip.toml" = {
           text = ''
             [greenclip]
@@ -235,7 +303,7 @@ in
           '';
         };
       }
-      // lib.optionalAttrs (cfg.todoCommand != null) {
+      // lib.optionalAttrs (cfg.features.todoQuickAdd && cfg.todoCommand != null) {
         "rofi/todo/todo.sh" = {
           executable = true;
           source = lib.getExe (
