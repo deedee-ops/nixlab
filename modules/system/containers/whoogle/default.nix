@@ -22,7 +22,7 @@ in
 
     virtualisation.oci-containers.containers.whoogle = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/benbusby/whoogle-search:latest@sha256:337ee555ab272db01cafd152636fc01fcddbd7eab0079abbade2c14992d53378";
+        image = "ghcr.io/benbusby/whoogle-search:latest@sha256:47cd35102bebdeb02ed1e9bc346235717308d6b0a66a259a7de8093c43452566";
         # disable tor
         cmd = [
           "/bin/sh"
