@@ -94,7 +94,7 @@ in
         dawarich = svc.mkContainer {
           cfg = {
             user = "65000:65000";
-            image = "freikin/dawarich:0.36.4@sha256:c70432e01716ee6cd2c05a2bda7449c6b9c93d3b346b699792736f3282d9568f";
+            image = "freikin/dawarich:0.37.0@sha256:e8bff08bc7a3677d8cfa74c0a8aa2857edd7f44d771db7828026592510bd1b75";
             dependsOn = lib.optionals cfg.internalPhoton [ "photon" ];
             cmd = [
               "bin/rails"
@@ -126,7 +126,7 @@ in
         dawarich-worker = svc.mkContainer {
           cfg = {
             user = "65000:65000";
-            image = "freikin/dawarich:0.36.4@sha256:c70432e01716ee6cd2c05a2bda7449c6b9c93d3b346b699792736f3282d9568f";
+            image = "freikin/dawarich:0.37.0@sha256:e8bff08bc7a3677d8cfa74c0a8aa2857edd7f44d771db7828026592510bd1b75";
             dependsOn = [ "dawarich" ];
             cmd = [ "sidekiq" ];
             environment = envs // {
