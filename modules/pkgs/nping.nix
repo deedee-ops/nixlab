@@ -9,7 +9,7 @@ let
   # nix build .#nixlab.nping
 
   # renovate: datasource=github-releases depName=hanshuaikang/Nping versioning=semver-coerced
-  rev = "v0.5.0";
+  rev = "v0.6.0";
 in
 (makeRustPlatform {
   inherit (fenix.packages."${system}".stable) cargo rustc;
