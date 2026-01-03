@@ -104,14 +104,6 @@ rec {
   };
 
   mySystemApps = {
-    ddclient = {
-      enable = true;
-      subdomains = [
-        "headscale"
-        "relay"
-      ];
-    };
-
     headscale = {
       enable = true;
       backup = false;

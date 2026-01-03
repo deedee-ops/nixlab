@@ -30,7 +30,7 @@ in
     }:
     inputs.nixpkgs.lib.nixosSystem (
       let
-        pkgs = import inputs.nixpkgs {
+        pkgsOpts = {
           inherit system;
           overlays = builtins.attrValues (import ../overlays { inherit inputs; });
           config = {
@@ -44,26 +44,21 @@ in
             rocmSupport = osConfig.myHardware.radeon.enable && osConfig.myHardware.radeon.forceCompileROCM;
           };
         };
-        pkgs-stable = import inputs.nixpkgs-stable {
-          inherit system;
-          overlays = builtins.attrValues (import ../overlays { inherit inputs; });
-          config = {
-            allowUnfreePredicate =
-              pkg:
-              builtins.elem (lib.getName pkg) (
-                osConfig.mySystem.allowUnfree
-                ++ osConfig.home-manager.users."${osConfig.mySystem.primaryUser}".myHomeApps.allowUnfree
-              );
-            cudaSupport = osConfig.myHardware.nvidia.enable && osConfig.myHardware.nvidia.forceCompileCUDA;
-            rocmSupport = osConfig.myHardware.radeon.enable && osConfig.myHardware.radeon.forceCompileROCM;
-          };
-        };
+
+        pkgs = import inputs.nixpkgs pkgsOpts;
+        pkgs-stable = import inputs.nixpkgs-stable pkgsOpts;
+        pkgs-master = import inputs.nixpkgs-master pkgsOpts;
       in
       {
         inherit system pkgs;
         modules = baseModules ++ hardwareModules ++ profileModules;
         specialArgs = {
-          inherit inputs nixConfig pkgs-stable;
+          inherit
+            inputs
+            nixConfig
+            pkgs-stable
+            pkgs-master
+            ;
         };
       }
     );

@@ -4,6 +4,7 @@
   lib,
   pkgs,
   pkgs-stable,
+  pkgs-master,
   nixConfig,
   ...
 }:
@@ -46,7 +47,7 @@ in
       ];
 
       extraSpecialArgs = {
-        inherit inputs pkgs-stable;
+        inherit inputs pkgs-stable pkgs-master;
 
         lib = inputs.nixpkgs.lib.extend (
           _: _: inputs.home-manager.lib // (import ../../lib/home.nix { inherit lib pkgs; })

@@ -1,6 +1,6 @@
 {
   config,
-  pkgs,
+  pkgs-master,
   lib,
   ...
 }:
@@ -15,9 +15,9 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        pkgs.rustdesk # for quicklaunch entry
+        # unstable build is broken atm: https://github.com/NixOS/nixpkgs/issues/475861
+        pkgs-master.rustdesk-flutter
       ];
-
     };
 
     myHomeApps.allowUnfree = [ "libsciter" ];

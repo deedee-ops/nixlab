@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  pkgs-master,
   config,
   ...
 }:
@@ -41,8 +42,14 @@ in
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;
-    usb-modeswitch.enable = true;
+    # https://github.com/NixOS/nixpkgs/issues/475392
+    # usb-modeswitch.enable = true;
   };
+
+  services.udev.packages = [ pkgs-master.usb-modeswitch-data ];
+  systemd.packages = [ pkgs-master.usb-modeswitch ];
+  environment.etc."usb_modeswitch.d".source =
+    "${pkgs-master.usb-modeswitch-data}/share/usb_modeswitch";
 
   # power
   services.logind.settings.Login = {
