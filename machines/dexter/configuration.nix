@@ -140,19 +140,13 @@ rec {
     mounts = [
       {
         type = "nfs";
-        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/backups";
-        dest = "/tank/backups";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/tank/private";
+        dest = "/mnt/tank/private";
       }
       {
         type = "nfs";
-        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/private";
-        dest = "/tank/private";
-      }
-      {
-        type = "nfs";
-        src = "${config.myInfra.machines.meemee.ip}:/mnt/tank/old-media";
-        dest = "/tank/media";
-        opts = "ro";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/cache/merger";
+        dest = "/mnt/cache/merger";
       }
     ];
 

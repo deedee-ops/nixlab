@@ -135,6 +135,19 @@ rec {
       zfsPool = "rpool";
     };
 
+    mounts = [
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/tank/private";
+        dest = "/mnt/tank/private";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/cache/merger";
+        dest = "/mnt/cache/merger";
+      }
+    ];
+
     networking = {
       enable = true;
       wifiSupport = true;

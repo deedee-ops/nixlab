@@ -36,6 +36,7 @@ in
       activation = {
         init-krew = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           export KREW_ROOT="${config.xdg.configHome}/krew";
+          export PATH="$KREW_ROOT/bin:$PATH"
           run ${pkgs.krew}/bin/krew update || true
         '';
       };
