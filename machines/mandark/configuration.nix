@@ -19,7 +19,7 @@ rec {
       "149.112.112.112"
     ];
     extraHosts = ''
-      192.168.42.10 s3.ajgon.casa
+      192.168.42.10 s3.ajgon.casa nix.ajgon.casa
       192.168.42.30 id.ajgon.casa
     '';
   };

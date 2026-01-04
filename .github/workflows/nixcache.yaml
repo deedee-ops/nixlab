@@ -89,7 +89,7 @@ jobs:
           builders-use-substitutes = true
           download-buffer-size = 524288000
           experimental-features = nix-command flakes
-          substituters = https://s3.ajgon.casa/nix?priority=30 https://cache.nixos.org
+          substituters = https://nix.ajgon.casa/?priority=30 https://cache.nixos.org
           trusted-public-keys = homelab:mM9UlYU+WDQSnxRfnV0gNcE+gLD/F9nkGIz97E22VeU= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
           warn-dirty = false
           extra-substituters = https://cache.garnix.io https://deploy-rs.cachix.org https://nix-community.cachix.org
