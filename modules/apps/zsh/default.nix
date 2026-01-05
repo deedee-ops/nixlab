@@ -103,6 +103,9 @@ in
         claude = ''${
           lib.getExe pkgs."${osConfig.virtualisation.oci-containers.backend}"
         } run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
+        claude-chat = ''${
+          lib.getExe pkgs."${osConfig.virtualisation.oci-containers.backend}"
+        } run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude'';
         claude-go = ''${
           lib.getExe pkgs."${osConfig.virtualisation.oci-containers.backend}"
         } run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
