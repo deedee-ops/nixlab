@@ -126,9 +126,23 @@ let
       "browser.translations.enable" = false;
       "browser.translations.automaticallyPopup" = false;
 
-      # disable AI
+      # disable AI bullshit
       "browser.ml.chat.enabled" = false;
+      "browser.ml.chat.menu" = false;
+      "browser.ml.chat.page" = false;
       "browser.ml.chat.shortcuts" = false;
+      "browser.ml.chat.sidebar" = false;
+      "browser.ml.enable" = false;
+      "browser.ml.linkPreview.enabled" = false;
+      "browser.ml.pageAssist.enabled" = false;
+      "browser.ml.smartAssist.enabled" = false;
+      "browser.search.visualSearch.featureGate" = false;
+      "browser.tabs.groups.smart.enabled" = false;
+      "browser.urlbar.quicksuggest.mlEnabled" = false;
+      "extensions.ml.enabled" = false;
+      "pdfjs.enableAltText" = false;
+      "places.semanticHistory.featureGate" = false;
+      "sidebar.revamp" = false;
 
       # UI
       "browser.uiCustomization.state" = builtins.toJSON {
