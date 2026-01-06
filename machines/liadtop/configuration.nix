@@ -143,6 +143,22 @@ rec {
       }
       {
         type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/tank/private/Dokumenty";
+        dest = "/mnt/tank/private/Dokumenty";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/tank/private/Memories";
+        dest = "/mnt/tank/private/Memories";
+      }
+      {
+        type = "nfs";
+        src = "${config.myInfra.machines.nas.ip}:/mnt/tank/private/Photos";
+        dest = "/mnt/tank/private/Photos";
+        opts = "ro";
+      }
+      {
+        type = "nfs";
         src = "${config.myInfra.machines.nas.ip}:/mnt/cache/merger";
         dest = "/mnt/cache/merger";
       }
