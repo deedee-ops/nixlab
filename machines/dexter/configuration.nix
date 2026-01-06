@@ -296,7 +296,7 @@ rec {
     discord.enable = true;
     firefox = {
       enable = true;
-      startupPage = "https://www.rzegocki.dev/";
+      startupPage = "https://www.ajgon.casa/";
     };
     freerdp = {
       enable = true;

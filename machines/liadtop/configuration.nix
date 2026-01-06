@@ -308,7 +308,7 @@ rec {
     discord.enable = true;
     firefox = {
       enable = true;
-      startupPage = "https://www.rzegocki.dev/";
+      startupPage = "https://www.ajgon.casa/";
     };
     mpv.enable = true;
     obsidian.enable = true;
