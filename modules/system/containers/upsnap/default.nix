@@ -30,7 +30,7 @@ in
 
     virtualisation.oci-containers.containers.upsnap = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/seriousm4x/upsnap:5.2.6@sha256:6355cde3a11781994896f5570ea8a78224d368479bbd84a70bd47c41fc21eb4c";
+        image = "ghcr.io/seriousm4x/upsnap:5.2.7@sha256:36532b5b14ede1fff71fe4d4203454f701ea0fa932ddf8132acdc4fbbfb580d1";
         user = "65000:65000";
         environment = {
           UPSNAP_INTERVAL = "*/30 * * * * *"; # 30 sec
