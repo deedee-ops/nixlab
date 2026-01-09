@@ -39,17 +39,22 @@ in
         GatewayPorts = "clientspecified";
       };
 
-      hostKeys = lib.optionals config.mySystem.impermanence.enable [
-        {
-          type = "ed25519";
-          path = "${config.mySystem.impermanence.persistPath}/etc/ssh/ssh_host_ed25519_key";
-        }
-        {
-          type = "rsa";
-          bits = 4096;
-          path = "${config.mySystem.impermanence.persistPath}/etc/ssh/ssh_host_rsa_key";
-        }
-      ];
+      hostKeys =
+        let
+          prefixPath =
+            if config.mySystem.impermanence.enable then config.mySystem.impermanence.persistPath else "";
+        in
+        [
+          {
+            type = "ed25519";
+            path = "${prefixPath}/etc/ssh/ssh_host_ed25519_key";
+          }
+          {
+            type = "rsa";
+            bits = 4096;
+            path = "${prefixPath}/etc/ssh/ssh_host_rsa_key";
+          }
+        ];
     };
 
     programs.ssh.startAgent = true;

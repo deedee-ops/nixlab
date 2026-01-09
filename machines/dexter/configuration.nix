@@ -10,7 +10,7 @@ in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
-    age.keyFile = "/persist/etc/age/keys.txt";
+    age.keyFile = "${if mySystem.impermanence.enable then mySystem.impermanence.persistPath else ""}/etc/age/keys.txt";
     secrets = {
       "credentials/gpg/key" = {
         owner = mySystem.primaryUser;
@@ -121,7 +121,7 @@ rec {
       hostId = "afe7d4b1";
       swapSize = "4G";
       systemDiskDevs = [
-        "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897"
+        "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6"
       ];
     };
 
@@ -130,12 +130,7 @@ rec {
       efiInstallAsRemovable = true;
     };
 
-    impermanence = {
-      enable = true;
-      machineId = "d394e4ebdac219e695b148e395a72f3a";
-      persistPath = "/persist";
-      zfsPool = "rpool";
-    };
+    impermanence.enable = false;
 
     mounts = [
       {

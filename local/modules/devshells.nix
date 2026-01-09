@@ -11,8 +11,6 @@ _: {
       devShells.default = config.devShells.homelab;
 
       devShells.homelab = pkgs.mkShell {
-        SOPS_AGE_KEY_FILE = "/persist/etc/age/keys.txt";
-
         nativeBuildInputs = [
           config.pre-commit.settings.package
           inputs'.deploy-rs.packages.default
@@ -28,6 +26,12 @@ _: {
 
         shellHook = ''
           ${config.pre-commit.installationScript}
+
+          if [ -f /persist/etc/age/keys.txt ]; then
+            export SOPS_AGE_KEY_FILE="/persist/etc/age/keys.txt"
+          else
+            export SOPS_AGE_KEY_FILE="/etc/age/keys.txt"
+          fi
 
           if [ -z "$CI" ]; then
             export GH_TOKEN="$(${lib.getExe pkgs.sops} -d --output-type json local/secrets.sops.yaml | ${lib.getExe pkgs.jq} -r '.zizmor.GH_TOKEN')"

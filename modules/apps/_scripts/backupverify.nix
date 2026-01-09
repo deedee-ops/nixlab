@@ -1,5 +1,6 @@
 {
   config,
+osConfig,
   lib,
   pkgs,
   ...
@@ -63,7 +64,7 @@ in
           usage
         fi
 
-        export SOPS_AGE_KEY_FILE="/persist/etc/age/keys.txt"
+        export SOPS_AGE_KEY_FILE="${if osConfig.mySystem.impermanence.enable then osConfig.mySystem.impermanence.persistPath else ""}/etc/age/keys.txt"
 
         restic_extra_opts=""
 
