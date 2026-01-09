@@ -36,6 +36,7 @@ in
 {
   options.myHomeApps.awesome = {
     enable = lib.mkEnableOption "awesomewm";
+    package = lib.mkPackageOption pkgs "awesome-git" { };
     autorun = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "List of applications to run on awesome start.";
@@ -96,8 +97,8 @@ in
 
   config = lib.mkIf (osConfig.mySystemApps.xorg.windowManager == "awesome") {
     xsession.windowManager.awesome = {
+      inherit (cfg) package;
       enable = true;
-      package = pkgs.awesome-git;
     };
     myHomeApps = {
       dunst.enable = cfg.useDunst;

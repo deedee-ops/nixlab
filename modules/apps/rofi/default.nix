@@ -43,6 +43,9 @@ in
           shutdownMenu = lib.mkEnableOption "shutdown menu" // {
             default = true;
           };
+          pinentry = lib.mkEnableOption "pinentry" // {
+            default = true;
+          };
         };
       };
       default = {
@@ -53,6 +56,7 @@ in
         passwordManager = true;
         todoQuickAdd = true;
         shutdownMenu = true;
+        pinentry = true;
       };
     };
     bitwarden = lib.mkOption {
@@ -113,7 +117,7 @@ in
       ];
 
       stylix.targets.rofi.enable = true;
-      myHomeApps.gnupg.pinentryPackage = pinentryRofi;
+      myHomeApps.gnupg = lib.optionalAttrs cfg.features.pinentry { pinentryPackage = pinentryRofi; };
 
       home = {
         packages = [
@@ -137,7 +141,7 @@ in
           settings = {
             inherit (cfg.bitwarden) email base_url;
             lock_timeout = 14400; # 4h
-            pinentry = pkgs.pinentry-gtk2;
+            pinentry = config.myHomeApps.gnupg.pinentryPackage;
           };
         };
 

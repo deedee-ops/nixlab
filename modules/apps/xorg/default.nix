@@ -70,6 +70,8 @@ in
     home = {
       activation = {
         screenshots-dir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+          mkdir -p "${config.home.homeDirectory}/Downloads"
+          mkdir -p "${config.home.homeDirectory}/Projects"
           mkdir -p "${config.home.homeDirectory}/Pictures/Screenshots"
         '';
       };

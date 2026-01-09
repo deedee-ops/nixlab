@@ -10,7 +10,9 @@ in
 rec {
   sops = {
     defaultSopsFile = ./secrets.sops.yaml;
-    age.keyFile = "${if mySystem.impermanence.enable then mySystem.impermanence.persistPath else ""}/etc/age/keys.txt";
+    age.keyFile = "${
+      if mySystem.impermanence.enable then mySystem.impermanence.persistPath else ""
+    }/etc/age/keys.txt";
     secrets = {
       "credentials/gpg/key" = {
         owner = mySystem.primaryUser;
@@ -227,6 +229,7 @@ rec {
       };
     };
     gnupg = {
+      pinentryPackage = pkgs.pinentry-qt;
       publicKeys = [ ./public.gpg ];
       privateKeys = [
         {
@@ -338,6 +341,7 @@ rec {
         clipboard = false;
         windowSwitcher = false;
         sshShell = false;
+        pinentry = false;
       };
     };
     rustdesk.enable = true;
@@ -351,7 +355,6 @@ rec {
       enable = true;
       wakapi.url = "https://wakapi.ajgon.casa";
     };
-    whatsapp.enable = true;
     xorg = {
       autorandr = {
         profile = {

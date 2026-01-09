@@ -10,6 +10,11 @@ in
 {
   options.myHomeApps.syncthing = {
     enable = lib.mkEnableOption "syncthing";
+    syncPath = lib.mkOption {
+      type = lib.types.str;
+      description = "Default path where all configured syncs are expected";
+      default = "${config.home.homeDirectory}/Sync";
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -22,6 +27,8 @@ in
           if [ ! -e "${config.xdg.stateHome}/syncthing/config.xml" ]; then
             run cp "${./config.xml}" "${config.xdg.stateHome}/syncthing/config.xml"
           fi
+
+          mkdir -p "${cfg.syncPath}";
         '';
       };
     };

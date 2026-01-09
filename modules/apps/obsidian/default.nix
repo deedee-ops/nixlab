@@ -33,10 +33,6 @@ in
       packages = [
         obsidianPkg # for quicklaunch entry
       ];
-
-      activation.init-obsidian = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        mkdir -p "${cfg.PKMpath}/Inbox";
-      '';
     };
 
     myHomeApps = {
