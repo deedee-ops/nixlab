@@ -1,4 +1,5 @@
 {
+  osConfig,
   config,
   pkgs,
   lib,
@@ -20,12 +21,25 @@ in
   config = lib.mkIf cfg.enable {
     programs.thunderbird = {
       enable = true;
-      package = pkgs.thunderbird-bin.overrideAttrs (attr: {
-        buildCommand = attr.buildCommand + ''
-          wrapProgram "$executablePath" \
-            --set 'HOME' '${config.xdg.configHome}'
-        '';
-      });
+      package =
+        (pkgs.thunderbird.override {
+          extraPolicies = {
+            Certificates = {
+              Install = [
+                "${pkgs.writeText "custom-ca.crt" (
+                  builtins.concatStringsSep "\n" osConfig.mySystem.trustedRootCertificates
+                )}"
+              ];
+            };
+
+          };
+        }).overrideAttrs
+          (attr: {
+            buildCommand = attr.buildCommand + ''
+              wrapProgram "$executablePath" \
+                --set 'HOME' '${config.xdg.configHome}'
+            '';
+          });
 
       # workaround to disable profile management by nix
       profiles = { };

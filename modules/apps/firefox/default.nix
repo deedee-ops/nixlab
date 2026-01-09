@@ -260,7 +260,7 @@ in
 
     programs.firefox = {
       enable = true;
-      package = pkgs.firefox-bin.overrideAttrs (a: {
+      package = pkgs.firefox.overrideAttrs (a: {
         buildCommand =
           a.buildCommand
           + (
@@ -278,6 +278,7 @@ in
       });
 
       policies = {
+        DefaultDownloadDirectory = "${config.home.homeDirectory}/Downloads";
         DisableTelemetry = true;
         DisableFirefoxStudies = true;
         DisablePocket = true;
@@ -287,6 +288,13 @@ in
         DisplayMenuBar = "default-off";
         HttpsOnlyMode = "enabled";
         SearchBar = "unified";
+        Certificates = {
+          Install = [
+            "${pkgs.writeText "custom-ca.crt" (
+              builtins.concatStringsSep "\n" osConfig.mySystem.trustedRootCertificates
+            )}"
+          ];
+        };
       };
 
       profiles = {
@@ -384,10 +392,5 @@ in
         "x-scheme-handler/unknown" = "firefox.desktop";
       };
     };
-
-    myHomeApps.allowUnfree = [
-      "firefox-bin"
-      "firefox-bin-unwrapped"
-    ];
   };
 }
