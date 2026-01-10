@@ -3,7 +3,7 @@ _: {
     { pkgs, ... }:
     rec {
       packages = {
-        bootstrap = pkgs.stdenvNoCC.mkDerivation {
+        bootstrap = pkgs.stdenv.mkDerivation {
           name = "bootstrap";
           version = "0.0.1";
           src = ../scripts;
@@ -22,7 +22,9 @@ _: {
           builtins.readFile ../scripts/bin/cache-packages.sh
         );
         disko-install = pkgs.writeScriptBin "disko-install" (
-          builtins.readFile ../scripts/bin/disko-install.sh
+          builtins.replaceStrings [ "@@ASSETS_DIR@@" ] [ "${../../assets}" ] (
+            builtins.readFile ../scripts/bin/disko-install.sh
+          )
         );
       };
 
