@@ -43,7 +43,7 @@ rec {
 
   mySystem = {
     purpose = "Laptop";
-    filesystem = "btrfs";
+    filesystem = "ext4";
     primaryUser = "ajgon";
     primaryUserExtraDirs = [
       "/mnt"
@@ -130,12 +130,7 @@ rec {
       efiInstallAsRemovable = true;
     };
 
-    impermanence = {
-      enable = true;
-      machineId = "8cb0c97e3fa0c35b006411c366cca589";
-      persistPath = "/persist";
-      zfsPool = "rpool";
-    };
+    impermanence.enable = false;
 
     mounts = [
       {

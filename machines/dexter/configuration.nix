@@ -38,7 +38,7 @@ rec {
 
   mySystem = {
     purpose = "Main client";
-    filesystem = "zfs";
+    filesystem = "ext4";
     primaryUser = "ajgon";
     primaryUserExtraDirs = [
       "/mnt"
