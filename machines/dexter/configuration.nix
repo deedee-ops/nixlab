@@ -278,10 +278,10 @@ rec {
       enable = true;
       features = {
         launcher = false;
-        clipboard = false;
-        passwordManager = false;
         windowSwitcher = false;
         sshShell = false;
+        clipboard = false;
+        passwordManager = false;
         pinentry = false;
       };
     };
@@ -298,6 +298,9 @@ rec {
         options = {
           baseUrl = "https://vault.bitwarden.eu";
         };
+      };
+      features = {
+        todoQuickAdd = false;
       };
     };
     wakatime = {

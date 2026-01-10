@@ -55,9 +55,9 @@ in
           passwordManager = lib.mkEnableOption "password manager" // {
             default = true;
           };
-          # todoQuickAdd = lib.mkEnableOption "TODO quick add menu" // {
-          #   default = true;
-          # };
+          todoQuickAdd = lib.mkEnableOption "TODO quick add menu" // {
+            default = true;
+          };
           # shutdownMenu = lib.mkEnableOption "shutdown menu" // {
           #   default = true;
           # };
@@ -69,7 +69,7 @@ in
         # sshShell = true;
         clipboard = true;
         passwordManager = true;
-        # todoQuickAdd = true;
+        todoQuickAdd = true;
         # shutdownMenu = true;
       };
     };
@@ -127,6 +127,10 @@ in
             awful.key({ RC.vars.modkey, "Shift" }, "v", function()
               awful.util.spawn("${lib.getExe config.services.vicinae.package} vicinae://extensions/vicinae/clipboard/history")
             end, { description = "clipboard menu", group = "apps" }),'')
+          + (lib.optionalString cfg.features.todoQuickAdd ''
+            awful.key({ RC.vars.modkey }, "e", function()
+              awful.util.spawn("${lib.getExe config.services.vicinae.package} vicinae://extensions/thomaslombart/todoist/create-task")
+            end, { description = "add task to todoist", group = "apps" }),'')
           + (lib.optionalString (cfg.features.passwordManager && cfg.passwordManager.type == "bitwarden") ''
             awful.key({ RC.vars.modkey, "Shift" }, "p", function()
               awful.util.spawn("${lib.getExe config.services.vicinae.package} vicinae://extensions/jomifepe/bitwarden/search")
@@ -161,16 +165,27 @@ in
             dark.name = "stylix";
             light.name = "stylix";
           };
-        }
-        // lib.optionalAttrs cfg.features.passwordManager {
-          providers = lib.optionalAttrs (cfg.passwordManager.type == "bitwarden") {
-            "@jomifepe/store.raycast.bitwarden" = {
-              preferences = {
-                cliPath = lib.getExe bwPkg;
-                serverUrl = cfg.passwordManager.options.baseUrl;
+          providers =
+            lib.optionalAttrs (cfg.features.passwordManager && cfg.passwordManager.type == "bitwarden") {
+              "@jomifepe/store.raycast.bitwarden" = {
+                preferences = {
+                  cliPath = lib.getExe bwPkg;
+                  serverUrl = cfg.passwordManager.options.baseUrl;
+                  repromptIgnoreDuration = "28800000"; # 8 hours
+                };
+              };
+            }
+            // lib.optionalAttrs cfg.features.todoQuickAdd {
+              "@thomaslombart/store.raycast.todoist" = {
+                entrypoints = {
+                  create-task = {
+                    preferences = {
+                      shouldCloseMainWindow = true;
+                    };
+                  };
+                };
               };
             };
-          };
         };
       };
     };
