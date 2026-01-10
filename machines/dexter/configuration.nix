@@ -276,14 +276,10 @@ rec {
     };
     rofi = {
       enable = true;
-      passwordManager = "bitwarden";
-      bitwarden = {
-        email = "igor@rzegocki.pl";
-        base_url = "https://vault.bitwarden.eu/";
-      };
       features = {
         launcher = false;
         clipboard = false;
+        passwordManager = false;
         windowSwitcher = false;
         sshShell = false;
         pinentry = false;
@@ -295,7 +291,15 @@ rec {
     telegram.enable = true;
     thunderbird.enable = true;
     todoist.enable = true;
-    vicinae.enable = true;
+    vicinae = {
+      enable = true;
+      passwordManager = {
+        type = "bitwarden";
+        options = {
+          baseUrl = "https://vault.bitwarden.eu";
+        };
+      };
+    };
     wakatime = {
       enable = true;
       wakapi.url = "https://wakapi.ajgon.casa";

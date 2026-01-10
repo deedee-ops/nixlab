@@ -66,7 +66,7 @@ in
             type = lib.types.str;
             description = "Sign in email for the vault.";
           };
-          base_url = lib.mkOption {
+          baseUrl = lib.mkOption {
             type = lib.types.str;
             description = "URL of the vault.";
           };
@@ -114,6 +114,12 @@ in
             !config.myHomeApps.rofi.features.clipboard || !config.myHomeApps.vicinae.features.clipboard;
           message = "rofi clipboard cannot be enabled if vicinae clipboard is also there";
         }
+        {
+          assertion =
+            !config.myHomeApps.rofi.features.passwordManager
+            || !config.myHomeApps.vicinae.features.passwordManager;
+          message = "rofi password manager cannot be enabled if vicinae password manager is also there";
+        }
       ];
 
       stylix.targets.rofi.enable = true;
@@ -139,7 +145,8 @@ in
           enable = true;
           package = rbwPkg;
           settings = {
-            inherit (cfg.bitwarden) email base_url;
+            inherit (cfg.bitwarden) email;
+            base_url = cfg.bitwarden.baseUrl;
             lock_timeout = 14400; # 4h
             pinentry = config.myHomeApps.gnupg.pinentryPackage;
           };
