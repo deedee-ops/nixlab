@@ -40,7 +40,7 @@
               deadnix.enable = true;
               flake-checker.enable = true;
               statix.enable = true;
-              nixfmt-rfc-style.enable = true;
+              nixfmt.enable = true;
 
               check-json.enable = true;
               lua-ls.enable = true;

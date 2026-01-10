@@ -27,7 +27,7 @@ in
         pkgs.go # mason
         pkgs.lua-language-server # mason
         pkgs.markdownlint-cli # mason
-        pkgs.nixfmt-rfc-style # mason
+        pkgs.nixfmt # mason
         pkgs.python3 # mason
         pkgs.python3Packages.pip # mason
         pkgs.shellcheck # mason
