@@ -50,7 +50,7 @@ in
 
     virtualisation.oci-containers.containers.vaultwarden = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/dani-garcia/vaultwarden:1.35.1@sha256:1d43c6754a030861f960fd4dab47e1b33fc19f05bd5f8f597ab7236465a6f14b";
+        image = "ghcr.io/dani-garcia/vaultwarden:1.35.2@sha256:d89a6d21e361254670c24a4272b4b5f245e402c284f2f55de2c379fdbcfa1fa5";
         user = "65000:65000";
         environment = {
           DATA_FOLDER = "/config";
