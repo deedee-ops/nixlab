@@ -30,28 +30,23 @@ _: {
       };
       nas = {
         ip = "192.168.2.10";
-        ssh = "nas.home.arpa:22";
-        host = "nas.home.arpa";
+        ssh = "nas.internal:22";
+        host = "nas.internal";
       };
       mandark = {
         ip = "164.92.204.134";
         ssh = "relay.rzegocki.dev:22";
         host = "relay.rzegocki.dev";
       };
-      meemee = {
-        ip = "192.168.2.10";
-        ssh = "meemee.home.arpa:22";
-        host = "meemee.home.arpa";
-      };
       kvm = {
         ip = "192.168.2.101";
         ssh = null;
-        host = null;
+        host = "kvm.internal";
       };
       dexter = {
         ip = "192.168.2.200";
-        ssh = "dexter.home.arpa:22";
-        host = "dexter.home.arpa";
+        ssh = "dexter.internal:22";
+        host = "dexter.internal";
       };
       work = {
         ip = "192.168.2.210";
@@ -61,12 +56,7 @@ _: {
       windows = {
         ip = "192.168.2.211";
         ssh = null;
-        host = "windows.home.arpa";
-      };
-      azeroth = {
-        ip = "192.168.2.212";
-        ssh = null;
-        host = "azeroth.home.arpa";
+        host = "windows.internal";
       };
     };
   };

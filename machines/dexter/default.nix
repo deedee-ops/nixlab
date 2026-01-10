@@ -13,7 +13,7 @@ rec {
 
     deploy.nodes.dexter = lib.mkDeployConfig {
       system = "x86_64-linux";
-      target = "dexter.home.arpa";
+      target = "dexter.internal";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.dexter;
     };

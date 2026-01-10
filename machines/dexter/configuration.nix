@@ -316,7 +316,7 @@ rec {
       enable = true;
       windowsHosts = {
         "Windows 10 RDP" = {
-          host = config.myInfra.machines.windows.ip;
+          inherit (config.myInfra.machines.windows) host;
           username = "ajgon";
           passwordSopsSecret = "home/apps/freerdp/windows-10";
         };

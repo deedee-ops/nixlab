@@ -13,7 +13,7 @@ rec {
 
     deploy.nodes.leelee = lib.mkDeployConfig {
       system = "x86_64-linux";
-      target = "leelee.home.arpa";
+      target = "leelee.internal";
       sshUser = "ajgon";
       nixosConfig = flakePart.nixosConfigurations.leelee;
     };

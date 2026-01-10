@@ -31,7 +31,7 @@ in
         "https://dns.quad9.net/dns-query"
         "[/${config.mySystem.rootDomain}/]${config.myInfra.machines.unifi.ip}"
         "[/relay.${config.mySystem.rootDomain}/]1.1.1.1"
-        "[/home.arpa/]${config.myInfra.machines.unifi.ip}"
+        "[/internal/]${config.myInfra.machines.unifi.ip}"
       ];
     };
     adminPasswordSopsSecret = lib.mkOption {
