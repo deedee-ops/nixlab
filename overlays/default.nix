@@ -2,6 +2,7 @@
 {
   awesomewm-git = inputs.awesomewm-git.overlays.default;
   headplane = inputs.headplane.overlays.default;
+  krewfile = inputs.krewfile.overlays.default;
 
   nixpkgs-overlays = _final: prev: {
     gdome2 = prev.gdome2.overrideAttrs (oldAttrs: {

@@ -33,13 +33,28 @@ in
         pkgs.stern
       ];
 
-      activation = {
-        init-krew = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          export KREW_ROOT="${config.xdg.configHome}/krew";
-          export PATH="$KREW_ROOT/bin:$PATH"
-          run ${pkgs.krew}/bin/krew update || true
-        '';
-      };
+      activation =
+        let
+          cfg = config.programs.krewfile;
+          krewfileContent = pkgs.writeText "krewfile" (
+            (builtins.concatStringsSep "\n" (
+              map (key: "index ${key} ${builtins.getAttr key cfg.indexes}") (builtins.attrNames cfg.indexes)
+            ))
+            + "\n\n"
+            + (builtins.concatStringsSep "\n" cfg.plugins)
+          );
+          args = if cfg.upgrade then "-upgrade" else "";
+        in
+        {
+          krew = lib.mkForce (
+            lib.hm.dag.entryAfter [ "installPackages" ] ''
+              export KREW_ROOT="${config.xdg.configHome}/krew";
+              export PATH="$KREW_ROOT/bin:$PATH"
+              run ${lib.getExe' pkgs.krewfile "krewfile"} -command ${lib.getExe pkgs.krew} -file ${krewfileContent} ${args} || true
+              run ${pkgs.krew}/bin/krew update || true
+            ''
+          );
+        };
 
       sessionVariables = {
         KREW_ROOT = "${config.xdg.configHome}/krew";
