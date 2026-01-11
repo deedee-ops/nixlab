@@ -16,6 +16,6 @@ in
       '';
     };
 
-    nixpkgs.config.permittedInsecurePackages = [ "squid-7.0.1" ];
+    mySystem.allowInsecure = [ "squid-7.0.1" ];
   };
 }

@@ -40,6 +40,8 @@ in
                 osConfig.mySystem.allowUnfree
                 ++ osConfig.home-manager.users."${osConfig.mySystem.primaryUser}".myHomeApps.allowUnfree
               );
+            permittedInsecurePackages = osConfig.mySystem.allowInsecure;
+
             cudaSupport = osConfig.myHardware.nvidia.enable && osConfig.myHardware.nvidia.forceCompileCUDA;
             rocmSupport = osConfig.myHardware.radeon.enable && osConfig.myHardware.radeon.forceCompileROCM;
           };

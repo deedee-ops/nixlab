@@ -7,6 +7,12 @@
 }:
 {
   options.mySystem = {
+    allowInsecure = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      description = "List of allowed insecure packages.";
+      default = [ ];
+    };
+
     allowUnfree = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = "List of allowed unfree packages.";
