@@ -21,7 +21,7 @@ in
     virtualisation.oci-containers.containers.koinsight = svc.mkContainer {
       cfg = {
         user = "65000:65000";
-        image = "ghcr.io/georgesg/koinsight:v0.1.4@sha256:2d2dc4b22683a545eee85381d23e498e1297677f7b549a0f7ea357d12e6768a1";
+        image = "ghcr.io/georgesg/koinsight:v0.2.0@sha256:78f4de2ed9a7e482baa90d3a2acd79401b03a995fd8c25a60e10c6ab9fc022c9";
         environment = {
           HOSTNAME = "0.0.0.0";
         };
