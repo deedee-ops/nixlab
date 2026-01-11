@@ -39,6 +39,8 @@ in
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
+  mySystem.hardwareModule = "zenbook-14";
+
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;

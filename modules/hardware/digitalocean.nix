@@ -23,6 +23,8 @@
     };
   };
 
+  mySystem.hardwareModule = "digitalocean";
+
   fileSystems."/" = {
     device = "/dev/vda1";
     fsType = "ext4";

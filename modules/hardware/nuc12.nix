@@ -26,6 +26,8 @@
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
+  mySystem.hardwareModule = "nuc12";
+
   hardware = {
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;

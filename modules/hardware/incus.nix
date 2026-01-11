@@ -22,6 +22,8 @@ in
     ];
   };
 
+  mySystem.hardwareModule = "incus";
+
   # CPU hotplug
   services.udev.extraRules = ''
     SUBSYSTEM=="cpu", CONST{arch}=="x86-64", TEST=="online", ATTR{online}=="0", ATTR{online}="1"

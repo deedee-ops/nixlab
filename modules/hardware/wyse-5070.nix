@@ -20,6 +20,8 @@ _: {
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
+  mySystem.hardwareModule = "wyse-5070";
+
   hardware = {
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;

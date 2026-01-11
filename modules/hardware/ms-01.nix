@@ -25,6 +25,8 @@
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
+  mySystem.hardwareModule = "ms-01";
+
   hardware = {
     cpu.intel.updateMicrocode = true;
     enableRedistributableFirmware = true;

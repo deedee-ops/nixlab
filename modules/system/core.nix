@@ -50,6 +50,11 @@
       default = "zfs";
     };
 
+    hardwareModule = lib.mkOption {
+      type = lib.types.str;
+      description = "Loaded hardware module.";
+    };
+
     notificationEmail = lib.mkOption {
       type = lib.types.nullOr lib.types.str;
       default = null;

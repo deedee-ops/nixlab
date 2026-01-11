@@ -38,6 +38,7 @@
   };
 
   nixpkgs.hostPlatform = "x86_64-linux";
+  mySystem.hardwareModule = "desktop";
   hardware = {
     cpu.amd.updateMicrocode = true;
     enableRedistributableFirmware = true;

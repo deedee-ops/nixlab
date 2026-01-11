@@ -22,5 +22,7 @@
     loader.systemd-boot.enable = true;
   };
 
+  mySystem.hardwareModule = "vm-amd";
+
   nixpkgs.hostPlatform = "x86_64-linux";
 }
