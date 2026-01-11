@@ -1,6 +1,6 @@
 {
   config,
-  pkgs-master,
+  pkgs,
   lib,
   ...
 }:
@@ -15,8 +15,7 @@ in
   config = lib.mkIf cfg.enable {
     home = {
       packages = [
-        # unstable build is broken atm: https://github.com/NixOS/nixpkgs/issues/475861
-        pkgs-master.rustdesk-flutter
+        pkgs.rustdesk
       ];
     };
 
