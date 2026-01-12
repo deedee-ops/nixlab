@@ -287,6 +287,13 @@ rec {
       };
     };
     rustdesk.enable = true;
+    supersonic = {
+      enable = true;
+      subsonicServer = {
+        host = "navidrome.ajgon.casa";
+        username = "ajgon";
+      };
+    };
     syncthing.enable = true;
     teams.enable = true;
     telegram.enable = true;
@@ -344,6 +351,7 @@ rec {
           };
         };
       };
+      enableGnomeKeyring = true;
       muteSoundOnStart = true;
       terminal = pkgs.ghostty;
     };

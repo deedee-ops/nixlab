@@ -1,0 +1,113 @@
+[Application]
+EnableSystemTray = true
+CloseToSystemTray = false
+StartupPage = 'Albums'
+SettingsTab = ''
+AllowMultiInstance = false
+MaxImageCacheSizeMB = 50
+SavePlayQueue = true
+SaveQueueToServer = false
+DefaultPlaylistID = ''
+AddToPlaylistSkipDuplicates = false
+ShowTrackChangeNotification = false
+EnableLrcLib = true
+CustomLrcLibUrl = ''
+EnablePasswordStorage = true
+SkipSSLVerify = false
+EnqueueBatchSize = 100
+Language = 'auto'
+DisableDPIDetection = false
+EnableAutoUpdateChecker = false
+RequestTimeoutSeconds = 15
+EnableOSMediaPlayerAPIs = true
+ShowSidebar = false
+SidebarWidthFraction = 0.8
+FontNormalTTF = ''
+FontBoldTTF = ''
+UIScaleSize = 'Larger'
+
+[[Servers]]
+ServerType = 'Subsonic'
+AltHostname = ''
+LegacyAuth = false
+ID = '38c96535-1ae5-4d4a-8dca-bbd025994793'
+Nickname = 'Default'
+Default = true
+SelectedLibrary = ''
+
+[AlbumPage]
+TracklistColumns = ['Artist', 'Time', 'Plays', 'Favorite', 'Rating']
+
+[AlbumsPage]
+SortOrder = 'Recently Added'
+ShowYears = true
+ShuffleMode = 'Tracks'
+PlayInOrder = false
+
+[ArtistPage]
+InitialView = 'Discography'
+DiscographySort = ''
+TracklistColumns = ['Album', 'Time', 'Plays', 'Favorite', 'Rating']
+
+[ArtistsPage]
+SortOrder = 'Name (A-Z)'
+
+[FavoritesPage]
+InitialView = 'Albums'
+TracklistColumns = ['Album', 'Time', 'Plays']
+ShowAlbumYears = true
+
+[GridView]
+CardSize = 230.0
+
+[PlaylistPage]
+TracklistColumns = ['Album', 'Time', 'Plays']
+
+[PlaylistsPage]
+InitialView = 'List'
+
+[TracksPage]
+TracklistColumns = ['Album', 'Time', 'Plays']
+
+[NowPlayingConfig]
+InitialView = 'Play Queue'
+
+[Playback]
+Autoplay = false
+RepeatMode = 'None'
+SkipOneStarWhenShuffling = false
+SkipKeywordWhenShuffling = ''
+UseWaveformSeekbar = true
+
+[LocalPlayback]
+AudioDeviceName = 'auto'
+AudioExclusive = false
+InMemoryCacheSizeMB = 30
+Volume = 100
+EqualizerEnabled = false
+EqualizerPreamp = 0.0
+GraphicEqualizerBands = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+[Scrobbling]
+Enabled = true
+ThresholdTimeSeconds = 240
+ThresholdPercent = 50
+
+[ReplayGain]
+Mode = 'no'
+PreampGainDB = 0.0
+PreventClipping = true
+
+[Transcoding]
+ForceRawFile = false
+RequestTranscode = false
+Codec = 'opus'
+MaxBitRateKBPS = 160
+
+[Theme]
+ThemeFile = 'catppuccin-mocha-blue.toml'
+Appearance = 'Dark'
+
+[PeakMeter]
+WindowHeight = 100
+WindowWidth = 375

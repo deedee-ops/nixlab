@@ -19,6 +19,7 @@ in
   options.myHomeApps.xorg = {
     mapRightCtrlToAltGr = lib.mkEnableOption "forcefuly map right Ctrl to AltGr";
     muteSoundOnStart = lib.mkEnableOption "mute sound device on xorg start";
+    enableGnomeKeyring = lib.mkEnableOption "gnome keyring";
     terminal = lib.mkOption {
       type = lib.types.package;
       description = "Default terminal package.";
@@ -31,6 +32,8 @@ in
     stylix.targets.xresources.enable = true;
 
     fonts.fontconfig.enable = true;
+
+    services.gnome-keyring.enable = cfg.enableGnomeKeyring;
 
     xsession = {
       enable = true;
@@ -79,6 +82,10 @@ in
       packages = [
         pkgs.roboto
         pkgs.xclip # pbcopy and pbpaste
+      ]
+      ++ lib.optionals cfg.enableGnomeKeyring [
+        pkgs.gcr
+        pkgs.seahorse
       ];
 
       pointerCursor.dotIcons.enable = false;

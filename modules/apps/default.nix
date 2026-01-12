@@ -46,6 +46,7 @@ _: {
     ./rustdesk
     ./slack
     ./speedcrunch
+    ./supersonic
     ./syncthing
     ./teams
     ./telegram

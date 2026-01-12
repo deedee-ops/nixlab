@@ -288,6 +288,13 @@ rec {
         pinentry = false;
       };
     };
+    supersonic = {
+      enable = true;
+      subsonicServer = {
+        host = "navidrome.ajgon.casa";
+        username = "ajgon";
+      };
+    };
     syncthing.enable = true;
     teams.enable = true;
     telegram.enable = true;
@@ -311,6 +318,7 @@ rec {
     };
     xorg = {
       autorandr = { };
+      enableGnomeKeyring = true;
       mapRightCtrlToAltGr = true;
       terminal = pkgs.ghostty;
       trackpadSupport = true;
