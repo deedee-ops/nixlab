@@ -17,7 +17,6 @@ return {
           "helm_ls",
           "jsonls",
           "jsonnet_ls",
-          -- "lua_ls", -- installed by nix
           "nil_ls",
           "tofu_ls",
           "yamlls",
@@ -33,12 +32,14 @@ return {
       -- vim.lsp.enable("golangci_lint_ls")
       -- vim.lsp.enable("gopls")
       -- vim.lsp.enable("jsonls")
-      -- vim.lsp.enable("lua_ls")
-      --
-      -- vim.lsp.enable("nil_ls")
-      vim.lsp.config("helm_ls", {
-        cmd = "helm_ls",
+      -- vim.lsp.enable("helm_ls")
+
+      vim.lsp.enable("marksman")
+      vim.lsp.config("marksman", {
+        settings = { wiki = { style = "file-path-stem" } },
       })
+
+      -- vim.lsp.enable("nil_ls")
       vim.lsp.config("nil_ls", {
         settings = {
           ["nil"] = {
@@ -58,6 +59,11 @@ return {
       vim.lsp.config("solargraph", {
         cmd = { "bundle", "exec", "solargraph", "stdio" },
       })
+
+      vim.lsp.enable("stylua")
+      -- vim.lsp.config("stylua", {
+      --   cmd = { "stylua", "--lsp" },
+      -- })
 
       -- vim.lsp.enable("yamlls")
 
@@ -97,7 +103,7 @@ return {
           diagnostics.cue_fmt, -- cue files
           diagnostics.deadnix, -- nix
           diagnostics.hadolint, -- dockerfile
-          diagnostics.markdownlint, -- markdown
+          -- diagnostics.markdownlint, -- markdown
           diagnostics.statix, -- nix
           diagnostics.yamllint, -- yaml
 
@@ -109,12 +115,12 @@ return {
             extra_args = { "-m", "160", "-t", "2" },
           }), -- golang
           -- formatting.jsonnetfmt, -- jsonnet
+          -- formatting.markdownlint, -- markdown
           formatting.nixfmt, -- nix
           formatting.opentofu_fmt, -- opentofu
           formatting.prettierd.with({
             extra_filetypes = { "json5" },
           }), -- json
-          formatting.stylua, -- lua
           formatting.yamlfmt, -- yaml
         },
       })
@@ -140,12 +146,10 @@ return {
           "json-lsp",
           "jsonnet-language-server",
           "jsonnetfmt",
-          -- "lua-language-server", -- installed by nix
           "luacheck",
           "nil",
           "nixpkgs-fmt",
           "prettierd",
-          "stylua",
           "tofu-ls",
           "yaml-language-server",
           "yamlfmt",

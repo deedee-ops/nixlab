@@ -1,6 +1,9 @@
 -- set leader
 vim.g.mapleader = ","
 
+-- set border to floating windows
+vim.o.winborder = "rounded"
+
 -- disable mouse
 vim.opt.mouse = ""
 

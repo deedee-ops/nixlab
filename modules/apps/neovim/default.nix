@@ -25,7 +25,6 @@ in
         pkgs.cargo # mason
         pkgs.deadnix # mason
         pkgs.go # mason
-        pkgs.lua-language-server # mason
         pkgs.markdownlint-cli # mason
         pkgs.nixfmt # mason
         pkgs.python3 # mason
@@ -39,6 +38,8 @@ in
         pkgs.buf # null-ls
         pkgs.cue # null-ls
         pkgs.helm-ls # null-ls
+        pkgs.marksman # null-ls
+        pkgs.stylua # null-ls
         pkgs.ripgrep # telescope
         pkgs.fd # telescope-filebrowser
         pkgs.gnumake # telescope-fzf
