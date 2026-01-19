@@ -154,10 +154,10 @@ awful.rules.rules = gears.table.join({
     properties = { floating = true, ontop = true, focus = true, sticky = true },
   },
 
-  -- Add titlebars to dialog clients
+  -- Add titlebars to dialog clients and make them floating in center
   {
     rule_any = { type = { "dialog" } },
-    properties = { titlebars_enabled = true },
+    properties = { titlebars_enabled = true, floating = true, placement = awful.placement.centered },
   },
 }, RC.vars.extraAwfulRules)
 
