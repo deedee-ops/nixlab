@@ -79,6 +79,7 @@ in
         krewRoot = "${config.xdg.configHome}/krew";
         upgrade = true;
         indexes = {
+          "default" = "https://github.com/kubernetes-sigs/krew-index.git";
           "netshoot" = "https://github.com/nilic/kubectl-netshoot.git";
         };
         plugins = [
@@ -125,6 +126,7 @@ in
         # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
         # it also can't be symlinked, because sops-nix daemon periodically restores it
 
+        mkdir -p "${config.xdg.configHome}/kube"
         rm -rf "${config.xdg.configHome}/kube/config" || true
         cp "${
           config.sops.secrets."${cfg.kubeconfigSopsSecret}".path
