@@ -28,6 +28,8 @@ in
         font-family = config.stylix.fonts.monospace.name;
         window-decoration = "none";
         gtk-single-instance = true;
+        window-inherit-working-directory = false;
+        working-directory = "home";
 
         scrollback-limit = config.myHomeApps.theme.terminalScrollBuffer;
         confirm-close-surface = false;
