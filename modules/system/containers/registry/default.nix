@@ -85,7 +85,7 @@ in
       registry-ui = lib.mkIf cfg.enableUI (
         svc.mkContainer {
           cfg = {
-            image = "joxit/docker-registry-ui:2.5.7@sha256:5594b76bf8dd9de479648e28f38572d020d260568be40b7e52b9758b442275e1";
+            image = "joxit/docker-registry-ui:2.6.0@sha256:bb5956a6b378706f1c3a92c947d0a0c606e280460cd9e37c0198caf46399c839";
             user = "101:101";
             environment = {
               CATALOG_ELEMENTS_LIMIT = "1000";
