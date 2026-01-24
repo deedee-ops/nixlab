@@ -46,7 +46,7 @@ in
 
     virtualisation.oci-containers.containers.airtrail = svc.mkContainer {
       cfg = {
-        image = "johly/airtrail:v3.4.3@sha256:eb358bd2f68ced76d137750d3a60600785a2458d6df782ffe3940da4c8e6b3e6";
+        image = "johly/airtrail:v3.4.4@sha256:6ca9efe33a515ee32d85419cc47fa48dc8ea35ebe5c9197394d7728d4f1746b4";
         environment = {
           ORIGIN = "https://airtrail.${config.mySystem.rootDomain}";
           OAUTH_ENABLED = "true";
