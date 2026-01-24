@@ -134,7 +134,6 @@ rec {
 
   myHomeApps = {
     extraPackages = [
-      pkgs.feishin
       pkgs.gimp
       (pkgs.callPackage ../../modules/pkgs/portwarden.nix {
         # yup, hardcoding salt sucks, but have to do it, otherwise will end up with impure package
