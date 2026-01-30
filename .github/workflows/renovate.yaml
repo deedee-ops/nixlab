@@ -76,7 +76,7 @@ jobs:
           LOG_LEVEL: ${{ github.event.inputs.logLevel || env.WORKFLOW_RENOVATE_LOG_LEVEL }}
 
       - name: Renovate
-        uses: renovatebot/github-action@5d135bbcab142c127d2ac8936b22db8cca182fe3 # v45.0.2
+        uses: renovatebot/github-action@98c8f1b0835e163b9fdfc7c86dff40dadc7162ee # v45.0.3
         with:
           configurationFile: "${{ env.RENOVATE_ONBOARDING_CONFIG_FILE_NAME }}"
           token: "${{ steps.app-token.outputs.token }}"
