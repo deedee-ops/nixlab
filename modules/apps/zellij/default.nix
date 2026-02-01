@@ -27,7 +27,7 @@ in
       settings = {
         default_layout = "compact";
         default_mode = "locked";
-        mouse_mode = false;
+        mouse_mode = true;
         pane_frames = false;
         scroll_buffer_size = config.myHomeApps.theme.terminalScrollBuffer;
         show_startup_tips = false;
