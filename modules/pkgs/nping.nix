@@ -21,10 +21,10 @@ in
       inherit rev;
       owner = "hanshuaikang";
       repo = "Nping";
-      hash = "sha256-Ljm6aldP0+E7X3ECoUXcMWTTC41gPT3n/v/NmjB3DWc=";
+      hash = "sha256-6eUsvNMQoJ5TUWPkOlmcJqdmxaXoBStnhiXiya+0nV8=";
     };
 
-    cargoHash = "sha256-pxydcSvAc2650tjEVoEEvTeFANqdYpg+ht/aLiGp4Z0=";
+    cargoHash = "sha256-6+drbq9dQ5/Atzoz9VPS4BoYEPeM5OqPXUuM1AXP72g=";
 
     doCheck = false;
 

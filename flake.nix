@@ -130,6 +130,7 @@ rec {
         nping = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/nping.nix) {
           inherit (inputs) fenix;
         };
+        tod = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/tod.nix) { };
         system = ./modules/system;
         hardware = {
           incus = ./modules/hardware/incus.nix;
