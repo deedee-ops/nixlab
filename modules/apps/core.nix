@@ -1,5 +1,6 @@
 {
   inputs,
+  osConfig,
   config,
   lib,
   pkgs,
@@ -50,6 +51,9 @@
 
   config = {
     nix.settings.use-xdg-base-directories = true;
+    sops.secrets = lib.optionalAttrs osConfig.mySystemApps.docker.enable {
+      "home/apps/docker/config" = { };
+    };
 
     home = lib.attrsets.recursiveUpdate {
       preferXdgDirectories = true;
@@ -57,6 +61,15 @@
       keyboard = {
         layout = "pl";
         options = [ "caps:escape" ];
+      };
+
+      activation = lib.optionalAttrs osConfig.mySystemApps.docker.enable {
+        init-docker-auth = lib.hm.dag.entryAfter [ "sops-nix" ] ''
+          mkdir -p ${config.xdg.configHome}/docker
+          cp -a ${
+            config.sops.secrets."home/apps/docker/config".path
+          } ${config.xdg.configHome}/docker/config.json
+        '';
       };
 
       packages = [
