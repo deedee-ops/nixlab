@@ -102,6 +102,7 @@ let
       "browser.formfill.enable" = false;
       "browser.search.separatePrivateDefault" = true;
       "browser.search.separatePrivateDefault.ui.enabled" = true;
+      "network.IDN_show_punycode" = true;
 
       # passwords
       "signon.autofillForms" = false;
