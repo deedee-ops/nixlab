@@ -65,7 +65,7 @@ in
         ];
       }
       // lib.optionalAttrs config.myHardware.nvidia.enable {
-        image = "ghcr.io/open-webui/open-webui:cuda@sha256:268d2b1b1f66f2d3f9a4ac3e0f06e0f545e9d6aaf71027115861874120e7edde";
+        image = "ghcr.io/open-webui/open-webui:cuda@sha256:b0ecd5d7101000fc1907043df386358b35ab4475efccec591bf7ba1805aabb81";
       };
 
       opts = {
