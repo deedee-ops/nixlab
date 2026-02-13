@@ -63,7 +63,7 @@ in
 
   config =
     let
-      image = "docker.n8n.io/n8nio/n8n:stable@sha256:ab6bce7b0a7cacafe8421afbe12217fdecd1c452be34beebda362f79cae8b0c9";
+      image = "docker.n8n.io/n8nio/n8n:stable@sha256:9220846479a40e3df1bc12e673cf38d33d0800afbea68b9bc90109babf594547";
     in
     lib.mkIf cfg.enable {
       warnings = [ (lib.mkIf (!cfg.backup) "WARNING: Backups for n8n are disabled!") ];
