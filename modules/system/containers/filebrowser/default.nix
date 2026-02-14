@@ -85,7 +85,7 @@ in
 
     virtualisation.oci-containers.containers.filebrowser = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/gtsteffaniak/filebrowser:1.2.3-beta@sha256:9a9d931b154e366970add32786a1108568308f8fe1e69d3ca1e36fcae9a1744b";
+        image = "ghcr.io/gtsteffaniak/filebrowser:1.2.4-beta@sha256:e1aff91a9433d64c66810c584b35f7a2e329da2aed35581ea68fc2c61dfdf8a8";
         user = "65000:65000";
         environment = {
           FILEBROWSER_CONFIG = "/config/config.yaml";
