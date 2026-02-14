@@ -52,7 +52,9 @@
   config = {
     nix.settings.use-xdg-base-directories = true;
     sops.secrets = lib.optionalAttrs osConfig.mySystemApps.docker.enable {
-      "home/apps/docker/config" = { };
+      "home/apps/docker/config" = {
+        mode = "0600";
+      };
     };
 
     home = lib.attrsets.recursiveUpdate {
