@@ -153,7 +153,30 @@ awful.rules.rules = gears.table.join({
     },
     properties = { floating = true, ontop = true, focus = true, sticky = true },
   },
+  -- PiP
+  {
+    rule_any = {
+      name = { "Picture-in-Picture" },
+    },
+    properties = {
+      floating = true,
+      ontop = true,
+      sticky = true,
+      callback = function(c)
+        gears.timer.delayed_call(function()
+          local width_factor = 0.40 -- 40%
+          local geo_orig = c:geometry()
+          local new_width = math.floor(c.screen.workarea.width * width_factor)
 
+          c:geometry({
+            width = new_width,
+            height = math.floor(new_width * (geo_orig.height / geo_orig.width)),
+          })
+          awful.placement.bottom_right(c, { margins = 20 })
+        end)
+      end,
+    },
+  },
   -- Add titlebars to dialog clients and make them floating in center
   {
     rule_any = { type = { "dialog" } },
