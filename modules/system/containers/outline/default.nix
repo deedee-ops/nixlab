@@ -80,7 +80,7 @@ in
 
     virtualisation.oci-containers.containers.outline = svc.mkContainer {
       cfg = {
-        image = "outlinewiki/outline:1.4.0@sha256:26aabb32fc2a2382908e80326de0d07ba7a4eedeab57ff1389b1efbe32f8209a";
+        image = "outlinewiki/outline:1.5.0@sha256:f053574bb63b82846ec3cd7d89ab4b3019073b4dd25fda45f5cdcccc990a7401";
         environment = {
           ENABLE_UPDATES = "false";
           FILE_STORAGE = "local";
