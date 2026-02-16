@@ -175,7 +175,13 @@ in
               } },
               floatingRole = { ${
                 builtins.concatStringsSep "," (
-                  builtins.map (item: "\"${item}\"") ([ "GtkFileChooserDialog" ] ++ cfg.floatingClients.role)
+                  builtins.map (item: "\"${item}\"") (
+                    [
+                      "GtkFileChooserDialog"
+                      "gimp-startup"
+                    ]
+                    ++ cfg.floatingClients.role
+                  )
                 )
               } },
 
