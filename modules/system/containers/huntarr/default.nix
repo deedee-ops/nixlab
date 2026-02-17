@@ -25,7 +25,7 @@ in
 
     virtualisation.oci-containers.containers.huntarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/plexguide/huntarr:9.2.4@sha256:6bf1fcfca06909e87a82846b43837eb75e7fea5e2dfc6e54b8ea34dbae2f15ac";
+        image = "ghcr.io/plexguide/huntarr:9.3.0@sha256:c3129c5b03f73b64f9203b968b57c1b0d5e8081cfb7c8d3f50d13087f89b9400";
         user = "65000:65000";
         volumes = [
           "${cfg.dataDir}/config:/config"
