@@ -153,7 +153,7 @@ in
     services = {
       resolved = {
         enable = lib.mkDefault true;
-        fallbackDns = cfg.fallbackDNS;
+        settings.Resolve.FallbackDNS = cfg.fallbackDNS;
       }
       // lib.optionalAttrs (cfg.nextdnsID != null) {
         dnsovertls = "true";

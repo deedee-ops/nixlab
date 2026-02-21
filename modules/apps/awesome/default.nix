@@ -138,8 +138,8 @@ in
               autorandrPath = "${lib.getExe pkgs.autorandr}",
               scrotPath = "${lib.getExe pkgs.scrot}",
               slopPath = "${lib.getExe pkgs.slop}",
-              xkillPath = "${lib.getExe pkgs.xorg.xkill}",
-              xsetPath = "${lib.getExe pkgs.xorg.xset}",
+              xkillPath = "${lib.getExe pkgs.xkill}",
+              xsetPath = "${lib.getExe pkgs.xset}",
 
             	modkey = "${cfg.modKey}",
             	terminal = "${lib.getExe config.myHomeApps.xorg.terminal}",

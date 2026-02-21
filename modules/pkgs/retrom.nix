@@ -18,7 +18,8 @@
   openssl,
   perl,
   pkg-config,
-  pnpm_10,
+  pnpmConfigHook,
+  fetchPnpmDeps,
   protobuf,
   webkitgtk_4_1,
   supportNvidia ? false,
@@ -38,7 +39,7 @@ let
     repo = pname;
     hash = "sha256-lB7WBVM800tC0HKiOEaF4mZM4QAozpGqkjFlI/0F5Lc=";
   };
-  pnpmDeps = pnpm_10.fetchDeps {
+  pnpmDeps = fetchPnpmDeps {
     inherit pname version src;
 
     fetcherVersion = 2;
@@ -56,7 +57,7 @@ let
     dontFixup = true;
 
     nativeBuildInputs = [
-      pnpm_10.configHook
+      pnpmConfigHook
       gnused
       nodejs_22
       faketty
@@ -110,7 +111,7 @@ in
       openssl
       perl
       pkg-config
-      pnpm_10.configHook
+      pnpmConfigHook
       protobuf
       depsGenerated
     ];

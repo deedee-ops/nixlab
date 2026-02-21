@@ -16,11 +16,11 @@ let
     pad_name="Wireless Controller Touchpad"
     while true; do
       sleep 5
-      if ${lib.getExe pkgs.xorg.xinput} | grep -q "$pad_name"; then
-        pad_id="$(${lib.getExe pkgs.xorg.xinput} | grep 'Wireless Controller Touchpad' | sed -E 's@.*id=([0-9]+).*@\1@g')"
+      if ${lib.getExe pkgs.xinput} | grep -q "$pad_name"; then
+        pad_id="$(${lib.getExe pkgs.xinput} | grep 'Wireless Controller Touchpad' | sed -E 's@.*id=([0-9]+).*@\1@g')"
 
-        if [[ "$(${lib.getExe pkgs.xorg.xinput} get-button-map "$pad_id")"] == 1* ]]; then
-          ${lib.getExe pkgs.xorg.xinput} set-button-map "$pad_id" 3 2 1 4 5 6 7
+        if [[ "$(${lib.getExe pkgs.xinput} get-button-map "$pad_id")"] == 1* ]]; then
+          ${lib.getExe pkgs.xinput} set-button-map "$pad_id" 3 2 1 4 5 6 7
         fi
       fi
     done

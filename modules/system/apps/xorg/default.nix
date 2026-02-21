@@ -60,7 +60,7 @@ in
             extraPackages = [ sddm-astronaut ];
           };
           # minisforum is garbage
-          environment = lib.optionalAttrs (config.mySystem.hardwareModule == "ms-01") {
+          generic.environment = lib.optionalAttrs (config.mySystem.hardwareModule == "ms-01") {
             QT_XCB_GL_INTEGRATION = "none";
           };
           autoLogin = lib.mkIf cfg.autoLogin {

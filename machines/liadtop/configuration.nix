@@ -37,7 +37,8 @@ rec {
       };
     };
     bluetooth.enable = true;
-    radeon.enable = true;
+    # not much value, a lot of build time
+    # radeon.enable = true;
     sound.enable = true;
   };
 

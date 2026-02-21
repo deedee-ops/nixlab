@@ -46,17 +46,17 @@ in
           ${lib.getExe (pkgs.callPackage ../../pkgs/libinput-three-finger-drag.nix { })} &
         '')
         + (lib.optionalString cfg.mapRightCtrlToAltGr ''
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 105 = Mode_switch Mode_switch Mode_switch Mode_switch"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 38 = a A aogonek Aogonek aogonek Aogonek aogonek Aogonek a A aogonek Aogonek"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 54 = c C cacute Cacute cacute Cacute cacute Cacute"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 26 = e E eogonek Eogonek eogonek Eogonek eogonek Eogonek e E eogonek Eogonek"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 46 = l L lstroke Lstroke lstroke Lstroke lstroke Lstroke l L lstroke Lstroke"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 57 = n N nacute Nacute nacute Nacute nacute Nacute n N nacute Nacute"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 32 = o O oacute Oacute oacute Oacute oacute Oacute o O oacute Oacute"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 39 = s S sacute Sacute sacute Sacute sacute Sacute s S sacute Sacute"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 53 = x X zacute Zacute zacute Zacute zacute Zacute x X zacute Zacute"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 52 = z Z zabovedot Zabovedot zabovedot Zabovedot zabovedot Zabovedot z Z zabovedot Zabovedot"
-          ${lib.getExe pkgs.xorg.xmodmap} -e "keycode 54 = c C cacute Cacute cacute Cacute cacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 105 = Mode_switch Mode_switch Mode_switch Mode_switch"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 38 = a A aogonek Aogonek aogonek Aogonek aogonek Aogonek a A aogonek Aogonek"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 54 = c C cacute Cacute cacute Cacute cacute Cacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 26 = e E eogonek Eogonek eogonek Eogonek eogonek Eogonek e E eogonek Eogonek"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 46 = l L lstroke Lstroke lstroke Lstroke lstroke Lstroke l L lstroke Lstroke"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 57 = n N nacute Nacute nacute Nacute nacute Nacute n N nacute Nacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 32 = o O oacute Oacute oacute Oacute oacute Oacute o O oacute Oacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 39 = s S sacute Sacute sacute Sacute sacute Sacute s S sacute Sacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 53 = x X zacute Zacute zacute Zacute zacute Zacute x X zacute Zacute"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 52 = z Z zabovedot Zabovedot zabovedot Zabovedot zabovedot Zabovedot z Z zabovedot Zabovedot"
+          ${lib.getExe pkgs.xmodmap} -e "keycode 54 = c C cacute Cacute cacute Cacute cacute"
         '');
     };
 
