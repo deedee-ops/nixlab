@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.roundcube = svc.mkContainer {
       cfg = {
-        image = "docker.io/roundcube/roundcubemail:1.6.13-apache-nonroot@sha256:5551cb6af3738ba9c0744337d77738579efbd72616a299132aac61ef87b7abbc";
+        image = "docker.io/roundcube/roundcubemail:1.6.13-apache-nonroot@sha256:3f21645208bbb58b8ce4804800fcdd004001715b143885c46d9994c69b813267";
         environment = {
           ROUNDCUBEMAIL_DB_TYPE = "sqlite";
           ROUNDCUBEMAIL_DEFAULT_HOST = "mail-archive-dovecot";
