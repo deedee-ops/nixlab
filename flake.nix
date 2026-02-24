@@ -82,6 +82,10 @@ rec {
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware/master";
     };
+    retrom = {
+      url = "github:JMBeresford/retrom";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -124,9 +128,6 @@ rec {
       nixlab = {
         inherit nixConfig;
 
-        retrom = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/retrom.nix) {
-          inherit (inputs) fenix;
-        };
         nping = inputs.nixpkgs.legacyPackages.x86_64-linux.callPackage (import ./modules/pkgs/nping.nix) {
           inherit (inputs) fenix;
         };

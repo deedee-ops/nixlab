@@ -1,9 +1,6 @@
 {
-  inputs,
-  osConfig,
   config,
   lib,
-  pkgs,
   ...
 }:
 let
@@ -37,13 +34,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = [
-      (pkgs.callPackage ../../pkgs/retrom.nix {
-        inherit (inputs) fenix;
-        supportNvidia = osConfig.myHardware.nvidia.enable;
-      })
-    ];
-
+    programs.retrom.enable = true;
     xdg.configFile."com.retrom.client/config.json".text = ''
       {
         "server": ${builtins.toJSON cfg.server},

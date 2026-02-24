@@ -59,6 +59,7 @@ in
 
         imports = [
           inputs.krewfile.homeManagerModules.krewfile
+          inputs.retrom.homeModules.retrom
           inputs.sops-nix.homeManagerModules.sops
           inputs.vicinae.homeManagerModules.default
 
