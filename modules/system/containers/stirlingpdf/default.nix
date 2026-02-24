@@ -39,7 +39,7 @@ in
 
     virtualisation.oci-containers.containers.stirlingpdf = svc.mkContainer {
       cfg = {
-        image = "docker.stirlingpdf.com/stirlingtools/stirling-pdf:2.5.2@sha256:74c9ad9e280087f0652bfc98c9b5524b03ea5c138050406d2e3936f9cd60906f";
+        image = "docker.stirlingpdf.com/stirlingtools/stirling-pdf:2.5.3@sha256:cc287bb47ad754ce052ee3c35d023f753532cbbde63dffc6abb150f338ed41ce";
         user = "65000:65000";
         environment = {
           ALLOW_GOOGLE_VISIBILITY = "false";
