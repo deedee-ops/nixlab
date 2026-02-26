@@ -28,7 +28,7 @@ in
 
     systemd =
       let
-        image = "ghcr.io/recyclarr/recyclarr:8.3.1@sha256:e28f8fd583b3175db64118ec006cc3436f6c8a7c9344520d314f91dc879f6607";
+        image = "ghcr.io/recyclarr/recyclarr:8.3.2@sha256:55afe316d3e4e4e3b9120cef7c79436b1b5311f6a18d4ef4b7653e720499c90a";
       in
       {
         services.docker-recyclarr = {
