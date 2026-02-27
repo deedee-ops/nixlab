@@ -79,7 +79,7 @@ in
 
     virtualisation.oci-containers.containers.vikunja = svc.mkContainer {
       cfg = {
-        image = "vikunja/vikunja:2.0.0@sha256:7126db888ff44c299a83a35af8ecacf98083a621ade4dd94b4a1c9bc8b837222"; # @todo wait for 0.25.x which supports *_FILE envs
+        image = "vikunja/vikunja:2.1.0@sha256:f13103b0287aef74a69241fa46e6cac76e14caf643602144ccaca57fc76e587f"; # @todo wait for 0.25.x which supports *_FILE envs
         user = "65000:65000";
         environment = {
           VIKUNJA_AUTH_OPENID_ENABLED = "true";
