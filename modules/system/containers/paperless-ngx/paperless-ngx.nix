@@ -46,7 +46,7 @@ in
 
     virtualisation.oci-containers.containers.paperless-ngx = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/paperless-ngx/paperless-ngx:2.20.8@sha256:e231ec11a1907bfdf172b4f120b4ef1994feb71e6cc624e8b88c53e2da3dfb62";
+        image = "ghcr.io/paperless-ngx/paperless-ngx:2.20.9@sha256:1d99ede700ffdf7aa44899b5fee29c8c279f175769b6cb295e91e9f15772728e";
         dependsOn = [
           "gotenberg"
           "tika"
