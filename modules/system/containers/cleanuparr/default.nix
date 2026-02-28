@@ -25,7 +25,7 @@ in
 
     virtualisation.oci-containers.containers.cleanuparr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/cleanuparr/cleanuparr:2.7.5@sha256:6e86b1d90f18cf71591c62ce490d1b85e6eb69f30da2caf7fb55ec5520dcb1b4";
+        image = "ghcr.io/cleanuparr/cleanuparr:2.7.6@sha256:874169c7a271c87100bc41cf3fc05c0dd1062289372a27154dab4d44ee51c6b5";
         volumes = [
           "${cfg.dataDir}/config:/config"
         ];
