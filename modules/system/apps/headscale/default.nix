@@ -118,7 +118,7 @@ in
               disable_api_key_login = cfg.oidc.enable && !cfg.enableApiKeyLogin;
               headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
               issuer = "https://${cfg.oidc.issuer}";
-              redirect_uri = "${config.services.headscale.settings.server_url}/admin/oidc/callback";
+              # redirect_uri = "${config.services.headscale.settings.server_url}/admin/oidc/callback";
               token_endpoint_auth_method = "client_secret_post";
             };
           };

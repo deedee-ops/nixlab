@@ -179,7 +179,7 @@ rec {
       kubeconfigSopsSecret = "home/apps/kubernetes/kubeconfig";
     };
     minio-client.enable = true;
-    mitmproxy.enable = true;
+    # mitmproxy.enable = true;
     qrtools.enable = true;
     speedcrunch.enable = true;
     ssh = {
