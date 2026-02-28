@@ -256,6 +256,10 @@ rec {
         };
       };
     };
+    lunatask = {
+      enable = true;
+      defaultAreaID = "2d870491-7121-4952-8727-e23518efd29c";
+    };
     mpv.enable = true;
     obsidian.enable = true;
     redshift = {
@@ -286,7 +290,6 @@ rec {
     teams.enable = true;
     telegram.enable = true;
     thunderbird.enable = true;
-    todoist.enable = true;
     vicinae = {
       enable = true;
       passwordManager = {

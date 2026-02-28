@@ -38,6 +38,7 @@ _: {
     ./firefox
     ./ghostty
     ./kitty
+    ./lunatask
     ./mpv
     ./obsidian
     ./planify
