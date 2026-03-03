@@ -22,7 +22,7 @@ concurrency:
 jobs:
   lint-build-and-push:
     runs-on: home-ops-runner
-    container: nixos/nix@sha256:c2f7db70a432d00c6759af108ff4fbc74a4c00e2d4517162e72338e7b9449c1f
+    container: nixos/nix@sha256:b9c9611c8530fa8049a1215b20638536e1e71dcaf85212e47845112caf3adeea
     steps:
       - name: Build and push to cache
         run: |-
