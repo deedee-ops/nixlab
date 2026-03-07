@@ -21,7 +21,7 @@ in
     package = lib.mkOption {
       type = lib.types.package;
       description = "Package of windows98 emulator.";
-      default = pkgs._86Box.override { unfreeEnableRoms = true; };
+      default = pkgs._86box.override { unfreeEnableRoms = true; };
     };
     saveStatePath = lib.mkOption {
       type = lib.types.path;

@@ -8,7 +8,7 @@ let
   cfg = config.myRetro.windows98;
 in
 {
-  config = lib.mkIf (cfg.enable && cfg.package.pname == "86Box") {
+  config = lib.mkIf (cfg.enable && cfg.package.pname == "86box") {
     home = {
       packages = [
         (pkgs.writeShellScriptBin "86Box-retrom" ''
@@ -27,6 +27,6 @@ in
       ];
     };
 
-    myHomeApps.allowUnfree = [ "86Box" ];
+    myHomeApps.allowUnfree = [ "86box" ];
   };
 }
