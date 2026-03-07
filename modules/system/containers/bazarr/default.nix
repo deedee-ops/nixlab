@@ -49,7 +49,7 @@ in
 
     virtualisation.oci-containers.containers.bazarr = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/home-operations/bazarr:1.5.6@sha256:281a0199110fc02f6a28f32f6b3b1e306126bd2cc9626f9be84b67766d958706";
+        image = "ghcr.io/home-operations/bazarr:1.5.6@sha256:79fc37491f55c7e24427bcd669bce3df2d7415ca432a47ce9d53cc5988af8411";
         user = "65000:65000";
         environment = {
           BAZARR__ANALYTICS_ENABLED = "false";
