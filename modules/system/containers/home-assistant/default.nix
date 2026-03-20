@@ -33,7 +33,7 @@ in
     virtualisation.oci-containers.containers = {
       code-server = svc.mkContainer {
         cfg = {
-          image = "ghcr.io/coder/code-server:4.111.0@sha256:d7a7c0188e942c53e7725dc7b7990086e1701557330f7db179fa270813544dcc";
+          image = "ghcr.io/coder/code-server:4.112.0@sha256:ddd9b0b854fec5a3c65ec0095b5c59fb8505ad44d8a18d00d6fcf6a3179692dd";
           user = "65000:65000";
           cmd = [
             "--auth"
