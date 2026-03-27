@@ -22,7 +22,7 @@ in
 
     virtualisation.oci-containers.containers.maddy = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/foxcpp/maddy:0.9.1@sha256:15c719bea6c24414c630ae2cbb59272c65e56c1041bbdad577b44f6e3d41df6d";
+        image = "ghcr.io/foxcpp/maddy:0.9.1@sha256:44428c5f2ad7e1407678c81d646bdb2ad68afc9d2385b07c3aa2b110a72e609d";
         environment = {
           DEBUG = "no";
           INGRESS_DOMAIN = config.mySystem.rootDomain;
