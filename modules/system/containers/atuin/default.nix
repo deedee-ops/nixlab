@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.atuin = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/atuinsh/atuin:18.13.5@sha256:7117ebe43ba9076417a9f9700a79b2e3d0b6d4eb8d1a42046264224b1c677968";
+        image = "ghcr.io/atuinsh/atuin:18.13.6@sha256:9bde3fe6b1633c357cb19c07ea49bb9834720e8ff42d04b39ad7865155581150";
         cmd = [
           "server"
           "start"
