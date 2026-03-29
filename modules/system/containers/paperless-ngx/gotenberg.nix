@@ -11,7 +11,7 @@ in
   config = lib.mkIf cfg.enable {
     virtualisation.oci-containers.containers.gotenberg = svc.mkContainer {
       cfg = {
-        image = "docker.io/gotenberg/gotenberg:8.28.0@sha256:f172b1ce5ec7516ab9452d33bfe3f198d778d3de39655825aa550f4a33946666";
+        image = "docker.io/gotenberg/gotenberg:8.29.0@sha256:a4c25548ac7a442e6f0126f6835d5eb17b23f2ab6bf4f6c821e3a16ae5664930";
       };
     };
   };
