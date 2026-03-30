@@ -100,7 +100,7 @@ in
       virtualisation.oci-containers.containers.beszel-hub = lib.mkIf isHub (
         svc.mkContainer {
           cfg = {
-            image = "ghcr.io/henrygd/beszel/beszel:0.18.5@sha256:f12afad648a8e1e91f9fb10db5d24c7205128ea4c79df1f67dcaa40ae2cf0f5a";
+            image = "ghcr.io/henrygd/beszel/beszel:0.18.6@sha256:31ce0228d61e8d99ea3b5d424c3c2b8a716274ea6027328287189aff267cc948";
             environment = {
               SHARE_ALL_SYSTEMS = "true";
             };
@@ -123,7 +123,7 @@ in
         svc.mkContainer {
           cfg = {
             dependsOn = [ "socket-proxy" ];
-            image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.5@sha256:2c98ad71778344d417b9b54d1d415542b28539537c6db8ac64fd6e25196e6516";
+            image = "ghcr.io/henrygd/beszel/beszel-agent:0.18.6@sha256:3b3584fde7b9ae0e5941a98fa44ae548b18cf833f2a3a0bea78dbc5fc909fc90";
             environment = {
               DOCKER_HOST = "tcp://127.0.0.1:2375";
               FILESYSTEM = cfg.rootFs;
@@ -144,7 +144,7 @@ in
           };
         }
         // (lib.optionalAttrs (cfg.gpuMode == "nvidia") {
-          image = "ghcr.io/arunoruto/beszel-agent:0.18.5@sha256:5bbfb5eef8fe13991f6e96f82170c0e19d1f712f805f0784f05f5baac563a97c";
+          image = "ghcr.io/arunoruto/beszel-agent:0.18.6@sha256:c125478e5241c3a86938c22da4f34f51c0f3684b859ebf5c07d9c286b46819c4";
         })
       );
 
