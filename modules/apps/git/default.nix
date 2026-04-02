@@ -23,6 +23,7 @@ in
       git = lib.attrsets.recursiveUpdate {
         enable = true;
         lfs.enable = true;
+        signing.format = null;
 
         settings = {
           alias = {

@@ -18,6 +18,7 @@
       gtk2 = {
         configLocation = "${config.xdg.configHome}/gtk-2.0/gtkrc";
       };
+      gtk4.theme = null;
       cursorTheme = {
         package = pkgs.catppuccin-cursors.mochaDark;
         name = "catppuccin-mocha-dark-cursors";

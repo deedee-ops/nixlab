@@ -105,10 +105,7 @@ in
               config_path = headscaleConfig;
             };
             integration = {
-              agent = {
-                enabled = true;
-                pre_authkey_path = "/var/lib/headplane/agent_preauth_key";
-              };
+              agent.enabled = true;
               proc.enabled = true;
             };
             oidc = lib.optionalAttrs cfg.oidc.enable {
