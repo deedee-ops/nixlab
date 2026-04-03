@@ -44,7 +44,7 @@ in
 
     virtualisation.oci-containers.containers.wakapi = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/muety/wakapi:2.17.2@sha256:71dc015036efd760ad1a7a3e52a214847c6a601d2e0c5a70fb539a69c2d4d5d2";
+        image = "ghcr.io/muety/wakapi:2.17.3@sha256:156e3e60656f6143f58cc849444a0a7992bbaa573dc870d92a9789be5671099d";
         user = "1000:65000";
         environment = {
           ENVIRONMENT = "prod";
