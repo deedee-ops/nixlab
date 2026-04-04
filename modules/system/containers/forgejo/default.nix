@@ -106,7 +106,7 @@ in
               "tcp://0.0.0.0:2375"
               "--tls=false"
             ];
-            image = "public.ecr.aws/docker/library/docker:dind@sha256:4d90f1f6c400315c2dba96d3ec93c01e64198395cbba04f79d12adce4f737029";
+            image = "public.ecr.aws/docker/library/docker:dind@sha256:686d2c5464787b0ca42420e0aa03a94fc9781ff9bf8b5ff947614b9fa4c3c3e0";
           };
           opts = {
             # to communicate with forgejo via its domain
