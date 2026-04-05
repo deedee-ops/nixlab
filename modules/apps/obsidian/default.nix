@@ -59,22 +59,29 @@ in
         ];
         extraConfig =
           let
-            terminalRunners = {
-              alacritty = "${lib.getExe config.programs.alacritty.package} --class 'obsd-new-note' -e";
-              kitty = "${lib.getExe config.programs.kitty.package} --class 'obsd-new-note' --";
-              ghostty = "${lib.getExe config.programs.ghostty.package} --class='obsd-new-note' -e";
-            };
+            spawnDaily = pkgs.writeShellScriptBin "spawn-obsidian-daily.sh" ''
+              ${lib.getExe' config.myHomeApps.awesome.package "awesome-client"} '
+              for _, c in ipairs(client.get()) do
+                  if c.class and c.class:lower():find("obsidian") then
+                      local t = c.first_tag
+                      if t then
+                          t:view_only()
+                          awful.screen.focus(t.screen)
+                      end
+                      client.focus = c
+                      c:raise()
+                      break
+                  end
+              end
+              '
+              ${lib.getExe' pkgs.xdg-utils "xdg-open"} 'obsidian://daily'
+            '';
           in
           ''
-            local home = os.getenv("HOME")
-            local xdg_config_home = os.getenv("XDG_CONFIG_HOME") or (os.getenv("HOME") .. "/.config")
             local obsidiankeys = gears.table.join(
-              awful.key({ RC.vars.modkey, "Shift" }, "a", function()
-                awful.util.spawn("${terminalRunners."${config.myHomeApps.xorg.terminal.pname}"} "
-                  .. "${lib.getExe config.programs.neovim.package} "
-                  .. "${cfg.PKMpath}/Inbox/" .. os.time() .. ".md"
-                )
-              end, { description = "new obsidian note", group = "apps" })
+              awful.key({ RC.vars.modkey }, "d", function()
+                awful.util.spawn("${lib.getExe spawnDaily}")
+              end, { description = "trigger daily obsidian note", group = "apps" })
             )
 
             RC.globalkeys = gears.table.join(RC.globalkeys, obsidiankeys)
