@@ -359,7 +359,7 @@ rec {
       screenHeight = 2160;
     };
     retrom = {
-      enable = false; # broken atm
+      enable = true;
       server = {
         hostname = "https://retrom.ajgon.casa";
         port = 443;
