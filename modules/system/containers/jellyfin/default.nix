@@ -42,7 +42,7 @@ in
 
     virtualisation.oci-containers.containers.jellyfin = svc.mkContainer {
       cfg = {
-        image = "ghcr.io/jellyfin/jellyfin:10.11.7@sha256:3607f9a27a9b03861ae67410b094cbec0d27ede212c87068f957044c4b2793f6";
+        image = "ghcr.io/jellyfin/jellyfin:10.11.8@sha256:713be14dd1f838ce1e87ca427139fb970f5447a3e507a0b283935954451d6cff";
         user = "65000:65000";
         environment = {
           DOTNET_SYSTEM_IO_DISABLEFILELOCKING = "true";
