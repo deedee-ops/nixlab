@@ -71,7 +71,8 @@ in
           server_url = "https://headscale.${config.mySystem.rootDomain}";
           logtail.enabled = false;
           dns = {
-            base_domain = "headnet.${config.mySystem.rootDomain}";
+            magic_dns = false;
+            base_domain = "internal";
             nameservers.global = cfg.nameservers;
           };
         };
