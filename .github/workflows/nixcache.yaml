@@ -23,6 +23,7 @@ jobs:
   lint-build-and-push:
     runs-on: home-ops-runner
     container: nixos/nix@sha256:0b1530edf840d9af519c7f3970cafbbed68d9d9554a83cc9adc04099753117e1
+    environment: production
     steps:
       - name: Build and push to cache
         run: |-
