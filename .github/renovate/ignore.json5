@@ -1,4 +1,0 @@
-{
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
-  ignorePaths: ["modules/system/containers/crypt/*.nix"],
-}
