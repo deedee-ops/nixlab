@@ -11,8 +11,13 @@
     git-hooks.url = "github:cachix/git-hooks.nix";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    nvf.url = "github:notashelf/nvf";
     sops-nix.url = "github:Mic92/sops-nix";
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } (
+      inputs.import-tree.matchNot ".*/features/.*/.*/.*" ./modules
+    );
 }

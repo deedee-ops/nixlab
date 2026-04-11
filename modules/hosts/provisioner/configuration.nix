@@ -9,6 +9,7 @@
       imports = [
         self.nixosModules.hardware-qemu-intel
         self.nixosModules.features-nixos-disks
+        self.nixosModules.features-nixos-globals
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-networking
@@ -16,6 +17,8 @@
         self.nixosModules.features-nixos-system
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
+
+        self.nixosModules.packages-neovim
       ];
 
       sops = {
@@ -30,6 +33,13 @@
             filesystem = "ext4";
             swapSize = "4G";
             systemDiskDevs = [ "/dev/sda" ];
+          };
+
+          globals = {
+            theme = {
+              name = "catppuccin";
+              style = "mocha";
+            };
           };
 
           grub.mode = "legacy";
