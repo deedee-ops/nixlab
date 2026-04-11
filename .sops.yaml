@@ -1,0 +1,18 @@
+---
+# To get a new key from remote SSH machine, invoke:
+# nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
+
+keys:
+  - users:
+      - &ajgon ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn
+  - hosts:
+      - &provisioner age1aekjeltvxfam5zy857n8hvgv2z04fujqns45jdanhmwjm88savtq55z209
+
+
+
+creation_rules:
+  - path_regex: provisioner/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *provisioner

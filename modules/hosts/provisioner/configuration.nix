@@ -1,7 +1,7 @@
 { self, ... }:
 {
   flake.nixosModules.hosts-provisioner-configuration =
-    { pkgs, ... }:
+    _:
     let
       primaryUser = "ajgon";
     in
@@ -14,7 +14,13 @@
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-time
+        self.nixosModules.features-nixos-user
       ];
+
+      sops = {
+        defaultSopsFile = ./secrets.sops.yaml;
+        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+      };
 
       features = {
         nixos = {
@@ -40,19 +46,12 @@
               ];
             };
           };
-        };
-      };
 
-      # TODO:
-      users.users."${primaryUser}" = {
-        isNormalUser = true;
-        description = "ajgon";
-        extraGroups = [
-          "networkmanager"
-          "wheel"
-        ];
-        password = "123123";
-        packages = with pkgs; [ ];
+          user = {
+            name = primaryUser;
+            extraDirectories = [ "/mnt" ];
+          };
+        };
       };
 
       system.stateVersion = "25.11";
