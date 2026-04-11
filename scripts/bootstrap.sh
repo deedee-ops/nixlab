@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 
 if (( $# != 1 )) && (( $# != 2 )); then
     >&2 echo "Usage: $0 <machine name> [machine ip]"

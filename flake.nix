@@ -8,6 +8,7 @@
 
     disko.url = "github:nix-community/disko";
     deploy-rs.url = "github:serokell/deploy-rs";
+    git-hooks.url = "github:cachix/git-hooks.nix";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
     sops-nix.url = "github:Mic92/sops-nix";
   };
