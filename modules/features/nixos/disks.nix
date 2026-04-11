@@ -137,6 +137,36 @@ _: {
           }
         ];
 
+        services =
+          (lib.optionalAttrs (cfg.filesystem == "btrfs") {
+            btrfs.autoScrub = {
+              enable = true;
+              fileSystems = [ "/" ];
+            };
+          })
+          // (lib.optionalAttrs (cfg.filesystem == "zfs") {
+            sanoid = {
+              enable = true;
+              interval = "hourly";
+              datasets = lib.genAttrs (builtins.attrNames (cfg.systemDatasets // cfg.tankDatasets)) (_: {
+                autoprune = true;
+                autosnap = true;
+                hourly = 12;
+                daily = 7;
+                monthly = 12;
+                yearly = 10;
+              });
+            };
+            zfs = {
+              autoScrub.enable = true;
+              trim.enable = true;
+              zed.settings = lib.mkIf config.mySystem.alerts.pushover.enable {
+                ZED_PUSHOVER_TOKEN = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_API_KEY)";
+                ZED_PUSHOVER_USER = "$(source ${config.mySystem.alerts.pushover.envFileSopsSecret} && echo $PUSHOVER_USER_KEY)";
+              };
+            };
+          });
+
         networking.hostId = cfg.hostId;
 
         disko.devices = {

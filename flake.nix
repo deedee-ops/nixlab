@@ -6,9 +6,10 @@
     import-tree.url = "github:vic/import-tree";
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
 
-    disko.url = "github:nix-community/disko";
     deploy-rs.url = "github:serokell/deploy-rs";
+    disko.url = "github:nix-community/disko";
     git-hooks.url = "github:cachix/git-hooks.nix";
+    nix-index-database.url = "github:nix-community/nix-index-database";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
     sops-nix.url = "github:Mic92/sops-nix";
   };

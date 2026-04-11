@@ -13,6 +13,7 @@
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-ssh
+        self.nixosModules.features-nixos-system
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
       ];
@@ -45,6 +46,13 @@
                 "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
               ];
             };
+          };
+
+          system = {
+            trustedRootCertificates = [
+              (builtins.readFile ../../../assets/ca-ec384.crt)
+              (builtins.readFile ../../../assets/ca-rsa4096.crt)
+            ];
           };
 
           user = {
