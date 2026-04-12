@@ -8,9 +8,12 @@ keys:
   - hosts:
       - &provisioner age1aekjeltvxfam5zy857n8hvgv2z04fujqns45jdanhmwjm88savtq55z209
 
-
-
 creation_rules:
+  - path_regex: home/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *provisioner
   - path_regex: provisioner/.*\.sops\.yaml$
     key_groups:
       - age:

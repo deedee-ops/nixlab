@@ -5,7 +5,9 @@
     let
       primaryUser = "ajgon";
       homeModules = [
+        self.homeModules.features-home-atuin
         self.homeModules.features-home-bat
+        self.homeModules.features-home-btop
 
         self.homeModules.themes-catppuccin
       ];

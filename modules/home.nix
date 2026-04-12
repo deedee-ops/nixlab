@@ -6,7 +6,9 @@
 let
   primaryUser = "ajgon";
   homeModules = [
+    self.homeModules.features-home-atuin
     self.homeModules.features-home-bat
+    self.homeModules.features-home-btop
 
     self.homeModules.themes-catppuccin
   ];
@@ -28,9 +30,16 @@ rec {
     let
       mkHome =
         system:
-        inputs.home-manager.lib.homeManagerConfiguration {
+        let
           pkgs = import inputs.nixpkgs { inherit system; };
+        in
+        inputs.home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+          lib = inputs.nixpkgs.lib.extend (
+            _: _: inputs.home-manager.lib // (import ../lib/home.nix { inherit pkgs; })
+          );
           modules = [
+            inputs.sops-nix.homeManagerModules.sops
             inputs.stylix.homeModules.stylix
 
             {
@@ -39,6 +48,9 @@ rec {
                 homeDirectory = "/home/${primaryUser}";
                 stateVersion = "25.11";
               };
+
+              # TODO:
+              sops.age.sshKeyPaths = [ "/run/secrets/credentials/ssh/private_key" ];
             }
           ]
           ++ homeModules;
