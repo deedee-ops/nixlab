@@ -190,7 +190,7 @@ in
       cfg = {
         dependsOn = lib.optionals (cfg.authenticationBackend == "lldap") [ "lldap" ];
         user = "65000:65000";
-        image = "ghcr.io/authelia/authelia:4.39.18@sha256:ac379ba7680cea6ea21a29b65bf6daabb5aec5b4412c5591ec71df4fd156c789";
+        image = "ghcr.io/authelia/authelia:4.39.19@sha256:0c824dcab1ae97c56bf673c5e77fe8cc6bcd400564555140cc8002a12c6b6463";
         environment = {
           AUTHELIA_STORAGE_POSTGRES_ADDRESS = "host.docker.internal";
           AUTHELIA_STORAGE_POSTGRES_DATABASE = "authelia";
