@@ -20,12 +20,12 @@
             prefixLength = 16;
           }
         ];
-        ipv6.addresses = [
-          {
-            address = "fe80::6c59:17ff:febb:ca48";
-            prefixLength = 64;
-          }
-        ];
+        # ipv6.addresses = [
+        #   {
+        #     address = "fe80::6c59:17ff:febb:ca48";
+        #     prefixLength = 64;
+        #   }
+        # ];
         ipv4.routes = [
           {
             address = "164.92.192.1";
@@ -40,12 +40,12 @@
             prefixLength = 16;
           }
         ];
-        ipv6.addresses = [
-          {
-            address = "fe80::3cfd:9cff:fecc:a1d3";
-            prefixLength = 64;
-          }
-        ];
+        # ipv6.addresses = [
+        #   {
+        #     address = "fe80::3cfd:9cff:fecc:a1d3";
+        #     prefixLength = 64;
+        #   }
+        # ];
       };
     };
   };
