@@ -4,18 +4,26 @@
     _:
     let
       primaryUser = "ajgon";
+      homeModules = [
+        self.homeModules.features-home-bat
+
+        self.homeModules.themes-catppuccin
+      ];
     in
     {
       imports = [
         self.nixosModules.hardware-qemu-intel
         self.nixosModules.features-nixos-disks
         self.nixosModules.features-nixos-grub
+        self.nixosModules.features-nixos-home-manager
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-system
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
+
+        self.nixosModules.themes-catppuccin
       ];
 
       sops = {
@@ -33,6 +41,11 @@
           };
 
           grub.mode = "legacy";
+
+          home-manager = {
+            username = "${primaryUser}";
+            modules = homeModules;
+          };
 
           networking = {
             firewallEnable = false;
