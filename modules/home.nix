@@ -6,9 +6,16 @@
 let
   primaryUser = "ajgon";
   homeModules = [
+    self.homeModules.features-home
     self.homeModules.features-home-atuin
     self.homeModules.features-home-bat
     self.homeModules.features-home-btop
+    self.homeModules.features-home-direnv
+    self.homeModules.features-home-git
+    self.homeModules.features-home-gnupg
+    self.homeModules.features-home-kubernetes
+    self.homeModules.features-home-ssh
+    self.homeModules.features-home-zsh
 
     self.homeModules.themes-catppuccin
   ];
@@ -39,6 +46,7 @@ rec {
             _: _: inputs.home-manager.lib // (import ../lib/home.nix { inherit pkgs; })
           );
           modules = [
+            inputs.krewfile.homeManagerModules.krewfile
             inputs.sops-nix.homeManagerModules.sops
             inputs.stylix.homeModules.stylix
 

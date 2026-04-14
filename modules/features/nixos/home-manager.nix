@@ -41,6 +41,7 @@
 
           users."${cfg.username}" = {
             imports = [
+              inputs.krewfile.homeManagerModules.krewfile
               inputs.sops-nix.homeManagerModules.sops
             ]
             ++ cfg.modules;

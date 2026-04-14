@@ -4,7 +4,7 @@ _: {
     {
       config = {
         sops.secrets = lib.genAttrs [ "atuin/encryptedKey" "atuin/username" "atuin/password" ] (_: {
-          sopsFile = ./atuin.sops.yaml;
+          sopsFile = ./secrets.sops.yaml;
         });
 
         programs = {
@@ -32,6 +32,7 @@ _: {
               secrets_filter = true;
               enter_accept = false;
 
+              logs.dir = "${config.xdg.stateHome}/atuin/logs";
               sync.records = true;
               dotfiles.enabled = false;
 
@@ -42,15 +43,18 @@ _: {
           };
         };
 
-        systemd.user.services.init-atuin = lib.mkHomeActivationAfterSops "init-atuin" ''
-          # headless atuin is a nightmare
-          export ATUIN_SESSION=dummy
+        systemd.user.services.init-atuin = lib.mkHomeActivationAfterSops {
+          name = "init-atuin";
+          script = ''
+            # headless atuin is a nightmare
+            export ATUIN_SESSION=dummy
 
-          ${lib.getExe config.programs.atuin.package} login \
-          -u "$(cat ${config.sops.secrets."atuin/username".path})" \
-          -p "$(cat ${config.sops.secrets."atuin/password".path})" || true
-          ${lib.getExe config.programs.atuin.package} sync -f || true
-        '';
+            ${lib.getExe config.programs.atuin.package} login \
+            -u "$(cat ${config.sops.secrets."atuin/username".path})" \
+            -p "$(cat ${config.sops.secrets."atuin/password".path})" || true
+            ${lib.getExe config.programs.atuin.package} sync -f || true
+          '';
+        };
       };
     };
 }
