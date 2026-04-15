@@ -23,7 +23,15 @@ _: {
         };
       };
       config = {
-        sops.secrets."features/nixos/user/hashedPassword".neededForUsers = true;
+        sops.secrets = {
+          "features/nixos/user/hashedPassword".neededForUsers = true;
+          "features/nixos/user/homeAgeKey" = {
+            inherit (config.users.users."${cfg.name}") group;
+            owner = config.users.users."${cfg.name}".name;
+            mode = "0440";
+            path = "${config.users.users."${cfg.name}".home}/.config/sops/age/keys.txt";
+          };
+        };
 
         users.users."${cfg.name}" = {
           isNormalUser = true;
@@ -31,6 +39,7 @@ _: {
           extraGroups = [
             "input"
             "networkmanager"
+            "render"
             "video"
             "wheel"
           ];

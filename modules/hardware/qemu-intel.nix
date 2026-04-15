@@ -10,22 +10,24 @@ _: {
         (modulesPath + "/profiles/qemu-guest.nix")
       ];
 
-      boot = {
-        extraModulePackages = [ ];
-        initrd = {
-          availableKernelModules = [
-            "ata_piix"
-            "uhci_hcd"
-            "virtio_pci"
-            "virtio_scsi"
-            "sd_mod"
-            "sr_mod"
-          ];
+      config = {
+        boot = {
+          extraModulePackages = [ ];
+          initrd = {
+            availableKernelModules = [
+              "ata_piix"
+              "uhci_hcd"
+              "virtio_pci"
+              "virtio_scsi"
+              "sd_mod"
+              "sr_mod"
+            ];
+            kernelModules = [ ];
+          };
           kernelModules = [ ];
         };
-        kernelModules = [ ];
-      };
 
-      nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+        nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+      };
     };
 }

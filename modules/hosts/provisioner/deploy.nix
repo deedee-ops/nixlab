@@ -9,7 +9,7 @@
       inherit (self.nixosConfigurations.provisioner.config.nixpkgs.hostPlatform) system;
     in
     {
-      hostname = "192.168.2.104";
+      hostname = "192.168.2.199";
       interactiveSudo = true;
       profiles.system = {
         sshUser = "ajgon";

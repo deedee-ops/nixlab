@@ -33,7 +33,7 @@ _: {
           };
         };
 
-        programs.ssh.startAgent = true;
+        # programs.ssh.startAgent = true;
 
         # pass ssh-agent socket when using sudo
         security.sudo = {

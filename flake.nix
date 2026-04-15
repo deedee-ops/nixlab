@@ -4,6 +4,7 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
+    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
 
     deploy-rs.url = "github:serokell/deploy-rs";
     disko.url = "github:nix-community/disko";

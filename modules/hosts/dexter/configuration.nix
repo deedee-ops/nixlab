@@ -1,9 +1,9 @@
 { self, ... }:
 {
-  flake.nixosModules.hosts-provisioner-configuration =
+  flake.nixosModules.hosts-dexter-configuration =
     _:
     let
-      primaryUser = "ajgon";
+      primaryUser = "ajgonoix";
       homeModules = [
         self.homeModules.features-home
         self.homeModules.features-home-atuin
@@ -21,7 +21,8 @@
     in
     {
       imports = [
-        self.nixosModules.hardware-qemu-intel
+        self.nixosModules.hardware-ms-01
+
         self.nixosModules.features-nixos-disks
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-home-manager
@@ -60,8 +61,12 @@
 
           networking = {
             firewallEnable = false;
-            hostname = "provisioner";
-            mainInterface.name = "ens18";
+            hostname = "dexter";
+            mainInterface = {
+              name = "enp89s0";
+              bridge = true;
+              bridgeMAC = "02:00:c0:a8:02:c8";
+            };
           };
 
           ssh = {
