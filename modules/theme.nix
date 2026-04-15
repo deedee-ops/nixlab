@@ -1,18 +1,19 @@
 _:
 let
   commonThemeConfig =
-    { pkgs, ... }:
+    { pkgs, theme, ... }:
     {
       stylix = {
+        inherit (theme) polarity;
+
         enable = true;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-        polarity = "dark";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme.name}-${theme.style}.yaml";
         opacity.terminal = 0.95;
         # targets.font-packages.enable = true;
         #
         # cursor = {
-        #   package = pkgs.catppuccin-cursors.mochaDark;
-        #   name = "catppuccin-mocha-dark-cursors";
+        #   package = pkgs.catppuccin-cursors."${theme.style}Dark";
+        #   name = "catppuccin-${theme.style}-dark-cursors";
         #   size = 48;
         # };
         #
@@ -41,15 +42,27 @@ let
     };
 in
 {
-  flake.homeModules.themes-catppuccin =
-    { pkgs, ... }:
-    {
-      config = { } // (commonThemeConfig { inherit pkgs; });
+  flake = rec {
+    theme = {
+      name = "catppuccin";
+      style = "mocha";
+      polarity = "dark";
     };
 
-  flake.nixosModules.themes-catppuccin =
-    { pkgs, ... }:
-    {
-      config = { } // (commonThemeConfig { inherit pkgs; });
-    };
+    homeModules.theme =
+      { pkgs, ... }:
+      {
+        config = {
+        }
+        // (commonThemeConfig { inherit pkgs theme; });
+      };
+
+    nixosModules.theme =
+      { pkgs, ... }:
+      {
+        config = {
+        }
+        // (commonThemeConfig { inherit pkgs theme; });
+      };
+  };
 }

@@ -5,11 +5,30 @@ _: {
       cfg = config.features.nixos.system;
     in
     {
-      options.features.nixos.system = {
-        trustedRootCertificates = lib.mkOption {
-          type = lib.types.listOf lib.types.str;
-          description = "A list of trusted root certificates in PEM format.";
-          default = [ ];
+      options = {
+        systemTheme = lib.mkOption {
+          type = lib.types.submodule {
+            options = {
+              name = lib.mkOption {
+                type = lib.types.str;
+                description = "Theme name";
+                example = "catppuccin";
+              };
+              style = lib.mkOption {
+                type = lib.types.str;
+                description = "Theme style";
+                example = "mocha";
+              };
+            };
+          };
+        };
+
+        features.nixos.system = {
+          trustedRootCertificates = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            description = "A list of trusted root certificates in PEM format.";
+            default = [ ];
+          };
         };
       };
 

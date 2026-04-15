@@ -13,10 +13,12 @@
         self.homeModules.features-home-git
         self.homeModules.features-home-gnupg
         self.homeModules.features-home-kubernetes
+        self.homeModules.features-home-neovim
         self.homeModules.features-home-ssh
+        self.homeModules.features-home-wakatime
         self.homeModules.features-home-zsh
 
-        self.homeModules.themes-catppuccin
+        self.homeModules.theme
       ];
     in
     {
@@ -35,7 +37,7 @@
 
         self.nixosModules.features-nixos-niri
 
-        self.nixosModules.themes-catppuccin
+        self.nixosModules.theme
       ];
 
       sops = {
