@@ -19,6 +19,8 @@ let
     self.homeModules.features-home-wakatime
     self.homeModules.features-home-zsh
 
+    self.homeModules.features-home-ghostty
+
     self.homeModules.theme
   ];
 in

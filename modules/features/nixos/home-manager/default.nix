@@ -35,7 +35,7 @@
 
           extraSpecialArgs = {
             lib = inputs.nixpkgs.lib.extend (
-              _: _: inputs.home-manager.lib // (import ../../../lib/home.nix { inherit pkgs; })
+              _: _: inputs.home-manager.lib // (import ../../../../lib/home.nix { inherit pkgs; })
             );
           };
 

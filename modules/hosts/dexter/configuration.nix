@@ -18,6 +18,8 @@
         self.homeModules.features-home-wakatime
         self.homeModules.features-home-zsh
 
+        self.homeModules.features-home-ghostty
+
         self.homeModules.theme
       ];
     in
@@ -68,6 +70,22 @@
               name = "enp89s0";
               bridge = true;
               bridgeMAC = "02:00:c0:a8:02:c8";
+            };
+          };
+
+          niri = {
+            monitors = [
+              "DP-1"
+              "HDMI-A-1"
+            ];
+            noctaliaShellExtraSettings = {
+              general = {
+                avatarImage = "/home/${primaryUser}/.face";
+              };
+              # TODO:
+              wallpaper = {
+                directory = "/home/${primaryUser}/Pictures/Wallpapers";
+              };
             };
           };
 
