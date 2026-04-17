@@ -43,6 +43,7 @@
             imports = [
               inputs.krewfile.homeManagerModules.krewfile
               inputs.sops-nix.homeManagerModules.sops
+              inputs.vicinae.homeManagerModules.default
             ]
             ++ cfg.modules;
 

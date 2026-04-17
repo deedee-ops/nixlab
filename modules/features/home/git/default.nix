@@ -7,7 +7,11 @@ _: {
           git = {
             enable = true;
             lfs.enable = true;
-            signing.format = null;
+            signing = {
+              format = null;
+              key = "igor@rzegocki.pl";
+              signByDefault = true;
+            };
 
             settings = {
               alias = {
@@ -63,6 +67,10 @@ _: {
               };
               rerere = {
                 enabled = true;
+              };
+              user = {
+                name = "Igor Rzegocki";
+                email = "igor@rzegocki.pl";
               };
               transfer = {
                 fsckobjects = true;

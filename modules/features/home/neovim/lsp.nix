@@ -135,8 +135,10 @@
       { pkgs, ... }:
       {
         extraPackages = [
+          pkgs.deadnix
           pkgs.nil
           pkgs.nixfmt
+          pkgs.statix
         ];
 
         specs.nix = {

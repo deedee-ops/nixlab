@@ -1,7 +1,17 @@
 _: {
   flake.homeModules.features-home-zsh =
     { config, lib, ... }:
+    let
+      cfg = config.features.home.zsh;
+    in
     {
+      options.features.home.zsh = {
+        promptColor = lib.mkOption {
+          type = lib.types.str;
+          default = "magenta";
+          description = "Color of the machine identification box in prompt.";
+        };
+      };
       config = {
         home = {
           activation = {
@@ -47,7 +57,7 @@ _: {
               autosuggestion.enable = true;
               enableCompletion = true;
 
-              # sessionVariables.PROMPT_HOSTNAME_COLOR = cfg.promptColor;
+              sessionVariables.PROMPT_HOSTNAME_COLOR = cfg.promptColor;
 
               initContent = lib.mkMerge [
                 (lib.mkOrder 550 ''

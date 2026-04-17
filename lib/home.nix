@@ -29,4 +29,34 @@
         RestartSec = 3;
       };
     };
+
+  mkGuiStartupService =
+    {
+      package,
+      command ? null,
+      delay ? 0,
+    }:
+    {
+      "${package.pname}" = {
+        Unit = {
+          Description = package.meta.description or "${package.pname}";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = if command == null then "${package}/bin/${package.meta.mainProgram}" else command;
+        }
+        // (
+          if delay > 0 then
+            {
+              ExecStartPre = "${pkgs.coreutils}/bin/sleep ${toString delay}";
+            }
+          else
+            { }
+        );
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+    };
 }

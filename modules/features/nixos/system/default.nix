@@ -1,6 +1,11 @@
 _: {
   flake.nixosModules.features-nixos-system =
-    { config, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     let
       cfg = config.features.nixos.system;
     in
@@ -35,6 +40,11 @@ _: {
       config = {
         environment.enableAllTerminfo = true;
 
+        fonts.packages = [
+          pkgs.corefonts
+          pkgs.vista-fonts
+        ];
+
         nix = {
           channel.enable = false; # don't use old nix channels
 
@@ -53,6 +63,8 @@ _: {
             use-xdg-base-directories = true;
           };
         };
+
+        nixpkgs.config.allowUnfree = true;
 
         programs.nix-index-database.comma.enable = true;
 

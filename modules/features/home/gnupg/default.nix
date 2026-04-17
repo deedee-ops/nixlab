@@ -6,7 +6,17 @@ _: {
       lib,
       ...
     }:
+    let
+      cfg = config.features.home.gnupg;
+    in
     {
+      options.features.home.gnupg = {
+        pinentryPackage = lib.mkOption {
+          type = lib.types.package;
+          default = pkgs.pinentry-curses;
+          description = "Pinentry package.";
+        };
+      };
       config = {
         sops.secrets = lib.genAttrs [ "gnupg/keyId" "gnupg/keyData" ] (_: {
           sopsFile = ./secrets.sops.yaml;
@@ -30,7 +40,7 @@ _: {
         services.gpg-agent = {
           enable = true;
           defaultCacheTtl = 28800;
-          pinentry.package = lib.mkDefault pkgs.pinentry-curses;
+          pinentry.package = cfg.pinentryPackage;
         };
 
         systemd.user.services.init-gnupg = lib.mkHomeActivationAfterSops {

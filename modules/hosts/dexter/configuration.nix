@@ -1,7 +1,7 @@
 { self, ... }:
 {
   flake.nixosModules.hosts-dexter-configuration =
-    _:
+    { pkgs, ... }:
     let
       trustedRootCertificates = [
         (builtins.readFile ../../../assets/ca-ec384.crt)
@@ -21,10 +21,18 @@
         self.homeModules.features-home-neovim
         self.homeModules.features-home-ssh
         self.homeModules.features-home-wakatime
+        self.homeModules.features-home-yazi
         self.homeModules.features-home-zsh
 
+        self.homeModules.features-home-discord
         self.homeModules.features-home-firefox
         self.homeModules.features-home-ghostty
+        self.homeModules.features-home-obsidian
+        self.homeModules.features-home-syncthing
+        self.homeModules.features-home-teams
+        self.homeModules.features-home-telegram
+        self.homeModules.features-home-thunderbird
+        self.homeModules.features-home-vicinae
 
         self.homeModules.theme
       ];
@@ -44,6 +52,8 @@
         self.nixosModules.features-nixos-user
 
         self.nixosModules.features-nixos-niri
+        self.nixosModules.features-nixos-plymouth
+        self.nixosModules.features-nixos-sddm
 
         self.nixosModules.theme
       ];
@@ -79,19 +89,23 @@
             };
           };
 
-          niri = {
+          niri = rec {
             features = [ "i915" ];
-            monitors = [
+            displays = [
               "DP-1"
               "HDMI-A-1"
             ];
+            launcher = "vicinae";
             noctaliaShellExtraSettings = {
               general = {
-                avatarImage = "/home/${primaryUser}/.face";
+                avatarImage = "${../../../assets/avatar.png}";
               };
-              # TODO:
               wallpaper = {
-                directory = "/home/${primaryUser}/Pictures/Wallpapers";
+                directory = "${../../../assets/wallpapers}";
+                monitorDirectories = map (display: {
+                  directory = "${../../../assets/wallpapers}";
+                  name = display;
+                }) displays;
               };
             };
           };
@@ -123,6 +137,12 @@
             "i915"
             "doh"
           ];
+        };
+
+        gnupg.pinentryPackage = pkgs.pinentry-qt;
+
+        thunderbird = {
+          inherit trustedRootCertificates;
         };
       };
 

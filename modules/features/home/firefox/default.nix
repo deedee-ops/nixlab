@@ -10,6 +10,7 @@
     let
       cfg = config.features.home.firefox;
       isGPU = (builtins.elem "i915" cfg.features) || (builtins.elem "nvidia" cfg.features);
+      firefoxPkg = config.programs.firefox.finalPackage;
     in
     {
       options.features.home.firefox = {
@@ -61,6 +62,26 @@
 
           profiles = {
             default = {
+              search = {
+                force = true;
+                default = "ddg";
+                order = [ "ddg" ];
+                engines = {
+                  "ddg" = {
+                    urls = [
+                      {
+                        template = "https://duckduckgo.com/";
+                        params = [
+                          {
+                            name = "q";
+                            value = "{searchTerms}";
+                          }
+                        ];
+                      }
+                    ];
+                  };
+                };
+              };
               settings =
                 lib.optionalAttrs isGPU {
                   # hardware accelerated video decoding
@@ -219,10 +240,9 @@
                         "_15b1b2af-e84a-4c70-ac7c-5608b0eeed5a_-browser-action" # Cookiebro
                         "ublock0_raymondhill_net-browser-action" # uBlock origin
                       ]
-                      # TODO:
-                      # ++ (lib.optionals config.myHomeApps.obsidian.enable [
-                      #   "clipper_obsidian_md-browser-action" # obsidian clipper
-                      # ])
+                      ++ (lib.optionals (builtins.elem "obsidian" (map (p: p.pname or false) config.home.packages)) [
+                        "clipper_obsidian_md-browser-action" # obsidian clipper
+                      ])
                       ++ [
                         "unified-extensions-button"
                       ];
@@ -260,7 +280,7 @@
           packages = lib.optionals isGPU [ pkgs.ffmpeg-full ];
 
           sessionVariables = {
-            DEFAULT_BROWSER = "${lib.getExe config.programs.firefox.finalPackage}";
+            DEFAULT_BROWSER = "${lib.getExe firefoxPkg}";
           };
         };
 
@@ -273,6 +293,8 @@
             "x-scheme-handler/unknown" = "firefox.desktop";
           };
         };
+
+        systemd.user.services = lib.mkGuiStartupService { package = firefoxPkg; };
       };
     };
 }

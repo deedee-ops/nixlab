@@ -20,7 +20,7 @@
       "marginHorizontal": 4,
       "frameThickness": 8,
       "frameRadius": 12,
-      "outerCorners": true,
+      "outerCorners": false,
       "hideOnOverview": false,
       "displayMode": "always_visible",
       "autoHideDelay": 500,
@@ -30,7 +30,7 @@
         "left": [
           {
             "characterCount": 2,
-            "colorizeIcons": false,
+            "colorizeIcons": true,
             "emptyColor": "secondary",
             "enableScrollWheel": true,
             "focusedColor": "primary",
@@ -43,7 +43,7 @@
             "labelMode": "none",
             "occupiedColor": "secondary",
             "pillSize": 0.6,
-            "showApplications": false,
+            "showApplications": true,
             "showApplicationsHover": false,
             "showBadge": true,
             "showLabelsOnlyWhenOccupied": true,
@@ -65,6 +65,12 @@
         ],
         "right": [
           {
+            "displayMode": "onhover",
+            "iconColor": "none",
+            "id": "Bluetooth",
+            "textColor": "none"
+          },
+          {
             "displayMode": "alwaysShow",
             "iconColor": "none",
             "id": "Volume",
@@ -80,19 +86,19 @@
             "unreadBadgeColor": "primary"
           },
           {
-            "deviceNativePath": "__default__",
-            "displayMode": "graphic-clean",
-            "hideIfIdle": false,
-            "hideIfNotDetected": true,
-            "id": "Battery",
-            "showNoctaliaPerformance": false,
-            "showPowerProfiles": false
+            "iconColor": "none",
+            "id": "NightLight"
+          },
+          {
+            "iconColor": "none",
+            "id": "KeepAwake",
+            "textColor": "none"
           },
           {
             "blacklist": [],
             "chevronColor": "none",
             "colorizeIcons": false,
-            "drawerEnabled": true,
+            "drawerEnabled": false,
             "hidePassive": false,
             "id": "Tray",
             "pinned": []
@@ -143,7 +149,7 @@
       "shadowOffsetY": 3,
       "language": "",
       "allowPanelsOnScreenWithoutBar": true,
-      "showChangelogOnStartup": true,
+      "showChangelogOnStartup": false,
       "telemetryEnabled": false,
       "enableLockScreenCountdown": false,
       "lockScreenCountdownDuration": 10000,
@@ -183,7 +189,7 @@
       "smoothScrollEnabled": true
     },
     "ui": {
-      "fontDefault": "DejaVu Sans",
+      "fontDefault": "Noto Sans",
       "fontFixed": "monospace",
       "fontDefaultScale": 1,
       "fontFixedScale": 1,
@@ -231,8 +237,7 @@
     "wallpaper": {
       "enabled": true,
       "overviewEnabled": false,
-      "monitorDirectories": [],
-      "enableMultiMonitorDirectories": false,
+      "enableMultiMonitorDirectories": true,
       "showHiddenFiles": false,
       "viewMode": "single",
       "setWallpaperOnAllMonitors": true,
@@ -241,20 +246,15 @@
       "fillColor": "#000000",
       "useSolidColor": false,
       "solidColor": "#1a1a2e",
-      "automationEnabled": false,
+      "automationEnabled": true,
       "wallpaperChangeMode": "random",
-      "randomIntervalSec": 300,
-      "transitionDuration": 1500,
+      "randomIntervalSec": 900,
+      "transitionDuration": 500,
       "transitionType": [
-        "fade",
-        "disc",
-        "stripes",
-        "wipe",
-        "pixelate",
-        "honeycomb"
+        "fade"
       ],
       "skipStartupTransition": false,
-      "transitionEdgeSmoothness": 0.05,
+      "transitionEdgeSmoothness": 0,
       "panelPosition": "follow_bar",
       "hideWallpaperFilenames": false,
       "useOriginalImages": false,
@@ -430,7 +430,7 @@
       "bluetoothAutoConnect": true
     },
     "sessionMenu": {
-      "enableCountdown": true,
+      "enableCountdown": false,
       "countdownDuration": 10000,
       "position": "center",
       "showHeader": true,
@@ -573,7 +573,7 @@
       "enableUserTheming": false
     },
     "nightLight": {
-      "enabled": false,
+      "enabled": true,
       "forced": false,
       "autoSchedule": true,
       "nightTemp": "4000",
@@ -630,10 +630,6 @@
     "barVisible": true,
     "openedPanel": "",
     "lockScreenActive": false,
-    "wallpapers": {
-      "DP-1": "/nix/store/7j4a02nkk4ilda585jbjgg9f9i9b4ibb-noctalia-shell-4.7.5/share/noctalia-shell/Assets/Wallpaper/noctalia.png",
-      "HDMI-A-1": "/nix/store/7j4a02nkk4ilda585jbjgg9f9i9b4ibb-noctalia-shell-4.7.5/share/noctalia-shell/Assets/Wallpaper/noctalia.png"
-    },
     "desktopWidgetsEditMode": false,
     "display": {
       "DP-1": {
@@ -671,7 +667,7 @@
       "lastSeenTs": 1776374529000
     },
     "changelogState": {
-      "lastSeenVersion": "v4.7.5"
+      "lastSeenVersion": "v4.7.7"
     },
     "colorSchemesList": {
       "schemes": [],

@@ -22,10 +22,18 @@ let
     self.homeModules.features-home-kubernetes
     self.homeModules.features-home-ssh
     self.homeModules.features-home-wakatime
+    self.homeModules.features-home-yazi
     self.homeModules.features-home-zsh
 
+    self.homeModules.features-home-discord
     self.homeModules.features-home-firefox
     self.homeModules.features-home-ghostty
+    self.homeModules.features-home-obsidian
+    self.homeModules.features-home-syncthing
+    self.homeModules.features-home-teams
+    self.homeModules.features-home-telegram
+    self.homeModules.features-home-thunderbird
+    self.homeModules.features-home-vicinae
 
     self.homeModules.theme
   ];
@@ -59,6 +67,7 @@ rec {
             inputs.krewfile.homeManagerModules.krewfile
             inputs.sops-nix.homeManagerModules.sops
             inputs.stylix.homeModules.stylix
+            inputs.vicinae.homeManagerModules.default
 
             {
               home = {
@@ -66,6 +75,8 @@ rec {
                 homeDirectory = "/home/${primaryUser}";
                 stateVersion = "25.11";
               };
+
+              nixpkgs.config.allowUnfree = true;
 
               features = {
                 home = {
@@ -75,6 +86,10 @@ rec {
                     features = [
                       "doh"
                     ];
+                  };
+
+                  thunderbird = {
+                    inherit trustedRootCertificates;
                   };
                 };
               };
