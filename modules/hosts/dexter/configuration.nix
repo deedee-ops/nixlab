@@ -3,6 +3,11 @@
   flake.nixosModules.hosts-dexter-configuration =
     _:
     let
+      trustedRootCertificates = [
+        (builtins.readFile ../../../assets/ca-ec384.crt)
+        (builtins.readFile ../../../assets/ca-rsa4096.crt)
+      ];
+
       primaryUser = "ajgonoix";
       homeModules = [
         self.homeModules.features-home
@@ -18,6 +23,7 @@
         self.homeModules.features-home-wakatime
         self.homeModules.features-home-zsh
 
+        self.homeModules.features-home-firefox
         self.homeModules.features-home-ghostty
 
         self.homeModules.theme
@@ -74,6 +80,7 @@
           };
 
           niri = {
+            features = [ "i915" ];
             monitors = [
               "DP-1"
               "HDMI-A-1"
@@ -98,16 +105,24 @@
           };
 
           system = {
-            trustedRootCertificates = [
-              (builtins.readFile ../../../assets/ca-ec384.crt)
-              (builtins.readFile ../../../assets/ca-rsa4096.crt)
-            ];
+            inherit trustedRootCertificates;
           };
 
           user = {
             name = primaryUser;
             extraDirectories = [ "/mnt" ];
           };
+        };
+      };
+
+      home-manager.users."${primaryUser}".features.home = {
+        firefox = {
+          inherit trustedRootCertificates;
+
+          features = [
+            "i915"
+            "doh"
+          ];
         };
       };
 

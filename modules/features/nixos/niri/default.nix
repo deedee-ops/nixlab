@@ -30,6 +30,17 @@ let
       description = "Noctalia shell extra settings to be merged with defaults";
       default = { };
     };
+
+    features = lib.mkOption {
+      type = lib.types.listOf (
+        lib.types.enum [
+          "i915"
+          "nvidia"
+        ]
+      );
+      description = "Extra features enabled in niri configs";
+      default = [ ];
+    };
   };
 in
 {
@@ -132,6 +143,18 @@ in
               QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
               XDG_CURRENT_DESKTOP = "niri";
               XDG_SESSION_TYPE = "wayland";
+            }
+            // lib.optionalAttrs (builtins.elem "i915" config.features) {
+              LIBVA_DRIVERS_PATH = "${pkgs.intel-vaapi-driver}/lib/dri/";
+              LIBVA_DRIVER_NAME = "iHD";
+              MOZ_DISABLE_RDD_SANDBOX = "1";
+              NVD_BACKEND = "direct";
+            }
+            // lib.optionalAttrs (builtins.elem "nvidia" config.features) {
+              LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
+              LIBVA_DRIVER_NAME = "nvidia";
+              MOZ_DISABLE_RDD_SANDBOX = "1";
+              NVD_BACKEND = "direct";
             };
 
             cursor = {

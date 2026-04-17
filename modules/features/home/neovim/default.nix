@@ -3,7 +3,15 @@
   flake.homeModules.features-home-neovim =
     { pkgs, ... }:
     {
-      home.packages = [ self.packages."${pkgs.stdenv.hostPlatform.system}".neovim ];
+      programs.neovim = {
+        enable = true;
+        package = self.packages."${pkgs.stdenv.hostPlatform.system}".neovim;
+
+        coc.enable = false;
+        defaultEditor = true;
+        viAlias = true;
+        vimAlias = true;
+      };
     };
 
   perSystem =

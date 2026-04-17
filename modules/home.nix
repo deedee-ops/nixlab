@@ -4,6 +4,11 @@
   ...
 }:
 let
+  trustedRootCertificates = [
+    (builtins.readFile ../assets/ca-ec384.crt)
+    (builtins.readFile ../assets/ca-rsa4096.crt)
+  ];
+
   primaryUser = "ajgon";
   homeModules = [
     self.homeModules.features-home
@@ -19,6 +24,7 @@ let
     self.homeModules.features-home-wakatime
     self.homeModules.features-home-zsh
 
+    self.homeModules.features-home-firefox
     self.homeModules.features-home-ghostty
 
     self.homeModules.theme
@@ -59,6 +65,18 @@ rec {
                 username = primaryUser;
                 homeDirectory = "/home/${primaryUser}";
                 stateVersion = "25.11";
+              };
+
+              features = {
+                home = {
+                  firefox = {
+                    inherit trustedRootCertificates;
+
+                    features = [
+                      "doh"
+                    ];
+                  };
+                };
               };
 
               # TODO:
