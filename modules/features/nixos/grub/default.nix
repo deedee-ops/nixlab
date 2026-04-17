@@ -32,6 +32,8 @@ _: {
           ) "features.nixos.grub.efiInstallAsRemovable is ignored in legacy mode")
         ];
 
+        stylix.targets.grub.enable = false;
+
         boot.loader = {
           systemd-boot.enable = lib.mkForce false;
           grub = {

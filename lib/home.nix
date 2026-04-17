@@ -29,4 +29,22 @@
         RestartSec = 3;
       };
     };
+
+  mkGuiStartupService =
+    { package }:
+    {
+      "${package.pname}" = {
+        Unit = {
+          Description = package.meta.description or "${package.pname}";
+          After = [ "graphical-session.target" ];
+          PartOf = [ "graphical-session.target" ];
+        };
+        Service = {
+          ExecStart = "${package}/bin/${package.meta.mainProgram}";
+        };
+        Install = {
+          WantedBy = [ "graphical-session.target" ];
+        };
+      };
+    };
 }

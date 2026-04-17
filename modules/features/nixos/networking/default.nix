@@ -263,11 +263,6 @@ _: {
             else
               lib.recursiveUpdate cfg.customNetworking { enable = true; };
         };
-
-        # TODO:
-        # mySystemApps.xorg.userAutorun = lib.optionalAttrs cfg.wifiSupport {
-        #   nm-applet = lib.getExe pkgs.networkmanagerapplet;
-        # };
       };
     };
 }

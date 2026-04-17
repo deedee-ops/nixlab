@@ -6,10 +6,10 @@
 }:
 let
   niriOptions = {
-    monitors = lib.mkOption {
+    displays = lib.mkOption {
       type = lib.types.listOf lib.types.str;
       description = ''
-        List of monitors detected and expected to be supported by niri.
+        List of displays detected and expected to be supported by niri.
         To determine them use: `niri msg outputs`
       '';
       default = [ "default" ]; # for one monitor whole logic will be ignored
@@ -17,6 +17,15 @@ let
         "DP-1"
         "HDMI-A-1"
       ];
+    };
+
+    launcher = lib.mkOption {
+      type = lib.types.enum [
+        "noctalia-shell"
+        "vicinae"
+      ];
+      description = "Dafault launcher";
+      default = "noctalia-shell";
     };
 
     terminal = lib.mkOption {
@@ -54,21 +63,15 @@ in
       options.features.nixos.niri = niriOptions;
 
       config = {
-        # services.greetd = {
-        #   enable = true;
-        #   settings = {
-        #     default_session = {
-        #       command = "niri-session";
-        #       user = "ajgon";
-        #     };
-        #   };
-        # };
-
         services.logind.settings.Login = {
           HandleLidSwitch = "suspend";
           HandleLidSwitchExternalPower = "suspend";
         };
         # security.pam.services.swaylock = { };
+
+        environment.systemPackages = [
+          inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default
+        ];
 
         programs.niri = {
           enable = true;
@@ -90,14 +93,6 @@ in
       packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
         inherit pkgs;
         imports = [ self.wrapperModules.niri ];
-
-        extraPackages = [
-          pkgs.brightnessctl
-          # pkgs.procps
-          # pkgs.swayidle
-          # pkgs.swaylock
-          pkgs.swayosd
-        ];
       };
     };
 
@@ -116,17 +111,9 @@ in
 
         settings =
           let
-            workspaces = map (w: "w${toString w}") (builtins.genList (x: x) 10);
-            niriSwitchWs = pkgs.writeShellApplication {
-              name = "niri-switch-ws.sh";
-              runtimeInputs = [
-                pkgs.jq
-                pkgs.niri
-              ];
-              text = builtins.readFile ./niri-switch-ws.sh;
-            };
             noctaliaShellPkg = inputs.wrapper-modules.wrappers.noctalia-shell.wrap {
               inherit pkgs;
+              package = inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default;
               settings = lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./noctalia.json)).settings config.noctaliaShellExtraSettings;
             };
           in
@@ -138,9 +125,11 @@ in
 
             environment = {
               DISPLAY = ":0"; # for xwayland-satellite
+              GTK_USE_PORTAL = "0";
               MOZ_ENABLE_WAYLAND = "1";
               QT_QPA_PLATFORM = "wayland";
               QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+              WAYLAND_DISPLAY = "wayland-1";
               XDG_CURRENT_DESKTOP = "niri";
               XDG_SESSION_TYPE = "wayland";
             }
@@ -168,7 +157,6 @@ in
                   max-scroll-amount = "95%";
                 };
               };
-              workspace-auto-back-and-forth = _: { };
 
               keyboard = {
                 xkb = {
@@ -189,19 +177,30 @@ in
               focus-ring.width = 2;
             };
 
-            workspaces = builtins.listToAttrs (
-              builtins.concatMap (
-                monitor:
-                map (workspace: {
-                  name = "${workspace}-${monitor}";
-                  value =
-                    { }
-                    // lib.optionalAttrs (builtins.length config.monitors > 1) {
-                      open-on-output = monitor;
-                    };
-                }) workspaces
-              ) config.monitors
-            );
+            workspaces =
+              let
+                workspaceDisplay = lib.last config.displays;
+              in
+              {
+                "1-thunderbird" = {
+                  open-on-output = workspaceDisplay;
+                };
+                "2-obsidian" = {
+                  open-on-output = workspaceDisplay;
+                };
+                "3-teams" = {
+                  open-on-output = workspaceDisplay;
+                };
+                "4-telegram" = {
+                  open-on-output = workspaceDisplay;
+                };
+                "5-discord" = {
+                  open-on-output = workspaceDisplay;
+                };
+                "x-firefox" = {
+                  open-on-output = workspaceDisplay;
+                };
+              };
 
             xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
 
@@ -221,14 +220,55 @@ in
             ];
 
             window-rules = [
-
+              {
+                matches = [
+                  { app-id = "thunderbird"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "1-thunderbird";
+              }
+              {
+                matches = [
+                  { title = "Obsidian"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "2-obsidian";
+              }
+              {
+                matches = [
+                  { app-id = "teams-for-linux"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "3-teams";
+              }
+              {
+                matches = [
+                  { app-id = "org.telegram.desktop"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "4-telegram";
+              }
+              {
+                matches = [
+                  { app-id = "discord"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "5-discord";
+              }
+              {
+                matches = [
+                  { app-id = "firefox"; }
+                ];
+                open-maximized = true;
+                open-on-workspace = "x-firefox";
+              }
             ];
 
             binds = {
               "Mod+Return".spawn =
                 lib.getExe
                   self.packages."${pkgs.stdenv.hostPlatform.system}"."${config.terminal}";
-              "Mod+Q".close-window = _: { };
+              "Mod+Shift+Q".close-window = _: { };
 
               "Mod+F".toggle-window-floating = _: { };
               "Mod+Z".maximize-column = _: { };
@@ -236,13 +276,15 @@ in
 
               "Mod+H".focus-column-left-or-last = _: { };
               "Mod+L".focus-column-right-or-first = _: { };
-              "Mod+K".focus-window-up-or-bottom = _: { };
-              "Mod+J".focus-window-down-or-top = _: { };
+              "Mod+K".focus-window-or-workspace-up = _: { };
+              "Mod+J".focus-window-or-workspace-down = _: { };
 
               "Mod+Shift+H".move-column-left = _: { };
               "Mod+Shift+L".move-column-right = _: { };
-              "Mod+Shift+K".move-window-up = _: { };
-              "Mod+Shift+J".move-window-down = _: { };
+              "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
+              "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
+
+              "Mod+Shift+G".switch-preset-column-width = _: { };
 
               "Mod+Ctrl+H".consume-or-expel-window-left = _: { };
               "Mod+Ctrl+L".consume-or-expel-window-right = _: { };
@@ -254,6 +296,39 @@ in
               "Print".screenshot-screen = _: { };
               "Mod+Print".screenshot-window = _: { };
               "Mod+Shift+Print".screenshot = _: { };
+
+              "Mod+Space".spawn = _: {
+                props =
+                  if config.launcher == "vicinae" then
+                    [
+                      (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                      "toggle"
+                    ]
+                  else
+                    [
+                      (lib.getExe noctaliaShellPkg)
+                      "ipc"
+                      "call"
+                      "launcher"
+                      "toggle"
+                    ];
+              };
+              "Mod+Shift+V".spawn = _: {
+                props =
+                  if config.launcher == "vicinae" then
+                    [
+                      (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                      "vicinae://extensions/vicinae/clipboard/history"
+                    ]
+                  else
+                    [
+                      (lib.getExe noctaliaShellPkg)
+                      "ipc"
+                      "call"
+                      "launcher"
+                      "clipboard"
+                    ];
+              };
 
               "Mod+Tab" = _: {
                 props = {
@@ -277,9 +352,11 @@ in
                 };
                 content.spawn = _: {
                   props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--output-volume"
-                    "raise"
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "volume"
+                    "increase"
                   ];
                 };
               };
@@ -289,9 +366,11 @@ in
                 };
                 content.spawn = _: {
                   props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--output-volume"
-                    "lower"
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "volume"
+                    "decrease"
                   ];
                 };
               };
@@ -301,9 +380,11 @@ in
                 };
                 content.spawn = _: {
                   props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--output-volume"
-                    "mute-toggle"
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "volume"
+                    "muteOutput"
                   ];
                 };
               };
@@ -313,9 +394,11 @@ in
                 };
                 content.spawn = _: {
                   props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--brightness"
-                    "raise"
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "brightness"
+                    "increase"
                   ];
                 };
               };
@@ -325,62 +408,23 @@ in
                 };
                 content.spawn = _: {
                   props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--brightness"
-                    "lower"
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "brightness"
+                    "decrease"
                   ];
                 };
               };
-              "XF86KbdBrightnessUp" = _: {
-                props = {
-                  allow-when-locked = true;
-                };
-                content.spawn = _: {
-                  props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--kbd-brightness"
-                    "raise"
-                  ];
-                };
-              };
-              "XF86KbdBrightnessDown" = _: {
-                props = {
-                  allow-when-locked = true;
-                };
-                content.spawn = _: {
-                  props = [
-                    (lib.getExe' pkgs.swayosd "swayosd-client")
-                    "--kbd-brightness"
-                    "lower"
-                  ];
-                };
-              };
-            }
-            // (lib.listToAttrs (
-              lib.imap0 (i: ws: {
-                name = "Mod+${toString (if i + 1 == 10 then 0 else i + 1)}";
-                value.spawn = _: {
-                  props = [
-                    (lib.getExe niriSwitchWs)
-                    ws
-                  ];
-                };
-              }) workspaces
-            ))
-            // (lib.listToAttrs (
-              lib.imap0 (i: ws: {
-                name = "Mod+Shift+${toString (if i + 1 == 10 then 0 else i + 1)}";
-                value.spawn = _: {
-                  props = [
-                    (lib.getExe niriSwitchWs)
-                    ws
-                    "--move"
-                  ];
-                };
-              }) workspaces
-            ));
-          };
 
+              "Mod+1".focus-workspace = "1-thunderbird";
+              "Mod+2".focus-workspace = "2-obsidian";
+              "Mod+3".focus-workspace = "3-teams";
+              "Mod+4".focus-workspace = "4-telegram";
+              "Mod+5".focus-workspace = "5-discord";
+              "Mod+0".focus-workspace = "x-firefox";
+            };
+          };
       };
     };
 }

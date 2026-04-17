@@ -9,6 +9,7 @@
       inputs.stylix.nixosModules.stylix
 
       self.nixosModules.hosts-dexter-configuration
+      self.nixosModules.hosts-dexter-devices
     ];
   };
 }
