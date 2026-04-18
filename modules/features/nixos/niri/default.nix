@@ -29,7 +29,10 @@ let
     };
 
     terminal = lib.mkOption {
-      type = lib.types.enum [ "ghostty" ];
+      type = lib.types.enum [
+        "ghostty"
+        "kitty"
+      ];
       description = "Default terminal emulator to use";
       default = "ghostty";
     };

@@ -26,7 +26,7 @@
 
         self.homeModules.features-home-discord
         self.homeModules.features-home-firefox
-        self.homeModules.features-home-ghostty
+        self.homeModules.features-home-kitty
         self.homeModules.features-home-obsidian
         self.homeModules.features-home-syncthing
         self.homeModules.features-home-teams
@@ -81,6 +81,8 @@
           niri = {
             displays = [ "eDP-1" ];
             launcher = "vicinae";
+            terminal = "kitty";
+
             noctalia = {
               extraSettings = {
                 bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-widgets.json);
