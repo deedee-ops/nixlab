@@ -1,6 +1,6 @@
-{ self, ... }:
+{ self, inputs, ... }:
 {
-  flake.nixosModules.hosts-dexter-configuration =
+  flake.nixosModules.hosts-liadtop-configuration =
     { pkgs, ... }:
     let
       trustedRootCertificates = [
@@ -39,13 +39,12 @@
     in
     {
       imports = [
-        self.nixosModules.hardware-ms-01
+        self.nixosModules.hardware-zenbook-14
 
         self.nixosModules.features-nixos-disks
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-home-manager
         self.nixosModules.features-nixos-locales
-        self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-system
         self.nixosModules.features-nixos-time
@@ -68,7 +67,7 @@
           disks = {
             enable = true;
             filesystem = "ext4";
-            swapSize = "4G";
+            swapSize = "24G";
             systemDiskDevs = [ "/dev/nvme0n1" ];
           };
 
@@ -79,23 +78,36 @@
             modules = homeModules;
           };
 
-          networking = {
-            firewallEnable = true;
-            hostname = "dexter";
-            mainInterface = {
-              name = "enp89s0";
-              bridge = true;
-              bridgeMAC = "02:00:c0:a8:02:c8";
-            };
-          };
-
           niri = {
-            features = [ "i915" ];
-            displays = [
-              "DP-1"
-              "HDMI-A-1"
-            ];
+            displays = [ "eDP-1" ];
             launcher = "vicinae";
+            noctalia = {
+              extraSettings = {
+                bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-widgets.json);
+              };
+
+              preInstalledPlugins = {
+                tailscale = {
+                  src = "${inputs.noctalia-plugins.outPath}/tailscale";
+                  settings = {
+                    refreshInterval = 5000;
+                    compactMode = false;
+                    showIpAddress = true;
+                    showPeerCount = true;
+                    hideDisconnected = false;
+                    hideMullvadExitNodes = true;
+                    terminalCommand = "";
+                    sshUsername = "";
+                    pingCount = 5;
+                    defaultPeerAction = "copy-ip";
+                    taildropEnabled = false;
+                    taildropDownloadDir = "~/Downloads";
+                    taildropReceiveMode = "operator";
+                    loginServer = "https://relay.rzegocki.dev";
+                  };
+                };
+              };
+            };
           };
 
           ssh = {
@@ -122,7 +134,6 @@
           inherit trustedRootCertificates;
 
           features = [
-            "i915"
             "doh"
           ];
         };

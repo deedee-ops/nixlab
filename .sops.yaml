@@ -7,8 +7,8 @@ keys:
       - &ajgon ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn
       - &homeManager age13lpwsgyvdsu690mg4kup99cuzmtq8kwu0t9zmj5ufkshvacxpecsyfmzlv
   - hosts:
-      - &provisioner age1aekjeltvxfam5zy857n8hvgv2z04fujqns45jdanhmwjm88savtq55z209
       - &dexter age1s3hlmga37ylfxp7y96uha27j6g4mxjs74ecsvjs9d6hwrv0uus5s4teuqn
+      - &liadtop age1czs2uzrun89mfzaykc2cl65auktzdhkky9lgp7c28wf6ezzz34sq5zhl6q
 
 creation_rules:
   - path_regex: home/.*\.sops\.yaml$
@@ -16,13 +16,13 @@ creation_rules:
       - age:
           - *ajgon
           - *homeManager
-  - path_regex: provisioner/.*\.sops\.yaml$
-    key_groups:
-      - age:
-          - *ajgon
-          - *provisioner
   - path_regex: dexter/.*\.sops\.yaml$
     key_groups:
       - age:
           - *ajgon
           - *dexter
+  - path_regex: liadtop/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *liadtop

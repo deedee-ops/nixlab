@@ -237,7 +237,9 @@
     "wallpaper": {
       "enabled": true,
       "overviewEnabled": false,
-      "enableMultiMonitorDirectories": true,
+      "directory": "/var/lib/wallpapers",
+      "monitorDirectories": [],
+      "enableMultiMonitorDirectories": false,
       "showHiddenFiles": false,
       "viewMode": "single",
       "setWallpaperOnAllMonitors": true,
@@ -559,7 +561,6 @@
     },
     "colorSchemes": {
       "useWallpaperColors": false,
-      "predefinedScheme": "Catppuccin",
       "darkMode": true,
       "schedulingMode": "off",
       "manualSunrise": "06:30",
@@ -616,65 +617,7 @@
       "overviewEnabled": true,
       "gridSnap": false,
       "gridSnapScale": false,
-      "monitorWidgets": [
-        {
-          "name": "HDMI-A-1",
-          "widgets": []
-        }
-      ]
-    }
-  },
-  "state": {
-    "doNotDisturb": false,
-    "noctaliaPerformanceMode": false,
-    "barVisible": true,
-    "openedPanel": "",
-    "lockScreenActive": false,
-    "desktopWidgetsEditMode": false,
-    "display": {
-      "DP-1": {
-        "name": "DP-1",
-        "connected": true,
-        "scale": 1.5,
-        "width": 2560,
-        "height": 1440,
-        "x": 0,
-        "y": 0,
-        "physical_width": 600,
-        "physical_height": 340,
-        "refresh_rate": 59997,
-        "vrr_supported": false,
-        "vrr_enabled": false,
-        "transform": "Normal"
-      },
-      "HDMI-A-1": {
-        "name": "HDMI-A-1",
-        "connected": true,
-        "scale": 1.5,
-        "width": 2560,
-        "height": 1440,
-        "x": 2560,
-        "y": 0,
-        "physical_width": 600,
-        "physical_height": 330,
-        "refresh_rate": 59997,
-        "vrr_supported": false,
-        "vrr_enabled": false,
-        "transform": "Normal"
-      }
-    },
-    "notificationsState": {
-      "lastSeenTs": 1776374529000
-    },
-    "changelogState": {
-      "lastSeenVersion": "v4.7.7"
-    },
-    "colorSchemesList": {
-      "schemes": [],
-      "timestamp": 0
-    },
-    "ui": {
-      "settingsSidebarExpanded": true
+      "monitorWidgets": []
     }
   }
 }

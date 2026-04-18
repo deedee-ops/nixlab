@@ -34,10 +34,26 @@ let
       default = "ghostty";
     };
 
-    noctaliaShellExtraSettings = lib.mkOption {
-      type = lib.types.attrs;
-      description = "Noctalia shell extra settings to be merged with defaults";
-      default = { };
+    noctalia = lib.mkOption {
+      type = lib.types.submodule {
+        options = {
+          colors = lib.mkOption {
+            type = lib.types.attrsOf lib.types.str;
+            description = "Noctalia custom color scheme";
+            default = { };
+          };
+          extraSettings = lib.mkOption {
+            type = lib.types.attrs;
+            description = "Noctalia shell extra settings to be merged with defaults";
+            default = { };
+          };
+          preInstalledPlugins = lib.mkOption {
+            type = lib.types.attrs;
+            description = "Same as wrapper-modules.noctualia-shell.options.preInstalledPlugins";
+            default = { };
+          };
+        };
+      };
     };
 
     features = lib.mkOption {
@@ -63,15 +79,21 @@ in
       options.features.nixos.niri = niriOptions;
 
       config = {
-        services.logind.settings.Login = {
-          HandleLidSwitch = "suspend";
-          HandleLidSwitchExternalPower = "suspend";
-        };
         # security.pam.services.swaylock = { };
 
         environment.systemPackages = [
           inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default
         ];
+
+        system.activationScripts = {
+          niri-copy-wallpapers = {
+            text = ''
+              mkdir -p /var/lib/wallpapers
+              cp -r ${../../../../assets/wallpapers}/* /var/lib/wallpapers
+              chmod a=rX /var/lib/wallpapers
+            '';
+          };
+        };
 
         programs.niri = {
           enable = true;
@@ -113,8 +135,28 @@ in
           let
             noctaliaShellPkg = inputs.wrapper-modules.wrappers.noctalia-shell.wrap {
               inherit pkgs;
+              inherit (config.noctalia) colors preInstalledPlugins;
+
               package = inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default;
-              settings = lib.recursiveUpdate (builtins.fromJSON (builtins.readFile ./noctalia.json)).settings config.noctaliaShellExtraSettings;
+              settings = lib.recursiveUpdate (lib.recursiveUpdate
+                (builtins.fromJSON (builtins.readFile ./noctalia.json)).settings
+                {
+                  general = {
+                    avatarImage = "${../../../../assets/avatar.png}";
+                  };
+                  wallpaper = {
+                    directory = "/var/lib/wallpapers";
+                  }
+                  // lib.optionalAttrs (builtins.length config.displays > 1) {
+                    enableMultiMonitorDirectories = true;
+                    monitorDirectories = map (display: {
+                      directory = "/var/lib/wallpapers";
+                      name = display;
+                    }) config.displays;
+
+                  };
+                }
+              ) config.noctalia.extraSettings;
             };
           in
           {
@@ -152,6 +194,7 @@ in
             };
 
             input = {
+              workspace-auto-back-and-forth = _: { };
               focus-follows-mouse = _: {
                 props = {
                   max-scroll-amount = "95%";
@@ -163,6 +206,14 @@ in
                   layout = "pl";
                   options = "caps:escape";
                 };
+              };
+
+              touchpad = {
+                tap = _: { };
+                drag = true;
+                drag-lock = _: { };
+                tap-button-map = "left-right-middle";
+                click-method = "clickfinger";
               };
             };
 
