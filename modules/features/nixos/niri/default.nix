@@ -88,6 +88,8 @@ in
           inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default
         ];
 
+        security.pam.services.login = { };
+
         system.activationScripts = {
           niri-copy-wallpapers = {
             text = ''

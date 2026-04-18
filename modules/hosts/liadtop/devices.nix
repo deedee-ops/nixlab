@@ -15,7 +15,22 @@ _: {
 
     security.rtkit.enable = true;
 
+    boot.kernelParams = [ "resume=/dev/disk/by-partlabel/disk-system-swap" ];
+
+    systemd.sleep.settings.Sleep = {
+      AllowSuspendThenHibernate = "yes";
+      HibernateDelaySec = "30min";
+    };
+
     services = {
+      logind.settings.Login = {
+        HandleLidSwitch = "suspend-then-hibernate";
+        HandleLidSwitchDocked = "ignore";
+        HandleLidSwitchExternalPower = "suspend-then-hibernate";
+        HandlePowerKey = "suspend-then-hibernate";
+        HandlePowerKeyLongPress = "poweroff";
+      };
+
       upower.enable = true;
 
       pulseaudio.enable = false;

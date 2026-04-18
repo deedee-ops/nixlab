@@ -30,14 +30,6 @@ _: {
         enableRedistributableFirmware = true;
         usb-modeswitch.enable = true;
       };
-
-      # power
-      services.logind.settings.Login = {
-        HandleLidSwitch = "suspend";
-        HandleLidSwitchExternalPower = "suspend";
-        HandlePowerKey = "suspend";
-        HandlePowerKeyLongPress = "poweroff";
-      };
     };
   };
 }
