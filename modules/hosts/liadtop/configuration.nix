@@ -42,6 +42,7 @@
         self.nixosModules.hardware-zenbook-14
 
         self.nixosModules.features-nixos-disks
+        self.nixosModules.features-nixos-docker
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-home-manager
         self.nixosModules.features-nixos-locales
@@ -71,10 +72,12 @@
             systemDiskDevs = [ "/dev/nvme0n1" ];
           };
 
+          docker.username = primaryUser;
+
           grub.mode = "uefi";
 
           home-manager = {
-            username = "${primaryUser}";
+            username = primaryUser;
             modules = homeModules;
           };
 
