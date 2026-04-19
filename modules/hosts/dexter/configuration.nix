@@ -93,7 +93,7 @@
           };
 
           niri = {
-            features = [ "i915" ];
+            features = [ "iHD" ];
             displays = [
               "DP-1"
               "HDMI-A-1"
@@ -126,7 +126,7 @@
           inherit trustedRootCertificates;
 
           features = [
-            "i915"
+            "iHD"
             "doh"
           ];
         };

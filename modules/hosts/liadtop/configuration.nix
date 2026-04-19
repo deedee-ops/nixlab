@@ -83,6 +83,7 @@
 
           niri = {
             displays = [ "eDP-1" ];
+            features = [ "radeon" ];
             launcher = "vicinae";
             terminal = "kitty";
 
@@ -139,6 +140,7 @@
           inherit trustedRootCertificates;
 
           features = [
+            "radeon"
             "doh"
           ];
         };

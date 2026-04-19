@@ -1,6 +1,6 @@
 _: {
   flake.nixosModules.hosts-liadtop-devices =
-    { lib, ... }:
+    { lib, pkgs, ... }:
     let
       lidAction = "suspend"; # suspend or suspend-then-hibernate
     in
@@ -9,6 +9,10 @@ _: {
         bluetooth = {
           enable = true;
           powerOnBoot = true;
+        };
+        graphics = {
+          enable = true;
+          extraPackages = [ pkgs.mesa ];
         };
         i2c.enable = true;
       };

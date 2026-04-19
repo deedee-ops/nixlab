@@ -24,11 +24,12 @@
           "ctrl+minus" = "change_font_size all -1.0";
           "ctrl+kp_subtract" = "change_font_size all -1.0";
           "ctrl+0" = "change_font_size all 0";
+          "shift+insert" = "paste_from_clipboard";
         };
 
         settings = {
           confirm_os_window_close = 0;
-          copy_on_select = true;
+          copy_on_select = "clipboard";
           cursor_shape = "block";
           disable_ligatures = "always";
           enable_audio_bell = false;

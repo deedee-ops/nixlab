@@ -62,7 +62,8 @@ let
     features = lib.mkOption {
       type = lib.types.listOf (
         lib.types.enum [
-          "i915"
+          "radeon"
+          "iHD"
           "nvidia"
         ]
       );
@@ -174,17 +175,30 @@ in
               DISPLAY = ":0"; # for xwayland-satellite
               GTK_USE_PORTAL = "0";
               MOZ_ENABLE_WAYLAND = "1";
-              QT_QPA_PLATFORM = "wayland";
+              MOZ_DBUS_REMOTE = "1";
               QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
               WAYLAND_DISPLAY = "wayland-1";
               XDG_CURRENT_DESKTOP = "niri";
               XDG_SESSION_TYPE = "wayland";
+
+              # tell various apps we use wayland
+              CLUTTER_BACKEND = "wayland";
+              EGL_PLATFORM = "wayland";
+              GDK_BACKEND = "wayland,x11";
+              NIXOS_OZONE_WL = "1";
+              QT_QPA_PLATFORM = "wayland";
+              SDL_VIDEODRIVER = "wayland,x11";
+              _JAVA_AWT_WM_NONREPARENTING = "1";
             }
-            // lib.optionalAttrs (builtins.elem "i915" config.features) {
-              LIBVA_DRIVERS_PATH = "${pkgs.intel-vaapi-driver}/lib/dri/";
+            // lib.optionalAttrs (builtins.elem "radeon" config.features) {
+              LIBVA_DRIVERS_PATH = "${pkgs.mesa}/lib/dri/";
+              LIBVA_DRIVER_NAME = "radeonsi";
+              MOZ_DISABLE_RDD_SANDBOX = "1";
+            }
+            // lib.optionalAttrs (builtins.elem "iHD" config.features) {
+              LIBVA_DRIVERS_PATH = "${pkgs.intel-media-driver}/lib/dri/";
               LIBVA_DRIVER_NAME = "iHD";
               MOZ_DISABLE_RDD_SANDBOX = "1";
-              NVD_BACKEND = "direct";
             }
             // lib.optionalAttrs (builtins.elem "nvidia" config.features) {
               LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";

@@ -9,6 +9,10 @@ _: {
           powerOnBoot = true;
         };
         i2c.enable = true;
+        graphics = {
+          enable = true;
+          extraPackages = [ pkgs.intel-media-driver ];
+        };
       };
 
       security.rtkit.enable = true;

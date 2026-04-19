@@ -42,6 +42,10 @@ _: {
 
             grep = "grep --color";
             ls = "ls --color";
+
+            claude = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
+            claude-chat = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude'';
+            claude-go = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
           }
           // lib.optionalAttrs pkgs.stdenv.isLinux {
             # check sync process (usually when unmounting USBs)

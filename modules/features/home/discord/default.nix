@@ -1,24 +1,11 @@
 _: {
   flake.homeModules.features-home-discord =
-    {
-      config,
-      pkgs,
-      lib,
-      ...
-    }:
-    let
-      discordPkg = pkgs.discord.overrideAttrs (oldAttrs: {
-        postInstall = ({ postInstall = ""; } // oldAttrs).postInstall + ''
-          wrapProgram "$out/opt/Discord/Discord" \
-            --set 'HOME' '${config.xdg.configHome}'
-        '';
-      });
-    in
+    { pkgs, lib, ... }:
     {
       config = {
-        home.packages = [ discordPkg ];
+        home.packages = [ pkgs.discord ];
 
-        systemd.user.services = lib.mkGuiStartupService { package = discordPkg; };
+        systemd.user.services = lib.mkGuiStartupService { package = pkgs.discord; };
       };
     };
 }

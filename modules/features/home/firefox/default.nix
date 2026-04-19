@@ -9,7 +9,10 @@
     }:
     let
       cfg = config.features.home.firefox;
-      isGPU = (builtins.elem "i915" cfg.features) || (builtins.elem "nvidia" cfg.features);
+      isGPU =
+        (builtins.elem "iHD" cfg.features)
+        || (builtins.elem "radeon" cfg.features)
+        || (builtins.elem "nvidia" cfg.features);
       firefoxPkg = config.programs.firefox.finalPackage;
     in
     {
@@ -20,6 +23,7 @@
               "doh"
               "i915"
               "nvidia"
+              "radeon"
             ]
           );
           description = "Extra features enabled in niri configs";
@@ -85,12 +89,12 @@
               settings =
                 lib.optionalAttrs isGPU {
                   # hardware accelerated video decoding
+                  "gfx.webrender.all" = true;
+                  "media.av1.enabled" = !(builtins.elem "radeon" cfg.features);
                   "media.ffmpeg.vaapi.enabled" = true;
+                  "media.hardware-video-decoding.force-enabled" = true;
                   "media.rdd-ffmpeg.enabled" = true;
-                  "media.av1.enabled" = true;
                   "widget.dmabuf.force-enabled" = true;
-                  "gfx.x11-egl.force-enabled" = true;
-
                 }
                 // lib.optionalAttrs (!(builtins.elem "doh" cfg.features)) {
                   # Variant A: kill DNS over HTTPS
@@ -202,6 +206,9 @@
                   "browser.translations.enable" = false;
                   "browser.translations.automaticallyPopup" = false;
 
+                  # clipboard
+                  "widget.clipboard.use-cached-data.enabled" = true;
+
                   # disable AI bullshit
                   "browser.ml.chat.enabled" = false;
                   "browser.ml.chat.menu" = false;
@@ -281,6 +288,8 @@
 
           sessionVariables = {
             DEFAULT_BROWSER = "${lib.getExe firefoxPkg}";
+            MOZ_ENABLE_WAYLAND = "1";
+            MOZ_DBUS_REMOTE = "1";
           };
         };
 
