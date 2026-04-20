@@ -10,13 +10,9 @@
     {
       config =
         let
-          secretsDbPath = "${config.home.homeDirectory}/Sync/sync/keepass/Secrets.kdbx";
+          secretsDbPath = "${config.home.homeDirectory}/Sync/sync/keepass/Passwords.kdbx";
         in
         {
-          sops.secrets = lib.genAttrs [ "keepassxc/secretsKey" ] (_: {
-            sopsFile = ./secrets.sops.yaml;
-          });
-
           programs.keepassxc.enable = true;
 
           home.activation.init-keepassxc = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -33,6 +29,7 @@
             Enabled=true
 
             [FdoSecrets]
+            ConfirmAccessItem=false
             Enabled=true
 
             [GUI]
@@ -53,9 +50,7 @@
 
           systemd.user.services = lib.mkGuiStartupService {
             package = pkgs.keepassxc;
-            command = "${lib.getExe pkgs.keepassxc} --minimized --keyfile \"${
-              config.sops.secrets."keepassxc/secretsKey".path
-            }\" ${secretsDbPath}";
+            command = "${lib.getExe pkgs.keepassxc} --minimized ${secretsDbPath}";
           };
 
           xdg = {
