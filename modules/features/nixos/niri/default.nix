@@ -516,6 +516,62 @@ in
                   ];
                 };
               };
+              "XF86AudioPlay" = _: {
+                props = {
+                  allow-when-locked = true;
+                };
+                content.spawn = _: {
+                  props = [
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "media"
+                    "playPause"
+                  ];
+                };
+              };
+              "XF86AudioStop" = _: {
+                props = {
+                  allow-when-locked = true;
+                };
+                content.spawn = _: {
+                  props = [
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "media"
+                    "stop"
+                  ];
+                };
+              };
+              "XF86AudioNext" = _: {
+                props = {
+                  allow-when-locked = true;
+                };
+                content.spawn = _: {
+                  props = [
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "media"
+                    "next"
+                  ];
+                };
+              };
+              "XF86AudioPrev" = _: {
+                props = {
+                  allow-when-locked = true;
+                };
+                content.spawn = _: {
+                  props = [
+                    (lib.getExe noctaliaShellPkg)
+                    "ipc"
+                    "call"
+                    "media"
+                    "previous"
+                  ];
+                };
+              };
 
               "Mod+1".focus-workspace = "1-thunderbird";
               "Mod+2".focus-workspace = "2-obsidian";

@@ -29,6 +29,7 @@
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
         self.homeModules.features-home-obsidian
+        self.homeModules.features-home-supersonic
         self.homeModules.features-home-syncthing
         self.homeModules.features-home-teams
         self.homeModules.features-home-telegram
