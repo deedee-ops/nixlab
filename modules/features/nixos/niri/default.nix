@@ -101,6 +101,12 @@ in
           };
         };
 
+        services.gnome.gnome-keyring.enable = lib.mkForce (
+          !(builtins.any (key: config.home-manager.users.${key}.programs.keepassxc.enable) (
+            builtins.attrNames config.home-manager.users
+          ))
+        );
+
         programs.niri = {
           enable = true;
 
@@ -289,7 +295,27 @@ in
               # ))
             ];
 
+            layer-rules = [
+              {
+                matches = [
+                  {
+                    namespace = "noctalia-notifications-.*";
+                  }
+                ];
+                block-out-from = "screencast";
+              }
+            ];
             window-rules = [
+              {
+                matches = [
+                  {
+                    app-id = "org.keepassxc.KeePassXC";
+                  }
+                ];
+                open-floating = true;
+                open-focused = true;
+                block-out-from = "screen-capture";
+              }
               {
                 matches = [
                   { app-id = "thunderbird"; }

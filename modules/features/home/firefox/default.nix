@@ -246,6 +246,7 @@
                         "containerise_kinte_sh-browser-action" # Containerise
                         "_15b1b2af-e84a-4c70-ac7c-5608b0eeed5a_-browser-action" # Cookiebro
                         "ublock0_raymondhill_net-browser-action" # uBlock origin
+                        "keepassxc-browser_keepassxc_org-browser-action" # KeepassXC
                       ]
                       ++ (lib.optionals (builtins.elem "obsidian" (map (p: p.pname or false) config.home.packages)) [
                         "clipper_obsidian_md-browser-action" # obsidian clipper

@@ -45,6 +45,8 @@
         };
         Service = {
           ExecStart = if command == null then "${package}/bin/${package.meta.mainProgram}" else command;
+          Restart = "on-failure";
+          RestartSec = 5;
         }
         // (
           if delay > 0 then
