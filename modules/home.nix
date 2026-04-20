@@ -36,6 +36,7 @@ let
     self.homeModules.features-home-telegram
     self.homeModules.features-home-thunderbird
     self.homeModules.features-home-vicinae
+    self.homeModules.features-home-zathura
 
     self.homeModules.theme
   ];
