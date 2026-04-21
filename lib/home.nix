@@ -34,7 +34,6 @@
     {
       package,
       command ? null,
-      delay ? 0,
     }:
     {
       "${package.pname}" = {
@@ -44,18 +43,11 @@
           PartOf = [ "graphical-session.target" ];
         };
         Service = {
+          ExecStartPre = "-${pkgs.glib}/bin/gdbus wait --session --timeout 30 org.kde.StatusNotifierWatcher";
           ExecStart = if command == null then "${package}/bin/${package.meta.mainProgram}" else command;
           Restart = "on-failure";
           RestartSec = 5;
-        }
-        // (
-          if delay > 0 then
-            {
-              ExecStartPre = "${pkgs.coreutils}/bin/sleep ${toString delay}";
-            }
-          else
-            { }
-        );
+        };
         Install = {
           WantedBy = [ "graphical-session.target" ];
         };
