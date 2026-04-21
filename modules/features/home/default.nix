@@ -1,6 +1,11 @@
 _: {
   flake.homeModules.features-home =
-    { pkgs, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     {
       options = {
         systemTheme = lib.mkOption {
@@ -24,11 +29,14 @@ _: {
         xdg.enable = true;
         home = {
           preferXdgDirectories = true;
+          activation.init-paths = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            ln -s ${config.home.homeDirectory}/Sync/sync/claude/ ${config.xdg.configHome}/claude || true
+          '';
 
           packages = [
             pkgs.silver-searcher
+            pkgs.wget
             pkgs.xterm
-            pkgs.alacritty
           ];
 
           shellAliases = {

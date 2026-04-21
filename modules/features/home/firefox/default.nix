@@ -21,7 +21,7 @@
           type = lib.types.listOf (
             lib.types.enum [
               "doh"
-              "i915"
+              "iHD"
               "nvidia"
               "radeon"
             ]
@@ -210,6 +210,12 @@
                   "widget.clipboard.use-cached-data.enabled" = true;
 
                   # disable AI bullshit
+                  "browser.ai.control.default" = "blocked";
+                  "browser.ai.control.linkPreviewKeyPoints" = "blocked";
+                  "browser.ai.control.pdfjsAltText" = "blocked";
+                  "browser.ai.control.sidebarChatbot" = "blocked";
+                  "browser.ai.control.smartTabGroups" = "blocked";
+                  "browser.ai.control.translations" = "blocked";
                   "browser.ml.chat.enabled" = false;
                   "browser.ml.chat.menu" = false;
                   "browser.ml.chat.page" = false;
@@ -221,6 +227,7 @@
                   "browser.ml.smartAssist.enabled" = false;
                   "browser.search.visualSearch.featureGate" = false;
                   "browser.tabs.groups.smart.enabled" = false;
+                  "browser.tabs.groups.smart.userEnabled" = false;
                   "browser.urlbar.quicksuggest.mlEnabled" = false;
                   "extensions.ml.enabled" = false;
                   "pdfjs.enableAltText" = false;
@@ -274,6 +281,7 @@
                   "network.dns.disableIPv6" = true;
                   "browser.startup.page" = 1;
                   "browser.startup.homepage" = "https://www.ajgon.casa";
+                  "browser.tabs.closeWindowWithLastTab" = false;
                 }
                 // lib.optionalAttrs (self.theme.polarity == "dark") { "ui.systemUsesDarkTheme" = 1; };
 

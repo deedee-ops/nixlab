@@ -41,6 +41,7 @@
             QuietSuccess=true
 
             [Security]
+            IconDownloadFallback=true
             LockDatabaseIdle=false
             LockDatabaseScreenLock=false
 

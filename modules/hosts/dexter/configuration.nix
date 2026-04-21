@@ -72,13 +72,16 @@
           disks = {
             enable = true;
             filesystem = "ext4";
-            swapSize = "4G";
+            swapSize = "8G";
             systemDiskDevs = [ "/dev/nvme0n1" ];
           };
 
           docker.username = primaryUser;
 
-          grub.mode = "uefi";
+          grub = {
+            mode = "uefi";
+            efiInstallAsRemovable = true;
+          };
 
           home-manager = {
             username = primaryUser;
