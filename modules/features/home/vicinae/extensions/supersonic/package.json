@@ -1,0 +1,76 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
+  "name": "supersonic",
+  "title": "Supersonic",
+  "description": "Search and control the Supersonic music player. Play albums, tracks, and playlists from whichever backend Supersonic is connected to.",
+  "icon": "extension-icon.png",
+  "author": "ajgon",
+  "categories": [
+    "Media"
+  ],
+  "license": "MIT",
+  "commands": [
+    {
+      "name": "search",
+      "title": "Search",
+      "subtitle": "Supersonic",
+      "description": "Search albums, tracks, and playlists via Supersonic",
+      "mode": "view"
+    },
+    {
+      "name": "play-pause",
+      "title": "Play / Pause",
+      "subtitle": "Supersonic",
+      "description": "Toggle playback in Supersonic",
+      "mode": "no-view"
+    },
+    {
+      "name": "next-track",
+      "title": "Next Track",
+      "subtitle": "Supersonic",
+      "description": "Skip to the next track",
+      "mode": "no-view"
+    },
+    {
+      "name": "previous-track",
+      "title": "Previous Track",
+      "subtitle": "Supersonic",
+      "description": "Jump to the previous track",
+      "mode": "no-view"
+    },
+    {
+      "name": "stop",
+      "title": "Stop",
+      "subtitle": "Supersonic",
+      "description": "Stop playback",
+      "mode": "no-view"
+    }
+  ],
+  "preferences": [
+    {
+      "name": "supersonicPath",
+      "title": "Supersonic Binary Path",
+      "description": "Path to the Supersonic binary. Supports $USER, ${USER}, and ~ expansion.",
+      "type": "textfield",
+      "required": false,
+      "default": "/etc/profiles/per-user/$USER/bin/supersonic"
+    }
+  ],
+  "dependencies": {
+    "@vicinae/api": "^0.20.7",
+    "@raycast/utils": "^1.17.0"
+  },
+  "devDependencies": {
+    "@raycast/eslint-config": "^1.0.11",
+    "@types/node": "20.8.10",
+    "@types/react": "^19.0.0",
+    "eslint": "^8.57.0",
+    "prettier": "^3.3.3",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop",
+    "lint": "vici lint"
+  }
+}

@@ -1,0 +1,5 @@
+[[allowlists]]
+description = "Ignore vicinae extensions"
+paths = [
+  '''modules/features/home/vicinae/extensions/.*'''
+]

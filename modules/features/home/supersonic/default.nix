@@ -44,6 +44,11 @@
               );
               "supersonic/themes/catppuccin-mocha-blue.toml".source = ./catppuccin-mocha-blue.toml;
             };
+
+          systemd.user.services = lib.mkGuiStartupService {
+            package = supersonicPkg;
+            command = "${lib.getExe supersonicPkg} -start-minimized";
+          };
         };
     };
 }
