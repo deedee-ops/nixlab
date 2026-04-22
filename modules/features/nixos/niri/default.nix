@@ -171,6 +171,15 @@ in
               ) config.noctalia.extraSettings;
 
               preInstalledPlugins = {
+                notes-scratchpad = {
+                  src = "${./noctalia-plugins}/notes-scratchpad";
+                  settings = {
+                    panelWidth = 0.5;
+                    panelHeight = 0.6;
+                    fontSize = 14;
+                    filePath = "~/Sync/sync/noctalia/notes-scratchpad.md";
+                  };
+                };
                 todo = {
                   src = "${./noctalia-plugins}/todo";
                   settings = {
@@ -502,6 +511,15 @@ in
                       "plugin:todo"
                       "togglePanel"
                     ];
+              };
+              "Mod+A".spawn = _: {
+                props = [
+                  (lib.getExe noctaliaShellPkg)
+                  "ipc"
+                  "call"
+                  "plugin:notes-scratchpad"
+                  "togglePanel"
+                ];
               };
 
               "XF86AudioRaiseVolume" = _: {

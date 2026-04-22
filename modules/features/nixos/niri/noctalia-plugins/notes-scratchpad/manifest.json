@@ -1,0 +1,37 @@
+{
+  "id": "notes-scratchpad",
+  "name": "Notes Scratchpad",
+  "version": "1.1.6",
+  "minNoctaliaVersion": "3.7.1",
+  "author": "apt-get",
+  "license": "MIT",
+  "repository": "https://github.com/noctalia-dev/noctalia-plugins",
+  "description": "A simple scratchpad for quick notes.",
+  "tags": [
+    "Bar",
+    "Panel",
+    "Productivity"
+  ],
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "controlCenterWidget": "ControlCenterWidget.qml",
+    "panel": "Panel.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "scratchpadContent": "",
+      "panelWidth": 0.4,
+      "panelHeight": 0.3,
+      "fontSize": 14,
+      "cursorPosition": 0,
+      "scrollPositionX": 0,
+      "scrollPositionY": 0,
+      "filePath": ""
+    }
+  }
+}

@@ -97,8 +97,7 @@ rec {
                 };
               };
 
-              # TODO:
-              sops.age.sshKeyPaths = [ "/run/secrets/credentials/ssh/private_key" ];
+              sops.age.sshKeyPaths = [ "/home/${primaryUser}/.config/sops-nix/secrets/ssh/privateKey" ];
             }
           ]
           ++ homeModules;
