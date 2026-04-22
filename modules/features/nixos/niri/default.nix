@@ -278,6 +278,7 @@ in
                 tap = _: { };
                 drag = true;
                 drag-lock = _: { };
+                dwt = _: { };
                 tap-button-map = "left-right-middle";
                 click-method = "clickfinger";
               };
