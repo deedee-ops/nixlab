@@ -38,6 +38,34 @@
   "right": [
     {
       "defaultSettings": {
+        "completedCount": 0,
+        "count": 0,
+        "current_page_id": 0,
+        "exportEmptySections": false,
+        "exportFormat": "markdown",
+        "exportPath": "~/Downloads",
+        "isExpanded": true,
+        "pages": [
+          {
+            "id": 0,
+            "name": "General"
+          }
+        ],
+        "priorityColors": {
+          "high": "#f44336",
+          "low": "#9e9e9e",
+          "medium": "#2196f3"
+        },
+        "showBackground": true,
+        "showCompleted": true,
+        "todoFilePath": "~/Sync/sync/noctalia/todo.json",
+        "todos": [],
+        "useCustomColors": false
+      },
+      "id": "plugin:todo"
+    },
+    {
+      "defaultSettings": {
         "compactMode": false,
         "defaultPeerAction": "copy-ip",
         "hideDisconnected": false,

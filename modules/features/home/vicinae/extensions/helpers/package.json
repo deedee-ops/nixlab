@@ -1,0 +1,83 @@
+{
+  "$schema": "https://raw.githubusercontent.com/vicinaehq/vicinae/refs/heads/main/extra/schemas/extension.json",
+  "name": "helpers",
+  "title": "Helpers",
+  "description": "A collection of system helper commands.",
+  "icon": "extension_icon.png",
+  "author": "ajgon",
+  "license": "MIT",
+  "categories": ["System"],
+  "contributors": [],
+  "pastContributors": [],
+  "commands": [
+    {
+      "name": "power-off-monitors",
+      "title": "Power Off Monitors",
+      "description": "Powers off all monitors via niri.",
+      "mode": "no-view",
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "niri msg action power-off-monitors",
+          "description": "Space-separated command to run (no shell expansion)."
+        }
+      ]
+    },
+    {
+      "name": "caffeinate",
+      "title": "Caffeinate",
+      "description": "Toggles idle inhibitor to prevent the system from sleeping.",
+      "mode": "no-view",
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "noctalia-shell ipc call idleInhibitor toggle",
+          "description": "Space-separated command to run (no shell expansion)."
+        }
+      ]
+    },
+    {
+      "name": "add-todo",
+      "title": "Add Todo",
+      "description": "Adds a todo item. Include @work or #work to flag it.",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "noctalia-shell ipc call plugin:todo addTodo {input} medium",
+          "description": "Command template for regular todos. Use {input} as placeholder for the todo text."
+        },
+        {
+          "name": "workCommand",
+          "title": "Shell Command (Work)",
+          "type": "textfield",
+          "required": true,
+          "default": "noctalia-shell ipc call plugin:todo addTodo {input} medium 1",
+          "description": "Command template for work todos (@work / #work). Use {input} as placeholder for the todo text."
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "@vicinae/api": "^0.16.11"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.3.2",
+    "typescript": "^5.9.2"
+  },
+  "scripts": {
+    "build": "vici build",
+    "dev": "vici develop",
+    "format": "biome format --write src",
+    "lint": "vici lint"
+  }
+}

@@ -106,6 +106,14 @@
             ];
             launcher = "vicinae";
             terminal = "kitty";
+
+            noctalia = {
+              extraSettings = {
+                desktopWidgets.monitorWidgets = builtins.fromJSON (
+                  builtins.readFile ./noctalia-monitor-widgets.json
+                );
+              };
+            };
           };
 
           ssh = {

@@ -147,7 +147,7 @@ in
           let
             noctaliaShellPkg = inputs.wrapper-modules.wrappers.noctalia-shell.wrap {
               inherit pkgs;
-              inherit (config.noctalia) colors preInstalledPlugins;
+              inherit (config.noctalia) colors;
 
               package = inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default;
               settings = lib.recursiveUpdate (lib.recursiveUpdate
@@ -169,6 +169,38 @@ in
                   };
                 }
               ) config.noctalia.extraSettings;
+
+              preInstalledPlugins = {
+                todo = {
+                  src = "${./noctalia-plugins}/todo";
+                  settings = {
+                    todos = [ ];
+                    pages = [
+                      {
+                        id = 0;
+                        name = "General";
+                      }
+                    ];
+                    current_page_id = 0;
+                    count = 0;
+                    completedCount = 0;
+                    showCompleted = true;
+                    showBackground = true;
+                    isExpanded = true;
+                    useCustomColors = false;
+                    priorityColors = {
+                      high = "#f44336";
+                      medium = "#2196f3";
+                      low = "#9e9e9e";
+                    };
+                    todoFilePath = "~/Sync/sync/noctalia/todo.json";
+                    exportPath = "~/Downloads";
+                    exportFormat = "markdown";
+                    exportEmptySections = false;
+                  };
+                };
+              }
+              // config.noctalia.preInstalledPlugins;
             };
           in
           {
@@ -444,6 +476,32 @@ in
                   "sessionMenu"
                   "toggle"
                 ];
+              };
+              "Mod+Grave".spawn = _: {
+                props = [
+                  (lib.getExe noctaliaShellPkg)
+                  "ipc"
+                  "call"
+                  "notifications"
+                  "toggleHistory"
+                ];
+              };
+
+              "Mod+E".spawn = _: {
+                props =
+                  if config.launcher == "vicinae" then
+                    [
+                      (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                      "vicinae://launch/@ajgon/helpers/add-todo"
+                    ]
+                  else
+                    [
+                      (lib.getExe noctaliaShellPkg)
+                      "ipc"
+                      "call"
+                      "plugin:todo"
+                      "togglePanel"
+                    ];
               };
 
               "XF86AudioRaiseVolume" = _: {
