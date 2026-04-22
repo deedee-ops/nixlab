@@ -98,6 +98,9 @@
             noctalia = {
               extraSettings = {
                 bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-widgets.json);
+                desktopWidgets.monitorWidgets = builtins.fromJSON (
+                  builtins.readFile ./noctalia-monitor-widgets.json
+                );
               };
 
               preInstalledPlugins = {
