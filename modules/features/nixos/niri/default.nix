@@ -193,7 +193,7 @@ in
                     current_page_id = 0;
                     count = 0;
                     completedCount = 0;
-                    showCompleted = true;
+                    showCompleted = false;
                     showBackground = true;
                     isExpanded = true;
                     useCustomColors = false;

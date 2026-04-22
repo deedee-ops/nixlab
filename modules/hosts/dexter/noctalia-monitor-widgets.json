@@ -23,7 +23,7 @@
             "medium": "#2196f3"
           },
           "showBackground": true,
-          "showCompleted": true,
+          "showCompleted": false,
           "todoFilePath": "~/Sync/sync/noctalia/todo.json",
           "todos": [],
           "useCustomColors": false
@@ -59,7 +59,7 @@
             "medium": "#2196f3"
           },
           "showBackground": true,
-          "showCompleted": true,
+          "showCompleted": false,
           "todoFilePath": "~/Sync/sync/noctalia/todo.json",
           "todos": [],
           "useCustomColors": false
