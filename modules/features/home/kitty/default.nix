@@ -49,6 +49,11 @@
           mouse_map ctrl+left click ungrabbed mouse_handle_click link
         '';
       };
+
+      systemd.user.services = lib.mkGuiStartupService {
+        package = pkgs.wl-clip-persist;
+        command = "${lib.getExe pkgs.wl-clip-persist} --clipboard both";
+      };
     };
   perSystem =
     { pkgs, ... }:
