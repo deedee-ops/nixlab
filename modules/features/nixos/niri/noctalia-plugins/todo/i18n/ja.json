@@ -9,7 +9,7 @@
     "items_count": "{active} 件中{total} 件が有効"
   },
   "main": {
-    "added_new_todo": "新しい ToDo を追加しました:",
+    "added_new_todo": "新しい ToDo を追加しました",
     "cleared_completed_todos": "クリア",
     "completed_todos_suffix": "完了したTODO",
     "not_found_suffix": "見つかりません",

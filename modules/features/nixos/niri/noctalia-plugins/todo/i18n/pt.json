@@ -9,7 +9,7 @@
     "items_count": "{active} de {total} itens"
   },
   "main": {
-    "added_new_todo": "Adicionado novo afazer:",
+    "added_new_todo": "Adicionado novo afazer",
     "cleared_completed_todos": "Liberado",
     "completed_todos_suffix": "Tarefas concluídas",
     "not_found_suffix": "não encontrado",

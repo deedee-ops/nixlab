@@ -12,7 +12,7 @@
     "items_count": "{active} of {total} items"
   },
   "main": {
-    "added_new_todo": "Added new todo: ",
+    "added_new_todo": "Added new todo",
     "cleared_completed_todos": "Cleared ",
     "cleared_all_todos": "Cleared all todos",
     "completed_todos_suffix": " completed todos",

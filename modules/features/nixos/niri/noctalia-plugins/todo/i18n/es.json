@@ -9,7 +9,7 @@
     "items_count": "{active} de {total} artículos"
   },
   "main": {
-    "added_new_todo": "Se agregó una nueva tarea:",
+    "added_new_todo": "Se agregó una nueva tarea",
     "cleared_completed_todos": "Despejado",
     "completed_todos_suffix": "Tareas completadas",
     "not_found_suffix": "no encontrado",

@@ -12,7 +12,7 @@
     "items_count": "{active} sur {total} éléments"
   },
   "main": {
-    "added_new_todo": "Nouvelle tâche ajoutée : ",
+    "added_new_todo": "Nouvelle tâche ajoutée",
     "cleared_completed_todos": "Supprimé ",
     "cleared_all_todos": "Toutes les tâches ont été supprimées",
     "completed_todos_suffix": " tâches terminées",

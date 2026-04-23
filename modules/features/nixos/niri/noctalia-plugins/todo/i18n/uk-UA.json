@@ -9,7 +9,7 @@
     "items_count": "{active} з {total} елементів"
   },
   "main": {
-    "added_new_todo": "Додано нову задачу:",
+    "added_new_todo": "Додано нову задачу",
     "cleared_completed_todos": "Очищено",
     "completed_todos_suffix": "завершені завдання",
     "not_found_suffix": "не знайдено",

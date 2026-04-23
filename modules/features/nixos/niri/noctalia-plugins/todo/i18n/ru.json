@@ -9,7 +9,7 @@
     "items_count": "{active} из {total} элементов"
   },
   "main": {
-    "added_new_todo": "Добавлено новое дело:",
+    "added_new_todo": "Добавлено новое дело",
     "cleared_completed_todos": "Очищено",
     "completed_todos_suffix": "Завершенные задачи",
     "not_found_suffix": "не найдено",

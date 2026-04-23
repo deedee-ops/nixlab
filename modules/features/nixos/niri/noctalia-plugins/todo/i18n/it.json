@@ -9,7 +9,7 @@
     "items_count": "{active} di {total} elementi"
   },
   "main": {
-    "added_new_todo": "Aggiunto nuovo compito: ",
+    "added_new_todo": "Aggiunto nuovo compito",
     "cleared_completed_todos": "Cancellato ",
     "completed_todos_suffix": " compiti completati",
     "not_found_suffix": " non trovato",

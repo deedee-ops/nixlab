@@ -9,7 +9,7 @@
     "items_count": "{active} ji {total} tiştan"
   },
   "main": {
-    "added_new_todo": "Min todo ya zêde kir:",
+    "added_new_todo": "Min todo ya zêde kir",
     "cleared_completed_todos": "Paqijkirin",
     "completed_todos_suffix": "hemû karên hatine kirin",
     "not_found_suffix": "nehatiya dîtin",

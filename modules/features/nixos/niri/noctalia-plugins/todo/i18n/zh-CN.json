@@ -9,7 +9,7 @@
     "items_count": "{active}/{total} 项"
   },
   "main": {
-    "added_new_todo": "已添加新待办事项: ",
+    "added_new_todo": "已添加新待办事项",
     "cleared_completed_todos": "清除了 ",
     "completed_todos_suffix": " 个已完成的待办事项",
     "not_found_suffix": " 的待办事项未找到",

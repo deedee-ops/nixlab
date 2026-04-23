@@ -9,7 +9,7 @@
     "items_count": "{actief} van {totaal} items"
   },
   "main": {
-    "added_new_todo": "Nieuwe taak toegevoegd:",
+    "added_new_todo": "Nieuwe taak toegevoegd",
     "cleared_completed_todos": "Vrijgegeven",
     "completed_todos_suffix": "voltooide taken",
     "not_found_suffix": "niet gevonden",

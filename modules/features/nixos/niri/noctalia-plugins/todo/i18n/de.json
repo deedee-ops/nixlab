@@ -12,7 +12,7 @@
     "items_count": "{active} von {total} Einträgen"
   },
   "main": {
-    "added_new_todo": "Neues Todo hinzugefügt:",
+    "added_new_todo": "Neues Todo hinzugefügt",
     "cleared_completed_todos": "Freigegeben",
     "cleared_all_todos": "Alle Aufgaben erledigt",
     "completed_todos_suffix": "Erledigte Aufgaben",

@@ -9,7 +9,7 @@
     "items_count": "{toplam} öğeden {aktif}"
   },
   "main": {
-    "added_new_todo": "Yeni yapılacaklar eklendi:",
+    "added_new_todo": "Yeni yapılacaklar eklendi",
     "cleared_completed_todos": "Temizlendi",
     "completed_todos_suffix": "tamamlanmış yapılacaklar",
     "not_found_suffix": "bulunamadı",

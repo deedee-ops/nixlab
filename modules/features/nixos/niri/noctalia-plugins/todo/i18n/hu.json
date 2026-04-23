@@ -9,7 +9,7 @@
     "items_count": "{active} / {total} elem"
   },
   "main": {
-    "added_new_todo": "Új teendő hozzáadva:",
+    "added_new_todo": "Új teendő hozzáadva",
     "cleared_completed_todos": "Törölve",
     "completed_todos_suffix": "befejezett teendők",
     "not_found_suffix": "nem található",
