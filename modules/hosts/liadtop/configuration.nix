@@ -175,6 +175,46 @@
 
           gnupg.pinentryPackage = pkgs.pinentry-qt;
 
+          ssh.appendOptions = {
+            matchBlocks = {
+              # private
+              forgejo = {
+                forwardAgent = false;
+                host = "git.ajgon.casa";
+                hostname = "git.ajgon.casa";
+                identitiesOnly = true;
+                port = 22;
+                user = "git";
+              };
+              mandark = {
+                forwardAgent = true;
+                host = "mandark";
+                hostname = "relay.rzegocki.dev";
+                identitiesOnly = true;
+                port = 22;
+                user = "ajgon";
+              };
+              nas = {
+                forwardAgent = false;
+                host = "nas";
+                hostname = "nas.internal";
+                identitiesOnly = true;
+                port = 22;
+                user = "ajgon";
+              };
+
+              # public
+              github = {
+                forwardAgent = false;
+                host = "github.com";
+                hostname = "github.com";
+                identitiesOnly = true;
+                port = 22;
+                user = "git";
+              };
+            };
+          };
+
           thunderbird = {
             inherit trustedRootCertificates;
           };

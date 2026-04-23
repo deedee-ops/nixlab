@@ -26,7 +26,7 @@ _: {
         shellHook = ''
           ${config.pre-commit.installationScript}
 
-          export SOPS_AGE_SSH_PRIVATE_KEY_FILE="$HOME/.config/sops-nix/secrets/ssh/privateKey"
+          export SOPS_AGE_SSH_PRIVATE_KEY_FILE="$HOME/.config/sops-nix/secrets/features/home/ssh/privateKey"
 
           ${lib.getExe pkgs.git} fetch --all
         '';

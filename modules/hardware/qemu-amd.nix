@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.hardware-qemu-intel =
+  flake.nixosModules.hardware-qemu-amd =
     {
       lib,
       modulesPath,
@@ -15,7 +15,7 @@ _: {
           extraModulePackages = [ ];
           initrd = {
             availableKernelModules = [
-              "ata_piix"
+              "ahci"
               "uhci_hcd"
               "virtio_pci"
               "virtio_scsi"
@@ -24,7 +24,7 @@ _: {
             ];
             kernelModules = [ ];
           };
-          kernelModules = [ "kvm-intel" ];
+          kernelModules = [ "kvm-amd" ];
           kernelParams = [ "nomodeset" ];
         };
 

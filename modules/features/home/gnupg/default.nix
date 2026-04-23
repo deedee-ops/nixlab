@@ -16,10 +16,20 @@ _: {
           default = pkgs.pinentry-curses;
           description = "Pinentry package.";
         };
+        publicKeys = lib.mkOption {
+          type = lib.types.listOf lib.types.path;
+          description = "List of paths to public keys";
+          default = [ ./ajgon.gpg ];
+        };
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
       };
       config = {
-        sops.secrets = lib.genAttrs [ "gnupg/keyId" "gnupg/keyData" ] (_: {
-          sopsFile = ./secrets.sops.yaml;
+        sops.secrets = lib.genAttrs [ "features/home/gnupg/keyId" "features/home/gnupg/keyData" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
         });
 
         home.shellAliases.gpgkill = "${lib.getExe' pkgs.gnupg "gpgconf"} --kill gpg-agent";
@@ -34,7 +44,7 @@ _: {
           publicKeys = builtins.map (src: {
             source = src;
             trust = "ultimate";
-          }) [ ./ajgon.gpg ];
+          }) cfg.publicKeys;
         };
 
         services.gpg-agent = {
@@ -47,9 +57,9 @@ _: {
           name = "init-gnupg";
           script = ''
             ${lib.getExe pkgs.gnupg} --list-secret-keys "$(cat ${
-              config.sops.secrets."gnupg/keyId".path
+              config.sops.secrets."features/home/gnupg/keyId".path
             })" > /dev/null || ${lib.getExe pkgs.gnupg} --batch --import ${
-              config.sops.secrets."gnupg/keyData".path
+              config.sops.secrets."features/home/gnupg/keyData".path
             }
           '';
           envs = [ "GNUPGHOME=${config.home.sessionVariables.GNUPGHOME}" ];

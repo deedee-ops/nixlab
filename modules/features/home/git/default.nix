@@ -1,17 +1,28 @@
 _: {
   flake.homeModules.features-home-git =
-    { config, ... }:
+    { config, lib, ... }:
+    let
+      cfg = config.features.home.git;
+    in
     {
+      options.features.home.git = {
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
       config = {
+        sops.secrets = lib.genAttrs [ "features/home/git/extraConfig" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
+        });
+
         programs = {
           git = {
             enable = true;
             lfs.enable = true;
-            signing = {
-              format = null;
-              key = "igor@rzegocki.pl";
-              signByDefault = true;
-            };
+
+            includes = [ { inherit (config.sops.secrets."features/home/git/extraConfig") path; } ];
 
             settings = {
               alias = {
@@ -67,10 +78,6 @@ _: {
               };
               rerere = {
                 enabled = true;
-              };
-              user = {
-                name = "Igor Rzegocki";
-                email = "igor@rzegocki.pl";
               };
               transfer = {
                 fsckobjects = true;

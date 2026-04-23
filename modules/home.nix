@@ -97,7 +97,9 @@ rec {
                 };
               };
 
-              sops.age.sshKeyPaths = [ "/home/${primaryUser}/.config/sops-nix/secrets/ssh/privateKey" ];
+              sops.age.sshKeyPaths = [
+                "/home/${primaryUser}/.config/sops-nix/secrets/features/home/ssh/privateKey"
+              ];
             }
           ]
           ++ homeModules;

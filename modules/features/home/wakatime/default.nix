@@ -1,10 +1,21 @@
 _: {
   flake.homeModules.features-home-wakatime =
     { config, lib, ... }:
+    let
+      cfg = config.features.home.wakatime;
+    in
     {
+      options.features.home.wakatime = {
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
+
       config = {
-        sops.secrets = lib.genAttrs [ "wakatime/apiKey" ] (_: {
-          sopsFile = ./secrets.sops.yaml;
+        sops.secrets = lib.genAttrs [ "features/home/wakatime/apiKey" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
         });
 
         home.sessionVariables = {
@@ -20,7 +31,7 @@ _: {
               guess_language = false
               offline = true
 
-              api_key_vault_cmd = cat ${config.sops.secrets."wakatime/apiKey".path}
+              api_key_vault_cmd = cat ${config.sops.secrets."features/home/wakatime/apiKey".path}
               api_url = https://wakapi.ajgon.casa/api
 
               hide_file_names = false

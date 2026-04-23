@@ -6,14 +6,30 @@ _: {
       lib,
       ...
     }:
+    let
+      cfg = config.features.home.ssh;
+    in
     {
+      options.features.home.ssh = {
+        appendOptions = lib.mkOption {
+          type = lib.types.attrs;
+          default = { };
+          description = "Extra custom options which will be merged with programs.ssh.";
+        };
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
+
       config = {
-        sops.secrets = lib.genAttrs [ "ssh/privateKey" ] (_: {
-          sopsFile = ./secrets.sops.yaml;
+        sops.secrets = lib.genAttrs [ "features/home/ssh/privateKey" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
         });
 
         programs = {
-          ssh = {
+          ssh = lib.attrsets.recursiveUpdate {
             enable = true;
             enableDefaultConfig = false;
             package = pkgs.symlinkJoin {
@@ -40,49 +56,10 @@ _: {
                 addKeysToAgent = "8h";
                 controlPath = "${config.xdg.stateHome}/ssh/master-%r@%n:%p";
                 userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
+                identityFile = [ config.sops.secrets."features/home/ssh/privateKey".path ];
               };
-              # private
-              forgejo = {
-                forwardAgent = false;
-                host = "git.ajgon.casa";
-                hostname = "git.ajgon.casa";
-                identitiesOnly = true;
-                identityFile = [ config.sops.secrets."ssh/privateKey".path ];
-                port = 22;
-                user = "git";
-              };
-              mandark = {
-                forwardAgent = true;
-                host = "mandark";
-                hostname = "relay.rzegocki.dev";
-                identitiesOnly = true;
-                identityFile = [ config.sops.secrets."ssh/privateKey".path ];
-                port = 22;
-                user = "ajgon";
-              };
-              nas = {
-                forwardAgent = false;
-                host = "nas";
-                hostname = "nas.internal";
-                identitiesOnly = true;
-                identityFile = [ config.sops.secrets."ssh/privateKey".path ];
-                port = 22;
-                user = "ajgon";
-              };
-
-              # public
-              github = {
-                forwardAgent = false;
-                host = "github.com";
-                hostname = "github.com";
-                identitiesOnly = true;
-                identityFile = [ config.sops.secrets."ssh/privateKey".path ];
-                port = 22;
-                user = "git";
-              };
-
             };
-          };
+          } cfg.appendOptions;
         };
 
         services.ssh-agent = {

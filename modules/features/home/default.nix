@@ -7,24 +7,6 @@ _: {
       ...
     }:
     {
-      options = {
-        systemTheme = lib.mkOption {
-          type = lib.types.submodule {
-            options = {
-              name = lib.mkOption {
-                type = lib.types.str;
-                description = "Theme name";
-                example = "catppuccin";
-              };
-              style = lib.mkOption {
-                type = lib.types.str;
-                description = "Theme style";
-                example = "mocha";
-              };
-            };
-          };
-        };
-      };
       config = {
         xdg.enable = true;
         home = {

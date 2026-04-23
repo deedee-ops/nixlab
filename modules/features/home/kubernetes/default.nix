@@ -7,10 +7,21 @@
       pkgs,
       ...
     }:
+    let
+      cfg = config.features.home.kubernetes;
+    in
     {
+      options.features.home.kubernetes = {
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
+
       config = {
-        sops.secrets = lib.genAttrs [ "kubernetes/kubeconfig" ] (_: {
-          sopsFile = ./secrets.sops.yaml;
+        sops.secrets = lib.genAttrs [ "features/home/kubernetes/kubeconfig" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
         });
 
         stylix.targets = {
@@ -129,7 +140,9 @@
 
             mkdir -p "${config.xdg.configHome}/kube"
             rm -rf "${config.xdg.configHome}/kube/config" || true
-            cp "${config.sops.secrets."kubernetes/kubeconfig".path}" "${config.xdg.configHome}/kube/config"
+            cp "${
+              config.sops.secrets."features/home/kubernetes/kubeconfig".path
+            }" "${config.xdg.configHome}/kube/config"
           '';
         };
       };
