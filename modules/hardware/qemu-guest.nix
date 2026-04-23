@@ -1,10 +1,6 @@
 _: {
-  flake.nixosModules.hardware-qemu-intel =
-    {
-      lib,
-      modulesPath,
-      ...
-    }:
+  flake.nixosModules.hardware-qemu-guest =
+    { lib, modulesPath, ... }:
     {
       imports = [
         (modulesPath + "/profiles/qemu-guest.nix")
@@ -15,16 +11,20 @@ _: {
           extraModulePackages = [ ];
           initrd = {
             availableKernelModules = [
+              "ahci"
               "ata_piix"
+              "sd_mod"
+              "sr_mod"
               "uhci_hcd"
               "virtio_pci"
               "virtio_scsi"
-              "sd_mod"
-              "sr_mod"
             ];
             kernelModules = [ ];
           };
-          kernelModules = [ "kvm-intel" ];
+          kernelModules = [
+            "kvm-intel"
+            "kvm-amd"
+          ];
           kernelParams = [ "nomodeset" ];
         };
 

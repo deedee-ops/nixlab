@@ -30,3 +30,6 @@ creation_rules:
       - age:
           - *ajgon
           - *work
+          # for local VMs
+          - *dexter
+          - *liadtop

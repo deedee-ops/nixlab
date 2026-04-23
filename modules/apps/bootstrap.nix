@@ -25,7 +25,7 @@
               ) self.nixosConfigurations
             )}
 
-            ${builtins.readFile ../../scripts/bootstrap.sh}
+            ${builtins.readFile ./bootstrap.sh}
           '';
         };
       };

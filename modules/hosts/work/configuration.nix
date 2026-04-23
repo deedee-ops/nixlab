@@ -29,7 +29,8 @@
     in
     {
       imports = [
-        self.nixosModules.hardware-qemu-amd
+        self.nixosModules.hardware-qemu-guest
+        self.nixosModules.hardware-qemu-local
 
         self.nixosModules.features-nixos-disks
         self.nixosModules.features-nixos-docker
@@ -48,7 +49,7 @@
 
       sops = {
         defaultSopsFile = ./secrets.sops.yaml;
-        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
+        age.sshKeyPaths = [ "/secrets/ssh_host_ed25519_key" ];
       };
 
       features = {
@@ -56,7 +57,6 @@
           disks = {
             enable = true;
             filesystem = "ext4";
-            swapSize = "4G";
             systemDiskDevs = [ "/dev/vda" ];
           };
 
@@ -80,7 +80,7 @@
           networking = {
             firewallEnable = false;
             hostname = "work";
-            mainInterface.name = "ens3";
+            mainInterface.name = "eth0";
           };
 
           ssh = {

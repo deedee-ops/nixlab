@@ -75,10 +75,18 @@ _: {
           };
         };
 
-        system.autoUpgrade = {
-          enable = true;
-          flake = "github:deedee-ops/nixlab";
-          runGarbageCollection = true;
+        system = {
+          # qemu-local VMs hosted on machines need that
+          activationScripts.readable-ssh-host-keys-for-wheel.text = ''
+            ${lib.getExe' pkgs.coreutils "chgrp"} wheel /etc/ssh/ssh_host_ed25519_key
+            ${lib.getExe' pkgs.coreutils "chmod"} 640 /etc/ssh/ssh_host_ed25519_key
+          '';
+
+          autoUpgrade = {
+            enable = true;
+            flake = "github:deedee-ops/nixlab";
+            runGarbageCollection = true;
+          };
         };
       };
     };

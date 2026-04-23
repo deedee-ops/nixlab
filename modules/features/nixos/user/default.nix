@@ -59,7 +59,10 @@ _: {
 
         system.activationScripts = {
           create-extra-dirs-and-fix-home-perms = {
-            deps = [ "users" ];
+            deps = [
+              "users"
+              "setupSecrets"
+            ];
             text = lib.concatStringsSep "\n" (
               builtins.map (extraDir: ''
                 mkdir -p ${extraDir} || true

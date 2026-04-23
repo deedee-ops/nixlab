@@ -202,6 +202,17 @@
                 port = 22;
                 user = "ajgon";
               };
+              work = {
+                forwardAgent = false;
+                host = "work";
+                hostname = "127.0.0.1";
+                identitiesOnly = true;
+                port = 2222;
+                user = "ajgon";
+                userKnownHostsFile = "/dev/null";
+
+                extraOptions.StrictHostKeyChecking = "no";
+              };
 
               # public
               github = {

@@ -122,7 +122,7 @@ in
             };
 
             features.nixos =
-              if (options ? niri) then
+              if (options ? features && options.features ? nixos && options.features.nixos ? niri) then
                 {
                   niri.noctalia = {
                     colors =
