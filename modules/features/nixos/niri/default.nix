@@ -287,7 +287,7 @@ in
             layout = {
               gaps = 8;
               preset-column-widths = [
-                { proportion = 0.32333; }
+                { proportion = 0.33333; }
                 { proportion = 0.5; }
                 { proportion = 0.66667; }
               ];

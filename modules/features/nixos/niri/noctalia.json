@@ -93,6 +93,22 @@
             "id": "plugin:todo"
           },
           {
+            "compactMode": false,
+            "hideMode": "visible",
+            "hideWhenIdle": false,
+            "id": "MediaMini",
+            "maxWidth": 125,
+            "panelShowAlbumArt": true,
+            "scrollingMode": "hover",
+            "showAlbumArt": true,
+            "showArtistFirst": false,
+            "showProgressRing": false,
+            "showVisualizer": true,
+            "textColor": "none",
+            "useFixedWidth": false,
+            "visualizerType": "mirrored"
+          },
+          {
             "displayMode": "onhover",
             "iconColor": "none",
             "id": "Bluetooth",
