@@ -40,6 +40,7 @@
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-mounts
         self.nixosModules.features-nixos-networking
+        self.nixosModules.features-nixos-squid
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-system
         self.nixosModules.features-nixos-time
@@ -55,6 +56,17 @@
 
       features = {
         nixos = {
+          qemu-local.portMappings = [
+            {
+              host = 2222;
+              guest = 22;
+            }
+            {
+              host = 3128;
+              guest = 3128;
+            }
+          ];
+
           disks = {
             enable = true;
             filesystem = "ext4";
