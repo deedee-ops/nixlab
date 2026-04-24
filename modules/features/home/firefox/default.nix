@@ -46,6 +46,8 @@
         programs.firefox = {
           enable = true;
 
+          nativeMessagingHosts = [ pkgs.tridactyl-native ];
+
           policies = {
             DefaultDownloadDirectory = "${config.home.homeDirectory}/Downloads";
             DisableTelemetry = true;
@@ -69,6 +71,7 @@
               search = {
                 force = true;
                 default = "ddg";
+                privateDefault = "ddg";
                 order = [ "ddg" ];
                 engines = {
                   "ddg" = {
@@ -302,13 +305,24 @@
           };
         };
 
-        xdg.mimeApps = {
-          defaultApplications = {
-            "text/html" = "firefox.desktop";
-            "x-scheme-handler/http" = "firefox.desktop";
-            "x-scheme-handler/https" = "firefox.desktop";
-            "x-scheme-handler/about" = "firefox.desktop";
-            "x-scheme-handler/unknown" = "firefox.desktop";
+        xdg = {
+          configFile."tridactyl/tridactylrc".text = ''
+            " disable annoying Ctrl+F override
+            unbind <C-f>
+
+            " enter ignore mode with "i" and exit with ESC
+            bind --mode=normal i mode ignore
+            bind --mode=ignore <Escape> mode normal
+          '';
+
+          mimeApps = {
+            defaultApplications = {
+              "text/html" = "firefox.desktop";
+              "x-scheme-handler/http" = "firefox.desktop";
+              "x-scheme-handler/https" = "firefox.desktop";
+              "x-scheme-handler/about" = "firefox.desktop";
+              "x-scheme-handler/unknown" = "firefox.desktop";
+            };
           };
         };
 
