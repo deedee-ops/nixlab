@@ -22,6 +22,7 @@
         self.homeModules.features-home-ssh
         self.homeModules.features-home-wakatime
         self.homeModules.features-home-yazi
+        self.homeModules.features-home-zellij
         self.homeModules.features-home-zsh
 
         self.homeModules.theme
