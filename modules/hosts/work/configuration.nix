@@ -40,6 +40,7 @@
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-mounts
         self.nixosModules.features-nixos-networking
+        self.nixosModules.features-nixos-openconnect
         self.nixosModules.features-nixos-squid
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-system
@@ -56,16 +57,22 @@
 
       features = {
         nixos = {
-          qemu-local.portMappings = [
-            {
-              host = 2222;
-              guest = 22;
-            }
-            {
-              host = 3128;
-              guest = 3128;
-            }
-          ];
+          qemu-local = {
+            portMappings = [
+              {
+                host = 2222;
+                guest = 22;
+              }
+              {
+                host = 3128;
+                guest = 3128;
+              }
+            ];
+            userMapping = {
+              host = primaryUser;
+              guest = primaryUser;
+            };
+          };
 
           disks = {
             enable = true;
@@ -94,6 +101,11 @@
             firewallEnable = false;
             hostname = "work";
             mainInterface.name = "eth0";
+          };
+
+          openconnect = {
+            keepaliveHost = "http://10.3.71.36";
+            sopsSecretsFile = ./secrets.sops.yaml;
           };
 
           ssh = {
@@ -144,18 +156,22 @@
             sopsSecretsFile = ./secrets.sops.yaml;
           };
 
-          ssh.appendOptions = {
-            matchBlocks."*" = {
-              forwardAgent = false;
+          ssh = {
+            sopsSecretsFile = ./secrets.sops.yaml;
+
+            appendOptions = {
+              matchBlocks."*" = {
+                forwardAgent = false;
+              };
+              extraConfig = ''
+                IdentitiesOnly yes
+                Port 22
+                StrictHostKeyChecking accept-new
+                SetEnv TERM=xterm-256color
+                HostkeyAlgorithms +ssh-rsa
+                PubkeyAcceptedAlgorithms +ssh-rsa
+              '';
             };
-            extraConfig = ''
-              IdentitiesOnly yes
-              Port 22
-              StrictHostKeyChecking accept-new
-              SetEnv TERM=xterm-256color
-              HostkeyAlgorithms +ssh-rsa
-              PubkeyAcceptedAlgorithms +ssh-rsa
-            '';
           };
 
           zsh.promptColor = "blue";

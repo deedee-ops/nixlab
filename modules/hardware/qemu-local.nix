@@ -11,6 +11,24 @@
       ];
 
       options.features.nixos.qemu-local = {
+        userMapping = lib.mkOption {
+          type = lib.types.submodule {
+            options = {
+              host = lib.mkOption {
+                type = lib.types.str;
+                description = "Username used host side.";
+              };
+              guest = lib.mkOption {
+                type = lib.types.str;
+                description = "Username user VM side.";
+              };
+            };
+          };
+          example = {
+            host = "userHost";
+            guest = "userGuest";
+          };
+        };
         portMappings = lib.mkOption {
           type = lib.types.listOf (
             lib.types.submodule {
@@ -45,6 +63,7 @@
 
         virtualisation = {
           cores = 8;
+          diskSize = 256000; # 250G
           graphics = false;
           memorySize = 8192;
 
@@ -55,9 +74,13 @@
           }) cfg.portMappings;
 
           sharedDirectories = {
+            downloads = {
+              source = "/home/${cfg.userMapping.host}/Downloads";
+              target = "/home/${cfg.userMapping.guest}/Downloads";
+            };
             projects = {
-              source = "/home/ajgon/Sync/work";
-              target = "/home/ajgon/Projects";
+              source = "/home/${cfg.userMapping.host}/Sync/vms/${config.networking.hostName}";
+              target = "/home/${cfg.userMapping.guest}/Projects";
             };
 
             bootstrapSSH = {

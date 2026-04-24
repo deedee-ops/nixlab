@@ -18,7 +18,7 @@ BASE_DIR="${XDG_DATA_HOME:-"${HOME}/.local/share"}/vms"
 build_vm() {
     local name="$1"
     local vm_dir="${BASE_DIR}/${name}"
-    local storage_dir="${HOME}/Sync/${name}"
+    local storage_dir="${HOME}/Sync/vms/${name}"
 
     "${vm_dir}/shutdown" || true
 
