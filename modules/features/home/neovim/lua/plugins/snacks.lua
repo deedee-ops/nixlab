@@ -112,6 +112,7 @@ return {
 						},
 					},
 					explorer = {
+						hidden = true,
 						win = {
 							list = {
 								keys = {
