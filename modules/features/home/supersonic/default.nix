@@ -2,6 +2,7 @@
 {
   flake.homeModules.features-home-supersonic =
     {
+      config,
       pkgs,
       lib,
       ...
@@ -37,8 +38,12 @@
                   ];
 
                   Theme = {
-                    ThemeFile = "${self.theme.name}-${self.theme.style}-${self.theme.accent}.toml";
-                    Apperance = if self.theme.style == "dark" then "Dark" else "Light";
+                    ThemeFile =
+                      if config.programs.noctalia-shell.enable then
+                        "noctalia.toml"
+                      else
+                        "${self.theme.name}-${self.theme.style}-${self.theme.accent}.toml";
+                    Apperance = if self.theme.polarity == "dark" then "Dark" else "Light";
                   };
                 }
               );

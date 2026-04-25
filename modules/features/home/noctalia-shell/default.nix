@@ -103,6 +103,14 @@
           // {
             # # hm and noctalia fight over this file
             "gtk-4.0/gtk.css".force = true;
+            "noctalia/templates".source = ./templates;
+            "noctalia/user-templates.toml".text = ''
+              [config]
+
+              [templates.supersonic]
+              input_path = "${config.xdg.configHome}/noctalia/templates/supersonic.toml"
+              output_path = "${config.xdg.configHome}/supersonic/themes/noctalia.toml"
+            '';
           };
 
         gtk = rec {
@@ -157,16 +165,19 @@
             sessionMenu = {
               enableCountdown = false;
             };
-            templates.activeTemplates = [
-              {
-                enabled = true;
-                id = "gtk";
-              }
-              {
-                enabled = true;
-                id = "qt";
-              }
-            ];
+            templates = {
+              activeTemplates = [
+                {
+                  enabled = true;
+                  id = "gtk";
+                }
+                {
+                  enabled = true;
+                  id = "qt";
+                }
+              ];
+              enableUserTheming = true;
+            };
             wallpaper = {
               directory = ../../../../assets/wallpapers;
               enableMultiMonitorDirectories = true;
