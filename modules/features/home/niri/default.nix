@@ -494,7 +494,7 @@
               window-rule = {
                 match = _: {
                   props = {
-                    app-id = "discord";
+                    app-id = "vesktop";
                   };
                 };
                 open-maximized = true;
