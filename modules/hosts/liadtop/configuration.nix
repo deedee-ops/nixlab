@@ -1,4 +1,4 @@
-{ self, inputs, ... }:
+{ self, ... }:
 {
   flake.nixosModules.hosts-liadtop-configuration =
     {
@@ -33,6 +33,7 @@
         self.homeModules.features-home-firefox
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
+        self.homeModules.features-home-niri
         self.homeModules.features-home-noctalia-shell
         self.homeModules.features-home-obsidian
         self.homeModules.features-home-rustdesk
@@ -61,9 +62,9 @@
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
 
-        self.nixosModules.features-nixos-niri
         self.nixosModules.features-nixos-plymouth
         self.nixosModules.features-nixos-sddm
+        self.nixosModules.features-nixos-wayland
 
         self.nixosModules.theme
       ];
@@ -89,13 +90,6 @@
           home-manager = {
             username = primaryUser;
             modules = homeModules;
-          };
-
-          niri = {
-            displays = [ "eDP-1" ];
-            features = [ "radeon" ];
-            launcher = "vicinae";
-            terminal = "kitty";
           };
 
           ssh = {
@@ -145,6 +139,13 @@
           };
 
           gnupg.pinentryPackage = pkgs.pinentry-qt;
+
+          niri = {
+            displays = [ "eDP-1" ];
+            features = [ "radeon" ];
+            launcher = "vicinae";
+            terminal = "kitty";
+          };
 
           noctalia-shell = {
             extraSettings = {
