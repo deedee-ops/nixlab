@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import QtQuick.Window
 import qs.Commons
 import qs.Services.UI
 import qs.Widgets
@@ -52,6 +53,30 @@ Item {
     if (pluginApi) {
       Logger.i("Todo", "Panel initialized");
     }
+  }
+
+  onVisibleChanged: {
+    if (visible) {
+      Qt.callLater(function () {
+        var proxyWin = root.Window.window;
+        if (proxyWin) proxyWin.requestActivate();
+        // NTextInput is a wrapper — focus the inner TextField so keyboard events arrive
+        var tf = findInnerTextField(newTodoInput);
+        (tf || newTodoInput).forceActiveFocus();
+      });
+    }
+  }
+
+  function findInnerTextField(item) {
+    if (!item) return null;
+    var stack = [];
+    for (var i = 0; i < item.children.length; i++) stack.push(item.children[i]);
+    while (stack.length > 0) {
+      var cur = stack.pop();
+      if (cur.toString().indexOf("TextField") !== -1) return cur;
+      for (var j = 0; j < cur.children.length; j++) stack.push(cur.children[j]);
+    }
+    return null;
   }
 
   onPluginApiChanged: {

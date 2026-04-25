@@ -20,9 +20,7 @@
       "showBadge": true,
       "showLabelsOnlyWhenOccupied": true,
       "unfocusedIconsOpacity": 1
-    }
-  ],
-  "center": [
+    },
     {
       "colorizeIcons": false,
       "hideMode": "hidden",
@@ -35,6 +33,7 @@
       "useFixedWidth": false
     }
   ],
+  "center": [],
   "right": [
     {
       "defaultSettings": {

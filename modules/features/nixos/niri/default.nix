@@ -498,20 +498,13 @@ in
               };
 
               "Mod+E".spawn = _: {
-                props =
-                  if config.launcher == "vicinae" then
-                    [
-                      (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                      "vicinae://launch/@ajgon/helpers/add-todo"
-                    ]
-                  else
-                    [
-                      (lib.getExe noctaliaShellPkg)
-                      "ipc"
-                      "call"
-                      "plugin:todo"
-                      "togglePanel"
-                    ];
+                props = [
+                  (lib.getExe noctaliaShellPkg)
+                  "ipc"
+                  "call"
+                  "plugin:todo"
+                  "togglePanel"
+                ];
               };
               "Mod+A".spawn = _: {
                 props = [
