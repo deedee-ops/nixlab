@@ -60,11 +60,29 @@ Item {
       Qt.callLater(function () {
         var proxyWin = root.Window.window;
         if (proxyWin) proxyWin.requestActivate();
-        // NTextInput is a wrapper — focus the inner TextField so keyboard events arrive
         var tf = findInnerTextField(newTodoInput);
-        (tf || newTodoInput).forceActiveFocus();
+        if (tf) {
+          // activeFocusOnTab=false lets Tab events propagate up to newTodoInput's Keys handlers
+          tf.activeFocusOnTab = false;
+          tf.forceActiveFocus();
+        } else {
+          newTodoInput.forceActiveFocus();
+        }
       });
     }
+  }
+
+  function switchPage(delta) {
+    var pages = pluginApi?.pluginSettings?.pages || [];
+    if (pages.length <= 1) return;
+    var currentId = pluginApi?.pluginSettings?.current_page_id ?? 0;
+    var currentIndex = 0;
+    for (var i = 0; i < pages.length; i++) {
+      if (pages[i].id === currentId) { currentIndex = i; break; }
+    }
+    var nextIndex = (currentIndex + delta + pages.length) % pages.length;
+    pluginApi.pluginSettings.current_page_id = pages[nextIndex].id;
+    pluginApi.saveSettings();
   }
 
   function findInnerTextField(item) {
@@ -212,6 +230,8 @@ Item {
                 placeholderText: pluginApi?.tr("panel.add_todo.placeholder")
                 Layout.fillWidth: true
                 Keys.onReturnPressed: addTodo()
+                Keys.onTabPressed: { switchPage(1); event.accepted = true; }
+                Keys.onBacktabPressed: { switchPage(-1); event.accepted = true; }
               }
 
               // Priority selector using a simplified approach
