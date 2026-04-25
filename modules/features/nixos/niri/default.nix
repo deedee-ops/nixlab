@@ -37,28 +37,6 @@ let
       default = "ghostty";
     };
 
-    noctalia = lib.mkOption {
-      type = lib.types.submodule {
-        options = {
-          colors = lib.mkOption {
-            type = lib.types.attrsOf lib.types.str;
-            description = "Noctalia custom color scheme";
-            default = { };
-          };
-          extraSettings = lib.mkOption {
-            type = lib.types.attrs;
-            description = "Noctalia shell extra settings to be merged with defaults";
-            default = { };
-          };
-          preInstalledPlugins = lib.mkOption {
-            type = lib.types.attrs;
-            description = "Same as wrapper-modules.noctualia-shell.options.preInstalledPlugins";
-            default = { };
-          };
-        };
-      };
-    };
-
     features = lib.mkOption {
       type = lib.types.listOf (
         lib.types.enum [
@@ -86,20 +64,10 @@ in
         # security.pam.services.swaylock = { };
 
         environment.systemPackages = [
-          inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default
+          pkgs.wl-clipboard
         ];
 
         security.pam.services.login = { };
-
-        system.activationScripts = {
-          niri-copy-wallpapers = {
-            text = ''
-              mkdir -p /var/lib/wallpapers
-              cp -r ${../../../../assets/wallpapers}/* /var/lib/wallpapers
-              chmod a=rX /var/lib/wallpapers
-            '';
-          };
-        };
 
         services.gnome.gnome-keyring.enable = lib.mkForce (
           !(builtins.any (key: config.home-manager.users.${key}.programs.keepassxc.enable) (
@@ -145,72 +113,7 @@ in
 
         settings =
           let
-            noctaliaShellPkg = inputs.wrapper-modules.wrappers.noctalia-shell.wrap {
-              inherit pkgs;
-              inherit (config.noctalia) colors;
-
-              package = inputs.noctalia.packages."${pkgs.stdenv.hostPlatform.system}".default;
-              settings = lib.recursiveUpdate (lib.recursiveUpdate
-                (builtins.fromJSON (builtins.readFile ./noctalia.json)).settings
-                {
-                  general = {
-                    avatarImage = "${../../../../assets/avatar.png}";
-                  };
-                  wallpaper = {
-                    directory = "/var/lib/wallpapers";
-                  }
-                  // lib.optionalAttrs (builtins.length config.displays > 1) {
-                    enableMultiMonitorDirectories = true;
-                    monitorDirectories = map (display: {
-                      directory = "/var/lib/wallpapers";
-                      name = display;
-                    }) config.displays;
-
-                  };
-                }
-              ) config.noctalia.extraSettings;
-
-              preInstalledPlugins = {
-                notes-scratchpad = {
-                  src = "${./noctalia-plugins}/notes-scratchpad";
-                  settings = {
-                    panelWidth = 0.5;
-                    panelHeight = 0.6;
-                    fontSize = 14;
-                    filePath = "~/Sync/sync/noctalia/notes-scratchpad.md";
-                  };
-                };
-                todo = {
-                  src = "${./noctalia-plugins}/todo";
-                  settings = {
-                    todos = [ ];
-                    pages = [
-                      {
-                        id = 0;
-                        name = "General";
-                      }
-                    ];
-                    current_page_id = 0;
-                    count = 0;
-                    completedCount = 0;
-                    showCompleted = false;
-                    showBackground = true;
-                    isExpanded = true;
-                    useCustomColors = false;
-                    priorityColors = {
-                      high = "#f44336";
-                      medium = "#2196f3";
-                      low = "#9e9e9e";
-                    };
-                    todoFilePath = "~/Sync/sync/noctalia/todo.json";
-                    exportPath = "~/Downloads";
-                    exportFormat = "markdown";
-                    exportEmptySections = false;
-                  };
-                };
-              }
-              // config.noctalia.preInstalledPlugins;
-            };
+            noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
           in
           {
             prefer-no-csd = _: { };

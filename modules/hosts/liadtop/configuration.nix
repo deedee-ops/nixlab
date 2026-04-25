@@ -33,6 +33,7 @@
         self.homeModules.features-home-firefox
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
+        self.homeModules.features-home-noctalia-shell
         self.homeModules.features-home-obsidian
         self.homeModules.features-home-rustdesk
         self.homeModules.features-home-supersonic
@@ -95,37 +96,6 @@
             features = [ "radeon" ];
             launcher = "vicinae";
             terminal = "kitty";
-
-            noctalia = {
-              extraSettings = {
-                bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-widgets.json);
-                desktopWidgets.monitorWidgets = builtins.fromJSON (
-                  builtins.readFile ./noctalia-monitor-widgets.json
-                );
-              };
-
-              preInstalledPlugins = {
-                tailscale = {
-                  src = "${inputs.noctalia-plugins.outPath}/tailscale";
-                  settings = {
-                    refreshInterval = 5000;
-                    compactMode = false;
-                    showIpAddress = true;
-                    showPeerCount = true;
-                    hideDisconnected = false;
-                    hideMullvadExitNodes = true;
-                    terminalCommand = "";
-                    sshUsername = "";
-                    pingCount = 5;
-                    defaultPeerAction = "copy-ip";
-                    taildropEnabled = false;
-                    taildropDownloadDir = "~/Downloads";
-                    taildropReceiveMode = "operator";
-                    loginServer = "https://relay.rzegocki.dev";
-                  };
-                };
-              };
-            };
           };
 
           ssh = {
@@ -175,6 +145,36 @@
           };
 
           gnupg.pinentryPackage = pkgs.pinentry-qt;
+
+          noctalia-shell = {
+            extraSettings = {
+              bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-bar-widgets.json);
+              desktopWidgets.monitorWidgets = builtins.fromJSON (
+                builtins.readFile ./noctalia-monitor-widgets.json
+              );
+            };
+            plugins = {
+              tailscale = {
+                sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+                settings = {
+                  refreshInterval = 5000;
+                  compactMode = false;
+                  showIpAddress = true;
+                  showPeerCount = true;
+                  hideDisconnected = false;
+                  hideMullvadExitNodes = true;
+                  terminalCommand = "";
+                  sshUsername = "";
+                  pingCount = 5;
+                  defaultPeerAction = "copy-ip";
+                  taildropEnabled = false;
+                  taildropDownloadDir = "~/Downloads";
+                  taildropReceiveMode = "operator";
+                  loginServer = "https://relay.rzegocki.dev";
+                };
+              };
+            };
+          };
 
           ssh.appendOptions = {
             matchBlocks = {

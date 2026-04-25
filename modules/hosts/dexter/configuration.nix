@@ -28,6 +28,7 @@
         self.homeModules.features-home-firefox
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
+        self.homeModules.features-home-noctalia-shell
         self.homeModules.features-home-obsidian
         self.homeModules.features-home-rustdesk
         self.homeModules.features-home-supersonic
@@ -107,14 +108,6 @@
             ];
             launcher = "vicinae";
             terminal = "kitty";
-
-            noctalia = {
-              extraSettings = {
-                desktopWidgets.monitorWidgets = builtins.fromJSON (
-                  builtins.readFile ./noctalia-monitor-widgets.json
-                );
-              };
-            };
           };
 
           ssh = {
@@ -147,6 +140,16 @@
         };
 
         gnupg.pinentryPackage = pkgs.pinentry-qt;
+
+        noctalia-shell = {
+          extraSettings = {
+            bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-bar-widgets.json);
+
+            desktopWidgets.monitorWidgets = builtins.fromJSON (
+              builtins.readFile ./noctalia-monitor-widgets.json
+            );
+          };
+        };
 
         ssh.appendOptions = {
           matchBlocks = {

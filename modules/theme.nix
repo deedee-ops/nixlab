@@ -39,6 +39,7 @@ in
   flake = rec {
     theme = {
       name = "catppuccin";
+      capitalizedName = "Catppuccin";
       style = "mocha";
       accent = "blue";
       polarity = "dark";
@@ -100,7 +101,7 @@ in
       };
 
     nixosModules.theme =
-      { options, pkgs, ... }:
+      { pkgs, ... }:
       {
         config =
           let
@@ -120,93 +121,6 @@ in
                 themePackages = [ (pkgs.catppuccin-plymouth.override { variant = theme.style; }) ];
               };
             };
-
-            features.nixos =
-              if (options ? features && options.features ? nixos && options.features.nixos ? niri) then
-                {
-                  niri.noctalia = {
-                    colors =
-                      if theme.polarity == "dark" then
-                        {
-                          mPrimary = "#cba6f7";
-                          mOnPrimary = "#11111b";
-                          mSecondary = "#fab387";
-                          mOnSecondary = "#11111b";
-                          mTertiary = "#94e2d5";
-                          mOnTertiary = "#11111b";
-                          mError = "#f38ba8";
-                          mOnError = "#11111b";
-                          mSurface = "#1e1e2e";
-                          mOnSurface = "#cdd6f4";
-                          mSurfaceVariant = "#313244";
-                          mOnSurfaceVariant = "#a3b4eb";
-                          mOutline = "#4c4f69";
-                          mShadow = "#11111b";
-                          mHover = "#94e2d5";
-                          mOnHover = "#11111b";
-                        }
-                      else
-                        {
-                          mPrimary = "#8839ef";
-                          mOnPrimary = "#eff1f5";
-                          mSecondary = "#fe640b";
-                          mOnSecondary = "#eff1f5";
-                          mTertiary = "#40a02b";
-                          mOnTertiary = "#eff1f5";
-                          mError = "#d20f39";
-                          mOnError = "#dce0e8";
-                          mSurface = "#eff1f5";
-                          mOnSurface = "#4c4f69";
-                          mSurfaceVariant = "#ccd0da";
-                          mOnSurfaceVariant = "#6c6f85";
-                          mOutline = "#a5adcb";
-                          mShadow = "#dce0e8";
-                          mHover = "#40a02b";
-                          mOnHover = "#eff1f5";
-                        };
-                    extraSettings = {
-                      cursor = {
-                        theme = "catppuccin-${theme.style}-${theme.polarity}-cursors";
-                        size = 24;
-                      };
-                      layout = {
-                        focus-ring = {
-                          active-color = "#cba6f7";
-                          inactive-color = "#1e1e2e";
-                          urgent-color = "#f38ba8";
-                        };
-                        border = {
-                          active-color = "#cba6f7";
-                          inactive-color = "#1e1e2e";
-                          urgent-color = "#f38ba8";
-                        };
-
-                        shadow = {
-                          color = "#11111b70";
-                        };
-
-                        tab-indicator = {
-                          active-color = "#cba6f7";
-                          inactive-color = "#6b02e9";
-                          urgent-color = "#f38ba8";
-                        };
-
-                        insert-hint = {
-                          color = "#cba6f780";
-                        };
-                      };
-
-                      recent-windows = {
-                        highlight = {
-                          active-color = "#cba6f7";
-                          urgent-color = "#f38ba8";
-                        };
-                      };
-                    };
-                  };
-                }
-              else
-                { };
           }
           // (commonThemeConfig { inherit pkgs theme; });
       };

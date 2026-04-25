@@ -1,0 +1,132 @@
+{
+  "left": [
+    {
+      "characterCount": 2,
+      "colorizeIcons": true,
+      "emptyColor": "secondary",
+      "enableScrollWheel": true,
+      "focusedColor": "primary",
+      "followFocusedScreen": false,
+      "fontWeight": "bold",
+      "groupedBorderOpacity": 1,
+      "hideUnoccupied": false,
+      "iconScale": 0.8,
+      "id": "Workspace",
+      "labelMode": "none",
+      "occupiedColor": "secondary",
+      "pillSize": 0.6,
+      "showApplications": true,
+      "showApplicationsHover": false,
+      "showBadge": true,
+      "showLabelsOnlyWhenOccupied": true,
+      "unfocusedIconsOpacity": 1
+    }
+  ],
+  "center": [
+    {
+      "colorizeIcons": false,
+      "hideMode": "hidden",
+      "id": "ActiveWindow",
+      "maxWidth": 9999,
+      "scrollingMode": "hover",
+      "showIcon": true,
+      "showText": true,
+      "textColor": "none",
+      "useFixedWidth": false
+    }
+  ],
+  "right": [
+    {
+      "defaultSettings": {
+        "completedCount": 0,
+        "count": 0,
+        "current_page_id": 0,
+        "exportEmptySections": false,
+        "exportFormat": "markdown",
+        "exportPath": "~/Downloads",
+        "isExpanded": true,
+        "pages": [
+          {
+            "id": 0,
+            "name": "General"
+          }
+        ],
+        "priorityColors": {
+          "high": "#f44336",
+          "low": "#9e9e9e",
+          "medium": "#2196f3"
+        },
+        "showBackground": true,
+        "showCompleted": false,
+        "todoFilePath": "~/Sync/sync/noctalia/todo.json",
+        "todos": [],
+        "useCustomColors": false
+      },
+      "id": "plugin:todo"
+    },
+    {
+      "compactMode": false,
+      "hideMode": "visible",
+      "hideWhenIdle": false,
+      "id": "MediaMini",
+      "maxWidth": 125,
+      "panelShowAlbumArt": true,
+      "scrollingMode": "hover",
+      "showAlbumArt": true,
+      "showArtistFirst": false,
+      "showProgressRing": false,
+      "showVisualizer": true,
+      "textColor": "none",
+      "useFixedWidth": false,
+      "visualizerType": "mirrored"
+    },
+    {
+      "displayMode": "onhover",
+      "iconColor": "none",
+      "id": "Bluetooth",
+      "textColor": "none"
+    },
+    {
+      "displayMode": "alwaysShow",
+      "iconColor": "none",
+      "id": "Volume",
+      "middleClickCommand": "pwvucontrol || pavucontrol",
+      "textColor": "none"
+    },
+    {
+      "hideWhenZero": false,
+      "hideWhenZeroUnread": false,
+      "iconColor": "none",
+      "id": "NotificationHistory",
+      "showUnreadBadge": true,
+      "unreadBadgeColor": "primary"
+    },
+    {
+      "iconColor": "none",
+      "id": "NightLight"
+    },
+    {
+      "iconColor": "none",
+      "id": "KeepAwake",
+      "textColor": "none"
+    },
+    {
+      "blacklist": [],
+      "chevronColor": "none",
+      "colorizeIcons": false,
+      "drawerEnabled": false,
+      "hidePassive": false,
+      "id": "Tray",
+      "pinned": []
+    },
+    {
+      "clockColor": "none",
+      "customFont": "",
+      "formatHorizontal": "ddd MMM dd, HH:mm",
+      "formatVertical": "HH mm - dd MM",
+      "id": "Clock",
+      "tooltipFormat": "HH:mm ddd, MMM dd",
+      "useCustomFont": false
+    }
+  ]
+}

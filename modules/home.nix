@@ -29,6 +29,7 @@ let
     self.homeModules.features-home-firefox
     self.homeModules.features-home-keepassxc
     self.homeModules.features-home-kitty
+    self.homeModules.features-home-noctalia-shell
     self.homeModules.features-home-obsidian
     self.homeModules.features-home-rustdesk
     self.homeModules.features-home-supersonic
