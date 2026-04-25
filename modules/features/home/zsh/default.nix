@@ -37,7 +37,6 @@ _: {
               "direnv"
               "ghostty"
               "kubecolor"
-              "lazygit"
               "nix-index"
               "yazi"
               "zellij"

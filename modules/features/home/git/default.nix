@@ -134,9 +134,6 @@ _: {
             };
           };
 
-          lazygit = {
-            enable = true;
-          };
           zsh = {
             plugins = [
               {
@@ -146,8 +143,6 @@ _: {
             ];
           };
         };
-
-        stylix.targets.lazygit.enable = true;
       };
     };
 }
