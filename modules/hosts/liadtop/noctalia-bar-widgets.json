@@ -20,20 +20,19 @@
       "showBadge": true,
       "showLabelsOnlyWhenOccupied": true,
       "unfocusedIconsOpacity": 1
-    },
-    {
-      "colorizeIcons": false,
-      "hideMode": "hidden",
-      "id": "ActiveWindow",
-      "maxWidth": 9999,
-      "scrollingMode": "hover",
-      "showIcon": true,
-      "showText": true,
-      "textColor": "none",
-      "useFixedWidth": false
     }
   ],
-  "center": [],
+  "center": [
+    {
+      "clockColor": "none",
+      "customFont": "",
+      "formatHorizontal": "ddd, MMM dd HH:mm:ss",
+      "formatVertical": "HH mm - dd MM",
+      "id": "Clock",
+      "tooltipFormat": "HH:mm ddd, MMM dd",
+      "useCustomFont": false
+    }
+  ],
   "right": [
     {
       "defaultSettings": {
@@ -151,15 +150,6 @@
       "hidePassive": false,
       "id": "Tray",
       "pinned": []
-    },
-    {
-      "clockColor": "none",
-      "customFont": "",
-      "formatHorizontal": "ddd MMM dd, HH:mm",
-      "formatVertical": "HH mm - dd MM",
-      "id": "Clock",
-      "tooltipFormat": "HH:mm ddd, MMM dd",
-      "useCustomFont": false
     }
   ]
 }
