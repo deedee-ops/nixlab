@@ -146,6 +146,9 @@
             colorSchemes = {
               predefinedScheme = self.theme.capitalizedName;
             };
+            desktopWidgets = {
+              enabled = true;
+            };
             dock = {
               enable = false;
             };
