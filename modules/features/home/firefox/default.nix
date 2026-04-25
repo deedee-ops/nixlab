@@ -39,14 +39,23 @@
 
       config = {
         stylix.targets.firefox = {
-          enable = true;
+          enable = !config.programs.noctalia-shell.enable;
           profileNames = [ "default" ];
         };
+        programs.noctalia-shell.settings.templates.activeTemplates = [
+          {
+            enabled = true;
+            id = "pywalfox";
+          }
+        ];
 
         programs.firefox = {
           enable = true;
 
-          nativeMessagingHosts = [ pkgs.tridactyl-native ];
+          nativeMessagingHosts = [
+            pkgs.pywalfox-native
+            pkgs.tridactyl-native
+          ];
 
           policies = {
             DefaultDownloadDirectory = "${config.home.homeDirectory}/Downloads";
@@ -296,6 +305,9 @@
         };
 
         home = {
+          activation.init-pywalfox = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            ${lib.getExe pkgs.pywalfox-native} install
+          '';
           packages = lib.optionals isGPU [ pkgs.ffmpeg-full ];
 
           sessionVariables = {

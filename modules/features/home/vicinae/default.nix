@@ -8,7 +8,13 @@ _: {
     }:
     {
       config = {
-        stylix.targets.vicinae.enable = true;
+        stylix.targets.vicinae.enable = !config.programs.noctalia-shell.enable;
+        programs.noctalia-shell.settings.templates.activeTemplates = [
+          {
+            enabled = true;
+            id = "vicinae";
+          }
+        ];
 
         home.activation.init-vicinae-extensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           mkdir -p "${config.xdg.dataHome}/vicinae/extensions"
@@ -38,8 +44,8 @@ _: {
               system_info = false;
             };
             theme = {
-              dark.name = "stylix";
-              light.name = "stylix";
+              dark.name = if config.programs.noctalia-shell.enable then "noctalia" else "stylix";
+              light.name = if config.programs.noctalia-shell.enable then "noctalia" else "stylix";
             };
           };
         };

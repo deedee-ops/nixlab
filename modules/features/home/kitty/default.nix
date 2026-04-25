@@ -8,7 +8,13 @@
       ...
     }:
     {
-      stylix.targets.kitty.enable = true;
+      stylix.targets.kitty.enable = !config.programs.noctalia-shell.enable;
+      programs.noctalia-shell.settings.templates.activeTemplates = [
+        {
+          enabled = true;
+          id = "kitty";
+        }
+      ];
 
       home.shellAliases.ssh = "${lib.getExe' config.programs.kitty.package "kitten"} ssh";
 
@@ -47,6 +53,9 @@
           # ctrl+click on links
           mouse_map left click ungrabbed mouse_handle_click prompt
           mouse_map ctrl+left click ungrabbed mouse_handle_click link
+        ''
+        + lib.optionalString config.programs.noctalia-shell.enable ''
+          include ${config.xdg.configHome}/kitty/themes/noctalia.conf
         '';
       };
 

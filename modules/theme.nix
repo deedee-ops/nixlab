@@ -7,6 +7,7 @@ let
         inherit (theme) polarity;
 
         enable = true;
+        autoEnable = false;
         base16Scheme = "${pkgs.base16-schemes}/share/themes/${theme.name}-${theme.style}.yaml";
         opacity.terminal = 0.95;
         targets.font-packages.enable = true;

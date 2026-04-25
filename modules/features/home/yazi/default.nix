@@ -10,6 +10,9 @@ _: {
         }
       ];
 
+      # hm and noctalia fight over this file
+      xdg.configFile."yazi/theme.toml".force = true;
+
       programs.yazi = {
         enable = true;
         shellWrapperName = "y";

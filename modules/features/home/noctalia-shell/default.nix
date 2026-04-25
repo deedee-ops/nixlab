@@ -1,7 +1,12 @@
 { self, inputs, ... }:
 {
   flake.homeModules.features-home-noctalia-shell =
-    { config, lib, ... }:
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
     let
       cfg = config.features.home.noctalia-shell;
       defaultPlugins = {
@@ -85,15 +90,33 @@
       };
 
       config = {
-        xdg.configFile = lib.concatMapAttrs (
-          pluginName: pluginCfg:
-          lib.mapAttrs' (fileName: _: {
-            name = "noctalia/plugins/${pluginName}/${fileName}";
-            value = {
-              source = pluginCfg.source + "/${fileName}";
-            };
-          }) (builtins.readDir pluginCfg.source)
-        ) (lib.filterAttrs (_: pluginCfg: pluginCfg.source != null) (defaultPlugins // cfg.plugins));
+        xdg.configFile =
+          (lib.concatMapAttrs (
+            pluginName: pluginCfg:
+            lib.mapAttrs' (fileName: _: {
+              name = "noctalia/plugins/${pluginName}/${fileName}";
+              value = {
+                source = pluginCfg.source + "/${fileName}";
+              };
+            }) (builtins.readDir pluginCfg.source)
+          ) (lib.filterAttrs (_: pluginCfg: pluginCfg.source != null) (defaultPlugins // cfg.plugins)))
+          // {
+            # # hm and noctalia fight over this file
+            "gtk-4.0/gtk.css".force = true;
+          };
+
+        gtk = rec {
+          theme = {
+            name = "adw-gtk3";
+            package = pkgs.adw-gtk3;
+          };
+          gtk3.theme = theme;
+          gtk4.theme = theme;
+        };
+        qt = {
+          enable = true;
+          platformTheme.name = "gtk3"; # align with gtk3
+        };
 
         programs.noctalia-shell = {
           enable = true;
@@ -134,6 +157,16 @@
             sessionMenu = {
               enableCountdown = false;
             };
+            templates.activeTemplates = [
+              {
+                enabled = true;
+                id = "gtk";
+              }
+              {
+                enabled = true;
+                id = "qt";
+              }
+            ];
             wallpaper = {
               directory = ../../../../assets/wallpapers;
               enableMultiMonitorDirectories = true;
