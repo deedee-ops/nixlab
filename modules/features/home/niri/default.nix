@@ -120,6 +120,11 @@
                 hide-after-inactive-ms = 3000;
               };
 
+              debug = {
+                # electron is shit
+                honor-xdg-activation-with-invalid-serial = _: { };
+              };
+
               input = {
                 workspace-auto-back-and-forth = _: { };
                 focus-follows-mouse = _: {
@@ -438,6 +443,7 @@
                 };
                 open-floating = true;
                 open-focused = true;
+                baba-is-float = true;
               };
             }
             {
