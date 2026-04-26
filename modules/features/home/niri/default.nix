@@ -67,9 +67,13 @@
         '';
         xdg.configFile."niri/config.kdl".text =
           let
-            inherit (inputs.wrapper-modules.lib) toKdl;
-
             noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+            toKdl =
+              content:
+              inputs.wrapper-modules.lib.toKdl (_: {
+                inherit content;
+                version = 1;
+              });
           in
           (toKdl (
             {

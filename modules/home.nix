@@ -78,7 +78,7 @@ rec {
               home = {
                 username = primaryUser;
                 homeDirectory = "/home/${primaryUser}";
-                stateVersion = "25.11";
+                stateVersion = "26.05";
               };
 
               nixpkgs.config.allowUnfree = true;
