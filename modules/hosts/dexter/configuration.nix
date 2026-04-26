@@ -11,34 +11,8 @@
       primaryUser = "ajgon";
       homeModules = [
         self.homeModules.features-home
-        self.homeModules.features-home-atuin
-        self.homeModules.features-home-bat
-        self.homeModules.features-home-btop
-        self.homeModules.features-home-direnv
-        self.homeModules.features-home-git
-        self.homeModules.features-home-gnupg
-        self.homeModules.features-home-kubernetes
-        self.homeModules.features-home-neovim
-        self.homeModules.features-home-ssh
-        self.homeModules.features-home-wakatime
-        self.homeModules.features-home-yazi
-        self.homeModules.features-home-zsh
-
-        self.homeModules.features-home-discord
-        self.homeModules.features-home-firefox
-        self.homeModules.features-home-keepassxc
-        self.homeModules.features-home-kitty
-        self.homeModules.features-home-niri
-        self.homeModules.features-home-noctalia-shell
-        self.homeModules.features-home-obsidian
-        self.homeModules.features-home-rustdesk
-        self.homeModules.features-home-supersonic
-        self.homeModules.features-home-syncthing
-        self.homeModules.features-home-teams
-        self.homeModules.features-home-telegram
-        self.homeModules.features-home-thunderbird
-        self.homeModules.features-home-vicinae
-        self.homeModules.features-home-zathura
+        self.homeModules.features-home-console
+        self.homeModules.features-home-gui
 
         self.homeModules.theme
       ];
@@ -47,20 +21,9 @@
       imports = [
         self.nixosModules.hardware-ms-01
 
-        self.nixosModules.features-nixos-disks
-        self.nixosModules.features-nixos-docker
-        self.nixosModules.features-nixos-grub
-        self.nixosModules.features-nixos-home-manager
-        self.nixosModules.features-nixos-locales
+        self.nixosModules.features-nixos-core
+        self.nixosModules.features-nixos-desktop
         self.nixosModules.features-nixos-networking
-        self.nixosModules.features-nixos-ssh
-        self.nixosModules.features-nixos-system
-        self.nixosModules.features-nixos-time
-        self.nixosModules.features-nixos-user
-
-        self.nixosModules.features-nixos-plymouth
-        self.nixosModules.features-nixos-sddm
-        self.nixosModules.features-nixos-wayland
 
         self.nixosModules.theme
       ];

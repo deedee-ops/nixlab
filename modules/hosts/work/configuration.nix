@@ -11,19 +11,7 @@
       primaryUser = "ajgon";
       homeModules = [
         self.homeModules.features-home
-        self.homeModules.features-home-atuin
-        self.homeModules.features-home-bat
-        self.homeModules.features-home-btop
-        self.homeModules.features-home-direnv
-        self.homeModules.features-home-git
-        self.homeModules.features-home-gnupg
-        self.homeModules.features-home-kubernetes
-        self.homeModules.features-home-neovim
-        self.homeModules.features-home-ssh
-        self.homeModules.features-home-wakatime
-        self.homeModules.features-home-yazi
-        self.homeModules.features-home-zellij
-        self.homeModules.features-home-zsh
+        self.homeModules.features-home-console
 
         self.homeModules.theme
       ];
@@ -33,19 +21,11 @@
         self.nixosModules.hardware-qemu-guest
         self.nixosModules.hardware-qemu-local
 
-        self.nixosModules.features-nixos-disks
-        self.nixosModules.features-nixos-docker
-        self.nixosModules.features-nixos-grub
-        self.nixosModules.features-nixos-home-manager
-        self.nixosModules.features-nixos-locales
+        self.nixosModules.features-nixos-core
         self.nixosModules.features-nixos-mounts
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-openconnect
         self.nixosModules.features-nixos-squid
-        self.nixosModules.features-nixos-ssh
-        self.nixosModules.features-nixos-system
-        self.nixosModules.features-nixos-time
-        self.nixosModules.features-nixos-user
 
         self.nixosModules.theme
       ];

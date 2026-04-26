@@ -70,6 +70,7 @@ rec {
           );
           modules = [
             inputs.krewfile.homeManagerModules.krewfile
+            inputs.noctalia.homeModules.default
             inputs.sops-nix.homeManagerModules.sops
             inputs.stylix.homeModules.stylix
             inputs.vicinae.homeManagerModules.default

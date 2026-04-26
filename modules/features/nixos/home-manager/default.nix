@@ -42,7 +42,10 @@
           users."${cfg.username}" = {
             imports = [
               inputs.krewfile.homeManagerModules.krewfile
+              inputs.noctalia.homeModules.default
               inputs.sops-nix.homeManagerModules.sops
+              # do not add it, it's added by base nixos and will clash
+              # inputs.stylix.homeModules.stylix
               inputs.vicinae.homeManagerModules.default
             ]
             ++ cfg.modules;

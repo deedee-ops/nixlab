@@ -1,4 +1,4 @@
-{ self, inputs, ... }:
+{ self, ... }:
 {
   flake.homeModules.features-home-noctalia-shell =
     {
@@ -53,9 +53,6 @@
       };
     in
     {
-      imports = [
-        inputs.noctalia.homeModules.default
-      ];
 
       options.features.home.noctalia-shell = {
         extraSettings = lib.mkOption {

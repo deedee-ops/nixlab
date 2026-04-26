@@ -63,9 +63,10 @@ in
               pointerCursor = {
                 name = cursorTheme;
                 package = cursorPackage;
+                dotIcons.enable = false;
                 size = cursorSize;
                 gtk.enable = true;
-                x11.enable = true;
+                x11.enable = false;
               };
             };
 
