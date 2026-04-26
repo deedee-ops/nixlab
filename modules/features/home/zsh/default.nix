@@ -35,7 +35,6 @@ _: {
             [
               "atuin"
               "direnv"
-              "ghostty"
               "kubecolor"
               "nix-index"
               "yazi"

@@ -36,11 +36,10 @@
 
         terminal = lib.mkOption {
           type = lib.types.enum [
-            "ghostty"
             "kitty"
           ];
           description = "Default terminal emulator to use";
-          default = "ghostty";
+          default = "kitty";
         };
 
         features = lib.mkOption {
