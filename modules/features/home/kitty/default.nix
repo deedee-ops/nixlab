@@ -44,6 +44,11 @@
           update_check_interval = 0;
           underline_hyperlinks = "never";
           window_padding_width = 6;
+        }
+        // lib.optionalAttrs config.programs.noctalia-shell.enable {
+          font_family = "JetBrainsMono Nerd Font Mono";
+          font_size = 12;
+          background_opacity = 0.95;
         };
 
         extraConfig = ''
