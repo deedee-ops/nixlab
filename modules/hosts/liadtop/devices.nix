@@ -38,7 +38,7 @@ _: {
           HandleLidSwitchExternalPower = lidAction;
           HandlePowerKey = lidAction;
           HandlePowerKeyLongPress = "poweroff";
-          InhibitDelayMaxSec = 3;
+          InhibitDelayMaxSec = 10;
         };
 
         upower.enable = true;

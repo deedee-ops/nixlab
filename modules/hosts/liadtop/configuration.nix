@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, inputs, ... }:
 {
   flake.nixosModules.hosts-liadtop-configuration =
     {
@@ -13,6 +13,7 @@
         (builtins.readFile ../../../assets/ca-rsa4096.crt)
       ];
 
+      noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
       primaryUser = "ajgon";
       homeModules = [
         self.homeModules.features-home
@@ -76,16 +77,17 @@
       };
 
       home-manager.users."${primaryUser}" = {
-        # zenbook doesn't support deep sleep so we need subpar workaround,
-        # at least to turn off display
         systemd.user.services.niri-pre-sleep = {
           Unit = {
-            Description = "Turn off niri displays before sleep";
+            Description = "Lock screen and turn off displays before sleep";
             Before = "sleep.target";
           };
           Service = {
             Type = "oneshot";
-            ExecStart = "${lib.getExe config.programs.niri.package} msg action power-off-monitors";
+            ExecStart = "${pkgs.writeShellScript "niri-pre-sleep" ''
+              ${lib.getExe noctaliaShellPkg} ipc call lockScreen lock
+              ${lib.getExe config.programs.niri.package} msg action power-off-monitors
+            ''}";
           };
           Install = {
             WantedBy = [ "sleep.target" ];
