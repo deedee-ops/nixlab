@@ -434,10 +434,20 @@
                 match = _: {
                   props = {
                     app-id = "org.keepassxc.KeePassXC";
+                    title = "Unlock Database";
                   };
                 };
                 open-floating = true;
                 open-focused = true;
+              };
+            }
+            {
+              window-rule = {
+                match = _: {
+                  props = {
+                    app-id = "org.keepassxc.KeePassXC";
+                  };
+                };
                 block-out-from = "screen-capture";
               };
             }

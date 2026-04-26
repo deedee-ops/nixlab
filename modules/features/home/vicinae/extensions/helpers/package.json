@@ -43,6 +43,22 @@
       ]
     },
     {
+      "name": "tailscale-toggle",
+      "title": "Tailscale Toggle",
+      "description": "Toggles Tailscale on or off.",
+      "mode": "no-view",
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "noctalia-shell ipc call plugin:tailscale toggle",
+          "description": "Space-separated command to run (no shell expansion)."
+        }
+      ]
+    },
+    {
       "name": "add-todo",
       "title": "Add Todo",
       "description": "Adds a todo item. Include @work or #work to flag it.",

@@ -64,10 +64,10 @@
     },
     {
       "compactMode": false,
-      "hideMode": "visible",
+      "hideMode": "hidden",
       "hideWhenIdle": false,
       "id": "MediaMini",
-      "maxWidth": 125,
+      "maxWidth": 75,
       "panelShowAlbumArt": true,
       "scrollingMode": "hover",
       "showAlbumArt": true,
@@ -75,7 +75,7 @@
       "showProgressRing": false,
       "showVisualizer": true,
       "textColor": "none",
-      "useFixedWidth": false,
+      "useFixedWidth": true,
       "visualizerType": "mirrored"
     },
     {
@@ -84,7 +84,7 @@
         "defaultPeerAction": "copy-ip",
         "hideDisconnected": false,
         "hideMullvadExitNodes": true,
-        "loginServer": "https://relay.rzegocki.dev",
+        "loginServer": "https://headscale.rzegocki.dev",
         "pingCount": 5,
         "refreshInterval": 5000,
         "showIpAddress": true,

@@ -59,6 +59,7 @@
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-ssh
         self.nixosModules.features-nixos-system
+        self.nixosModules.features-nixos-tailscale
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
 
@@ -164,14 +165,14 @@
                   showPeerCount = true;
                   hideDisconnected = false;
                   hideMullvadExitNodes = true;
-                  terminalCommand = "";
-                  sshUsername = "";
+                  terminalCommand = "${lib.getExe pkgs.kitty}";
+                  sshUsername = "${primaryUser}";
                   pingCount = 5;
                   defaultPeerAction = "copy-ip";
                   taildropEnabled = false;
                   taildropDownloadDir = "~/Downloads";
                   taildropReceiveMode = "operator";
-                  loginServer = "https://relay.rzegocki.dev";
+                  loginServer = "https://headscale.rzegocki.dev";
                 };
               };
             };
