@@ -6,6 +6,11 @@ _: {
     in
     {
       options.features.home.zsh = {
+        extraConfig = lib.mkOption {
+          type = lib.types.lines;
+          default = "";
+          description = "Extra configuration appended to .zshrc file.";
+        };
         promptColor = lib.mkOption {
           type = lib.types.str;
           default = "magenta";
@@ -63,6 +68,7 @@ _: {
 
                   export HISTFILE="${config.xdg.stateHome}/zsh/history"
                 '')
+                (lib.mkOrder 2000 cfg.extraConfig)
               ];
 
               plugins = lib.mkAfter (
@@ -76,6 +82,7 @@ _: {
                     "keys"
                     "nix"
                     "prompt"
+                    "self-heal"
                   ]
               );
             };

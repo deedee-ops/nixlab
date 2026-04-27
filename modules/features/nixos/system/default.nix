@@ -28,7 +28,10 @@
         };
 
         config = {
-          environment.enableAllTerminfo = true;
+          environment = {
+            enableAllTerminfo = true;
+            systemPackages = cfg.extraPackages;
+          };
 
           fonts.packages = [
             pkgs.corefonts
@@ -78,11 +81,17 @@
           };
 
           system = {
-            # qemu-local VMs hosted on machines need that
-            activationScripts.readable-ssh-host-keys-for-wheel.text = ''
-              ${lib.getExe' pkgs.coreutils "chgrp"} wheel /etc/ssh/ssh_host_ed25519_key
-              ${lib.getExe' pkgs.coreutils "chmod"} 640 /etc/ssh/ssh_host_ed25519_key
-            '';
+            activationScripts = {
+              # qemu-local VMs hosted on machines need that
+              readable-ssh-host-keys-for-wheel.text = ''
+                ${lib.getExe' pkgs.coreutils "chgrp"} wheel /etc/ssh/ssh_host_ed25519_key
+                ${lib.getExe' pkgs.coreutils "chmod"} 640 /etc/ssh/ssh_host_ed25519_key
+              '';
+
+              symlink-bin-bash.text = ''
+                ln -s /run/current-system/sw/bin/bash /bin/bash || true
+              '';
+            };
 
             autoUpgrade = {
               enable = true;

@@ -6,7 +6,27 @@ _: {
       lib,
       ...
     }:
+    let
+      cfg = config.features.home.syncthing;
+    in
     {
+      options.features.home.syncthing = {
+        guiAddress = lib.mkOption {
+          type = lib.types.str;
+          default = "127.0.0.1:8384";
+          description = "Default address to bind syncthing to.";
+        };
+        skipTray = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Install syncthing daemon only, without tray.";
+        };
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
       config = {
         home = {
           activation = {
@@ -21,11 +41,16 @@ _: {
           };
         };
 
-        services.syncthing.enable = true;
-        systemd.user.services = lib.mkGuiStartupService {
-          package = pkgs.syncthingtray-minimal;
-          command = "${lib.getExe' pkgs.syncthingtray-minimal "syncthingtray"} --wait";
+        services.syncthing = {
+          inherit (cfg) guiAddress;
+          enable = true;
         };
+        systemd.user.services = lib.optionalAttrs (!cfg.skipTray) (
+          lib.mkGuiStartupService {
+            package = pkgs.syncthingtray-minimal;
+            command = "${lib.getExe' pkgs.syncthingtray-minimal "syncthingtray"} --wait";
+          }
+        );
       };
     };
 }

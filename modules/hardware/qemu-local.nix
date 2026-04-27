@@ -69,6 +69,7 @@
 
           forwardPorts = map (mapping: {
             from = "host";
+            host.address = "127.0.0.1";
             host.port = mapping.host;
             guest.port = mapping.guest;
           }) cfg.portMappings;
@@ -77,10 +78,6 @@
             downloads = {
               source = "/home/${cfg.userMapping.host}/Downloads";
               target = "/home/${cfg.userMapping.guest}/Downloads";
-            };
-            projects = {
-              source = "/home/${cfg.userMapping.host}/Sync/vms/${config.networking.hostName}";
-              target = "/home/${cfg.userMapping.guest}/Projects";
             };
 
             bootstrapSSH = {

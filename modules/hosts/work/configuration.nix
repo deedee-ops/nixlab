@@ -1,17 +1,21 @@
 { self, inputs, ... }:
 {
   flake.nixosModules.hosts-work-configuration =
-    { pkgs, ... }:
+    { config, pkgs, ... }:
     let
       trustedRootCertificates = [
         (builtins.readFile ../../../assets/ca-ec384.crt)
         (builtins.readFile ../../../assets/ca-rsa4096.crt)
+        (builtins.readFile ../../../assets/ca-work.crt)
       ];
 
       primaryUser = "ajgon";
       homeModules = [
         self.homeModules.features-home
         self.homeModules.features-home-console
+
+        self.homeModules.features-home-syncthing
+        self.homeModules.features-home-zellij
 
         self.homeModules.theme
       ];
@@ -33,6 +37,12 @@
       sops = {
         defaultSopsFile = ./secrets.sops.yaml;
         age.sshKeyPaths = [ "/secrets/ssh_host_ed25519_key" ];
+
+        secrets."features/home/zsh/extraConfig" = {
+          inherit (config.users.users."${primaryUser}") group;
+          owner = config.users.users."${primaryUser}".name;
+          mode = "0400";
+        };
       };
 
       features = {
@@ -46,6 +56,14 @@
               {
                 host = 3128;
                 guest = 3128;
+              }
+              {
+                host = 18384;
+                guest = 18384;
+              }
+              {
+                host = 44391;
+                guest = 44391;
               }
             ];
             userMapping = {
@@ -101,16 +119,18 @@
 
             extraPackages = [
               pkgs.sshpass
-              (inputs.nixpkgs-legacy.python311.withPackages (python-pkgs: [
-                python-pkgs.ansible
-                python-pkgs.ansible-core
-                python-pkgs.github3-py
-                python-pkgs.jmespath
-                python-pkgs.passlib
-                python-pkgs.pycryptodome
-                python-pkgs.pymysql
-                python-pkgs.pyvmomi
-              ]))
+              (inputs.nixpkgs-legacy.legacyPackages."${pkgs.stdenv.hostPlatform.system}".python311.withPackages
+                (python-pkgs: [
+                  python-pkgs.ansible
+                  python-pkgs.ansible-core
+                  python-pkgs.github3-py
+                  python-pkgs.jmespath
+                  python-pkgs.passlib
+                  python-pkgs.pycryptodome
+                  python-pkgs.pymysql
+                  python-pkgs.pyvmomi
+                ])
+              )
             ];
           };
 
@@ -154,7 +174,17 @@
             };
           };
 
-          zsh.promptColor = "blue";
+          syncthing = {
+            guiAddress = "0.0.0.0:18384";
+            skipTray = true;
+          };
+
+          zsh = {
+            promptColor = "blue";
+            extraConfig = ''
+              source ${config.sops.secrets."features/home/zsh/extraConfig".path}
+            '';
+          };
         };
       };
 

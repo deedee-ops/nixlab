@@ -9,6 +9,7 @@
     }:
     let
       trustedRootCertificates = [
+        (builtins.readFile ../../../assets/ca-work.crt)
         (builtins.readFile ../../../assets/ca-ec384.crt)
         (builtins.readFile ../../../assets/ca-rsa4096.crt)
       ];

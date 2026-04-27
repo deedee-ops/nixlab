@@ -22,6 +22,7 @@
       config = {
         sops.secrets = lib.genAttrs [ "features/home/kubernetes/kubeconfig" ] (_: {
           sopsFile = cfg.sopsSecretsFile;
+          mode = "0600";
         });
 
         stylix.targets = {
@@ -31,6 +32,7 @@
 
         home = {
           packages = [
+            pkgs.fzf # for kubectl ctx
             pkgs.kubectl
             pkgs.stern
           ];

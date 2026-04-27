@@ -9,7 +9,7 @@
       inherit (self.nixosConfigurations.work.config.nixpkgs.hostPlatform) system;
     in
     {
-      hostname = "work.internal";
+      hostname = "127.0.0.1";
       interactiveSudo = true;
       profiles.system = {
         sshUser = "ajgon";
