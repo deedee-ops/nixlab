@@ -147,7 +147,7 @@
               enabled = true;
             };
             dock = {
-              enable = false;
+              enabled = false;
             };
             idle = {
               enabled = true;
