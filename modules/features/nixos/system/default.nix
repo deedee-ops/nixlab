@@ -89,7 +89,7 @@
               '';
 
               symlink-bin-bash.text = ''
-                ln -s /run/current-system/sw/bin/bash /bin/bash || true
+                ln -s /run/current-system/sw/bin/bash /bin/bash 2>/dev/null || true
               '';
             };
 
@@ -105,7 +105,6 @@
       imports = [
         self.nixosModules.features-nixos-disks
         self.nixosModules.features-nixos-docker
-        self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-home-manager
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-ssh

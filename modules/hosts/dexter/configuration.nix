@@ -24,6 +24,7 @@
 
         self.nixosModules.features-nixos-core
         self.nixosModules.features-nixos-desktop
+        self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-networking
 
         self.nixosModules.theme

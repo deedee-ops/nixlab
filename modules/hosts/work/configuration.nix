@@ -1,7 +1,12 @@
 { self, inputs, ... }:
 {
   flake.nixosModules.hosts-work-configuration =
-    { config, pkgs, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       trustedRootCertificates = [
         (builtins.readFile ../../../assets/ca-ec384.crt)
@@ -44,6 +49,10 @@
           mode = "0400";
         };
       };
+      boot.loader = {
+        systemd-boot.enable = lib.mkForce false;
+        grub.enable = false;
+      };
 
       features = {
         nixos = {
@@ -79,8 +88,6 @@
           };
 
           docker.username = primaryUser;
-
-          grub.mode = "uefi";
 
           home-manager = {
             username = primaryUser;
@@ -136,7 +143,6 @@
 
           user = {
             name = primaryUser;
-            extraDirectories = [ "/mnt" ];
           };
         };
       };

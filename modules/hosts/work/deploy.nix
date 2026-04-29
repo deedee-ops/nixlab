@@ -13,6 +13,10 @@
       interactiveSudo = true;
       profiles.system = {
         sshUser = "ajgon";
+        sshOpts = [
+          "-p"
+          "2222"
+        ];
         remoteBuild = false;
         user = "root";
         path = inputs.deploy-rs.lib."${system}".activate.nixos self.nixosConfigurations.work;
