@@ -45,10 +45,10 @@
                 grep = "grep --color";
                 ls = "ls --color";
 
-                claude = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
-                claude-chat = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude'';
-                claude-go = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
-                claude-node = ''${lib.getExe pkgs.docker} run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/node/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-node'';
+                claude = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
+                claude-chat = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude'';
+                claude-go = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
+                claude-node = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/node/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-node'';
 
                 w = "${lib.getExe startVMpkg} work";
               }
@@ -94,6 +94,7 @@
         self.homeModules.features-home-telegram
         self.homeModules.features-home-thunderbird
         self.homeModules.features-home-vicinae
+        self.homeModules.features-home-wayland
         self.homeModules.features-home-zathura
       ];
     };

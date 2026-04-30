@@ -22,7 +22,7 @@ _: {
           startWhenNeeded = false;
           openFirewall = true;
           settings = {
-            PermitRootLogin = "no";
+            PermitRootLogin = lib.mkForce "no";
             PasswordAuthentication = false;
             KbdInteractiveAuthentication = false;
 

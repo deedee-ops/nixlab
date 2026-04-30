@@ -63,11 +63,13 @@ _: {
               "users"
               "setupSecrets"
             ];
-            text = lib.concatStringsSep "\n" (
+            text = ''
+              chown -R ${cfg.name}:users "${config.users.users."${cfg.name}".home}"
+            ''
+            + lib.concatStringsSep "\n" (
               builtins.map (extraDir: ''
                 mkdir -p ${extraDir} || true
                 chown ${cfg.name}:users "${extraDir}"
-                chown -R ${cfg.name}:users "${config.users.users."${cfg.name}".home}"
               '') cfg.extraDirectories
             );
           };

@@ -20,6 +20,8 @@ _: {
       };
       config = {
         environment.systemPackages = [
+          # https://github.com/nix-community/home-manager/issues/3113
+          pkgs.dconf
           pkgs.wl-clipboard
         ];
 

@@ -8,6 +8,7 @@ keys:
   - hosts:
       - &dexter age1s3hlmga37ylfxp7y96uha27j6g4mxjs74ecsvjs9d6hwrv0uus5s4teuqn
       - &liadtop age1czs2uzrun89mfzaykc2cl65auktzdhkky9lgp7c28wf6ezzz34sq5zhl6q
+      - &mandark age15sf9evgkvx4uzk4mgf43rfree6w68cudw8mt0daljmd55230gaxqjgk6rx
       - &work age1p3frxma9rmdfxf4dd26yyc3q9an667k99za5sqyl6ma7e206wdcs7k3ja5
 creation_rules:
   - path_regex: home/.*\.sops\.yaml$
@@ -25,6 +26,11 @@ creation_rules:
       - age:
           - *ajgon
           - *liadtop
+  - path_regex: mandark/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *ajgon
+          - *mandark
   - path_regex: work/.*\.sops\.yaml$
     key_groups:
       - age:
