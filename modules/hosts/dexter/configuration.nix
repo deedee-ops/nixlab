@@ -15,6 +15,8 @@
         self.homeModules.features-home-console
         self.homeModules.features-home-gui
 
+        self.homeModules.features-home-zsh-pdf
+
         self.homeModules.theme
       ];
     in

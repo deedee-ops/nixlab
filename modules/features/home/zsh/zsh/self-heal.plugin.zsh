@@ -11,5 +11,6 @@ _fix_terminal_state() {
   printf '\e[?1049l'
 }
 
-autoload -Uz add-zsh-hook
-add-zsh-hook precmd _fix_terminal_state
+function fix() {
+  _fix_terminal_state
+}

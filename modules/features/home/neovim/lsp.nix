@@ -70,6 +70,7 @@
       { pkgs, ... }:
       {
         extraPackages = [
+          pkgs.prettierd
           pkgs.vscode-json-languageserver
         ];
 
