@@ -221,7 +221,7 @@
                     if cfg.launcher == "vicinae" then
                       [
                         (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                        "vicinae://extensions/vicinae/clipboard/history"
+                        "vicinae://launch/clipboard/history"
                       ]
                     else
                       [
