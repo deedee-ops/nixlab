@@ -14,7 +14,7 @@
 
         self.homeModules.features-home-bat
         self.homeModules.features-home-btop
-        self.homeModules.features-home-xdg
+        self.homeModules.features-home-shell
         self.homeModules.features-home-yazi
         self.homeModules.features-home-zsh
 

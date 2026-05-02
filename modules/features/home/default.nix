@@ -70,9 +70,9 @@
         self.homeModules.features-home-gnupg
         self.homeModules.features-home-kubernetes
         self.homeModules.features-home-neovim
+        self.homeModules.features-home-shell
         self.homeModules.features-home-ssh
         self.homeModules.features-home-wakatime
-        self.homeModules.features-home-xdg
         self.homeModules.features-home-yazi
         self.homeModules.features-home-zsh
       ];
