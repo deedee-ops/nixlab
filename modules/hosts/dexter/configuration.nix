@@ -10,12 +10,11 @@
       ];
 
       primaryUser = "ajgon";
+      qrcpPort = 55555;
       homeModules = [
         self.homeModules.features-home
         self.homeModules.features-home-console
         self.homeModules.features-home-gui
-
-        self.homeModules.features-home-zsh-pdf
 
         self.homeModules.theme
       ];
@@ -59,7 +58,10 @@
           };
 
           networking = {
-            firewallEnable = true;
+            firewall = {
+              enable = true;
+              openPorts = [ qrcpPort ];
+            };
             hostname = "dexter";
             mainInterface = {
               name = "enp89s0";
@@ -178,6 +180,8 @@
         thunderbird = {
           inherit trustedRootCertificates;
         };
+
+        zsh.qrcp.port = qrcpPort;
       };
 
       system.stateVersion = "25.11";

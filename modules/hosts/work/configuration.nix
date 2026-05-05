@@ -103,7 +103,7 @@
           ];
 
           networking = {
-            firewallEnable = false;
+            firewall.enable = false;
             hostname = "work";
             mainInterface.name = "eth0";
           };

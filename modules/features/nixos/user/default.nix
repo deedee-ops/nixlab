@@ -64,7 +64,7 @@ _: {
               "setupSecrets"
             ];
             text = ''
-              chown -R ${cfg.name}:users "${config.users.users."${cfg.name}".home}"
+              chown -R ${cfg.name}:users "${config.users.users."${cfg.name}".home}/.config"
             ''
             + lib.concatStringsSep "\n" (
               builtins.map (extraDir: ''

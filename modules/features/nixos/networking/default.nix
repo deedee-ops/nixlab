@@ -10,7 +10,14 @@ _: {
     in
     {
       options.features.nixos.networking = {
-        firewallEnable = lib.mkEnableOption "firewall";
+        firewall = {
+          enable = lib.mkEnableOption "firewall";
+          openPorts = lib.mkOption {
+            type = lib.types.listOf lib.types.port;
+            description = "List of ports opened by default";
+            default = [ ];
+          };
+        };
         wifiSupport = lib.mkEnableOption "WiFi support";
         completelyDisableIPV6 = lib.mkOption {
           type = lib.types.bool;
@@ -127,11 +134,13 @@ _: {
           dhcpcd.enable = false;
           enableIPv6 = !cfg.completelyDisableIPV6;
           firewall = {
-            enable = cfg.firewallEnable;
+            inherit (cfg.firewall) enable;
             checkReversePath =
               if cfg.secondaryInterface == null && cfg.customNetworking == null then "strict" else "loose";
+            allowedTCPPorts = cfg.firewall.openPorts;
+            allowedUDPPorts = cfg.firewall.openPorts;
           };
-          nftables.enable = cfg.firewallEnable;
+          nftables.enable = cfg.firewall.enable;
           resolvconf.enable = false;
           useDHCP = false;
           useHostResolvConf = false;

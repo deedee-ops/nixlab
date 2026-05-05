@@ -1,10 +1,16 @@
-_: {
+{ self, ... }:
+{
   flake.homeModules.features-home-zsh =
     { config, lib, ... }:
     let
       cfg = config.features.home.zsh;
     in
     {
+      imports = [
+        self.homeModules.features-home-zsh-pdf
+        self.homeModules.features-home-zsh-qrtools
+      ];
+
       options.features.home.zsh = {
         extraConfig = lib.mkOption {
           type = lib.types.lines;
