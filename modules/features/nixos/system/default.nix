@@ -36,6 +36,7 @@
           fonts.packages = [
             pkgs.corefonts
             pkgs.vista-fonts
+            pkgs.roboto
           ];
 
           nix = {
