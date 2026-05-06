@@ -27,6 +27,7 @@
         self.nixosModules.features-nixos-desktop
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-networking
+        self.nixosModules.features-nixos-vms
 
         self.nixosModules.theme
       ];
@@ -85,6 +86,14 @@
           user = {
             name = primaryUser;
             extraDirectories = [ "/mnt" ];
+          };
+
+          vms = {
+            username = primaryUser;
+            dataFS = {
+              device = "/dev/nvme1n1";
+              fsType = "xfs";
+            };
           };
         };
       };
