@@ -117,6 +117,7 @@ return {
 						win = {
 							list = {
 								keys = {
+									["<esc>"] = false,
 									["o"] = "confirm",
 								},
 							},
