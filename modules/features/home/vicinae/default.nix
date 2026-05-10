@@ -6,8 +6,24 @@ _: {
       lib,
       ...
     }:
+    let
+      cfg = config.features.home.vicinae;
+    in
     {
+      options.features.home.vicinae = {
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
+      };
+
       config = {
+        sops.secrets = lib.genAttrs [ "features/home/vicinae/ytcast.json" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
+          path = "${config.xdg.cacheHome}/ytcast/ytcast.json";
+        });
+
         stylix.targets.vicinae.enable = !config.programs.noctalia-shell.enable;
         programs.noctalia-shell.settings.templates.activeTemplates = [
           {
@@ -16,13 +32,18 @@ _: {
           }
         ];
 
-        home.activation.init-vicinae-extensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          mkdir -p "${config.xdg.dataHome}/vicinae/extensions"
-          cp -r "${./extensions}/"* "${config.xdg.dataHome}/vicinae/extensions"
-          chmod -R u+w "${config.xdg.dataHome}/vicinae/extensions"
+        home = {
+          activation.init-vicinae-extensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            mkdir -p "${config.xdg.dataHome}/vicinae/extensions"
+            cp -r "${./extensions}/"* "${config.xdg.dataHome}/vicinae/extensions"
+            chmod -R u+w "${config.xdg.dataHome}/vicinae/extensions"
 
-          ${lib.getExe' pkgs.systemd "systemctl"} --user restart vicinae
-        '';
+            ${lib.getExe' pkgs.systemd "systemctl"} --user restart vicinae
+          '';
+          packages = [
+            pkgs.ytcast
+          ];
+        };
 
         services.vicinae = {
           enable = true;

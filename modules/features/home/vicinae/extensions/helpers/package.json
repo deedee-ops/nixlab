@@ -59,6 +59,30 @@
       ]
     },
     {
+      "name": "ytcast",
+      "title": "YTCast",
+      "description": "Casts a YouTube URL to a Chromecast device chosen from a list.",
+      "mode": "view",
+      "preferences": [
+        {
+          "name": "devices",
+          "title": "Devices",
+          "type": "textfield",
+          "required": true,
+          "default": "",
+          "description": "Comma-separated list of devices in 'Name:device-id' format, e.g. 'Living Room:abc123, Bedroom:def456'."
+        }
+      ],
+      "arguments": [
+        {
+          "name": "url",
+          "placeholder": "YouTube URL",
+          "type": "text",
+          "required": true
+        }
+      ]
+    },
+    {
       "name": "add-todo",
       "title": "Add Todo",
       "description": "Adds a todo item. Include @work or #work to flag it.",
