@@ -10,7 +10,8 @@
             require("catppuccin").setup({
               flavour = "${self.theme.style}";
               integrations = {
-                barbar = true,
+                blink_cmp = true,
+                bufferline = true,
                 lualine = true,
                 snacks = true,
               },

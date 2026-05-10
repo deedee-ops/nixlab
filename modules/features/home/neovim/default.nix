@@ -58,6 +58,7 @@
 
               # plugins
               pkgs.vimPlugins.auto-session
+              pkgs.vimPlugins.bufdelete-nvim
               pkgs.vimPlugins.vim-helm
               pkgs.vimPlugins.vim-surround
               pkgs.vimPlugins.vim-wakatime
@@ -67,7 +68,7 @@
           lazyPlugins = {
             lazy = true;
             data = [
-              pkgs.vimPlugins.barbar-nvim
+              pkgs.vimPlugins.bufferline-nvim
               pkgs.vimPlugins.comment-nvim
               pkgs.vimPlugins.conform-nvim
               pkgs.vimPlugins.lazydev-nvim

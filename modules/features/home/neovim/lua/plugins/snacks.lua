@@ -2,7 +2,6 @@ return {
 	"snacks.nvim",
 	event = "DeferredUIEnter",
 	keys = {
-		{ "<leader>w", ":BufferClose<CR>", mode = "n", desc = "barbar: close tab" },
 		{
 			"<leader>kb",
 			function()
