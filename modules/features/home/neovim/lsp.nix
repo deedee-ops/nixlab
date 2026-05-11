@@ -33,7 +33,9 @@
       { pkgs, ... }:
       {
         extraPackages = [
+          pkgs.go
           pkgs.gofumpt
+          pkgs.golangci-lint
           pkgs.golangci-lint-langserver
           pkgs.golines
           pkgs.gopls
