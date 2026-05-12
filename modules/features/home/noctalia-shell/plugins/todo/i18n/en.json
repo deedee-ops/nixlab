@@ -12,7 +12,7 @@
     "items_count": "{active} of {total} items"
   },
   "main": {
-    "added_new_todo": "Added new todo",
+    "added_new_todo": "Added new todo: ",
     "cleared_completed_todos": "Cleared ",
     "cleared_all_todos": "Cleared all todos",
     "completed_todos_suffix": " completed todos",
@@ -73,11 +73,15 @@
       "button_add_details": "Add",
       "button_edit_details": "Edit",
       "button_save": "Save",
-      "button_cancel": "Cancel"
+      "button_cancel": "Cancel",
+      "copy_details_button_tooltip": "Copy",
+      "copied_details": "Details copied to clipboard"
     },
     "todo_item": {
       "delete_button_tooltip": "Delete",
-      "edit_button_tooltip": "Edit"
+      "edit_button_tooltip": "Edit",
+      "copy_button_tooltip": "Copy",
+      "copied": "Copied to clipboard"
     }
   },
   "settings": {

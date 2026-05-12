@@ -180,6 +180,7 @@
             };
             wallpaper = {
               directory = ../../../../assets/wallpapers;
+              overviewEnabled = true;
               enableMultiMonitorDirectories = true;
               automationEnabled = true;
               randomIntervalSec = 900;

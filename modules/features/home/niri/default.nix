@@ -462,6 +462,13 @@
             + "\n"
             + (toKdl [
               {
+                # for noctalia
+                window-rule = {
+                  geometry-corner-radius = 20;
+                  clip-to-geometry = true;
+                };
+              }
+              {
                 window-rule = {
                   match = _: {
                     props = {
@@ -553,6 +560,17 @@
                   };
                   open-maximized = true;
                   open-on-workspace = "x-firefox";
+                };
+              }
+              {
+                # for blurred wallpaper in overview, provided by noctalia
+                layer-rule = {
+                  match = _: {
+                    props = {
+                      namespace = "^noctalia-overview.*";
+                    };
+                  };
+                  place-within-backdrop = true;
                 };
               }
               {

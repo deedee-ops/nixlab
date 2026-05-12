@@ -129,7 +129,8 @@
             };
             plugins = {
               tailscale = {
-                sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins";
+                # query param is a hack, to refresh plugin on version change
+                sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins?v1.5.0";
                 settings = {
                   refreshInterval = 5000;
                   compactMode = false;
