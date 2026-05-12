@@ -21,6 +21,7 @@ _: {
           "iommu=pt"
         ];
         extraModulePackages = [ ];
+        blacklistedKernelModules = [ "uvcvideo" ]; # disable webcam
       };
 
       nixpkgs.hostPlatform = "x86_64-linux";

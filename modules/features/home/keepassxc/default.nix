@@ -60,12 +60,6 @@
               Name=org.freedesktop.secrets
               Exec=${lib.getExe pkgs.keepassxc}
             '';
-
-            portal = {
-              enable = true;
-              extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-              config.common.default = [ "gtk" ];
-            };
           };
         };
     };

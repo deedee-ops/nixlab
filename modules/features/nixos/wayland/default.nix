@@ -19,11 +19,20 @@ _: {
         };
       };
       config = {
-        environment.systemPackages = [
-          # https://github.com/nix-community/home-manager/issues/3113
-          pkgs.dconf
-          pkgs.wl-clipboard
-        ];
+        environment = {
+          systemPackages = [
+            pkgs.wl-clipboard
+            # https://github.com/nix-community/home-manager/issues/3113
+            pkgs.dconf
+          ];
+
+          etc."xdg/xdg-desktop-portal-wlr/config".text = ''
+            [screencast]
+            max_fps=30
+            chooser_type=simple
+            chooser_cmd=${lib.getExe pkgs.slurp} -f %o -or
+          '';
+        };
 
         security.pam.services.login = { };
 
