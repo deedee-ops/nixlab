@@ -183,8 +183,8 @@
               enableMultiMonitorDirectories = true;
               automationEnabled = true;
               randomIntervalSec = 900;
-              transitionDuration = 500;
-              transitionType = [ ];
+              transitionDuration = 1500;
+              transitionType = [ "pixelate" ];
               transitionEdgeSmoothness = 0;
             };
           } cfg.extraSettings;
