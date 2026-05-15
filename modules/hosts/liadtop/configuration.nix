@@ -181,9 +181,9 @@
               work = {
                 forwardAgent = false;
                 host = "work";
-                hostname = "127.0.0.1";
+                hostname = "192.168.2.210";
                 identitiesOnly = true;
-                port = 2222;
+                port = 22;
                 user = "ajgon";
                 userKnownHostsFile = "/dev/null";
 

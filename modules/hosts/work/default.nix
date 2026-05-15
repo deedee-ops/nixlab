@@ -8,6 +8,7 @@
       inputs.sops-nix.nixosModules.sops
       inputs.stylix.nixosModules.stylix
 
+      self.nixosModules.hosts-work-backup
       self.nixosModules.hosts-work-configuration
     ];
   };

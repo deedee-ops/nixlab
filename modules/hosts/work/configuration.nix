@@ -19,7 +19,6 @@
         self.homeModules.features-home
         self.homeModules.features-home-console
 
-        self.homeModules.features-home-syncthing
         self.homeModules.features-home-zellij
 
         self.homeModules.theme
@@ -28,7 +27,6 @@
     {
       imports = [
         self.nixosModules.hardware-qemu-guest
-        self.nixosModules.hardware-qemu-local
 
         self.nixosModules.features-nixos-core
         self.nixosModules.features-nixos-mounts
@@ -41,7 +39,10 @@
 
       sops = {
         defaultSopsFile = ./secrets.sops.yaml;
-        age.sshKeyPaths = [ "/secrets/ssh_host_ed25519_key" ];
+
+        # Use `/secrets` when using `build-vm`, use `/etc/ssh` when using external VM
+        # age.sshKeyPaths = [ "/secrets/ssh_host_ed25519_key" ];
+        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
         secrets."features/home/zsh/extraConfig" = {
           inherit (config.users.users."${primaryUser}") group;
@@ -50,37 +51,12 @@
         };
       };
       boot.loader = {
-        systemd-boot.enable = lib.mkForce false;
+        systemd-boot.enable = lib.mkForce true;
         grub.enable = false;
       };
 
       features = {
         nixos = {
-          qemu-local = {
-            portMappings = [
-              {
-                host = 2222;
-                guest = 22;
-              }
-              {
-                host = 3128;
-                guest = 3128;
-              }
-              {
-                host = 18384;
-                guest = 18384;
-              }
-              {
-                host = 44391;
-                guest = 44391;
-              }
-            ];
-            userMapping = {
-              host = primaryUser;
-              guest = primaryUser;
-            };
-          };
-
           disks = {
             enable = true;
             filesystem = "ext4";
@@ -178,11 +154,6 @@
                 PubkeyAcceptedAlgorithms +ssh-rsa
               '';
             };
-          };
-
-          syncthing = {
-            guiAddress = "0.0.0.0:18384";
-            skipTray = true;
           };
 
           zsh = {
