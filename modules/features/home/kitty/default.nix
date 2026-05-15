@@ -47,7 +47,7 @@
         }
         // lib.optionalAttrs config.programs.noctalia-shell.enable {
           font_family = "JetBrainsMono Nerd Font Mono";
-          font_size = 12;
+          font_size = 10;
           background_opacity = 0.95;
         };
 

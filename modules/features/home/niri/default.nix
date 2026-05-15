@@ -185,7 +185,7 @@
                     { proportion = 0.5; }
                     { proportion = 0.66667; }
                   ];
-                  default-column-width.proportion = 0.50;
+                  default-column-width.proportion = 0.33333;
                   focus-ring.width = 2;
                 };
 
