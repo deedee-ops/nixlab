@@ -108,11 +108,6 @@
           ];
         };
 
-        freerdp.windowsHosts.w10vm = {
-          host = "windows.internal";
-          username = primaryUser;
-        };
-
         gnupg.pinentryPackage = pkgs.pinentry-qt;
 
         niri = {

@@ -15,6 +15,14 @@ _: {
           type = lib.types.attrsOf (
             lib.types.submodule {
               options = {
+                displayName = lib.mkOption {
+                  type = lib.types.nullOr lib.types.str;
+                  default = null;
+                };
+                preRunScript = lib.mkOption {
+                  type = lib.types.lines;
+                  default = "";
+                };
                 host = lib.mkOption {
                   type = lib.types.str;
                 };
@@ -52,10 +60,12 @@ _: {
           value = {
             text = ''
               [Desktop Entry]
-              Name=${name}
+              Name=${if value.displayName == null then name else value.displayName}
               Comment=RDP connection
               Exec=${lib.getExe (
                 pkgs.writeShellScriptBin "rdp.sh" ''
+                  ${if value.preRunScript == "" then "" else "${value.preRunScript} || exit 1"}
+
                   ${lib.getExe' pkgs.freerdp "xfreerdp"} /v:${value.host} /dynamic-resolution /workarea /scale:180 /d:${value.domain} /u:${value.username} /p:$(cat ${
                     config.sops.secrets."features/home/freerdp/${name}".path
                   }) /cert:ignore
@@ -68,7 +78,7 @@ _: {
               Encoding=UTF-8
               Categories=Network
               StartupWMClass=windows-rdp
-              Name[en_US]=${name}
+              Name[en_US]=${if value.displayName == null then name else value.displayName}
             '';
           };
         }) cfg.windowsHosts;

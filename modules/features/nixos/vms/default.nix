@@ -39,6 +39,47 @@ _: {
           "disk"
         ];
 
+        home-manager.users."${cfg.username}".features.home = {
+          freerdp.windowsHosts.w10vm = {
+            inherit (cfg) username;
+
+            displayName = "Windows 10 VM";
+            host = "192.168.122.100";
+            preRunScript = lib.getExe (
+              pkgs.writeShellScriptBin "ensure-windows10-vm.sh" ''
+                VM_NAME="windows10"
+                VM_IP="192.168.122.100"
+                RDP_PORT=3389
+                CHECK_INTERVAL=5
+                MAX_WAIT=120
+
+                die() {
+                    ${lib.getExe' pkgs.libnotify "notify-send"} -u critical -a "VM Launcher" "Windows 10 Error" "$1"
+                    exit 1
+                }
+
+                rdp_up() {
+                    timeout 2 bash -c "</dev/tcp/$VM_IP/$RDP_PORT" 2>/dev/null
+                }
+
+                if ! ${lib.getExe' pkgs.libvirt "virsh"} domstate "$VM_NAME" 2>/dev/null | grep -q "^running$"; then
+                    ${lib.getExe' pkgs.libvirt "virsh"} start "$VM_NAME" 2>&1 || die "Failed to start VM '$VM_NAME'."
+                    ${lib.getExe' pkgs.libnotify "notify-send"} -a "VM Launcher" "Windows 10 Booting" "VM will be available at $VM_IP:$RDP_PORT"
+                fi
+
+                elapsed=0
+                until rdp_up; do
+                    if [ "$elapsed" -ge "$MAX_WAIT" ]; then
+                        die "Timed out after ""$MAX_WAIT""s waiting for RDP on $VM_IP:$RDP_PORT."
+                    fi
+                    sleep "$CHECK_INTERVAL"
+                    elapsed=$(( elapsed + CHECK_INTERVAL ))
+                done
+              ''
+            );
+          };
+        };
+
         services.samba = {
           enable = true;
           settings = {

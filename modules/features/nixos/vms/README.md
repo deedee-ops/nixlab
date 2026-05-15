@@ -26,6 +26,22 @@ virsh change-media windows10 sda --eject --config
 
 ## Connecting the shared folder
 
+### Required: enable guest SMB access on Windows
+
+Windows 10 (1709 and later) blocks insecure guest SMB access by default. **Without
+this step the share will not connect** — you will get "Windows cannot access
+\\192.168.122.1\vmshare" even though networking is working correctly.
+
+Run the following in an **Administrator** Command Prompt inside the VM:
+
+```cmd
+reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v AllowInsecureGuestAuth /t REG_DWORD /d 1 /f
+```
+
+Reboot the VM (or restart the Workstation service) for the change to take effect.
+
+### Map the network drive
+
 The host machine is always reachable from the VM at `192.168.122.1`.
 
 In Windows Explorer, map a network drive to:
@@ -34,10 +50,9 @@ In Windows Explorer, map a network drive to:
 \\192.168.122.1\vmshare
 ```
 
-Select **Connect using different credentials** if prompted, then use `Guest` as the
-username with a blank password. Tick **Reconnect at sign-in** to make it permanent.
+Tick **Reconnect at sign-in** to make it permanent.
 
-Anything dropped into `/srv/vmshare` on the host appears in that drive instantly,
+Anything dropped into `/srv/vms/share` on the host appears in that drive instantly,
 and vice versa.
 
 ## Snapshots
