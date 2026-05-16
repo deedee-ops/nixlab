@@ -36,9 +36,10 @@
     headplane.url = "github:tale/headplane";
     home-manager.url = "github:nix-community/home-manager";
     krewfile.url = "github:brumhard/krewfile";
-    noctalia.url = "github:noctalia-dev/noctalia-shell";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    noctalia.url = "github:noctalia-dev/noctalia-shell";
+    nsticky.url = "github:lonerOrz/nsticky";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
     vicinae.url = "github:vicinaehq/vicinae";

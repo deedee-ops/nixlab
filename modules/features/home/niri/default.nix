@@ -55,12 +55,25 @@
         };
       };
       config = {
-        programs.noctalia-shell.settings.templates.activeTemplates = [
-          {
-            enabled = true;
-            id = "niri";
-          }
-        ];
+        programs = {
+          noctalia-shell.settings.templates.activeTemplates = [
+            {
+              enabled = true;
+              id = "niri";
+            }
+          ];
+          nsticky = {
+            enable = true;
+            settings = {
+              sticky = {
+                firefox = {
+                  app-id = "firefox";
+                  title = "Picture-in-Picture";
+                };
+              };
+            };
+          };
+        };
         home = {
           activation.init-niri = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             # ensure noctalia.kdl exists otherwise niri will fail to include it and start
@@ -560,6 +573,26 @@
                   };
                   open-maximized = true;
                   open-on-workspace = "x-firefox";
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "firefox";
+                      title = "Picture-in-Picture";
+                    };
+                  };
+                  open-floating = true;
+                  default-column-width.proportion = 0.33;
+                  default-window-height.proportion = 0.33;
+                  default-floating-position = _: {
+                    props = {
+                      relative-to = "bottom-right";
+                      x = 16;
+                      y = 16;
+                    };
+                  };
                 };
               }
               {
