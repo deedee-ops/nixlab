@@ -82,6 +82,7 @@ _: {
 
         services.samba = {
           enable = true;
+          enableWinbindd = false;
           settings = {
             global = {
               workgroup = "WORKGROUP";
@@ -90,12 +91,18 @@ _: {
               "guest account" = "nobody";
               "hosts allow" = "192.168.122. 127.";
               "hosts deny" = "0.0.0.0/0";
+              "change notify" = "no";
             };
             vmshare = {
               path = "/srv/vms/share";
               "read only" = "no";
               "guest ok" = "yes";
-              "force user" = "nobody";
+              "force user" = cfg.username;
+              "force group" = "users";
+              "nt acl support" = "no";
+              "store dos attributes" = "no";
+              "oplocks" = "no";
+              "level2 oplocks" = "no";
               comment = "VM Shared Folder";
             };
           };
