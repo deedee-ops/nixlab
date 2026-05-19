@@ -30,7 +30,7 @@
           self.modules.neovim."${self.theme.name}"
         ];
 
-        extraPackages = [
+        runtimePkgs = [
           pkgs.curl
           pkgs.git
           pkgs.ripgrep

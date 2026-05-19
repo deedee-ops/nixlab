@@ -142,17 +142,15 @@
             sopsSecretsFile = ./secrets.sops.yaml;
 
             appendOptions = {
-              matchBlocks."*" = {
-                forwardAgent = false;
+              settings."Host *" = {
+                ForwardAgent = false;
+                IdentitiesOnly = true;
+                Port = 22;
+                StrictHostKeyChecking = "accept-new";
+                SetEnv = "TERM=xterm-256color";
+                HostkeyAlgorithms = "+ssh-rsa";
+                PubkeyAcceptedAlgorithms = "+ssh-rsa";
               };
-              extraConfig = ''
-                IdentitiesOnly yes
-                Port 22
-                StrictHostKeyChecking accept-new
-                SetEnv TERM=xterm-256color
-                HostkeyAlgorithms +ssh-rsa
-                PubkeyAcceptedAlgorithms +ssh-rsa
-              '';
             };
           };
 

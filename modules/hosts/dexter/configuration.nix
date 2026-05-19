@@ -131,52 +131,46 @@
         };
 
         ssh.appendOptions = {
-          matchBlocks = {
+          settings = {
             # private
-            forgejo = {
-              forwardAgent = false;
-              host = "git.ajgon.casa";
-              hostname = "git.ajgon.casa";
-              identitiesOnly = true;
-              port = 22;
-              user = "git";
+            "Host git.ajgon.casa" = {
+              ForwardAgent = false;
+              HostName = "git.ajgon.casa";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "git";
             };
             mandark = {
-              forwardAgent = true;
-              host = "mandark";
-              hostname = "relay.rzegocki.dev";
-              identitiesOnly = true;
-              port = 22;
-              user = "ajgon";
+              ForwardAgent = true;
+              HostName = "relay.rzegocki.dev";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
             };
             nas = {
-              forwardAgent = false;
-              host = "nas";
-              hostname = "nas.internal";
-              identitiesOnly = true;
-              port = 22;
-              user = "ajgon";
+              ForwardAgent = false;
+              HostName = "nas.internal";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
             };
             work = {
-              forwardAgent = false;
-              host = "work";
-              hostname = "192.168.2.210";
-              identitiesOnly = true;
-              port = 22;
-              user = "ajgon";
-              userKnownHostsFile = "/dev/null";
-
-              extraOptions.StrictHostKeyChecking = "no";
+              ForwardAgent = false;
+              HostName = "192.168.2.210";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
+              StrictHostKeyChecking = false;
+              UserKnownHostsFile = "/dev/null";
             };
 
             # public
-            github = {
-              forwardAgent = false;
-              host = "github.com";
-              hostname = "github.com";
-              identitiesOnly = true;
-              port = 22;
-              user = "git";
+            "Host github.com" = {
+              ForwardAgent = false;
+              HostName = "github.com";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "git";
             };
           };
         };

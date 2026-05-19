@@ -82,7 +82,7 @@ _: {
 
         services.samba = {
           enable = true;
-          enableWinbindd = false;
+          winbindd.enable = false;
           settings = {
             global = {
               workgroup = "WORKGROUP";

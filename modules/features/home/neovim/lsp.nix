@@ -4,7 +4,7 @@
     bash =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.bash-language-server
         ];
 
@@ -18,7 +18,7 @@
     docker =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.docker-language-server
         ];
 
@@ -32,7 +32,7 @@
     go =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.go
           pkgs.gofumpt
           pkgs.golangci-lint
@@ -57,7 +57,7 @@
     helm =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.helm-ls
         ];
 
@@ -71,7 +71,7 @@
     json =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.prettierd
           pkgs.vscode-json-languageserver
         ];
@@ -86,7 +86,7 @@
     jsonnet =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.jsonnet-language-server
           pkgs.go-jsonnet
         ];
@@ -101,7 +101,7 @@
     lua =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.lua-language-server
           pkgs.stylua
         ];
@@ -122,7 +122,7 @@
     markdown =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.markdownlint-cli2
           pkgs.marksman
         ];
@@ -137,7 +137,7 @@
     nix =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.deadnix
           pkgs.nil
           pkgs.nixfmt
@@ -167,7 +167,7 @@
     opentofu =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.tofu-ls
         ];
 
@@ -181,7 +181,7 @@
     ruby =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.rubocop
           pkgs.rubyPackages.solargraph
         ];
@@ -201,7 +201,7 @@
     yaml =
       { pkgs, ... }:
       {
-        extraPackages = [
+        runtimePkgs = [
           pkgs.yaml-language-server
           pkgs.yamlfmt
           pkgs.yamllint

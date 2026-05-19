@@ -51,12 +51,12 @@ _: {
               ];
             };
 
-            matchBlocks = {
-              "*" = {
-                addKeysToAgent = "8h";
-                controlPath = "${config.xdg.stateHome}/ssh/master-%r@%n:%p";
-                userKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
-                identityFile = [ config.sops.secrets."features/home/ssh/privateKey".path ];
+            settings = {
+              "Host *" = {
+                AddKeysToAgent = "8h";
+                ControlPath = "${config.xdg.stateHome}/ssh/master-%r@%n:%p";
+                IdentityFile = [ config.sops.secrets."features/home/ssh/privateKey".path ];
+                UserKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
               };
             };
           } cfg.appendOptions;

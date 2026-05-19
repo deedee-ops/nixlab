@@ -35,10 +35,8 @@
               grep = "grep --color";
               ls = "ls --color";
 
-              claude = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude'';
-              claude-chat = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude'';
-              claude-go = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-go'';
-              claude-node = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/node/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-node'';
+              claude-chat = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude-chat'';
+              claude-code = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-code'';
 
               w = "ssh work";
             }
