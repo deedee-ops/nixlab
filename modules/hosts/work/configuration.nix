@@ -147,7 +147,9 @@
                 IdentitiesOnly = true;
                 Port = 22;
                 StrictHostKeyChecking = "accept-new";
-                SetEnv = "TERM=xterm-256color";
+                SetEnv = {
+                  TERM = "xterm-256color";
+                };
                 HostkeyAlgorithms = "+ssh-rsa";
                 PubkeyAcceptedAlgorithms = "+ssh-rsa";
               };
