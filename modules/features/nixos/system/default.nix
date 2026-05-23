@@ -29,8 +29,13 @@
 
         config = {
           environment = {
-            enableAllTerminfo = true;
-            systemPackages = cfg.extraPackages;
+            systemPackages =
+              (map (x: x.terminfo) [
+                pkgs.alacritty
+                pkgs.ghostty
+                pkgs.kitty
+              ])
+              ++ cfg.extraPackages;
           };
 
           fonts.packages = [

@@ -70,6 +70,10 @@
                   app-id = "firefox";
                   title = "Picture-in-Picture";
                 };
+                keepassxc-unlock = {
+                  app-id = "org.keepassxc.KeePassXC";
+                  title = "Unlock Database";
+                };
               };
             };
           };
@@ -530,12 +534,7 @@
                 window-rule = {
                   match = _: {
                     props = {
-                      app-id = "electron";
-                    };
-                  };
-                  exclude = _: {
-                    props = {
-                      title = "Obsidian";
+                      app-id = "teams-for-linux";
                     };
                   };
                   open-maximized = true;
