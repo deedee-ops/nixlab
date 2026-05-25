@@ -1,5 +1,4 @@
-{ inputs, ... }:
-{
+_: {
   flake.nixosModules.features-nixos-headscale =
     {
       config,
@@ -9,13 +8,8 @@
     }:
     let
       cfg = config.features.nixos.headscale;
-      hpkgs = inputs.headplane.packages."${pkgs.stdenv.hostPlatform.system}";
     in
     {
-      imports = [
-        inputs.headplane.nixosModules.headplane
-      ];
-
       options.features.nixos.headscale = {
         nameservers = lib.mkOption {
           type = lib.types.listOf lib.types.str;
@@ -74,7 +68,7 @@
             enable = true;
             package = pkgs.caddy.withPlugins {
               plugins = [ "github.com/caddy-dns/cloudflare@v0.2.4" ];
-              hash = "sha256-J0HWjCPoOoARAxDpG2bS9c0x5Wv4Q23qWZbTjd8nW84=";
+              hash = "sha256-bzMqxWTqrJ1skZmRTXyEMCKStXpljbqe5r0Ve2cnBfM=";
             };
             virtualHosts."${cfg.serverHost}".extraConfig = ''
               tls {
@@ -118,7 +112,6 @@
             in
             {
               enable = true;
-              package = hpkgs.headplane;
               settings = {
                 server = {
                   base_url = "https://${cfg.serverHost}";
@@ -135,7 +128,7 @@
                 integration = {
                   agent = {
                     enabled = true;
-                    package = hpkgs.headplane-agent;
+                    pre_authkey_path = "/var/lib/headplane/agent_preauth_key";
                   };
                   proc.enabled = true;
                 };
