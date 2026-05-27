@@ -50,6 +50,7 @@
 
     features-home-console = _: {
       imports = [
+        self.homeModules.features-home-aichat
         self.homeModules.features-home-atuin
         self.homeModules.features-home-bat
         self.homeModules.features-home-btop
