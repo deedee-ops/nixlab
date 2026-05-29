@@ -1,4 +1,5 @@
-_: {
+{ self, ... }:
+{
   flake.homeModules.features-home-opencode =
     { config, lib, ... }:
     let
@@ -26,6 +27,7 @@ _: {
         programs.opencode = {
           enable = true;
           settings = {
+            theme = self.theme.name;
             disabled_providers = [ "opencode" ];
             default_agent = "chat";
             provider.vllm = {
