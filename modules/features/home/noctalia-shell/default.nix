@@ -53,7 +53,6 @@
       };
     in
     {
-
       options.features.home.noctalia-shell = {
         extraSettings = lib.mkOption {
           type = lib.types.attrs;
@@ -123,6 +122,32 @@
           platformTheme.name = "gtk3"; # align with gtk3
         };
 
+        systemd.user.services.notification-proxy =
+          let
+            python = pkgs.python3.withPackages (
+              ps: with ps; [
+                dbus-python
+                pygobject3
+              ]
+            );
+          in
+          {
+            Unit = {
+              Description = "Notification proxy";
+              After = [ "graphical-session.target" ];
+              PartOf = [ "graphical-session.target" ];
+            };
+            Service = {
+              Type = "simple";
+              ExecStart = "${lib.getExe python} ${./scripts/notification-proxy.py}";
+              Restart = "on-failure";
+              RestartSec = "3";
+            };
+            Install = {
+              WantedBy = [ "graphical-session.target" ];
+            };
+          };
+
         programs.noctalia-shell = {
           enable = true;
 
@@ -158,6 +183,10 @@
             };
             location = {
               name = "Krakow, PL";
+            };
+            notifications = {
+              enabled = true;
+              criticalUrgencyDuration = 28800; # 8h
             };
             nightLight = {
               enabled = true;
