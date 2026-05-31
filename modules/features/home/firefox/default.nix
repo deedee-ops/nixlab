@@ -209,6 +209,7 @@
 
                   # tracking
                   "browser.contentblocking.category" = "strict";
+                  "media.peerconnection.enabled" = false;
 
                   # containers
                   "privacy.userContext.enabled" = true;
