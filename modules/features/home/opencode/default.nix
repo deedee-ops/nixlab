@@ -26,8 +26,8 @@
         };
         programs.opencode = {
           enable = true;
+          tui.theme = self.theme.name;
           settings = {
-            theme = self.theme.name;
             disabled_providers = [ "opencode" ];
             default_agent = "chat";
             provider.vllm = {
