@@ -210,249 +210,269 @@
 
                 spawn-at-startup = [ (lib.getExe noctaliaShellPkg) ];
 
-                binds = {
-                  "Mod+Return".spawn = lib.getExe config.programs."${cfg.terminal}".package;
-                  "Mod+Shift+Q".close-window = _: { };
+                binds =
+                  let
+                    niri-focus-column = pkgs.writeShellApplication {
+                      name = "niri-focus-column";
+                      runtimeInputs = [
+                        pkgs.jq
+                      ];
+                      text = builtins.readFile ./niri-focus-column.sh;
+                    };
+                  in
+                  {
+                    "Mod+Return".spawn = lib.getExe config.programs."${cfg.terminal}".package;
+                    "Mod+Shift+Q".close-window = _: { };
 
-                  "Mod+F".toggle-window-floating = _: { };
-                  "Mod+Z".maximize-column = _: { };
-                  "Mod+Shift+Z".fullscreen-window = _: { };
+                    "Mod+F".toggle-window-floating = _: { };
+                    "Mod+Z".maximize-column = _: { };
+                    "Mod+Shift+Z".fullscreen-window = _: { };
 
-                  "Mod+H".focus-column-left-or-last = _: { };
-                  "Mod+L".focus-column-right-or-first = _: { };
-                  "Mod+K".focus-window-or-workspace-up = _: { };
-                  "Mod+J".focus-window-or-workspace-down = _: { };
+                    "Mod+H".spawn = _: {
+                      props = [
+                        (lib.getExe niri-focus-column)
+                        "left"
+                      ];
+                    };
+                    "Mod+L".spawn = _: {
+                      props = [
+                        (lib.getExe niri-focus-column)
+                        "right"
+                      ];
+                    };
+                    "Mod+K".focus-window-or-workspace-up = _: { };
+                    "Mod+J".focus-window-or-workspace-down = _: { };
 
-                  "Mod+Shift+H".move-column-left = _: { };
-                  "Mod+Shift+L".move-column-right = _: { };
-                  "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
-                  "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
+                    "Mod+Shift+H".move-column-left = _: { };
+                    "Mod+Shift+L".move-column-right = _: { };
+                    "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
+                    "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
 
-                  "Mod+Shift+G".switch-preset-column-width = _: { };
+                    "Mod+Shift+G".switch-preset-column-width = _: { };
 
-                  "Mod+Ctrl+H".consume-or-expel-window-left = _: { };
-                  "Mod+Ctrl+L".consume-or-expel-window-right = _: { };
+                    "Mod+Ctrl+H".consume-or-expel-window-left = _: { };
+                    "Mod+Ctrl+L".consume-or-expel-window-right = _: { };
 
-                  "Mod+Shift+Period".move-window-to-monitor-next = _: { };
-                  "Mod+Shift+Comma".move-window-to-monitor-previous = _: { };
-                  "Mod+Period".focus-monitor-next = _: { };
-                  "Mod+Comma".focus-monitor-previous = _: { };
+                    "Mod+Shift+Period".move-window-to-monitor-next = _: { };
+                    "Mod+Shift+Comma".move-window-to-monitor-previous = _: { };
+                    "Mod+Period".focus-monitor-next = _: { };
+                    "Mod+Comma".focus-monitor-previous = _: { };
 
-                  "Print".screenshot-screen = _: { };
-                  "Mod+Print".screenshot-window = _: { };
-                  "Mod+Shift+Print".screenshot = _: { };
+                    "Print".screenshot-screen = _: { };
+                    "Mod+Print".screenshot-window = _: { };
+                    "Mod+Shift+Print".screenshot = _: { };
 
-                  "Mod+Space".spawn = _: {
-                    props =
-                      if cfg.launcher == "vicinae" then
-                        [
-                          (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                          "toggle"
-                        ]
-                      else
-                        [
+                    "Mod+Space".spawn = _: {
+                      props =
+                        if cfg.launcher == "vicinae" then
+                          [
+                            (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                            "toggle"
+                          ]
+                        else
+                          [
+                            (lib.getExe noctaliaShellPkg)
+                            "ipc"
+                            "call"
+                            "launcher"
+                            "toggle"
+                          ];
+                    };
+                    "Mod+Shift+V".spawn = _: {
+                      props =
+                        if cfg.launcher == "vicinae" then
+                          [
+                            (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                            "vicinae://launch/clipboard/history"
+                          ]
+                        else
+                          [
+                            (lib.getExe noctaliaShellPkg)
+                            "ipc"
+                            "call"
+                            "launcher"
+                            "clipboard"
+                          ];
+                    };
+
+                    "Mod+Tab" = _: {
+                      props = {
+                        repeat = false;
+                      };
+                      content.toggle-overview = _: { };
+                    };
+                    "Mod+Shift+E".spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaShellPkg)
+                        "ipc"
+                        "call"
+                        "sessionMenu"
+                        "toggle"
+                      ];
+                    };
+                    "Mod+Grave".spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaShellPkg)
+                        "ipc"
+                        "call"
+                        "notifications"
+                        "toggleHistory"
+                      ];
+                    };
+
+                    "Mod+E".spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaShellPkg)
+                        "ipc"
+                        "call"
+                        "plugin:todo"
+                        "togglePanel"
+                      ];
+                    };
+                    "Mod+A".spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaShellPkg)
+                        "ipc"
+                        "call"
+                        "plugin:notes-scratchpad"
+                        "togglePanel"
+                      ];
+                    };
+
+                    "XF86AudioRaiseVolume" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
                           (lib.getExe noctaliaShellPkg)
                           "ipc"
                           "call"
-                          "launcher"
-                          "toggle"
+                          "volume"
+                          "increase"
                         ];
-                  };
-                  "Mod+Shift+V".spawn = _: {
-                    props =
-                      if cfg.launcher == "vicinae" then
-                        [
-                          (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                          "vicinae://launch/clipboard/history"
-                        ]
-                      else
-                        [
+                      };
+                    };
+                    "XF86AudioLowerVolume" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
                           (lib.getExe noctaliaShellPkg)
                           "ipc"
                           "call"
-                          "launcher"
-                          "clipboard"
+                          "volume"
+                          "decrease"
                         ];
-                  };
+                      };
+                    };
+                    "XF86AudioMute" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "volume"
+                          "muteOutput"
+                        ];
+                      };
+                    };
+                    "XF86MonBrightnessUp" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "brightness"
+                          "increase"
+                        ];
+                      };
+                    };
+                    "XF86MonBrightnessDown" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "brightness"
+                          "decrease"
+                        ];
+                      };
+                    };
+                    "XF86AudioPlay" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "media"
+                          "playPause"
+                        ];
+                      };
+                    };
+                    "XF86AudioStop" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "media"
+                          "stop"
+                        ];
+                      };
+                    };
+                    "XF86AudioNext" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "media"
+                          "next"
+                        ];
+                      };
+                    };
+                    "XF86AudioPrev" = _: {
+                      props = {
+                        allow-when-locked = true;
+                      };
+                      content.spawn = _: {
+                        props = [
+                          (lib.getExe noctaliaShellPkg)
+                          "ipc"
+                          "call"
+                          "media"
+                          "previous"
+                        ];
+                      };
+                    };
 
-                  "Mod+Tab" = _: {
-                    props = {
-                      repeat = false;
-                    };
-                    content.toggle-overview = _: { };
+                    "Mod+1".focus-workspace = "1-thunderbird";
+                    "Mod+2".focus-workspace = "2-obsidian";
+                    "Mod+3".focus-workspace = "3-teams";
+                    "Mod+4".focus-workspace = "4-telegram";
+                    "Mod+5".focus-workspace = "5-discord";
+                    "Mod+0".focus-workspace = "x-firefox";
                   };
-                  "Mod+Shift+E".spawn = _: {
-                    props = [
-                      (lib.getExe noctaliaShellPkg)
-                      "ipc"
-                      "call"
-                      "sessionMenu"
-                      "toggle"
-                    ];
-                  };
-                  "Mod+Grave".spawn = _: {
-                    props = [
-                      (lib.getExe noctaliaShellPkg)
-                      "ipc"
-                      "call"
-                      "notifications"
-                      "toggleHistory"
-                    ];
-                  };
-
-                  "Mod+E".spawn = _: {
-                    props = [
-                      (lib.getExe noctaliaShellPkg)
-                      "ipc"
-                      "call"
-                      "plugin:todo"
-                      "togglePanel"
-                    ];
-                  };
-                  "Mod+A".spawn = _: {
-                    props = [
-                      (lib.getExe noctaliaShellPkg)
-                      "ipc"
-                      "call"
-                      "plugin:notes-scratchpad"
-                      "togglePanel"
-                    ];
-                  };
-
-                  "XF86AudioRaiseVolume" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "volume"
-                        "increase"
-                      ];
-                    };
-                  };
-                  "XF86AudioLowerVolume" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "volume"
-                        "decrease"
-                      ];
-                    };
-                  };
-                  "XF86AudioMute" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "volume"
-                        "muteOutput"
-                      ];
-                    };
-                  };
-                  "XF86MonBrightnessUp" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "brightness"
-                        "increase"
-                      ];
-                    };
-                  };
-                  "XF86MonBrightnessDown" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "brightness"
-                        "decrease"
-                      ];
-                    };
-                  };
-                  "XF86AudioPlay" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "media"
-                        "playPause"
-                      ];
-                    };
-                  };
-                  "XF86AudioStop" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "media"
-                        "stop"
-                      ];
-                    };
-                  };
-                  "XF86AudioNext" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "media"
-                        "next"
-                      ];
-                    };
-                  };
-                  "XF86AudioPrev" = _: {
-                    props = {
-                      allow-when-locked = true;
-                    };
-                    content.spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "media"
-                        "previous"
-                      ];
-                    };
-                  };
-
-                  "Mod+1".focus-workspace = "1-thunderbird";
-                  "Mod+2".focus-workspace = "2-obsidian";
-                  "Mod+3".focus-workspace = "3-teams";
-                  "Mod+4".focus-workspace = "4-telegram";
-                  "Mod+5".focus-workspace = "5-discord";
-                  "Mod+0".focus-workspace = "x-firefox";
-                };
               }
               // lib.optionalAttrs config.programs.noctalia-shell.enable {
                 include = "${config.xdg.configHome}/niri/noctalia.kdl";
