@@ -79,14 +79,14 @@
             default = {
               search = {
                 force = true;
-                default = "ddg";
-                privateDefault = "ddg";
-                order = [ "ddg" ];
+                default = "searxng";
+                privateDefault = "searxng";
+                order = [ "searxng" ];
                 engines = {
-                  "ddg" = {
+                  "searxng" = {
                     urls = [
                       {
-                        template = "https://duckduckgo.com/";
+                        template = "https://search.ajgon.casa/";
                         params = [
                           {
                             name = "q";
