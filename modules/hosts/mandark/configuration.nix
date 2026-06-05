@@ -65,7 +65,7 @@
             ];
             oidc = {
               enable = true;
-              clientId = "8b45ae3e-0b3b-4b9c-a55b-90c89b1a25a4";
+              clientId = "ee482830-e30a-48e1-ad71-0f0846ff08da";
               issuer = "id.ajgon.casa";
             };
             serverHost = "headscale.rzegocki.dev";
