@@ -73,7 +73,7 @@
           mounts.mounts = [
             {
               type = "nfs";
-              src = "nas.internal:/mnt/cache/backups/work";
+              src = "nas.internal:/mnt/fast/backups/work";
               dest = "/mnt/backup";
             }
           ];
