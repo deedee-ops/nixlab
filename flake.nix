@@ -33,7 +33,7 @@
     deploy-rs.url = "github:serokell/deploy-rs";
     disko.url = "github:nix-community/disko";
     git-hooks.url = "github:cachix/git-hooks.nix";
-    home-manager.url = "github:nix-community/home-manager/release-26.05";
+    home-manager.url = "github:nix-community/home-manager";
     krewfile.url = "github:brumhard/krewfile";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
