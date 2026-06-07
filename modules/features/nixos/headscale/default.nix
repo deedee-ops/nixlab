@@ -97,51 +97,37 @@ _: {
             };
           };
 
-          headplane =
-            let
-              format = pkgs.formats.yaml { };
-              # A workaround generate a valid Headscale config accepted by Headplane when `config_strict == true`.
-              headscaleSettings = lib.recursiveUpdate config.services.headscale.settings {
-                oidc.client_secret_path = "/dev/null";
-                policy.path = "/dev/null";
-                tls_cert_path = "/dev/null";
-                tls_key_path = "/dev/null";
+          headplane = {
+            enable = true;
+            settings = {
+              server = {
+                base_url = "https://${cfg.serverHost}";
+                host = "127.0.0.1";
+                port = 43000;
+                cookie_secret_path = config.sops.secrets."features/nixos/headplane/cookieSecret".path;
+                cookie_secure = true;
               };
-
-              headscaleConfig = format.generate "headscale.yml" headscaleSettings;
-            in
-            {
-              enable = true;
-              settings = {
-                server = {
-                  base_url = "https://${cfg.serverHost}";
-                  host = "127.0.0.1";
-                  port = 43000;
-                  cookie_secret_path = config.sops.secrets."features/nixos/headplane/cookieSecret".path;
-                  cookie_secure = true;
+              headscale = {
+                url = "http://${config.services.headscale.address}:${toString config.services.headscale.port}";
+                public_url = config.services.headscale.settings.server_url;
+              };
+              integration = {
+                agent = {
+                  enabled = true;
+                  pre_authkey_path = "/var/lib/headplane/agent_preauth_key";
                 };
-                headscale = {
-                  url = "http://${config.services.headscale.address}:${toString config.services.headscale.port}";
-                  public_url = config.services.headscale.settings.server_url;
-                  config_path = headscaleConfig;
-                };
-                integration = {
-                  agent = {
-                    enabled = true;
-                    pre_authkey_path = "/var/lib/headplane/agent_preauth_key";
-                  };
-                  proc.enabled = true;
-                };
-                oidc = lib.optionalAttrs cfg.oidc.enable {
-                  client_id = cfg.oidc.clientId;
-                  client_secret_path = config.sops.secrets."features/nixos/headplane/oidcClientSecret".path;
-                  disable_api_key_login = false;
-                  headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
-                  issuer = "https://${cfg.oidc.issuer}";
-                  token_endpoint_auth_method = "client_secret_post";
-                };
+                proc.enabled = true;
+              };
+              oidc = lib.optionalAttrs cfg.oidc.enable {
+                client_id = cfg.oidc.clientId;
+                client_secret_path = config.sops.secrets."features/nixos/headplane/oidcClientSecret".path;
+                disable_api_key_login = false;
+                headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
+                issuer = "https://${cfg.oidc.issuer}";
+                token_endpoint_auth_method = "client_secret_post";
               };
             };
+          };
         };
 
         systemd.services = {
