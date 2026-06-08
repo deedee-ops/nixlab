@@ -29,50 +29,6 @@ vim.keymap.set("n", "<C-k>", "<Esc><C-W>k", {})
 vim.keymap.set("n", "<C-h>", "<Esc><C-W>h", {})
 vim.keymap.set("n", "<C-l>", "<Esc><C-W>l", {})
 
--- sane cut/delete
-local esc = vim.api.nvim_replace_termcodes("<Esc>", true, false, true)
-
-_G.delete_operator = function(motion_type)
-	if motion_type == "line" then
-		vim.cmd("'[,']delete _")
-	elseif motion_type == "char" then
-		vim.cmd('normal! `[v`]"_d')
-	else
-		local ctrl_v = vim.api.nvim_replace_termcodes("<C-v>", true, false, true)
-		vim.cmd("normal! `[" .. ctrl_v .. '`]"_d')
-	end
-	vim.api.nvim_feedkeys(esc, "n", false)
-end
-
-_G.cut_operator = function(motion_type)
-	if motion_type == "line" then
-		vim.cmd("'[,']delete")
-	elseif motion_type == "char" then
-		vim.cmd("normal! `[v`]d")
-	else
-		local ctrl_v = vim.api.nvim_replace_termcodes("<C-v>", true, false, true)
-		vim.cmd("normal! `[" .. ctrl_v .. "`]d")
-	end
-	vim.api.nvim_feedkeys(esc, "n", false)
-end
-
-vim.keymap.set("n", "d", function()
-	vim.o.operatorfunc = "v:lua.delete_operator"
-	return "g@"
-end, { expr = true })
-
-vim.keymap.set("n", "dd", '"_dd')
-
-vim.keymap.set("n", "x", function()
-	vim.o.operatorfunc = "v:lua.cut_operator"
-	return "g@"
-end, { expr = true })
-
-vim.keymap.set("n", "xx", "dd")
-
-vim.keymap.set("v", "d", '"_d')
-vim.keymap.set("v", "x", "d")
-
 -- show line numbers
 vim.cmd("set number")
 vim.cmd("set relativenumber")
