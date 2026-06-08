@@ -34,6 +34,7 @@
         };
 
         settings = {
+          auto_reload_config = -1; # https://github.com/kovidgoyal/kitty/issues/10102
           confirm_os_window_close = 0;
           copy_on_select = "clipboard";
           cursor_shape = "block";

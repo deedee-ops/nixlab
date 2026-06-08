@@ -18,6 +18,7 @@
             '';
 
             packages = [
+              pkgs.jq
               pkgs.silver-searcher
               pkgs.wget
               pkgs.xterm
