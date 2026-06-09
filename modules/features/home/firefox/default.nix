@@ -209,7 +209,8 @@
 
                   # tracking
                   "browser.contentblocking.category" = "strict";
-                  "media.peerconnection.enabled" = false;
+                  # disabling this will break webrtc stuff completely, like JetKVM
+                  # "media.peerconnection.enabled" = false;
 
                   # containers
                   "privacy.userContext.enabled" = true;
