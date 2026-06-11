@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
+inputs:
+  deploy-rs:
+    url: github:serokell/deploy-rs
+  git-hooks:
+    url: github:cachix/git-hooks.nix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
+  nixos-anywhere:
+    url: github:nix-community/nixos-anywhere
+  nixpkgs:
+    url: github:cachix/devenv-nixpkgs/rolling
+  talos-pilot:
+    url: github:Handfish/talos-pilot
