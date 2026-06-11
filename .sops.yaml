@@ -3,7 +3,7 @@
 # nix-shell -p ssh-to-age --run 'cat /etc/ssh/ssh_host_ed25519_key.pub | ssh-to-age'
 keys:
   - users:
-      - &ajgon ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn
+      - &nixlab age1fs44t82xf7hm7p27s5wfgauteymp3zhpn3rwun6spn6qu3rgxqasqclxr5
       - &homeManager age13lpwsgyvdsu690mg4kup99cuzmtq8kwu0t9zmj5ufkshvacxpecsyfmzlv
   - hosts:
       - &dexter age1s3hlmga37ylfxp7y96uha27j6g4mxjs74ecsvjs9d6hwrv0uus5s4teuqn
@@ -14,28 +14,25 @@ creation_rules:
   - path_regex: home/.*\.sops\.yaml$
     key_groups:
       - age:
-          - *ajgon
+          - *nixlab
           - *homeManager
   - path_regex: dexter/.*\.sops\.yaml$
     key_groups:
       - age:
-          - *ajgon
+          - *nixlab
           - *dexter
   - path_regex: liadtop/.*\.sops\.yaml$
     key_groups:
       - age:
-          - *ajgon
+          - *nixlab
           - *liadtop
   - path_regex: mandark/.*\.sops\.yaml$
     key_groups:
       - age:
-          - *ajgon
+          - *nixlab
           - *mandark
   - path_regex: work/.*\.sops\.yaml$
     key_groups:
       - age:
-          - *ajgon
+          - *nixlab
           - *work
-          # for local VMs
-          - *dexter
-          - *liadtop

@@ -1,11 +1,16 @@
 {
   inputs,
+  config,
   pkgs,
   lib,
   ...
 }:
 
 {
+  env = {
+    SOPS_AGE_KEY = config.secretspec.secrets.SOPS_AGE_KEY;
+  };
+
   packages = [
     inputs.deploy-rs.packages."${pkgs.stdenv.system}".default
     inputs.nixos-anywhere.packages."${pkgs.stdenv.system}".default
@@ -84,8 +89,6 @@
   };
 
   enterShell = ''
-    export SOPS_AGE_SSH_PRIVATE_KEY_FILE="$HOME/.config/sops-nix/secrets/features/home/ssh/privateKey"
-
     ${lib.getExe pkgs.git} fetch --all
   '';
 }

@@ -14,3 +14,7 @@ inputs:
     url: github:cachix/devenv-nixpkgs/rolling
   talos-pilot:
     url: github:Handfish/talos-pilot
+
+secretspec:
+  enable: true
+  provider: keyring
