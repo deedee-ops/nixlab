@@ -1,5 +1,13 @@
 {
   nixConfig = {
+    substituters = [
+      "https://nix.ajgon.casa/nixlab"
+      "https://cache.nixos.org"
+    ];
+    trusted-public-keys = [
+      "nixlab:CbnM70ClsRKjVPimSwpAkuuuHNv5nJ1ShHsdG7J0p5g="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+    ];
     extra-substituters = [
       "https://cache.garnix.io"
       "https://nix-community.cachix.org"

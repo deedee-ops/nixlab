@@ -11,7 +11,7 @@ inputs:
   nixos-anywhere:
     url: github:nix-community/nixos-anywhere
   nixpkgs:
-    url: github:cachix/devenv-nixpkgs/rolling
+    url: github:nixos/nixpkgs/nixos-unstable
   talos-pilot:
     url: github:Handfish/talos-pilot
 

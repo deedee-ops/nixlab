@@ -1,0 +1,70 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: Populate cache
+'on':
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+concurrency:
+  group: ${{ forgejo.ref }}-${{ forgejo.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  main:
+    runs-on: nix
+    environment: production
+    steps:
+      - name: Checkout
+        run: |
+          git init -b master
+          git remote add origin \
+          "http://x-access-token:${FORGEJO_TOKEN}@${FORGEJO_SERVER_URL#http*://}/${FORGEJO_REPOSITORY}.git"
+          git fetch --depth=1 origin "${FORGEJO_REF_NAME}"
+          git checkout FETCH_HEAD
+
+          nix-env -iA gnused -f '<nixpkgs>' || true
+          sed -i'' 's@enable: true@enable: false@g' devenv.yaml
+
+      - name: Build and push to cache
+        # yamllint disable rule:line-length
+        run: |-
+          set -e
+
+          cat assets/ca-ec384.crt >> "$NIX_SSL_CERT_FILE"
+          cat assets/ca-rsa4096.crt >> "$NIX_SSL_CERT_FILE"
+
+          mkdir -p ~/.config/nix
+          cat <<EOF | tee ~/.config/nix/nix.conf
+          builders-use-substitutes = true
+          download-buffer-size = 524288000
+          experimental-features = nix-command flakes
+          substituters = https://nix.ajgon.casa/nixlab?priority=30 https://cache.nixos.org
+          trusted-public-keys = nixlab:CbnM70ClsRKjVPimSwpAkuuuHNv5nJ1ShHsdG7J0p5g= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+          warn-dirty = false
+          extra-substituters = https://cache.garnix.io https://deploy-rs.cachix.org https://nix-community.cachix.org
+          extra-trusted-public-keys = cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g= deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+          EOF
+
+          nix profile add nixpkgs#attic-client nixpkgs#devenv
+          attic login homelab https://nix.ajgon.casa '${{ secrets.ATTIC_TOKEN }}'
+
+          # shellcheck disable=SC2044
+          for host in $(find modules/hosts -maxdepth 1 -mindepth 1 -type d -exec basename {} \;); do
+            echo "👷 Building \"${host}\""
+            nix --accept-flake-config build \
+            .#nixosConfigurations."$host".config.system.build.toplevel --out-link "/tmp/result-$host"
+
+            attic push nixlab "/tmp/result-$host"
+          done
+
+          echo "👷 Building devenv"
+          devenv shell true > /dev/null 2>&1
+          attic push nixlab "$(readlink .devenv/profile)"
+        # yamllint enable rule:line-length
+        env:
+          CI: "true"

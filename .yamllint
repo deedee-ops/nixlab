@@ -1,11 +1,19 @@
 ---
+# yaml-language-server: $schema=https://json.schemastore.org/yamllint.json
 extends: default
 
 rules:
+  comments:
+    min-spaces-from-content: 1
+
+  comments-indentation:
+    ignore:
+      - "kubernetes/lib/cluster-provisioner/templates/appset.yaml"
   line-length:
     allow-non-breakable-words: true
     allow-non-breakable-inline-mappings: true
     max: 120
 
 ignore:
-  - "*.sops.y*ml"
+  - "**/*.sops.yaml"
+# vim:ft=yaml

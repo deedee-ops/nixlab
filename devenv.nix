@@ -8,7 +8,7 @@
 
 {
   env = {
-    SOPS_AGE_KEY = config.secretspec.secrets.SOPS_AGE_KEY;
+    SOPS_AGE_KEY = config.secretspec.secrets.SOPS_AGE_KEY or "";
   };
 
   packages = [
@@ -63,6 +63,14 @@
       statix.enable = true;
       nixfmt.enable = true;
 
+      actionlint = {
+        enable = true;
+        args = [
+          "-config-file"
+          ".forgejo/actionlint.yaml"
+        ];
+        files = ".forgejo/workflows/.+\.yaml";
+      };
       check-json.enable = true;
       lua-ls.enable = true;
       shellcheck = {
@@ -75,6 +83,17 @@
       };
       stylua.enable = true;
       yamllint.enable = true;
+      zizmor = {
+        enable = true;
+        args = [
+          "-c"
+          ".forgejo/zizmor.yaml"
+        ];
+        name = "zizmor";
+        package = pkgs.zizmor;
+        entry = "${pkgs.lib.getExe pkgs.zizmor}";
+        files = ".forgejo/workflows/.+\.yaml";
+      };
 
       commitizen.enable = true;
 
