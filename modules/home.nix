@@ -20,6 +20,7 @@ let
     self.homeModules.features-home-direnv
     self.homeModules.features-home-git
     self.homeModules.features-home-gnupg
+    self.homeModules.features-home-minio-cli
     self.homeModules.features-home-neovim
     self.homeModules.features-home-opencode
     self.homeModules.features-home-kubernetes
