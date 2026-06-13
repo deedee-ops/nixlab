@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, nixConfig, ... }:
 {
   flake.homeModules = {
     features-home =
@@ -11,6 +11,8 @@
       {
         config = {
           xdg.enable = true;
+          nix.settings = nixConfig;
+
           home = {
             preferXdgDirectories = true;
             activation.init-paths = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

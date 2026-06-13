@@ -1,4 +1,4 @@
-{
+rec {
   nixConfig = {
     substituters = [
       "https://nix.ajgon.casa/nixlab"
@@ -52,5 +52,10 @@
     vicinae.url = "github:vicinaehq/vicinae";
   };
 
-  outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
+  outputs =
+    inputs:
+    inputs.flake-parts.lib.mkFlake {
+      inherit inputs;
+      specialArgs = { inherit nixConfig; };
+    } (inputs.import-tree ./modules);
 }

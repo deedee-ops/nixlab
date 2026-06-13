@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, nixConfig, ... }:
 {
   flake.nixosModules = {
     features-nixos-system =
@@ -60,7 +60,8 @@
               ];
 
               use-xdg-base-directories = true;
-            };
+            }
+            // nixConfig;
           };
 
           nixpkgs.config.allowUnfree = true;
