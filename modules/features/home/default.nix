@@ -1,4 +1,4 @@
-{ self, nixConfig, ... }:
+{ self, ... }:
 {
   flake.homeModules = {
     features-home =
@@ -11,7 +11,6 @@
       {
         config = {
           xdg.enable = true;
-          nix.settings = nixConfig;
 
           home = {
             preferXdgDirectories = true;
@@ -21,7 +20,7 @@
 
             packages = [
               pkgs.jq
-              pkgs.silver-searcher
+              pkgs.ripgrep
               pkgs.wget
               pkgs.xterm
             ];
@@ -37,6 +36,8 @@
 
               grep = "grep --color";
               ls = "ls --color";
+
+              ag = "rg"; # old habits die hard
 
               claude-chat = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude-chat'';
               claude-code = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-code'';
