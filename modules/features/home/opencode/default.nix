@@ -1,7 +1,12 @@
 { self, ... }:
 {
   flake.homeModules.features-home-opencode =
-    { config, lib, ... }:
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
     let
       cfg = config.features.home.opencode;
     in
@@ -15,6 +20,12 @@
       };
       config = {
         sops.secrets = {
+          "features/home/opencode/configs/kubeconfig" = {
+            sopsFile = cfg.sopsSecretsFile;
+          };
+          "features/home/opencode/configs/talosconfig" = {
+            sopsFile = cfg.sopsSecretsFile;
+          };
           "features/home/opencode/agents/chat.md" = {
             sopsFile = cfg.sopsSecretsFile;
             path = "${config.xdg.configHome}/opencode/agents/chat.md";
@@ -23,6 +34,10 @@
             sopsFile = cfg.sopsSecretsFile;
             path = "${config.xdg.configHome}/opencode/agents/hermes.md";
           };
+          "features/home/opencode/agents/homelab-k8s-debugger.md" = {
+            sopsFile = cfg.sopsSecretsFile;
+            path = "${config.xdg.configHome}/opencode/agents/homelab-k8s-debugger.md";
+          };
         };
         programs.opencode = {
           enable = true;
@@ -30,21 +45,48 @@
           settings = {
             disabled_providers = [ "opencode" ];
             default_agent = "chat";
+            mcp = {
+              deedee = {
+                type = "remote";
+                url = "https://mcp.ajgon.casa";
+                enabled = true;
+                # timeout = 5000;
+              };
+              siderolabs = {
+                type = "remote";
+                url = "https://docs.siderolabs.com/mcp";
+                enabled = true;
+              };
+            };
+            model = "vllm/vllm/openai/gpt-oss-120b";
+            plugin = [ "superpowers@git+https://github.com/obra/superpowers.git#f2cbfbe" ];
             provider.vllm = {
               npm = "@ai-sdk/openai-compatible";
               name = "DeeDee vLLM";
               options.baseURL = "https://bifrost.ajgon.casa/v1";
               models = {
-                "vllm/Qwen/Qwen3.6-27B".name = "Qwen3.6-27B";
                 "vllm/openai/gpt-oss-120b".name = "gpt-oss-120b";
                 "vllm/hermes-agent".name = "hermes";
               };
             };
-            model = "vllm/vllm/Qwen/Qwen3.6-27B";
           };
         };
 
-        home.shellAliases.oc = lib.getExe config.programs.opencode.package;
+        home.shellAliases.oc = lib.getExe (
+          pkgs.writeShellApplication {
+            name = "opencode.sh";
+            runtimeInputs = [
+              pkgs.fluxcd
+              pkgs.kubectl
+              pkgs.talosctl
+            ];
+            text = ''
+              export KUBECONFIG="${config.sops.secrets."features/home/opencode/configs/kubeconfig".path}"
+              export TALOSCONFIG="${config.sops.secrets."features/home/opencode/configs/talosconfig".path}"
+              ${lib.getExe config.programs.opencode.package}
+            '';
+          }
+        );
       };
     };
 }
