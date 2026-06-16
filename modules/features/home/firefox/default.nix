@@ -321,12 +321,10 @@
 
         xdg = {
           configFile."tridactyl/tridactylrc".text = ''
-            " disable annoying Ctrl+F override
-            unbind <C-f>
-
-            " enter ignore mode with "i" and exit with ESC
-            bind --mode=normal i mode ignore
-            bind --mode=ignore <Escape> mode normal
+            " Wipe every normal-mode binding, then restore only the hint triggers
+            js Object.keys(tri.config.get("nmaps")).forEach(k=>tri.config.set("nmaps",k,""))
+            js tri.config.set("nmaps","f","hint")
+            js tri.config.set("nmaps","F","hint -b")
           '';
 
           mimeApps = {
