@@ -28,6 +28,8 @@ rec {
     connect-timeout = 5;
     warn-dirty = false;
     download-buffer-size = 524288000;
+    # always check for non-existing packages in substituters
+    narinfo-cache-negative-ttl = 0;
   };
 
   inputs = {
