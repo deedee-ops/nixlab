@@ -10,7 +10,7 @@
     {
       config =
         let
-          secretsDbPath = "${config.home.homeDirectory}/Sync/sync/keepass/Passwords.kdbx";
+          secretsDbPath = "${config.home.homeDirectory}/Sync/keepassxc/Passwords.kdbx";
         in
         {
           programs.keepassxc.enable = true;
