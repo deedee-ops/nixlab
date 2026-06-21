@@ -42,6 +42,7 @@
       "\\.glsl$"
       "mpv.*\\.hook$"
       "\\.patch$"
+      "\\.lock$"
     ];
 
     hooks = {

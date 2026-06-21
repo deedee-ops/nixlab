@@ -12,8 +12,6 @@ inputs:
     url: github:nix-community/nixos-anywhere
   nixpkgs:
     url: github:nixos/nixpkgs/nixos-unstable
-  talos-pilot:
-    url: github:Handfish/talos-pilot
 
 secretspec:
   enable: true

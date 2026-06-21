@@ -267,30 +267,13 @@
         "type": "github"
       }
     },
-    "nixpkgs_4": {
-      "locked": {
-        "lastModified": 1768564909,
-        "narHash": "sha256-Kell/SpJYVkHWMvnhqJz/8DqQg2b6PguxVWOuadbHCc=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "e4bae1bd10c9c57b2cf517953ab70060a828ee6f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "deploy-rs": "deploy-rs",
         "devenv": "devenv",
         "git-hooks": "git-hooks",
         "nixos-anywhere": "nixos-anywhere",
-        "nixpkgs": "nixpkgs_3",
-        "talos-pilot": "talos-pilot"
+        "nixpkgs": "nixpkgs_3"
       }
     },
     "systems": {
@@ -305,40 +288,6 @@
       "original": {
         "owner": "nix-systems",
         "repo": "default",
-        "type": "github"
-      }
-    },
-    "systems_2": {
-      "locked": {
-        "lastModified": 1681028828,
-        "narHash": "sha256-Vy1rq5AaRuLzOxct8nz4T6wlgyUR7zLU309k9mBC768=",
-        "owner": "nix-systems",
-        "repo": "default",
-        "rev": "da67096a3b9bf56a91d16901293e51ba5b49a27e",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-systems",
-        "repo": "default",
-        "type": "github"
-      }
-    },
-    "talos-pilot": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_4",
-        "systems": "systems_2"
-      },
-      "locked": {
-        "lastModified": 1771367932,
-        "narHash": "sha256-KlFJVvjT0ATLYLC9oAa4q2IKiF/fzikN/L+z1ar9b1w=",
-        "owner": "Handfish",
-        "repo": "talos-pilot",
-        "rev": "1874dfb62469af522becd71683ae36da1e167f50",
-        "type": "github"
-      },
-      "original": {
-        "owner": "Handfish",
-        "repo": "talos-pilot",
         "type": "github"
       }
     },

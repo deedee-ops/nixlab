@@ -1,0 +1,46 @@
+---
+# yaml-language-server: $schema=https://www.schemastore.org/github-workflow.json
+name: Update flake
+'on':
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 0' # every sunday on 5am
+
+concurrency:
+  group: ${{ forgejo.ref }}-${{ forgejo.workflow }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  main:
+    runs-on: nix
+    environment: production
+    steps:
+      - name: Checkout
+        run: |
+          git clone "http://x-access-token:${FORGEJO_TOKEN}@${FORGEJO_SERVER_URL#http*://}/${FORGEJO_REPOSITORY}.git" .
+
+          nix-env -iA gnused -f '<nixpkgs>' || true
+          sed -i'' 's@enable: true@enable: false@g' devenv.yaml
+
+      - name: Update, build and push to cache
+        run: |-
+          mkdir -p ~/.config/nix
+          echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
+
+          nix --accept-flake-config run .#cache -- \
+          --ci --update-flake --attic-token='${{ secrets.ATTIC_TOKEN }}' --github-token='${{ secrets.GH_TOKEN }}'
+        env:
+          CI: "true"
+
+      - name: Push back to repo
+        run: |
+          sed -i'' 's@enable: false@enable: true@g' devenv.yaml
+
+          git config user.name "robodexo2000[bot]"
+          git config user.email "robodexo2000@ajgon.casa"
+          git add -A
+          git commit -m 'chore(deps): lock file maintenance'
+          git push origin master
