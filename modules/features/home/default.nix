@@ -65,7 +65,6 @@
         self.homeModules.features-home-kubernetes
         self.homeModules.features-home-minio-cli
         self.homeModules.features-home-neovim
-        self.homeModules.features-home-opencode
         self.homeModules.features-home-shell
         self.homeModules.features-home-ssh
         self.homeModules.features-home-wakatime
