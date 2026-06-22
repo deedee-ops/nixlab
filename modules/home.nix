@@ -17,6 +17,7 @@ let
     self.homeModules.features-home-atuin
     self.homeModules.features-home-bat
     self.homeModules.features-home-btop
+    self.homeModules.features-home-claude
     self.homeModules.features-home-direnv
     self.homeModules.features-home-git
     self.homeModules.features-home-gnupg

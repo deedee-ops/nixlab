@@ -39,9 +39,6 @@
 
               ag = "rg"; # old habits die hard
 
-              claude-chat = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -w /var/empty ghcr.io/ajgon/claude-chat'';
-              claude-code = ''docker run --rm -it -v "$XDG_CONFIG_HOME/claude":/home/ubuntu/.config/claude -v "$(pwd):/work" -w /work ghcr.io/ajgon/claude-code'';
-
               w = "ssh work";
             }
             // lib.optionalAttrs pkgs.stdenv.isLinux {
@@ -59,6 +56,7 @@
         self.homeModules.features-home-atuin
         self.homeModules.features-home-bat
         self.homeModules.features-home-btop
+        self.homeModules.features-home-claude
         self.homeModules.features-home-direnv
         self.homeModules.features-home-git
         self.homeModules.features-home-gnupg
