@@ -125,11 +125,11 @@
                   "network.dns.echconfig.enabled" = true;
                   "network.dns.use_https_rr_as_altsvc" = true;
                   "network.security.esni.enabled" = true;
-                  "network.trr.custom_uri" = "https://dns.quad9.net/dns-query";
-                  "network.trr.default_provider_uri" = "https://dns.quad9.net/dns-query";
+                  "network.trr.custom_uri" = "https://dns.nextdns.io/1ff226";
+                  "network.trr.default_provider_uri" = "https://dns.nextdns.io/1ff226";
                   "network.trr.excluded-domains" = "ajgon.casa";
                   "network.trr.mode" = 3;
-                  "network.trr.uri" = "https://dns.quad9.net/dns-query";
+                  "network.trr.uri" = "https://dns.nextdns.io/1ff226";
                 }
                 // {
                   # startup
