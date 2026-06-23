@@ -11,6 +11,14 @@ return {
 			desc = "snacks: show file explorer",
 		},
 		{
+			"`",
+			function()
+				Snacks.terminal.toggle()
+			end,
+			mode = "n",
+			desc = "snacks: show terminal",
+		},
+		{
 			"<leader>kk",
 			function()
 				Snacks.picker.keymaps()
