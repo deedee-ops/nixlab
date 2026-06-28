@@ -45,7 +45,7 @@ _: {
           ];
         };
 
-        services.vicinae = {
+        programs.vicinae = {
           enable = true;
           systemd = {
             enable = true;
