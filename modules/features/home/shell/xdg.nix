@@ -83,6 +83,9 @@ _: {
             # Sqlite3
             SQLITE_HISTORY = "${config.xdg.cacheHome}/sqlite_history";
 
+            # Steam
+            STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
+
             # wine
             WINEPREFIX = "${config.xdg.dataHome}/wine";
           };

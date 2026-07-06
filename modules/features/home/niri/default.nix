@@ -624,6 +624,35 @@
                   };
                 };
               }
+              # steam
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "steam";
+                    };
+                  };
+                  open-maximized = true;
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "steam";
+                      title = "^notificationtoasts_\d+_desktop$";
+                    };
+                  };
+                  open-maximized = false;
+                  default-floating-position = _: {
+                    props = {
+                      relative-to = "bottom-right";
+                      x = 16;
+                      y = 16;
+                    };
+                  };
+                };
+              }
               {
                 # for blurred wallpaper in overview, provided by noctalia
                 layer-rule = {
