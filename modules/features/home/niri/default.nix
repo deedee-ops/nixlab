@@ -598,6 +598,16 @@
                 window-rule = {
                   match = _: {
                     props = {
+                      app-id = "youtube";
+                    };
+                  };
+                  open-maximized = true;
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
                       app-id = "firefox";
                       title = "Picture-in-Picture";
                     };

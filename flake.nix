@@ -42,6 +42,7 @@ rec {
 
     deploy-rs.url = "github:serokell/deploy-rs";
     disko.url = "github:nix-community/disko";
+    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     home-manager.url = "github:nix-community/home-manager";
     krewfile.url = "github:brumhard/krewfile";
     nix-index-database.url = "github:nix-community/nix-index-database";
