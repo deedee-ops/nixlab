@@ -20,6 +20,8 @@
 
             packages = [
               pkgs.jq
+              pkgs.openssl
+              pkgs.pwgen
               pkgs.ripgrep
               pkgs.wget
               pkgs.xterm
