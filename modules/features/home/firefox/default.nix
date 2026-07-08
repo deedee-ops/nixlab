@@ -16,6 +16,20 @@
       firefoxPkg = config.programs.firefox.finalPackage;
 
       addons = inputs.firefox-addons.packages."${pkgs.stdenv.hostPlatform.system}";
+
+      # Handles `href="ytp:<video-id>"` (shorthand) — expands to a watch URL and
+      # opens it in the youtube profile. Also tolerates a full youtube URL.
+      # No --no-remote: reuses a running youtube instance instead of erroring on
+      # the profile lock; MOZ_APP_REMOTINGNAME keeps it separate from main firefox.
+      youtubeHandler = pkgs.writeShellScriptBin "youtube-open" ''
+        raw="''${1#ytp:}"
+        raw="''${raw#//}"
+        case "$raw" in
+          http://*|https://*) url="$raw" ;;
+          *)                  url="https://www.youtube.com/watch?v=$raw" ;;
+        esac
+        exec env MOZ_APP_REMOTINGNAME=youtube ${lib.getExe firefoxPkg} -P youtube --name youtube "$url"
+      '';
       baseSettings =
         lib.optionalAttrs isGPU {
           # hardware accelerated video decoding
@@ -284,6 +298,11 @@
                 # misc
                 "browser.startup.homepage" = "https://www.ajgon.casa";
 
+                # custom scheme: route `ytp:` links to the youtube profile without a prompt
+                "network.protocol-handler.external.ytp" = true;
+                "network.protocol-handler.expose.ytp" = false;
+                "network.protocol-handler.warn-external.ytp" = false;
+
                 # UI
                 "browser.uiCustomization.state" = builtins.toJSON {
                   placements = {
@@ -332,10 +351,16 @@
         };
 
         home = {
-          activation.init-pywalfox = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            ${lib.getExe pkgs.pywalfox-native} install
-          '';
-          packages = lib.optionals isGPU [ pkgs.ffmpeg-full ];
+          activation = {
+            init-pywalfox = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              ${lib.getExe pkgs.pywalfox-native} install
+            '';
+            init-ytp-handler = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              run ${pkgs.desktop-file-utils}/bin/update-desktop-database "$HOME/.local/share/applications"
+              run ${pkgs.xdg-utils}/bin/xdg-mime default youtube-handler.desktop x-scheme-handler/ytp
+            '';
+          };
+          packages = [ youtubeHandler ] ++ lib.optionals isGPU [ pkgs.ffmpeg-full ];
 
           sessionVariables = {
             DEFAULT_BROWSER = "${lib.getExe firefoxPkg}";
@@ -357,7 +382,7 @@
               [Desktop Entry]
               Name=YouTube
               Comment=YouTube player
-              Exec=env MOZ_APP_REMOTINGNAME=youtube ${lib.getExe firefoxPkg} -P youtube --no-remote --name youtube
+              Exec=env MOZ_APP_REMOTINGNAME=youtube ${lib.getExe firefoxPkg} -P youtube --name youtube
               Icon=youtube
               Terminal=false
               Type=Application
@@ -368,6 +393,19 @@
             '';
           };
 
+          dataFile."applications/youtube-handler.desktop" = {
+            text = ''
+              [Desktop Entry]
+              Name=YouTube Profile Handler
+              Comment=Open ytp: links in the YouTube profile
+              Exec=${lib.getExe youtubeHandler} %u
+              Terminal=false
+              Type=Application
+              NoDisplay=true
+              MimeType=x-scheme-handler/ytp
+            '';
+          };
+
           mimeApps = {
             defaultApplications = {
               "text/html" = "firefox.desktop";
@@ -375,6 +413,7 @@
               "x-scheme-handler/https" = "firefox.desktop";
               "x-scheme-handler/about" = "firefox.desktop";
               "x-scheme-handler/unknown" = "firefox.desktop";
+              "x-scheme-handler/ytp" = "youtube-handler.desktop";
             };
           };
         };
