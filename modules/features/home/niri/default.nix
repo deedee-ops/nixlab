@@ -88,6 +88,7 @@
             pkgs.evince
             pkgs.ffmpegthumbnailer
             pkgs.kdePackages.kdegraphics-thumbnailers
+            pkgs.kdePackages.plasma-integration
           ];
         };
 
@@ -128,7 +129,7 @@
                   DISPLAY = ":0"; # for xwayland-satellite
                   MOZ_ENABLE_WAYLAND = "1";
                   MOZ_DBUS_REMOTE = "1";
-                  QT_QPA_PLATFORMTHEME = "qt6ct";
+                  QT_QPA_PLATFORMTHEME = "kde";
                   QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
                   WAYLAND_DISPLAY = "wayland-1";
                   XDG_CURRENT_DESKTOP = "niri";
@@ -503,6 +504,19 @@
                 window-rule = {
                   geometry-corner-radius = 20;
                   clip-to-geometry = true;
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "org.freedesktop.impl.portal.desktop.kde";
+                    };
+                  };
+                  open-floating = true;
+                  open-focused = true;
+                  default-column-width.proportion = 0.5;
+                  default-window-height.proportion = 0.5;
                 };
               }
               {
