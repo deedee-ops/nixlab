@@ -44,7 +44,7 @@
             enable = true;
             filesystem = "ext4";
             swapSize = "8G";
-            systemDiskDevs = [ "/dev/nvme0n1" ];
+            systemDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
           };
 
           docker.username = primaryUser;
@@ -92,7 +92,7 @@
           vms = {
             username = primaryUser;
             dataFS = {
-              device = "/dev/nvme1n1";
+              device = "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897";
               fsType = "xfs";
             };
           };
