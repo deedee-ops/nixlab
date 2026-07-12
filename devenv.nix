@@ -96,7 +96,8 @@
         files = ".forgejo/workflows/.+\.yaml";
       };
 
-      commitizen.enable = true;
+      # TODO: enable when fixed
+      # commitizen.enable = true;
 
       # custom hooks
       gitleaks = {
