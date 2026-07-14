@@ -70,7 +70,10 @@ _: {
             # Python
             PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
             PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
-            SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt"; # httpx shenanigans
+            # python ssl shenanigans
+            CURL_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
+            REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
+            SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
 
             # Ruby
             IRBRC = "${config.xdg.configHome}/irb/irbrc";
