@@ -70,10 +70,6 @@ _: {
             # Python
             PYTHONSTARTUP = "${config.xdg.configHome}/python/pythonrc";
             PYTHON_HISTORY = "${config.xdg.stateHome}/python_history";
-            # python ssl shenanigans
-            CURL_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
-            REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
-            SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
 
             # Ruby
             IRBRC = "${config.xdg.configHome}/irb/irbrc";
@@ -92,6 +88,12 @@ _: {
 
             # wine
             WINEPREFIX = "${config.xdg.dataHome}/wine";
+
+            # ssl shenanigans in various frameworks and libraries
+            CURL_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
+            NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
+            REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
+            SSL_CERT_FILE = "/etc/ssl/certs/ca-certificates.crt";
           };
         };
 
