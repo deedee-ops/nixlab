@@ -73,7 +73,7 @@
       ];
     };
 
-    features-home-gui = _: {
+    features-home-gui = { pkgs, ... }: {
       imports = [
         self.homeModules.features-home-discord
         self.homeModules.features-home-firefox
@@ -93,6 +93,12 @@
         self.homeModules.features-home-wayland
         self.homeModules.features-home-zathura
       ];
+
+      config = {
+        home.packages = [
+          pkgs.libreoffice
+        ];
+      };
     };
   };
 }
