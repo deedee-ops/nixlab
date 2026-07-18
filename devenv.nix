@@ -96,8 +96,12 @@
         files = ".forgejo/workflows/.+\.yaml";
       };
 
-      # TODO: enable when fixed
-      # commitizen.enable = true;
+      commitizen = {
+        enable = true;
+        package = pkgs.commitizen.overridePythonAttrs (_: {
+          doCheck = false;
+        });
+      };
 
       # custom hooks
       gitleaks = {
