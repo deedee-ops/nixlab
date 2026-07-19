@@ -108,13 +108,13 @@ _: {
                 cookie_secure = true;
               };
               headscale = {
+                api_key_path = "/var/lib/headplane/headscale_api_key";
                 url = "http://${config.services.headscale.address}:${toString config.services.headscale.port}";
                 public_url = config.services.headscale.settings.server_url;
               };
               integration = {
                 agent = {
                   enabled = true;
-                  pre_authkey_path = "/var/lib/headplane/agent_preauth_key";
                 };
                 proc.enabled = true;
               };
@@ -122,7 +122,6 @@ _: {
                 client_id = cfg.oidc.clientId;
                 client_secret_path = config.sops.secrets."features/nixos/headplane/oidcClientSecret".path;
                 disable_api_key_login = false;
-                headscale_api_key_path = "/var/lib/headplane/headscale_api_key";
                 issuer = "https://${cfg.oidc.issuer}";
                 token_endpoint_auth_method = "client_secret_post";
               };

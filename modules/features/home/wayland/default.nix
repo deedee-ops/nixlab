@@ -46,6 +46,7 @@
             packages = [ cursorPackage ];
 
             pointerCursor = {
+              enable = true;
               name = cursorTheme;
               package = cursorPackage;
               dotIcons.enable = false;
