@@ -33,9 +33,7 @@
         self.nixosModules.features-nixos-time
         self.nixosModules.features-nixos-user
 
-        self.nixosModules.features-nixos-headscale
         self.nixosModules.features-nixos-rustdesk
-        self.nixosModules.features-nixos-tailscale
         self.nixosModules.features-nixos-towonel
 
         self.nixosModules.theme
@@ -61,19 +59,6 @@
 
       features = {
         nixos = {
-          headscale = {
-            nameservers = [
-              "192.168.42.1"
-            ];
-            oidc = {
-              enable = true;
-              clientId = "ee482830-e30a-48e1-ad71-0f0846ff08da";
-              issuer = "id.ajgon.casa";
-            };
-            serverHost = "headscale.rzegocki.dev";
-            sopsSecretsFile = ./secrets.sops.yaml;
-          };
-
           home-manager = {
             username = primaryUser;
             modules = homeModules;
