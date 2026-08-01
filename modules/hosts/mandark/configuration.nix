@@ -25,6 +25,7 @@
       imports = [
         self.nixosModules.hardware-gandicloud
 
+        self.nixosModules.features-nixos-docker
         self.nixosModules.features-nixos-home-manager
         self.nixosModules.features-nixos-locales
         self.nixosModules.features-nixos-ssh
@@ -35,6 +36,7 @@
         self.nixosModules.features-nixos-headscale
         self.nixosModules.features-nixos-rustdesk
         self.nixosModules.features-nixos-tailscale
+        self.nixosModules.features-nixos-towonel
 
         self.nixosModules.theme
       ];
@@ -92,6 +94,11 @@
 
           system = {
             inherit trustedRootCertificates;
+          };
+
+          towonel = {
+            publicHost = "relay.rzegocki.dev";
+            sopsSecretsFile = ./secrets.sops.yaml;
           };
 
           user = {

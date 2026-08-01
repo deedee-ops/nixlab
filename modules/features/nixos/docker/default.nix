@@ -28,7 +28,10 @@ _: {
               dates = "daily";
             };
             storageDriver = lib.mkIf (
-              config.features.nixos.disks.filesystem == "zfs" || config.features.nixos.disks.filesystem == "btrfs"
+              config.features.nixos ? disks
+              && (
+                config.features.nixos.disks.filesystem == "zfs" || config.features.nixos.disks.filesystem == "btrfs"
+              )
             ) config.features.nixos.disks.filesystem;
           };
         };
