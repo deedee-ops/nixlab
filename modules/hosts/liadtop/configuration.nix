@@ -31,7 +31,6 @@
         self.nixosModules.features-nixos-core
         self.nixosModules.features-nixos-desktop
         self.nixosModules.features-nixos-grub
-        self.nixosModules.features-nixos-tailscale
         self.nixosModules.features-nixos-wireguard
 
         self.nixosModules.theme
@@ -129,28 +128,6 @@
               desktopWidgets.monitorWidgets = builtins.fromJSON (
                 builtins.readFile ./noctalia-monitor-widgets.json
               );
-            };
-            plugins = {
-              tailscale = {
-                # query param is a hack, to refresh plugin on version change
-                sourceUrl = "https://github.com/noctalia-dev/noctalia-plugins?v1.5.0";
-                settings = {
-                  refreshInterval = 5000;
-                  compactMode = false;
-                  showIpAddress = true;
-                  showPeerCount = true;
-                  hideDisconnected = false;
-                  hideMullvadExitNodes = true;
-                  terminalCommand = "${lib.getExe pkgs.kitty}";
-                  sshUsername = "${primaryUser}";
-                  pingCount = 5;
-                  defaultPeerAction = "copy-ip";
-                  taildropEnabled = false;
-                  taildropDownloadDir = "~/Downloads";
-                  taildropReceiveMode = "operator";
-                  loginServer = "https://headscale.rzegocki.dev";
-                };
-              };
             };
           };
 

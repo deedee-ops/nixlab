@@ -79,25 +79,6 @@
       "visualizerType": "mirrored"
     },
     {
-      "defaultSettings": {
-        "compactMode": false,
-        "defaultPeerAction": "copy-ip",
-        "hideDisconnected": false,
-        "hideMullvadExitNodes": true,
-        "loginServer": "https://headscale.rzegocki.dev",
-        "pingCount": 5,
-        "refreshInterval": 5000,
-        "showIpAddress": true,
-        "showPeerCount": true,
-        "sshUsername": "",
-        "taildropDownloadDir": "~/Downloads",
-        "taildropEnabled": true,
-        "taildropReceiveMode": "operator",
-        "terminalCommand": ""
-      },
-      "id": "plugin:tailscale"
-    },
-    {
       "displayMode": "onhover",
       "iconColor": "none",
       "id": "Network",
