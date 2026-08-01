@@ -59,6 +59,40 @@
       ]
     },
     {
+      "name": "wireguard-toggle",
+      "title": "Wireguard Toggle",
+      "description": "Toggles Wireguard on or off.",
+      "mode": "no-view",
+      "keywords": ["wireguard", "wg", "vpn"],
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "wg-toggle",
+          "description": "Space-separated command to run (no shell expansion)."
+        }
+      ]
+    },
+    {
+      "name": "wireguard-status",
+      "title": "Wireguard Status",
+      "description": "Reports the current Wireguard status via a desktop notification.",
+      "mode": "no-view",
+      "keywords": ["wireguard", "wg", "vpn"],
+      "preferences": [
+        {
+          "name": "command",
+          "title": "Shell Command",
+          "type": "textfield",
+          "required": true,
+          "default": "wg-toggle status",
+          "description": "Space-separated command to run (no shell expansion)."
+        }
+      ]
+    },
+    {
       "name": "ytcast",
       "title": "YTCast",
       "description": "Casts a YouTube URL to a Chromecast device chosen from a list.",
