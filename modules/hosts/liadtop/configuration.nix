@@ -16,6 +16,7 @@
 
       noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
       primaryUser = "ajgon";
+      qrcpPort = 55555;
       homeModules = [
         self.homeModules.features-home
         self.homeModules.features-home-console
@@ -40,6 +41,8 @@
         defaultSopsFile = ./secrets.sops.yaml;
         age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
       };
+
+      networking.firewall.allowedTCPPorts = [ qrcpPort ];
 
       features = {
         nixos = {
@@ -179,6 +182,8 @@
           thunderbird = {
             inherit trustedRootCertificates;
           };
+
+          zsh.qrcp.port = qrcpPort;
         };
       };
 
