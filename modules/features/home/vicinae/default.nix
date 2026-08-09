@@ -1,4 +1,4 @@
-_: {
+{ inputs, ... }: {
   flake.homeModules.features-home-vicinae =
     {
       config,
@@ -47,6 +47,7 @@ _: {
 
         programs.vicinae = {
           enable = true;
+          package = inputs.vicinae.packages."${pkgs.stdenv.system}".default;
           systemd = {
             enable = true;
             autoStart = true;
