@@ -80,6 +80,7 @@
         self.homeModules.features-home-freerdp
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
+        self.homeModules.features-home-mindwtr
         self.homeModules.features-home-niri
         self.homeModules.features-home-noctalia-shell
         self.homeModules.features-home-obsidian

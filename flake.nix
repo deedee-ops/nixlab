@@ -57,5 +57,5 @@ rec {
     inputs.flake-parts.lib.mkFlake {
       inherit inputs;
       specialArgs = { inherit nixConfig; };
-    } (inputs.import-tree ./modules);
+    } (inputs.import-tree.matchNot ".*/package\.nix" ./modules);
 }
