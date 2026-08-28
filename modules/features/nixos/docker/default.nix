@@ -36,6 +36,8 @@ _: {
           };
         };
 
+        environment.systemPackages = [ pkgs.docker-sbx ];
+
         networking.firewall = {
           trustedInterfaces = [ "docker0" ];
           interfaces."docker0".allowedUDPPorts = [ 53 ];
