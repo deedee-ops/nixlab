@@ -41,6 +41,7 @@
             ${lib.getExe' pkgs.systemd "systemctl"} --user restart vicinae
           '';
           packages = [
+            pkgs.libqalculate
             pkgs.ytcast
           ];
         };
@@ -62,6 +63,11 @@
             escape_key_behavior = "close_window";
             pop_to_root_on_close = true;
             launcher_window.opacity = 1.0;
+            providers = {
+              calculator.preferences = {
+                backend = "qalculate";
+              };
+            };
             telemetry = {
               system_info = false;
             };
