@@ -99,6 +99,11 @@
       };
 
       home-manager.users."${primaryUser}".features.home = {
+        claude = {
+          defaultContext = builtins.readFile ./claude-context.md;
+          extraMounts = [ "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops" ];
+        };
+
         firefox = {
           inherit trustedRootCertificates;
 

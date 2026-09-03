@@ -125,6 +125,12 @@
 
       home-manager.users."${primaryUser}" = {
         features.home = {
+          claude = {
+            defaultContext = builtins.readFile ./claude-context.md;
+            extraMounts = [ "/home/${primaryUser}/Projects/k8s-gitops:/home/ubuntu/k8s-gitops" ];
+            sopsSecretsFile = ./secrets.sops.yaml;
+          };
+
           git = {
             sopsSecretsFile = ./secrets.sops.yaml;
           };
