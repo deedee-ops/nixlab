@@ -78,6 +78,7 @@
         self.homeModules.features-home-discord
         self.homeModules.features-home-firefox
         self.homeModules.features-home-freerdp
+        self.homeModules.features-home-kdeconnect
         self.homeModules.features-home-keepassxc
         self.homeModules.features-home-kitty
         self.homeModules.features-home-mindwtr
