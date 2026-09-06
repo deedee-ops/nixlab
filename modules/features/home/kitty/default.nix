@@ -67,7 +67,8 @@
 
       systemd.user.services = lib.mkGuiStartupService {
         package = pkgs.wl-clip-persist;
-        command = "${lib.getExe pkgs.wl-clip-persist} --clipboard both";
+        # `--clipboard both` breaks selections in GTK apps
+        command = "${lib.getExe pkgs.wl-clip-persist} --clipboard regular";
       };
     };
   perSystem =
