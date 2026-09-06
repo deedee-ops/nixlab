@@ -38,7 +38,12 @@ rec {
     import-tree.url = "github:vic/import-tree";
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
 
-    deploy-rs.url = "github:serokell/deploy-rs";
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      # deploy-rs pins nixpkgs from 2025-03, whose rustPlatform.importCargoLock
+      # still fetches crates from crates.io/api/v1, which now returns 403.
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     disko.url = "github:nix-community/disko";
     firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
     home-manager.url = "github:nix-community/home-manager";
