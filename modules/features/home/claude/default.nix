@@ -21,6 +21,12 @@ _: {
           default = null;
           example = "You are claude, do claude stuff";
         };
+        extraArgs = lib.mkOption {
+          type = lib.types.str;
+          description = "List of extra arguments passed to docker runner";
+          default = "";
+          example = "--network=host";
+        };
         extraMounts = lib.mkOption {
           type = lib.types.listOf lib.types.str;
           description = "List of extra directories to be mounted";
@@ -55,17 +61,27 @@ _: {
             pkgs.writeShellApplication {
               name = "claude.sh";
               text = ''
+                CFGDIR="$(mktemp -d)"
+                cleanup() {
+                    [[ -n "$CFGDIR" ]] && rm -rf -- "$CFGDIR"
+                }
+
+                trap cleanup EXIT HUP INT TERM
+                mkdir -p "$CFGDIR/kube" "$CFGDIR/talos"
+                cp -a "${config.sops.secrets."features/home/claude/configs/kubeconfig".path}" "$CFGDIR/kube/config"
+                cp -a "${
+                  config.sops.secrets."features/home/claude/configs/talosconfig".path
+                }" "$CFGDIR/talos/config"
+                chmod 600 "$CFGDIR/kube/config"
+                chmod 600 "$CFGDIR/talos/config"
+
                 docker pull registry.ajgon.casa/tools/claude
                 docker run --rm -it \
-                           ${extraMounts} ${defaultContext} \
+                           ${extraMounts} ${defaultContext} ${cfg.extraArgs} \
                            -v "${config.xdg.configHome}/claude:/home/ubuntu/.config/claude" \
                            -v "$(pwd):$(pwd)" \
-                           -v "${
-                             config.sops.secrets."features/home/claude/configs/kubeconfig".path
-                           }:/home/ubuntu/.config/kube/config" \
-                           -v "${
-                             config.sops.secrets."features/home/claude/configs/talosconfig".path
-                           }:/home/ubuntu/.config/talos/config" \
+                           -v "$CFGDIR/kube:/home/ubuntu/.config/kube" \
+                           -v "$CFGDIR/talos:/home/ubuntu/.config/talos" \
                            -w "$(pwd)" \
                            registry.ajgon.casa/tools/claude "$@"
               '';

@@ -127,6 +127,7 @@
         features.home = {
           claude = {
             defaultContext = builtins.readFile ./claude-context.md;
+            extraArgs = "--dns=10.82.8.42";
             extraMounts = [ "/home/${primaryUser}/Projects/k8s-gitops:/home/ubuntu/k8s-gitops" ];
             sopsSecretsFile = ./secrets.sops.yaml;
           };
