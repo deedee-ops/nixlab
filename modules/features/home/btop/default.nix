@@ -2,13 +2,8 @@ _: {
   flake.homeModules.features-home-btop =
     { config, ... }:
     {
-      stylix.targets.btop.enable = !config.programs.noctalia-shell.enable;
-      programs.noctalia-shell.settings.templates.activeTemplates = [
-        {
-          enabled = true;
-          id = "btop";
-        }
-      ];
+      stylix.targets.btop.enable = !config.programs.noctalia.enable;
+      programs.noctalia.settings.theme.templates.builtin_ids = [ "btop" ];
 
       home.shellAliases = {
         htop = "btop";
@@ -19,7 +14,7 @@ _: {
         enable = true;
 
         settings = {
-          color_theme = if config.programs.noctalia-shell.enable then "noctalia" else "stylix";
+          color_theme = if config.programs.noctalia.enable then "noctalia" else "stylix";
           # general
           truecolor = true;
           force_tty = false;

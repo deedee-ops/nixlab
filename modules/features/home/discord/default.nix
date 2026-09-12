@@ -8,17 +8,12 @@ _: {
     }:
     {
       config = {
-        stylix.targets.vesktop.enable = !config.programs.noctalia-shell.enable;
-        programs.noctalia-shell.settings.templates.activeTemplates = [
-          {
-            enabled = true;
-            id = "discord";
-          }
-        ];
+        stylix.targets.vesktop.enable = !config.programs.noctalia.enable;
+        programs.noctalia.settings.theme.templates.community_ids = [ "discord" ];
 
         programs.vesktop = {
           enable = true;
-          vencord.settings.enabledThemes = lib.optionals config.programs.noctalia-shell.enable [
+          vencord.settings.enabledThemes = lib.optionals config.programs.noctalia.enable [
             "noctalia-material.theme.css"
           ];
           settings = {

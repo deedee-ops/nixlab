@@ -2,13 +2,8 @@ _: {
   flake.homeModules.features-home-yazi =
     { config, lib, ... }:
     {
-      stylix.targets.yazi.enable = !config.programs.noctalia-shell.enable;
-      programs.noctalia-shell.settings.templates.activeTemplates = [
-        {
-          enabled = true;
-          id = "yazi";
-        }
-      ];
+      stylix.targets.yazi.enable = !config.programs.noctalia.enable;
+      programs.noctalia.settings.theme.templates.community_ids = [ "yazi" ];
 
       # hm and noctalia fight over this file
       xdg.configFile."yazi/theme.toml".force = true;
@@ -35,7 +30,7 @@ _: {
             };
           };
         }
-        // lib.optionalAttrs config.programs.noctalia-shell.enable {
+        // lib.optionalAttrs config.programs.noctalia.enable {
           flavor = {
             dark = "noctalia";
             light = "noctalia";

@@ -14,7 +14,7 @@
         (builtins.readFile ../../../assets/ca-rsa4096.crt)
       ];
 
-      noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+      noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
       primaryUser = "ajgon";
       qrcpPort = 55555;
       homeModules = [
@@ -92,7 +92,7 @@
           Service = {
             Type = "oneshot";
             ExecStart = "${pkgs.writeShellScript "niri-pre-sleep" ''
-              ${lib.getExe noctaliaShellPkg} ipc call lockScreen lock
+              ${lib.getExe noctaliaPkg} msg session lock
               ${lib.getExe config.programs.niri.package} msg action power-off-monitors
             ''}";
           };
@@ -130,14 +130,7 @@
             terminal = "kitty";
           };
 
-          noctalia-shell = {
-            extraSettings = {
-              bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-bar-widgets.json);
-              desktopWidgets.monitorWidgets = builtins.fromJSON (
-                builtins.readFile ./noctalia-monitor-widgets.json
-              );
-            };
-          };
+          noctalia-shell.extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
 
           ssh.appendOptions = {
             settings = {

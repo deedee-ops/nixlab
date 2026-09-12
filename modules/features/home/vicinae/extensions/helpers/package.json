@@ -37,7 +37,7 @@
           "title": "Shell Command",
           "type": "textfield",
           "required": true,
-          "default": "noctalia-shell ipc call idleInhibitor toggle",
+          "default": "noctalia msg caffeine-toggle",
           "description": "Space-separated command to run (no shell expansion)."
         }
       ]
@@ -53,7 +53,7 @@
           "title": "Shell Command",
           "type": "textfield",
           "required": true,
-          "default": "noctalia-shell ipc call plugin:tailscale toggle",
+          "default": "noctalia msg plugin davemhammer/tailscale:service all toggle",
           "description": "Space-separated command to run (no shell expansion)."
         }
       ]
@@ -127,7 +127,7 @@
           "title": "Shell Command",
           "type": "textfield",
           "required": true,
-          "default": "noctalia-shell ipc call plugin:todo addTodo {input} medium",
+          "default": "noctalia-add-todo {input}",
           "description": "Command template for regular todos. Use {input} as placeholder for the todo text."
         },
         {
@@ -135,7 +135,7 @@
           "title": "Shell Command (Work)",
           "type": "textfield",
           "required": true,
-          "default": "noctalia-shell ipc call plugin:todo addTodo {input} medium 1",
+          "default": "noctalia-add-todo --work {input}",
           "description": "Command template for work todos (@work / #work). Use {input} as placeholder for the todo text."
         }
       ]

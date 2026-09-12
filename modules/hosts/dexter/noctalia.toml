@@ -1,0 +1,97 @@
+[bar.main]
+start = ["workspaces"]
+center = ["clock"]
+end = [
+  "todo",
+  "media",
+  "bluetooth",
+  "volume",
+  "notifications",
+  "nightlight",
+  "caffeine",
+  "tray",
+]
+
+[widget.workspaces]
+style = "regular"
+show_labels = false
+labels_only_when_occupied = true
+max_label_chars = 2
+pill_scale = 0.8
+font_weight = 700
+focused_color = "primary"
+occupied_color = "secondary"
+empty_color = "secondary"
+focused_output_only = false
+hide_when_empty = false
+
+[widget.clock]
+format = "{:%a, %b %d %H:%M:%S}"
+vertical_format = "{:%H %M - %d %m}"
+tooltip_format = "{:%H:%M %a, %b %d}"
+
+[widget.todo]
+type = "nightwatch75/todo:todo"
+
+[widget.media]
+max_length = 125
+title_scroll = "on_hover"
+artist_first = false
+hide_when_no_media = false
+
+[widget.bluetooth]
+show_label = false
+
+[widget.volume]
+show_label = true
+
+[widget.volume.actions]
+middle = "exec pwvucontrol || pavucontrol"
+
+[widget.notifications]
+hide_when_no_unread = false
+
+[widget.tray]
+hidden = []
+pinned = []
+hide_passive = false
+drawer = false
+
+[shell.panel]
+session_placement = "floating"
+session_position = "center"
+
+[[shell.session.actions]]
+action = "lock"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "1"
+variant = "default"
+
+[[shell.session.actions]]
+action = "lock_and_suspend"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "2"
+variant = "default"
+
+[[shell.session.actions]]
+action = "reboot"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "3"
+variant = "default"
+
+[[shell.session.actions]]
+action = "logout"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "4"
+variant = "default"
+
+[[shell.session.actions]]
+action = "shutdown"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "5"
+variant = "destructive"

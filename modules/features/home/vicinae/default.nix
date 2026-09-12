@@ -24,13 +24,8 @@
           path = "${config.xdg.cacheHome}/ytcast/ytcast.json";
         });
 
-        stylix.targets.vicinae.enable = !config.programs.noctalia-shell.enable;
-        programs.noctalia-shell.settings.templates.activeTemplates = [
-          {
-            enabled = true;
-            id = "vicinae";
-          }
-        ];
+        stylix.targets.vicinae.enable = !config.programs.noctalia.enable;
+        programs.noctalia.settings.theme.templates.community_ids = [ "vicinae" ];
 
         home = {
           activation.init-vicinae-extensions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -72,8 +67,8 @@
               system_info = false;
             };
             theme = {
-              dark.name = if config.programs.noctalia-shell.enable then "noctalia" else "stylix";
-              light.name = if config.programs.noctalia-shell.enable then "noctalia" else "stylix";
+              dark.name = if config.programs.noctalia.enable then "noctalia" else "stylix";
+              light.name = if config.programs.noctalia.enable then "noctalia" else "stylix";
             };
           };
         };
