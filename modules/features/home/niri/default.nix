@@ -27,11 +27,11 @@
 
         launcher = lib.mkOption {
           type = lib.types.enum [
-            "noctalia-shell"
+            "noctalia"
             "vicinae"
           ];
           description = "Dafault launcher";
-          default = "noctalia-shell";
+          default = "noctalia";
         };
 
         terminal = lib.mkOption {
@@ -56,12 +56,7 @@
       };
       config = {
         programs = {
-          noctalia-shell.settings.templates.activeTemplates = [
-            {
-              enabled = true;
-              id = "niri";
-            }
-          ];
+          noctalia.settings.theme.templates.builtin_ids = [ "niri" ];
           nsticky = {
             enable = true;
             settings = {
@@ -110,7 +105,7 @@
 
           configFile."niri/config.kdl".text =
             let
-              noctaliaShellPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
+              noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
               toKdl =
                 content:
                 inputs.wrapper-modules.lib.toKdl (_: {
@@ -118,367 +113,343 @@
                   version = 1;
                 });
             in
-            (toKdl (
-              {
-                prefer-no-csd = _: { };
-                screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d-%H%M%S_scrot.png";
-                hotkey-overlay.skip-at-startup = _: { };
-                gestures.hot-corners.off = _: { };
+            (toKdl {
+              prefer-no-csd = _: { };
+              screenshot-path = "~/Pictures/Screenshots/%Y-%m-%d-%H%M%S_scrot.png";
+              hotkey-overlay.skip-at-startup = _: { };
+              gestures.hot-corners.off = _: { };
 
-                environment = {
-                  DISPLAY = ":0"; # for xwayland-satellite
-                  MOZ_ENABLE_WAYLAND = "1";
-                  MOZ_DBUS_REMOTE = "1";
-                  QT_QPA_PLATFORMTHEME = "kde";
-                  QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-                  WAYLAND_DISPLAY = "wayland-1";
-                  XDG_CURRENT_DESKTOP = "niri";
-                  XDG_SESSION_TYPE = "wayland";
+              environment = {
+                DISPLAY = ":0"; # for xwayland-satellite
+                MOZ_ENABLE_WAYLAND = "1";
+                MOZ_DBUS_REMOTE = "1";
+                QT_QPA_PLATFORMTHEME = "kde";
+                QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+                WAYLAND_DISPLAY = "wayland-1";
+                XDG_CURRENT_DESKTOP = "niri";
+                XDG_SESSION_TYPE = "wayland";
 
-                  # tell various apps we use wayland
-                  CLUTTER_BACKEND = "wayland";
-                  EGL_PLATFORM = "wayland";
-                  GDK_BACKEND = "wayland,x11";
-                  NIXOS_OZONE_WL = "1";
-                  QT_QPA_PLATFORM = "wayland";
-                  SDL_VIDEODRIVER = "wayland,x11";
-                  _JAVA_AWT_WM_NONREPARENTING = "1";
-                }
-                // lib.optionalAttrs (builtins.elem "radeon" cfg.features) {
-                  LIBVA_DRIVERS_PATH = "${pkgs.mesa}/lib/dri/";
-                  LIBVA_DRIVER_NAME = "radeonsi";
-                  MOZ_DISABLE_RDD_SANDBOX = "1";
-                }
-                // lib.optionalAttrs (builtins.elem "iHD" cfg.features) {
-                  LIBVA_DRIVERS_PATH = "${pkgs.intel-media-driver}/lib/dri/";
-                  LIBVA_DRIVER_NAME = "iHD";
-                  MOZ_DISABLE_RDD_SANDBOX = "1";
-                }
-                // lib.optionalAttrs (builtins.elem "nvidia" cfg.features) {
-                  LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
-                  LIBVA_DRIVER_NAME = "nvidia";
-                  MOZ_DISABLE_RDD_SANDBOX = "1";
-                  NVD_BACKEND = "direct";
+                # tell various apps we use wayland
+                CLUTTER_BACKEND = "wayland";
+                EGL_PLATFORM = "wayland";
+                GDK_BACKEND = "wayland,x11";
+                NIXOS_OZONE_WL = "1";
+                QT_QPA_PLATFORM = "wayland";
+                SDL_VIDEODRIVER = "wayland,x11";
+                _JAVA_AWT_WM_NONREPARENTING = "1";
+              }
+              // lib.optionalAttrs (builtins.elem "radeon" cfg.features) {
+                LIBVA_DRIVERS_PATH = "${pkgs.mesa}/lib/dri/";
+                LIBVA_DRIVER_NAME = "radeonsi";
+                MOZ_DISABLE_RDD_SANDBOX = "1";
+              }
+              // lib.optionalAttrs (builtins.elem "iHD" cfg.features) {
+                LIBVA_DRIVERS_PATH = "${pkgs.intel-media-driver}/lib/dri/";
+                LIBVA_DRIVER_NAME = "iHD";
+                MOZ_DISABLE_RDD_SANDBOX = "1";
+              }
+              // lib.optionalAttrs (builtins.elem "nvidia" cfg.features) {
+                LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
+                LIBVA_DRIVER_NAME = "nvidia";
+                MOZ_DISABLE_RDD_SANDBOX = "1";
+                NVD_BACKEND = "direct";
+              };
+
+              cursor = {
+                xcursor-size = 24;
+                hide-after-inactive-ms = 3000;
+              };
+
+              debug = {
+                # electron is shit
+                honor-xdg-activation-with-invalid-serial = _: { };
+              };
+
+              input = {
+                workspace-auto-back-and-forth = _: { };
+                focus-follows-mouse = _: {
+                  props = {
+                    max-scroll-amount = "95%";
+                  };
                 };
 
-                cursor = {
-                  xcursor-size = 24;
-                  hide-after-inactive-ms = 3000;
+                keyboard = {
+                  xkb = {
+                    layout = "pl";
+                    options = "caps:escape";
+                  };
                 };
 
-                debug = {
-                  # electron is shit
-                  honor-xdg-activation-with-invalid-serial = _: { };
+                touchpad = {
+                  tap = _: { };
+                  drag = true;
+                  drag-lock = _: { };
+                  dwt = _: { };
+                  tap-button-map = "left-right-middle";
+                  click-method = "clickfinger";
                 };
+              };
 
-                input = {
-                  workspace-auto-back-and-forth = _: { };
-                  focus-follows-mouse = _: {
+              layout = {
+                gaps = 8;
+                preset-column-widths = [
+                  { proportion = 0.33333; }
+                  { proportion = 0.5; }
+                  { proportion = 0.66667; }
+                ];
+                default-column-width.proportion = 0.33333;
+                focus-ring.width = 2;
+              };
+
+              xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
+
+              spawn-at-startup = [ (lib.getExe noctaliaPkg) ];
+
+              binds =
+                let
+                  niri-focus-column = pkgs.writeShellApplication {
+                    name = "niri-focus-column";
+                    runtimeInputs = [
+                      pkgs.jq
+                    ];
+                    text = builtins.readFile ./niri-focus-column.sh;
+                  };
+                in
+                {
+                  "Mod+Return".spawn = lib.getExe config.programs."${cfg.terminal}".package;
+                  "Mod+Shift+Q".close-window = _: { };
+
+                  "Mod+F".toggle-window-floating = _: { };
+                  "Mod+Z".maximize-column = _: { };
+                  "Mod+Shift+Z".fullscreen-window = _: { };
+
+                  "Mod+H".spawn = _: {
+                    props = [
+                      (lib.getExe niri-focus-column)
+                      "left"
+                    ];
+                  };
+                  "Mod+L".spawn = _: {
+                    props = [
+                      (lib.getExe niri-focus-column)
+                      "right"
+                    ];
+                  };
+                  "Mod+K".focus-window-or-workspace-up = _: { };
+                  "Mod+J".focus-window-or-workspace-down = _: { };
+
+                  "Mod+Shift+H".move-column-left = _: { };
+                  "Mod+Shift+L".move-column-right = _: { };
+                  "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
+                  "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
+
+                  "Mod+Shift+G".switch-preset-column-width = _: { };
+
+                  "Mod+Ctrl+H".consume-or-expel-window-left = _: { };
+                  "Mod+Ctrl+L".consume-or-expel-window-right = _: { };
+
+                  "Mod+Shift+Period".move-window-to-monitor-next = _: { };
+                  "Mod+Shift+Comma".move-window-to-monitor-previous = _: { };
+                  "Mod+Period".focus-monitor-next = _: { };
+                  "Mod+Comma".focus-monitor-previous = _: { };
+
+                  "Print".screenshot-screen = _: { };
+                  "Mod+Print".screenshot-window = _: { };
+                  "Mod+Shift+Print".screenshot = _: { };
+
+                  "Mod+Space".spawn = _: {
+                    props =
+                      if cfg.launcher == "vicinae" then
+                        [
+                          (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                          "toggle"
+                        ]
+                      else
+                        [
+                          (lib.getExe noctaliaPkg)
+                          "msg"
+                          "panel-toggle"
+                          "launcher"
+                        ];
+                  };
+                  "Mod+Shift+V".spawn = _: {
+                    props =
+                      if cfg.launcher == "vicinae" then
+                        [
+                          (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
+                          "vicinae://launch/clipboard/history"
+                        ]
+                      else
+                        [
+                          (lib.getExe noctaliaPkg)
+                          "msg"
+                          "panel-toggle"
+                          "clipboard"
+                        ];
+                  };
+
+                  "Mod+Tab" = _: {
                     props = {
-                      max-scroll-amount = "95%";
+                      repeat = false;
                     };
+                    content.toggle-overview = _: { };
+                  };
+                  "Mod+Shift+E".spawn = _: {
+                    props = [
+                      (lib.getExe noctaliaPkg)
+                      "msg"
+                      "panel-toggle"
+                      "session"
+                    ];
+                  };
+                  "Mod+Grave".spawn = _: {
+                    props = [
+                      (lib.getExe noctaliaPkg)
+                      "msg"
+                      "panel-toggle"
+                      "control-center"
+                      "notifications"
+                    ];
                   };
 
-                  keyboard = {
-                    xkb = {
-                      layout = "pl";
-                      options = "caps:escape";
-                    };
+                  "Mod+E".spawn = _: {
+                    props = [
+                      (lib.getExe noctaliaPkg)
+                      "msg"
+                      "panel-toggle"
+                      "nightwatch75/todo:panel"
+                    ];
+                  };
+                  "Mod+A".spawn = _: {
+                    props = [
+                      (lib.getExe noctaliaPkg)
+                      "msg"
+                      "panel-toggle"
+                      "ahmedhossamdev/sticky-notes:panel"
+                    ];
                   };
 
-                  touchpad = {
-                    tap = _: { };
-                    drag = true;
-                    drag-lock = _: { };
-                    dwt = _: { };
-                    tap-button-map = "left-right-middle";
-                    click-method = "clickfinger";
+                  "XF86AudioRaiseVolume" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "volume-up"
+                      ];
+                    };
                   };
-                };
-
-                layout = {
-                  gaps = 8;
-                  preset-column-widths = [
-                    { proportion = 0.33333; }
-                    { proportion = 0.5; }
-                    { proportion = 0.66667; }
-                  ];
-                  default-column-width.proportion = 0.33333;
-                  focus-ring.width = 2;
-                };
-
-                xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
-
-                spawn-at-startup = [ (lib.getExe noctaliaShellPkg) ];
-
-                binds =
-                  let
-                    niri-focus-column = pkgs.writeShellApplication {
-                      name = "niri-focus-column";
-                      runtimeInputs = [
-                        pkgs.jq
-                      ];
-                      text = builtins.readFile ./niri-focus-column.sh;
+                  "XF86AudioLowerVolume" = _: {
+                    props = {
+                      allow-when-locked = true;
                     };
-                  in
-                  {
-                    "Mod+Return".spawn = lib.getExe config.programs."${cfg.terminal}".package;
-                    "Mod+Shift+Q".close-window = _: { };
-
-                    "Mod+F".toggle-window-floating = _: { };
-                    "Mod+Z".maximize-column = _: { };
-                    "Mod+Shift+Z".fullscreen-window = _: { };
-
-                    "Mod+H".spawn = _: {
+                    content.spawn = _: {
                       props = [
-                        (lib.getExe niri-focus-column)
-                        "left"
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "volume-down"
                       ];
                     };
-                    "Mod+L".spawn = _: {
+                  };
+                  "XF86AudioMute" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
                       props = [
-                        (lib.getExe niri-focus-column)
-                        "right"
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "volume-mute"
                       ];
                     };
-                    "Mod+K".focus-window-or-workspace-up = _: { };
-                    "Mod+J".focus-window-or-workspace-down = _: { };
-
-                    "Mod+Shift+H".move-column-left = _: { };
-                    "Mod+Shift+L".move-column-right = _: { };
-                    "Mod+Shift+K".move-window-up-or-to-workspace-up = _: { };
-                    "Mod+Shift+J".move-window-down-or-to-workspace-down = _: { };
-
-                    "Mod+Shift+G".switch-preset-column-width = _: { };
-
-                    "Mod+Ctrl+H".consume-or-expel-window-left = _: { };
-                    "Mod+Ctrl+L".consume-or-expel-window-right = _: { };
-
-                    "Mod+Shift+Period".move-window-to-monitor-next = _: { };
-                    "Mod+Shift+Comma".move-window-to-monitor-previous = _: { };
-                    "Mod+Period".focus-monitor-next = _: { };
-                    "Mod+Comma".focus-monitor-previous = _: { };
-
-                    "Print".screenshot-screen = _: { };
-                    "Mod+Print".screenshot-window = _: { };
-                    "Mod+Shift+Print".screenshot = _: { };
-
-                    "Mod+Space".spawn = _: {
-                      props =
-                        if cfg.launcher == "vicinae" then
-                          [
-                            (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                            "toggle"
-                          ]
-                        else
-                          [
-                            (lib.getExe noctaliaShellPkg)
-                            "ipc"
-                            "call"
-                            "launcher"
-                            "toggle"
-                          ];
+                  };
+                  "XF86MonBrightnessUp" = _: {
+                    props = {
+                      allow-when-locked = true;
                     };
-                    "Mod+Shift+V".spawn = _: {
-                      props =
-                        if cfg.launcher == "vicinae" then
-                          [
-                            (lib.getExe inputs.vicinae.packages."${pkgs.stdenv.hostPlatform.system}".default)
-                            "vicinae://launch/clipboard/history"
-                          ]
-                        else
-                          [
-                            (lib.getExe noctaliaShellPkg)
-                            "ipc"
-                            "call"
-                            "launcher"
-                            "clipboard"
-                          ];
-                    };
-
-                    "Mod+Tab" = _: {
-                      props = {
-                        repeat = false;
-                      };
-                      content.toggle-overview = _: { };
-                    };
-                    "Mod+Shift+E".spawn = _: {
+                    content.spawn = _: {
                       props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "sessionMenu"
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "brightness-up"
+                      ];
+                    };
+                  };
+                  "XF86MonBrightnessDown" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "brightness-down"
+                      ];
+                    };
+                  };
+                  "XF86AudioPlay" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "media"
                         "toggle"
                       ];
                     };
-                    "Mod+Grave".spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "notifications"
-                        "toggleHistory"
-                      ];
-                    };
-
-                    "Mod+E".spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "plugin:todo"
-                        "togglePanel"
-                      ];
-                    };
-                    "Mod+A".spawn = _: {
-                      props = [
-                        (lib.getExe noctaliaShellPkg)
-                        "ipc"
-                        "call"
-                        "plugin:notes-scratchpad"
-                        "togglePanel"
-                      ];
-                    };
-
-                    "XF86AudioRaiseVolume" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "volume"
-                          "increase"
-                        ];
-                      };
-                    };
-                    "XF86AudioLowerVolume" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "volume"
-                          "decrease"
-                        ];
-                      };
-                    };
-                    "XF86AudioMute" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "volume"
-                          "muteOutput"
-                        ];
-                      };
-                    };
-                    "XF86MonBrightnessUp" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "brightness"
-                          "increase"
-                        ];
-                      };
-                    };
-                    "XF86MonBrightnessDown" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "brightness"
-                          "decrease"
-                        ];
-                      };
-                    };
-                    "XF86AudioPlay" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "media"
-                          "playPause"
-                        ];
-                      };
-                    };
-                    "XF86AudioStop" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "media"
-                          "stop"
-                        ];
-                      };
-                    };
-                    "XF86AudioNext" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "media"
-                          "next"
-                        ];
-                      };
-                    };
-                    "XF86AudioPrev" = _: {
-                      props = {
-                        allow-when-locked = true;
-                      };
-                      content.spawn = _: {
-                        props = [
-                          (lib.getExe noctaliaShellPkg)
-                          "ipc"
-                          "call"
-                          "media"
-                          "previous"
-                        ];
-                      };
-                    };
-
-                    "Mod+1".focus-workspace = "1-thunderbird";
-                    "Mod+2".focus-workspace = "2-obsidian";
-                    "Mod+3".focus-workspace = "3-teams";
-                    "Mod+4".focus-workspace = "4-telegram";
-                    "Mod+5".focus-workspace = "5-discord";
-                    "Mod+0".focus-workspace = "x-firefox";
                   };
-              }
-              // lib.optionalAttrs config.programs.noctalia-shell.enable {
-                include = "${config.xdg.configHome}/niri/noctalia.kdl";
-              }
-            ))
+                  "XF86AudioStop" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "media"
+                        "stop"
+                      ];
+                    };
+                  };
+                  "XF86AudioNext" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "media"
+                        "next"
+                      ];
+                    };
+                  };
+                  "XF86AudioPrev" = _: {
+                    props = {
+                      allow-when-locked = true;
+                    };
+                    content.spawn = _: {
+                      props = [
+                        (lib.getExe noctaliaPkg)
+                        "msg"
+                        "media"
+                        "previous"
+                      ];
+                    };
+                  };
+
+                  "Mod+1".focus-workspace = "1-thunderbird";
+                  "Mod+2".focus-workspace = "2-obsidian";
+                  "Mod+3".focus-workspace = "3-teams";
+                  "Mod+4".focus-workspace = "4-telegram";
+                  "Mod+5".focus-workspace = "5-discord";
+                  "Mod+0".focus-workspace = "x-firefox";
+                };
+            })
             + "\n"
             + (toKdl (
               builtins.map
@@ -504,6 +475,20 @@
                 window-rule = {
                   geometry-corner-radius = 20;
                   clip-to-geometry = true;
+                };
+              }
+              {
+                # noctalia v5 settings is a regular toplevel, not a panel
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "dev.noctalia.Noctalia";
+                    };
+                  };
+                  open-floating = true;
+                  open-focused = true;
+                  default-column-width.fixed = 1080;
+                  default-window-height.fixed = 920;
                 };
               }
               {
@@ -672,7 +657,7 @@
                 layer-rule = {
                   match = _: {
                     props = {
-                      namespace = "^noctalia-overview.*";
+                      namespace = "^noctalia-backdrop";
                     };
                   };
                   place-within-backdrop = true;
@@ -682,13 +667,20 @@
                 layer-rule = {
                   match = _: {
                     props = {
-                      namespace = "noctalia-notifications-.*";
+                      namespace = "^noctalia-notification$";
                     };
                   };
                   block-out-from = "screencast";
                 };
               }
-            ]);
+            ])
+            # Written verbatim (not via toKdl, which quotes node names) so that
+            # noctalia's niri template hook recognises the include and does not
+            # try to append its own to this read-only file.
+            + lib.optionalString config.programs.noctalia.enable ''
+
+              include "noctalia.kdl"
+            '';
         };
       };
     };

@@ -1,0 +1,58 @@
+[bar.main]
+start = ["workspaces"]
+center = ["clock"]
+end = [
+  "todo",
+  "media",
+  "bluetooth",
+  "volume",
+  "notifications",
+  "nightlight",
+  "caffeine",
+  "tray",
+]
+
+[widget.workspaces]
+style = "regular"
+show_labels = false             # v4 labelMode = "none"
+labels_only_when_occupied = true
+max_label_chars = 2             # v4 characterCount
+pill_scale = 0.8
+font_weight = 700               # v4 fontWeight = "bold"
+focused_color = "primary"
+occupied_color = "secondary"
+empty_color = "secondary"
+focused_output_only = false     # v4 followFocusedScreen = false
+hide_when_empty = false         # v4 hideUnoccupied = false
+
+[widget.clock]
+format = "{:%a, %b %d %H:%M:%S}"
+vertical_format = "{:%H %M - %d %m}"
+tooltip_format = "{:%H:%M %a, %b %d}"
+
+[widget.todo]
+type = "nightwatch75/todo:todo"
+
+[widget.media]
+max_length = 125
+title_scroll = "on_hover"
+artist_first = false
+hide_when_no_media = false      # v4 hideMode = "visible"
+
+[widget.bluetooth]
+show_label = false              # v4 displayMode = "onhover"
+
+[widget.volume]
+show_label = true               # v4 displayMode = "alwaysShow"
+
+[widget.volume.actions]
+middle = "exec pwvucontrol || pavucontrol"
+
+[widget.notifications]
+hide_when_no_unread = false
+
+[widget.tray]
+hidden = []
+pinned = []
+hide_passive = false
+drawer = false

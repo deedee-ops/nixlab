@@ -39,7 +39,7 @@
 
                   Theme = {
                     ThemeFile =
-                      if config.programs.noctalia-shell.enable then
+                      if config.programs.noctalia.enable then
                         "noctalia.toml"
                       else
                         "${self.theme.name}-${self.theme.style}-${self.theme.accent}.toml";

@@ -125,15 +125,7 @@
           terminal = "kitty";
         };
 
-        noctalia-shell = {
-          extraSettings = {
-            bar.widgets = builtins.fromJSON (builtins.readFile ./noctalia-bar-widgets.json);
-
-            desktopWidgets.monitorWidgets = builtins.fromJSON (
-              builtins.readFile ./noctalia-monitor-widgets.json
-            );
-          };
-        };
+        noctalia-shell.extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
 
         ssh.appendOptions = {
           settings = {

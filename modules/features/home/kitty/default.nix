@@ -8,13 +8,8 @@
       ...
     }:
     {
-      stylix.targets.kitty.enable = !config.programs.noctalia-shell.enable;
-      programs.noctalia-shell.settings.templates.activeTemplates = [
-        {
-          enabled = true;
-          id = "kitty";
-        }
-      ];
+      stylix.targets.kitty.enable = !config.programs.noctalia.enable;
+      programs.noctalia.settings.theme.templates.builtin_ids = [ "kitty" ];
 
       home.shellAliases.ssh = "${lib.getExe' config.programs.kitty.package "kitten"} ssh";
 
@@ -46,7 +41,7 @@
           underline_hyperlinks = "never";
           window_padding_width = 6;
         }
-        // lib.optionalAttrs config.programs.noctalia-shell.enable {
+        // lib.optionalAttrs config.programs.noctalia.enable {
           font_family = "JetBrainsMono Nerd Font Mono";
           font_size = 10;
           background_opacity = 0.95;
@@ -60,8 +55,10 @@
           mouse_map left click ungrabbed mouse_handle_click prompt
           mouse_map ctrl+left click ungrabbed mouse_handle_click link
         ''
-        + lib.optionalString config.programs.noctalia-shell.enable ''
-          include ${config.xdg.configHome}/kitty/themes/noctalia.conf
+        # noctalia's kitty template hook looks for this exact (relative) line
+        # before appending it to kitty.conf - which is read-only here.
+        + lib.optionalString config.programs.noctalia.enable ''
+          include themes/noctalia.conf
         '';
       };
 

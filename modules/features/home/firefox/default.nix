@@ -211,15 +211,10 @@
 
       config = {
         stylix.targets.firefox = {
-          enable = !config.programs.noctalia-shell.enable;
+          enable = !config.programs.noctalia.enable;
           profileNames = [ "default" ];
         };
-        programs.noctalia-shell.settings.templates.activeTemplates = [
-          {
-            enabled = true;
-            id = "pywalfox";
-          }
-        ];
+        programs.noctalia.settings.theme.templates.community_ids = [ "pywalfox" ];
 
         programs.firefox = {
           enable = true;

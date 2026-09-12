@@ -7,12 +7,7 @@ _: {
     }:
     {
       config = {
-        programs.noctalia-shell.settings.templates.activeTemplates = [
-          {
-            enabled = true;
-            id = "telegram";
-          }
-        ];
+        programs.noctalia.settings.theme.templates.community_ids = [ "telegram" ];
 
         home.packages = [ pkgs.telegram-desktop ];
 

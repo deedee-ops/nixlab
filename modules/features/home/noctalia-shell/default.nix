@@ -9,105 +9,61 @@
     }:
     let
       cfg = config.features.home.noctalia-shell;
-      defaultPlugins = {
-        notes-scratchpad = {
-          source = ./plugins/notes-scratchpad;
-          sourceUrl = null;
-          settings = {
-            panelWidth = 0.5;
-            panelHeight = 0.6;
-            fontSize = 14;
-            filePath = "~/Sync/sync/noctalia/notes-scratchpad.md";
-          };
-        };
-
-        todo = {
-          source = ./plugins/todo;
-          sourceUrl = null;
-          settings = {
-            todos = [ ];
-            pages = [
-              {
-                id = 0;
-                name = "General";
-              }
-            ];
-            current_page_id = 0;
-            count = 0;
-            completedCount = 0;
-            showCompleted = false;
-            showBackground = true;
-            isExpanded = true;
-            useCustomColors = false;
-            priorityColors = {
-              high = "#f44336";
-              medium = "#2196f3";
-              low = "#9e9e9e";
-            };
-            todoFilePath = "~/Sync/sync/noctalia/todo.json";
-            exportPath = "~/Downloads";
-            exportFormat = "markdown";
-            exportEmptySections = false;
-          };
-        };
-      };
     in
     {
       options.features.home.noctalia-shell = {
         extraSettings = lib.mkOption {
           type = lib.types.attrs;
-          description = "Noctalia shell extra settings to be merged with defaults";
-          default = { };
-        };
-        plugins = lib.mkOption {
-          type = lib.types.attrsOf (
-            lib.types.submodule {
-              options = {
-                source = lib.mkOption {
-                  type = lib.types.nullOr lib.types.path;
-                  description = "Path to plugin source, takes priority over URL";
-                  default = null;
-                };
-                sourceUrl = lib.mkOption {
-                  type = lib.types.nullOr lib.types.str;
-                  description = "URL to plugin source";
-                  default = null;
-                };
-                settings = lib.mkOption {
-                  type = lib.types.attrs;
-                  description = "Plugin settings";
-                  default = { };
-                };
-              };
-            }
-          );
+          description = "Noctalia extra settings to be merged with defaults";
           default = { };
         };
       };
 
       config = {
-        xdg.configFile =
-          (lib.concatMapAttrs (
-            pluginName: pluginCfg:
-            lib.mapAttrs' (fileName: _: {
-              name = "noctalia/plugins/${pluginName}/${fileName}";
-              value = {
-                source = pluginCfg.source + "/${fileName}";
-              };
-            }) (builtins.readDir pluginCfg.source)
-          ) (lib.filterAttrs (_: pluginCfg: pluginCfg.source != null) (defaultPlugins // cfg.plugins)))
-          // {
-            # # hm and noctalia fight over this file
-            "gtk-4.0/gtk.css".force = true;
-            "noctalia/templates".source = ./templates;
-            "noctalia/user-templates.toml".text = ''
-              [config]
+        # The v5 todo plugin has no IPC entry point for adding a task, so the
+        # vicinae "Add Todo" command pokes its JSON store directly. The plugin
+        # re-reads the file every couple of seconds.
+        home.packages = [
+          (pkgs.writeShellApplication {
+            name = "noctalia-add-todo";
+            runtimeInputs = [ pkgs.jq ];
+            text = ''
+              file="''${NOCTALIA_TODO_FILE:-$HOME/Sync/sync/noctalia/todo.json}"
 
-              [templates.supersonic]
-              input_path = "${config.xdg.configHome}/noctalia/templates/supersonic.toml"
-              output_path = "${config.xdg.configHome}/supersonic/themes/noctalia.toml"
+              if [ "''${1:-}" = "--work" ]; then
+                shift
+                text="$* @work"
+              else
+                text="$*"
+              fi
+
+              [ -n "$(printf '%s' "$text" | tr -d '[:space:]')" ] || exit 0
+              mkdir -p "$(dirname "$file")"
+              [ -s "$file" ] || printf '{}' >"$file"
+
+              tmp="$(mktemp "$file.XXXXXX")"
+              trap 'rm -f "$tmp"' EXIT
+              jq --arg text "$text" '
+                (if type == "array" then { version: 2, sort: "priority", tasks: . } else . end)
+                | .tasks = (.tasks // [])
+                | .tasks += [{
+                    id: ((.tasks | map(.id) | max // 0) + 1),
+                    text: $text,
+                    priority: "medium",
+                    done: false
+                  }]
+                | { version: 2, sort: (.sort // "priority"), tasks: .tasks }
+              ' "$file" >"$tmp"
+              cat "$tmp" >"$file"
             '';
-          };
+          })
+        ];
+
+        xdg.configFile = {
+          # hm and noctalia fight over this file
+          "gtk-4.0/gtk.css".force = true;
+          "noctalia/templates".source = ./templates;
+        };
 
         gtk = rec {
           theme = {
@@ -122,109 +78,137 @@
           platformTheme.name = "gtk3"; # align with gtk3
         };
 
-        systemd.user.services.notification-proxy =
-          let
-            python = pkgs.python3.withPackages (
-              ps: with ps; [
-                dbus-python
-                pygobject3
-              ]
-            );
-          in
-          {
-            Unit = {
-              Description = "Notification proxy";
-              After = [ "graphical-session.target" ];
-              PartOf = [ "graphical-session.target" ];
-            };
-            Service = {
-              Type = "simple";
-              ExecStart = "${lib.getExe python} ${./scripts/notification-proxy.py}";
-              Restart = "on-failure";
-              RestartSec = "3";
-            };
-            Install = {
-              WantedBy = [ "graphical-session.target" ];
-            };
-          };
-
-        programs.noctalia-shell = {
+        programs.noctalia = {
           enable = true;
 
-          colors = lib.mkForce { };
           settings = lib.recursiveUpdate {
-            general = {
-              avatarImage = "${../../../../assets/avatar.png}";
-              showChangelogOnStartup = false;
-              enableLockScreenCountdown = false;
+            shell = {
+              avatar_path = "${../../../../assets/avatar.png}";
             };
-            bar = {
-              outerCorners = false;
-              mouseWheelAction = "workspace";
+
+            bar.main = {
+              position = "top";
+              # Full-width bar with square corners. `radius` seeds all four
+              # corners, so it squares them on its own; `concave_edge_corners`
+              # then has nothing to carve, but keep it off explicitly.
+              margin_ends = 0;
+              radius = 0;
+              concave_edge_corners = false;
+
+              # v4 `bar.mouseWheelAction = "workspace"`, which only ever applied
+              # to the empty bar area - v5 calls that the dead zone.
+              dead_zone.actions = {
+                scroll_up = "workspace-switch prev";
+                scroll_down = "workspace-switch next";
+              };
             };
-            brightness = {
-              enableDdcSupport = true;
-            };
-            colorSchemes = {
-              predefinedScheme = self.theme.capitalizedName;
-            };
-            desktopWidgets = {
-              enabled = true;
-            };
-            dock = {
-              enabled = false;
-            };
+
+            backdrop.enabled = true; # v4 `wallpaper.overviewEnabled`
+
+            brightness.enable_ddcutil = true;
+
+            desktop_widgets.enabled = false;
+
+            dock.enabled = false;
+
             idle = {
-              enabled = true;
-              screenOffTimeout = 180;
-              lockTimeout = 120;
-              suspendTimeout = 300;
-              fadeDuration = 2;
+              # v4 `idle.fadeDuration`
+              pre_action_fade_seconds = 2;
+              behavior = {
+                lock = {
+                  enabled = true;
+                  action = "lock";
+                  timeout = 120;
+                };
+                screen-off = {
+                  enabled = true;
+                  action = "screen_off";
+                  timeout = 180;
+                };
+                suspend = {
+                  enabled = true;
+                  action = "lock_and_suspend";
+                  timeout = 300;
+                };
+              };
             };
+
             location = {
-              name = "Krakow, PL";
+              auto_locate = false;
+              address = "Krakow, PL";
             };
-            notifications = {
-              enabled = true;
-              criticalUrgencyDuration = 28800; # 8h
-            };
-            nightLight = {
-              enabled = true;
-            };
-            sessionMenu = {
-              enableCountdown = false;
-            };
-            templates = {
-              activeTemplates = [
-                {
-                  enabled = true;
-                  id = "gtk";
-                }
-                {
-                  enabled = true;
-                  id = "qt";
-                }
+
+            nightlight.enabled = true;
+
+            notification = {
+              enable_daemon = true;
+              # v4 ran a python d-bus proxy that rewrote these senders to critical
+              # urgency so they would stick around (`criticalUrgencyDuration`).
+              # v5 does it natively: 8h forced display duration.
+              filter_order = [
+                "teams"
+                "telegram"
               ];
-              enableUserTheming = true;
+              filter = {
+                teams = {
+                  enabled = true;
+                  match = "teams-for-linux";
+                  allow_permanent = true;
+                  override_duration = 28800000; # 8h
+                };
+                telegram = {
+                  enabled = true;
+                  match = "org.telegram.desktop";
+                  allow_permanent = true;
+                  override_duration = 28800000; # 8h
+                };
+              };
             };
+
+            theme = {
+              mode = self.theme.polarity;
+              source = "builtin";
+              builtin = self.theme.capitalizedName;
+
+              templates = {
+                enable_builtin_templates = true;
+                builtin_ids = [
+                  "gtk3"
+                  "gtk4"
+                  "qt"
+                ];
+                enable_community_templates = true;
+                community_ids = [ ];
+                # v4 `user-templates.toml`
+                user.supersonic = {
+                  input_path = "$XDG_CONFIG_HOME/noctalia/templates/supersonic.toml";
+                  output_path = "$XDG_CONFIG_HOME/supersonic/themes/noctalia.toml";
+                };
+              };
+            };
+
             wallpaper = {
-              directory = ../../../../assets/wallpapers;
-              overviewEnabled = true;
-              enableMultiMonitorDirectories = true;
-              automationEnabled = true;
-              randomIntervalSec = 900;
-              transitionDuration = 1500;
-              transitionType = [ "pixelate" ];
-              transitionEdgeSmoothness = 0;
+              directory = "${../../../../assets/wallpapers}";
+              per_monitor_directories = true;
+              transition = [ "honeycomb" ]; # v4 "pixelate" has no v5 equivalent
+              transition_duration = 1500;
+              transition_on_startup = true; # v4 behaviour
+              edge_smoothness = 0;
+              automation = {
+                enabled = true;
+                interval_seconds = 900;
+                order = "random";
+              };
+            };
+
+            plugins = {
+              auto_update = "all";
+              enabled = [
+                "ahmedhossamdev/sticky-notes"
+                "nightwatch75/todo"
+              ];
             };
           } cfg.extraSettings;
-
-          plugins.states = builtins.mapAttrs (_: value: {
-            enabled = true;
-            sourceUrl = if (value.source == null) then value.sourceUrl else null;
-          }) (defaultPlugins // cfg.plugins);
-
-          pluginSettings = builtins.mapAttrs (_: value: value.settings) (defaultPlugins // cfg.plugins);
         };
       };
     };
