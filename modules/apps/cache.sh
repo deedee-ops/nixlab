@@ -5,17 +5,17 @@ set +o nounset
 
 ci=false
 update=false
-attic_token=""
+
+# ncps exposes its write routes under /upload and re-signs what it stores with its
+# own key, so pushing needs no credentials -- it is gated on the server by
+# --cache-allow-put-verb and kept off the public router. zstd is set explicitly
+# because nix would otherwise default to xz, which is far slower for no gain here.
+cache_url="https://nix.ajgon.casa/upload?compression=zstd"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
   --ci) ci=true ;;
   --update-flake) update=true ;;
-  --attic-token=*) attic_token="${1#*=}" ;;
-  --attic-token)
-    attic_token="$2"
-    shift
-    ;;
   --github-token=*) github_token="${1#*=}" ;;
   --github-token)
     github_token="$2"
@@ -50,9 +50,14 @@ if $update; then
   echo "✅ All done!"
 fi
 
-if [[ -n "$attic_token" ]]; then
-  attic login homelab https://nix.ajgon.casa "${attic_token}"
-fi
+# `nix copy` below pushes each host's *runtime* closure, which does not reference
+# the flake inputs -- so nixpkgs, home-manager, disko et al never reach the cache
+# that way, and without them the flake cannot even be evaluated offline. Archive
+# them explicitly, and do it here rather than at the end: the `nix-collect-garbage
+# -d` below can drop input source trees, since they are not strongly GC-rooted.
+echo "👷 Archiving flake inputs"
+nix --accept-flake-config flake archive --to "$cache_url"
+echo "✅ All done!"
 
 # shellcheck disable=SC2044
 for host in $(find modules/hosts -maxdepth 1 -mindepth 1 -type d -exec basename {} \;); do
@@ -64,12 +69,12 @@ for host in $(find modules/hosts -maxdepth 1 -mindepth 1 -type d -exec basename 
     nh os build ".#${host}" --accept-flake-config --out-link "/tmp/result-$host"
   fi
 
-  attic push nixlab "/tmp/result-$host"
+  nix copy --to "$cache_url" "/tmp/result-$host"
 done
 
 echo "👷 Building devenv"
 devenv shell true >/dev/null 2>&1
-attic push nixlab "$(readlink .devenv/profile)"
+nix copy --to "$cache_url" "$(readlink .devenv/profile)"
 
 if $update; then
   echo "👷 Collecting garbage"

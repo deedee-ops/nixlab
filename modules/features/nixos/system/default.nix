@@ -61,7 +61,11 @@
 
               use-xdg-base-directories = true;
             }
-            // nixConfig;
+            # nixpkgs (nixos/modules/config/nix.nix) unconditionally defines
+            # substituters/trusted-public-keys with cache.nixos.org, and list
+            # options merge by concatenation - so plain values would be appended
+            # instead of replacing them. mkForce makes nixConfig authoritative.
+            // lib.mapAttrs (_: value: if lib.isList value then lib.mkForce value else value) nixConfig;
           };
 
           nixpkgs.config.allowUnfree = true;

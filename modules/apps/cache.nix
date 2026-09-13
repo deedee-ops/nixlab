@@ -7,7 +7,6 @@ _: {
         program = pkgs.writeShellApplication {
           name = "cache";
           runtimeInputs = [
-            pkgs.attic-client
             pkgs.devenv
             pkgs.git
             pkgs.jq

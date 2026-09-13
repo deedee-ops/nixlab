@@ -1,27 +1,13 @@
 rec {
   nixConfig = {
     substituters = [
-      "https://nix.ajgon.casa/nixlab"
-      "https://cache.nixos.org"
+      "https://nix.ajgon.casa"
     ];
     trusted-public-keys = [
-      "nixlab:CbnM70ClsRKjVPimSwpAkuuuHNv5nJ1ShHsdG7J0p5g="
-      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "nix.ajgon.casa-1:qVYJDXgy/BlE5IDjHvjRKb4ArzZKMqP+hBL3UHAGbb4="
     ];
-    extra-substituters = [
-      "https://nix-community.cachix.org"
-
-      "https://deploy-rs.cachix.org"
-      "https://noctalia.cachix.org"
-      "https://vicinae.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-
-      "deploy-rs.cachix.org-1:xfNobmiwF/vzvK1gpfediPwpdIP0rpDV2rYqx40zdSI="
-      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
-      "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
-    ];
+    extra-substituters = [ ];
+    extra-trusted-public-keys = [ ];
     builders-use-substitutes = true;
     connect-timeout = 5;
     warn-dirty = false;
