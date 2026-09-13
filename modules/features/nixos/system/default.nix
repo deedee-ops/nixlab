@@ -123,8 +123,8 @@
     features-nixos-desktop = {
       imports = [
         self.nixosModules.features-nixos-kdeconnect
+        self.nixosModules.features-nixos-noctalia-greeter
         self.nixosModules.features-nixos-plymouth
-        self.nixosModules.features-nixos-sddm
         self.nixosModules.features-nixos-wayland
       ];
     };

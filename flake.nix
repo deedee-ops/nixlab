@@ -51,6 +51,7 @@ rec {
     nix-index-database.url = "github:nix-community/nix-index-database";
     nixos-anywhere.url = "github:nix-community/nixos-anywhere";
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
     nsticky.url = "github:lonerOrz/nsticky";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
