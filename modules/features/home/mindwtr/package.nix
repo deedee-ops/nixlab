@@ -6,11 +6,11 @@
 
 let
   pname = "mindwtr";
-  version = "1.2.7";
+  version = "1.3.1";
 
   src = fetchurl {
     url = "https://github.com/dongdongbh/Mindwtr/releases/download/v${version}/Mindwtr-${version}-x86_64.AppImage";
-    hash = "sha256-QkvZ9T879uRuWFIDPt+VAJ5BpL+GN7a+HKTJ7dsa5kM=";
+    hash = "sha256-0BYCJXg3MEyhdhz8c8JZVX2sVCi1hcC+57PWov/4xaA=";
   };
 
   appimageContents = appimageTools.extract { inherit pname version src; };
