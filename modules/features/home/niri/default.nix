@@ -623,6 +623,17 @@
                   };
                 };
               }
+              # dosbox
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      title = "DOSBox";
+                    };
+                  };
+                  open-maximized = true;
+                };
+              }
               # steam
               {
                 window-rule = {

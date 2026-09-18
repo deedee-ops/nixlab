@@ -22,6 +22,8 @@
         self.homeModules.features-home-console
         self.homeModules.features-home-gui
 
+        self.homeModules.features-home-dosbox
+
         self.homeModules.theme
       ];
     in
@@ -106,6 +108,8 @@
             defaultContext = builtins.readFile ./claude-context.md;
             extraMounts = [ "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops" ];
           };
+
+          dosbox.savePath = "/home/${primaryUser}/Sync/retrosaves/dosbox-x";
 
           firefox = {
             inherit trustedRootCertificates;
