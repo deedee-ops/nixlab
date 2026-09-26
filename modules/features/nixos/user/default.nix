@@ -37,6 +37,7 @@ _: {
           isNormalUser = true;
           description = "${cfg.name}";
           extraGroups = [
+            "dialout"
             "input"
             "networkmanager"
             "render"

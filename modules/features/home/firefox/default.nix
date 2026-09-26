@@ -226,6 +226,7 @@
 
           policies = {
             DefaultDownloadDirectory = "${config.home.homeDirectory}/Downloads";
+            DefaultSerialGuardSetting = 3;
             DisableTelemetry = true;
             DisableFirefoxStudies = true;
             DisablePocket = true;
