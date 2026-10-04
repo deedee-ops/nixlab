@@ -50,6 +50,9 @@
             environment = {
               # workaround against service limitations
               PATH = "/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin";
+              # https://github.com/vicinaehq/vicinae/issues/2040
+              USE_LAYER_SHELL = 1;
+              QSG_RHI_BACKEND = "vulkan";
             };
           };
 
