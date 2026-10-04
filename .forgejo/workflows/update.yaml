@@ -41,6 +41,7 @@ jobs:
 
           git config user.name "robodexo2000[bot]"
           git config user.email "robodexo2000@ajgon.casa"
+          git config core.hooksPath /dev/null
           git add -A
           git commit -m 'chore(deps): lock file maintenance'
           git push origin master
