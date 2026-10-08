@@ -15,16 +15,27 @@ _: {
           extraPackages = [ pkgs.mesa ];
         };
         i2c.enable = true;
+        wirelessRegulatoryDatabase = true;
       };
 
       networking = {
-        networkmanager.enable = true;
+        networkmanager = {
+          enable = true;
+          wifi.powersave = false; # MT7922 drops connections with powersave on
+        };
         hostName = "liadtop";
       };
 
       security.rtkit.enable = true;
 
-      boot.kernelParams = [ "resume=/dev/disk/by-partlabel/disk-system-swap" ];
+      boot = {
+        kernelParams = [ "resume=/dev/disk/by-partlabel/disk-system-swap" ];
+        # MT7922 stability: explicit regdomain (world domain limits txpower) and no ASPM
+        extraModprobeConfig = ''
+          options cfg80211 ieee80211_regdom=PL
+          options mt7921e disable_aspm=1
+        '';
+      };
 
       systemd.sleep.settings.Sleep = lib.optionalAttrs (lidAction == "suspend-then-hibernate") {
         AllowSuspendThenHibernate = "yes";
