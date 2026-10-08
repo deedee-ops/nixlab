@@ -51,7 +51,7 @@ rec {
     nsticky.url = "github:lonerOrz/nsticky";
     sops-nix.url = "github:Mic92/sops-nix";
     stylix.url = "github:danth/stylix";
-    vicinae.url = "github:vicinaehq/vicinae";
+    vicinae.url = "github:vMohammad24/vicinae/fix/nix";
   };
 
   outputs =
