@@ -52,6 +52,9 @@
           systemd.user.services = lib.mkGuiStartupService {
             package = pkgs.keepassxc;
             command = "${lib.getExe pkgs.keepassxc} --minimized ${secretsDbPath}";
+            preStart = [
+              ''${pkgs.crudini}/bin/crudini --set "${config.xdg.configHome}/keepassxc/keepassxc.ini" FdoSecrets Enabled true''
+            ];
           };
 
           xdg = {
@@ -59,6 +62,7 @@
               [D-BUS Service]
               Name=org.freedesktop.secrets
               Exec=${lib.getExe pkgs.keepassxc}
+              SystemdService=keepassxc.service
             '';
           };
         };
