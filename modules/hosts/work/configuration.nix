@@ -31,6 +31,7 @@
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-openconnect
         self.nixosModules.features-nixos-squid
+        self.nixosModules.features-nixos-tailscale
 
         self.nixosModules.theme
       ];
@@ -95,6 +96,13 @@
                 ])
               )
             ];
+          };
+
+          # safety hatch, independent from home wireguard - don't let tailnet DNS interfere with corporate VPN
+          tailscale = {
+            acceptDNS = false;
+            advertiseTags = [ "tag:hatch" ];
+            sopsSecretsFile = ./secrets.sops.yaml;
           };
 
           user = {
