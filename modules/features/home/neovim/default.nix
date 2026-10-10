@@ -34,6 +34,7 @@
           pkgs.curl
           pkgs.git
           pkgs.ripgrep
+          pkgs.sops
         ];
 
         specs = {
@@ -62,6 +63,16 @@
               pkgs.vimPlugins.vim-helm
               pkgs.vimPlugins.vim-surround
               pkgs.vimPlugins.vim-wakatime
+              (pkgs.vimUtils.buildVimPlugin {
+                pname = "sops-nvim";
+                version = "0-unstable-2026-09-12";
+                src = pkgs.fetchFromGitHub {
+                  owner = "trixnz";
+                  repo = "sops.nvim";
+                  rev = "26592d8fab2a4c133d2a5d95e90d2ba54eb3c018";
+                  hash = "sha256-SXlI2M2BjNKEbReqTnNXITmryAboPjQJmq1IcgAMc5A=";
+                };
+              })
             ];
           };
 

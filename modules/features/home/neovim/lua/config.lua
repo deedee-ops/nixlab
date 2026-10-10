@@ -61,6 +61,15 @@ vim.keymap.set("n", "<Down>", "<NOP>", {})
 vim.keymap.set("n", "<Left>", "<NOP>", {})
 vim.keymap.set("n", "<Right>", "<NOP>", {})
 
+-- don't leak decrypted sops secrets to swap/undo files
+vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+	pattern = { "*.sops.*" },
+	callback = function()
+		vim.opt_local.swapfile = false
+		vim.opt_local.undofile = false
+	end,
+})
+
 -- strip whitespaces on save
 vim.api.nvim_create_autocmd({ "BufWritePre" }, {
 	pattern = { "*" },
