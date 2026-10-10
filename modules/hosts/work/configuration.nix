@@ -3,7 +3,6 @@
   flake.nixosModules.hosts-work-configuration =
     {
       config,
-      lib,
       pkgs,
       ...
     }:
@@ -26,10 +25,9 @@
     in
     {
       imports = [
-        self.nixosModules.hardware-qemu-guest
+        self.nixosModules.hardware-lxc-container
 
         self.nixosModules.features-nixos-core
-        self.nixosModules.features-nixos-mounts
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-openconnect
         self.nixosModules.features-nixos-squid
@@ -50,33 +48,15 @@
           mode = "0400";
         };
       };
-      boot.loader = {
-        systemd-boot.enable = lib.mkForce true;
-        grub.enable = false;
-      };
 
       features = {
         nixos = {
-          disks = {
-            enable = true;
-            filesystem = "ext4";
-            systemDiskDevs = [ "/dev/vda" ];
-          };
-
           docker.username = primaryUser;
 
           home-manager = {
             username = primaryUser;
             modules = homeModules;
           };
-
-          mounts.mounts = [
-            {
-              type = "nfs";
-              src = "nas.internal:/mnt/fast/backups/work";
-              dest = "/mnt/backup";
-            }
-          ];
 
           networking = {
             firewall.enable = false;
@@ -122,6 +102,14 @@
           };
         };
       };
+
+      # pinned, so the shifted ownership of the bind-mounted Projects dataset on TrueNAS (2147001001:2147000101) stays valid
+      users.users."${primaryUser}".uid = 1000;
+
+      # the Projects mount point is created before the user exists, which may leave home owned by root
+      systemd.tmpfiles.rules = [
+        "z /home/${primaryUser} 0700 ${primaryUser} users -"
+      ];
 
       home-manager.users."${primaryUser}" = {
         features.home = {

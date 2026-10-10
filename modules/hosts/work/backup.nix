@@ -31,7 +31,6 @@ _: {
     in
     {
       sops.secrets = {
-        "features/backups/local/password" = { };
         "features/backups/repo-borgbase-eu/password" = { };
         "features/backups/repo-borgbase-eu/env" = { };
       };
@@ -41,11 +40,6 @@ _: {
           environmentFile = config.sops.secrets."features/backups/repo-borgbase-eu/env".path;
           passwordFile = config.sops.secrets."features/backups/repo-borgbase-eu/password".path;
           repository = "rest:https://ddqn91y5.repo.borgbase.com/projects";
-        }
-        // commonBackupOpts;
-        projects-local = {
-          passwordFile = config.sops.secrets."features/backups/local/password".path;
-          repository = "/mnt/backup/projects";
         }
         // commonBackupOpts;
       };

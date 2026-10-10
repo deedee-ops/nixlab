@@ -8,11 +8,14 @@ _: {
       options.features.nixos.disks = with lib; {
         enable = mkEnableOption "disks setup and partitioning";
         filesystem = lib.mkOption {
-          type = lib.types.enum [
-            "ext4"
-            "btrfs"
-            "zfs"
-          ];
+          type = lib.types.nullOr (
+            lib.types.enum [
+              "ext4"
+              "btrfs"
+              "zfs"
+            ]
+          );
+          default = null;
           description = "Global filesystem for the system disks. As a rule of thumb - use 'ext4' for VMs, 'zfs' for servers and 'btrfs' for desktops.";
         };
         hostId = mkOption {
@@ -115,6 +118,10 @@ _: {
       };
       config = lib.mkIf cfg.enable {
         assertions = [
+          {
+            assertion = cfg.filesystem != null;
+            message = "`filesystem` must be set when disks setup is enabled";
+          }
           {
             assertion = cfg.filesystem == "zfs" || builtins.length cfg.systemDiskDevs == 1;
             message = "Only one `systemDiskDevs` can be set for global filesystem different than zfs";
