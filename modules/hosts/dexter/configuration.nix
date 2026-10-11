@@ -103,7 +103,11 @@
       home-manager.users."${primaryUser}".features.home = {
         claude = {
           defaultContext = builtins.readFile ./claude-context.md;
-          extraMounts = [ "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops" ];
+          extraMounts = [
+            "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops"
+            # sensitive information
+            "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
+          ];
         };
 
         dosbox.savePath = "/home/${primaryUser}/Sync/retrosaves/dosbox-x";
