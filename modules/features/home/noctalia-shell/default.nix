@@ -17,6 +17,11 @@
           description = "Noctalia extra settings to be merged with defaults";
           default = { };
         };
+        extraPlugins = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          description = "Extra plugins (`<author>/<plugin>`) to enable on top of the defaults";
+          default = [ ];
+        };
       };
 
       config = {
@@ -193,7 +198,8 @@
               enabled = [
                 "ahmedhossamdev/sticky-notes"
                 "nightwatch75/todo"
-              ];
+              ]
+              ++ cfg.extraPlugins;
             };
           } cfg.extraSettings;
         };

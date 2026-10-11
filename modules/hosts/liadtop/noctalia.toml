@@ -4,6 +4,7 @@ center = ["clock"]
 end = [
   "todo",
   "media",
+  "tailscale",
   "network",
   "bluetooth",
   "volume",
@@ -41,6 +42,9 @@ max_length = 75
 title_scroll = "on_hover"
 artist_first = false
 hide_when_no_media = true
+
+[widget.tailscale]
+type = "davemhammer/tailscale:status"
 
 [widget.network]
 show_label = false

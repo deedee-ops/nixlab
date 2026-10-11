@@ -134,7 +134,10 @@
             terminal = "kitty";
           };
 
-          noctalia-shell.extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
+          noctalia-shell = {
+            extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
+            extraPlugins = [ "davemhammer/tailscale" ];
+          };
 
           ssh.appendOptions = {
             settings = {
