@@ -155,7 +155,7 @@
               };
               mandark = {
                 ForwardAgent = true;
-                HostName = "relay.rzegocki.dev";
+                HostName = "relay.ajgon.casa";
                 IdentitiesOnly = true;
                 Port = 22;
                 User = "ajgon";
