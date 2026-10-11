@@ -22,44 +22,22 @@
           description = "Extra plugins (`<author>/<plugin>`) to enable on top of the defaults";
           default = [ ];
         };
+        sopsSecretsFile = lib.mkOption {
+          type = lib.types.path;
+          description = "Path to sopsfile containing secrets";
+          default = ./secrets.sops.yaml;
+        };
       };
-
       config = {
-        home.packages = [
-          (pkgs.writeShellApplication {
-            name = "noctalia-add-todo";
-            runtimeInputs = [ pkgs.jq ];
-            text = ''
-              file="''${NOCTALIA_TODO_FILE:-$HOME/Sync/sync/noctalia/todo.json}"
+        sops.secrets = lib.genAttrs [ "features/home/noctalia-shell/todo/caldavPassword" ] (_: {
+          sopsFile = cfg.sopsSecretsFile;
+        });
 
-              if [ "''${1:-}" = "--work" ]; then
-                shift
-                text="$* @work"
-              else
-                text="$*"
-              fi
+        # todo plugin opens links with xdg-open
+        home.packages = [ pkgs.xdg-utils ];
 
-              [ -n "$(printf '%s' "$text" | tr -d '[:space:]')" ] || exit 0
-              mkdir -p "$(dirname "$file")"
-              [ -s "$file" ] || printf '{}' >"$file"
-
-              tmp="$(mktemp "$file.XXXXXX")"
-              trap 'rm -f "$tmp"' EXIT
-              jq --arg text "$text" '
-                (if type == "array" then { version: 2, sort: "priority", tasks: . } else . end)
-                | .tasks = (.tasks // [])
-                | .tasks += [{
-                    id: ((.tasks | map(.id) | max // 0) + 1),
-                    text: $text,
-                    priority: "medium",
-                    done: false
-                  }]
-                | { version: 2, sort: (.sort // "priority"), tasks: .tasks }
-              ' "$file" >"$tmp"
-              cat "$tmp" >"$file"
-            '';
-          })
-        ];
+        # local plugins, discovered by noctalia from its data dir
+        xdg.dataFile."noctalia/plugins/todo".source = ./plugins/todo;
 
         xdg.configFile = {
           # hm and noctalia fight over this file
@@ -197,9 +175,16 @@
               auto_update = "all";
               enabled = [
                 "ahmedhossamdev/sticky-notes"
-                "nightwatch75/todo"
+                "ajgon/todo"
               ]
               ++ cfg.extraPlugins;
+            };
+
+            # username and password (or password_file) are set in Settings → Plugins
+            plugin_settings."ajgon/todo" = {
+              host = "https://davis.ajgon.casa/dav/";
+              username = "ajgon";
+              password_file = config.sops.secrets."features/home/noctalia-shell/todo/caldavPassword".path;
             };
           } cfg.extraSettings;
         };

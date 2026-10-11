@@ -317,7 +317,7 @@
                       (lib.getExe noctaliaPkg)
                       "msg"
                       "panel-toggle"
-                      "nightwatch75/todo:panel"
+                      "ajgon/todo:panel"
                     ];
                   };
                   "Mod+A".spawn = _: {

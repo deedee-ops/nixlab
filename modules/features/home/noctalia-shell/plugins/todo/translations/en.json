@@ -1,0 +1,85 @@
+{
+  "title": "To Do",
+  "placeholder": "New todo…",
+  "empty": "Nothing to do",
+  "tip": {
+    "add": "Add (Enter)",
+    "close": "Close",
+    "delete": "Remove",
+    "done": "Mark as done",
+    "settings": "Plugin settings",
+    "sync": "Sync now",
+    "undone": "Mark as not done",
+    "links": "{count} links — click to list, right-click for a menu",
+    "back_to_input": "Back to the add field"
+  },
+  "tooltip": {
+    "open": "{count} open",
+    "sync": "Sync"
+  },
+  "status": {
+    "offline": "Offline — {count} change(s) waiting to sync",
+    "offline_detail": "CalDAV server unreachable",
+    "synced": "Synced at {time}",
+    "syncing": "Syncing…",
+    "unconfigured": "Not synced — set the CalDAV server in the plugin settings"
+  },
+  "error": {
+    "auth": "CalDAV login failed — check username and password",
+    "bad_host": "Server URL must start with http:// or https://",
+    "calendar_no_todos": "Calendar \"{name}\" does not accept todos (enable VTODO on it)",
+    "calendar_not_found": "Calendar \"{name}\" not found",
+    "http": "CalDAV {what} failed (HTTP {status})",
+    "no_endpoint": "No CalDAV endpoint found on the server",
+    "no_home": "Server did not report a calendar home",
+    "no_todo_calendar": "No calendar accepts todos — enable VTODO on one (Davis: edit calendar → Todos)",
+    "password_file": "Cannot read the password file",
+    "rejected": "Server rejected the todo — does the calendar accept VTODO?",
+    "open_link": "Cannot open {url} (no xdg-open or gio found)"
+  },
+  "settings": {
+    "host": {
+      "label": "Server URL",
+      "description": "CalDAV server, e.g. https://davis.example.com. A URL with a path (e.g. …/dav/) is used as the DAV root as-is."
+    },
+    "username": {
+      "label": "Username",
+      "description": "CalDAV username."
+    },
+    "password": {
+      "label": "Password",
+      "description": "CalDAV password. Stored in plain text in Noctalia's settings; ignored when a password file is set."
+    },
+    "password_file": {
+      "label": "Password file",
+      "description": "File containing the password (e.g. a sops-nix secret). Takes precedence over the password field."
+    },
+    "calendar": {
+      "label": "Calendar",
+      "description": "Calendar name or path segment to use. Empty picks the first calendar that accepts todos."
+    },
+    "sync_interval": {
+      "label": "Sync interval (seconds)",
+      "description": "How often to pull changes from the server."
+    },
+    "glyph": {
+      "label": "Bar glyph",
+      "description": "Glyph shown on the bar."
+    },
+    "show_count": {
+      "label": "Show count",
+      "description": "Show the number of open todos next to the glyph."
+    },
+    "show_completed": {
+      "label": "Show completed tasks",
+      "description": "Keep done todos in the panel (struck through, below the open ones)."
+    }
+  },
+  "more": "… and {count} more",
+  "menu": {
+    "links": "Open link"
+  },
+  "hint": {
+    "list": "↑/↓ move · Space done/undone · Enter open link · ↑ on the first todo to add"
+  }
+}

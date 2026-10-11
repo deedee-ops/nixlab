@@ -31,7 +31,7 @@ vertical_format = "{:%H %M - %d %m}"
 tooltip_format = "{:%H:%M %a, %b %d}"
 
 [widget.todo]
-type = "nightwatch75/todo:todo"
+type = "ajgon/todo:todo"
 
 [widget.media]
 max_length = 125

@@ -1,0 +1,107 @@
+# To Do — a quick-add todo list synced with a CalDAV calendar (VTODO).
+# The `sync` service owns the list and the CalDAV sync; the bar widget shows the
+# number of open todos and the panel adds, ticks off and removes them.
+
+id = "ajgon/todo"
+name = "To Do"
+version = "1.0.0"
+# 33 for ui.scroll revealKey (keyboard highlight stays in view); also covers
+# panel.openContextMenu (28), argv runAsync (24), require() (22), capture_keys,
+# widget actions, openSettings and nowMs
+plugin_api = 33
+author = "ajgon"
+license = "MIT"
+dependencies = ["xdg-open"]
+tags = ["bar", "panel", "service", "productivity", "caldav"]
+icon = "checklist"
+description = "Quick-add todo list synced with a CalDAV calendar (VTODO)."
+
+[[setting]]
+key = "host"
+type = "string"
+label_key = "settings.host.label"
+description_key = "settings.host.description"
+default = ""
+
+[[setting]]
+key = "username"
+type = "string"
+label_key = "settings.username.label"
+description_key = "settings.username.description"
+default = ""
+
+[[setting]]
+key = "password"
+type = "string"
+label_key = "settings.password.label"
+description_key = "settings.password.description"
+default = ""
+
+[[setting]]
+key = "password_file"
+type = "file"
+label_key = "settings.password_file.label"
+description_key = "settings.password_file.description"
+default = ""
+
+[[setting]]
+key = "calendar"
+type = "string"
+label_key = "settings.calendar.label"
+description_key = "settings.calendar.description"
+default = ""
+
+[[setting]]
+key = "show_completed"
+type = "bool"
+label_key = "settings.show_completed.label"
+description_key = "settings.show_completed.description"
+default = false
+
+[[setting]]
+key = "sync_interval"
+type = "int"
+label_key = "settings.sync_interval.label"
+description_key = "settings.sync_interval.description"
+default = 300
+min = 30
+max = 3600
+advanced = true
+
+[[service]]
+id = "sync"
+entry = "sync.luau"
+
+[[panel]]
+id = "panel"
+entry = "panel.luau"
+width = 920
+height = 560
+placement = "attached"
+open_near_click = false
+keyboard_focus = "exclusive"
+# Up/Down move the highlight, Space ticks, Enter adds (in the field) or opens
+# links. A focused text field still gets printable keys (Space), so panel.luau
+# drops the field from the tree while navigating the list.
+capture_keys = ["up", "down", "space", "return", "kp_enter"]
+
+[[widget]]
+id = "todo"
+entry = "widget.luau"
+
+  [widget.actions]
+  left = "panel-toggle ajgon/todo:panel"
+
+  [[widget.setting]]
+  key = "glyph"
+  type = "glyph"
+  label_key = "settings.glyph.label"
+  description_key = "settings.glyph.description"
+  default = "checklist"
+
+  [[widget.setting]]
+  key = "show_count"
+  type = "bool"
+  label_key = "settings.show_count.label"
+  description_key = "settings.show_count.description"
+  default = true

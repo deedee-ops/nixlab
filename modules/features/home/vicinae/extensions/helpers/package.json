@@ -81,30 +81,6 @@
           "required": true
         }
       ]
-    },
-    {
-      "name": "add-todo",
-      "title": "Add Todo",
-      "description": "Adds a todo item. Include @work or #work to flag it.",
-      "mode": "view",
-      "preferences": [
-        {
-          "name": "command",
-          "title": "Shell Command",
-          "type": "textfield",
-          "required": true,
-          "default": "noctalia-add-todo {input}",
-          "description": "Command template for regular todos. Use {input} as placeholder for the todo text."
-        },
-        {
-          "name": "workCommand",
-          "title": "Shell Command (Work)",
-          "type": "textfield",
-          "required": true,
-          "default": "noctalia-add-todo --work {input}",
-          "description": "Command template for work todos (@work / #work). Use {input} as placeholder for the todo text."
-        }
-      ]
     }
   ],
   "dependencies": {
