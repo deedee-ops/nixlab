@@ -35,7 +35,6 @@
         self.nixosModules.features-nixos-desktop
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-tailscale
-        self.nixosModules.features-nixos-wireguard
 
         self.nixosModules.theme
       ];
@@ -82,7 +81,7 @@
             extraDirectories = [ "/mnt" ];
           };
 
-          wireguard.sopsSecretsFile = ./secrets.sops.yaml;
+          tailscale.acceptRoutes = true;
         };
       };
 

@@ -98,12 +98,10 @@
             ];
           };
 
-          # safety hatch, independent from home wireguard - don't let tailnet DNS interfere with corporate VPN
-          tailscale = {
-            acceptDNS = false;
-            advertiseTags = [ "tag:hatch" ];
-            sopsSecretsFile = ./secrets.sops.yaml;
-          };
+          # joined by hand (`tailscale up`, then disable key expiry in the console);
+          # don't let tailnet DNS interfere with the corporate VPN. No accepted routes:
+          # this box sits in 192.168.2.0/24 itself, the NAS routes would hijack its own LAN.
+          tailscale.acceptDNS = false;
 
           user = {
             name = primaryUser;
