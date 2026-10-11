@@ -41,7 +41,7 @@ rec {
       inputs.nixpkgs.follows = "nixpkgs";
     };
     disko.url = "github:nix-community/disko";
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    firefox-addons.url = "git+https://gitlab.com/rycee/nur-expressions?dir=pkgs/firefox-addons";
     home-manager.url = "github:nix-community/home-manager";
     krewfile.url = "github:brumhard/krewfile";
     nix-index-database.url = "github:nix-community/nix-index-database";
