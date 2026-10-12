@@ -113,6 +113,7 @@
           "browser.tabs.crashReporting.sendReport" = false;
           "browser.crashReports.unsubmittedCheck.autoSubmit2" = false;
           "dom.private-attribution.submission.enabled" = false;
+          "privacy.globalprivacycontrol.enabled" = true;
 
           # location bar
           "browser.urlbar.speculativeConnect.enabled" = false;
