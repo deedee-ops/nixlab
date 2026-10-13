@@ -1,4 +1,4 @@
-{ inputs, ... }: {
+_: {
   flake.homeModules.features-home-vicinae =
     {
       config,
@@ -43,16 +43,12 @@
 
         programs.vicinae = {
           enable = true;
-          package = inputs.vicinae.packages."${pkgs.stdenv.system}".default;
           systemd = {
             enable = true;
             autoStart = true;
             environment = {
               # workaround against service limitations
               PATH = "/etc/profiles/per-user/${config.home.username}/bin:/run/current-system/sw/bin";
-              # https://github.com/vicinaehq/vicinae/issues/2040
-              USE_LAYER_SHELL = 1;
-              QSG_RHI_BACKEND = "vulkan";
             };
           };
 
