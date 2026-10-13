@@ -140,6 +140,7 @@
           "browser.download.alwaysOpenPanel" = false;
           "browser.download.manager.addToRecentDocs" = false;
           "browser.download.always_ask_before_handling_new_types" = true;
+          "network.http.response.timeout" = 0; # better resumable downloads
 
           # tracking
           "browser.contentblocking.category" = "strict";
