@@ -65,7 +65,19 @@
             # substituters/trusted-public-keys with cache.nixos.org, and list
             # options merge by concatenation - so plain values would be appended
             # instead of replacing them. mkForce makes nixConfig authoritative.
-            // lib.mapAttrs (_: value: if lib.isList value then lib.mkForce value else value) nixConfig;
+            // lib.mapAttrs (_: value: if lib.isList value then lib.mkForce value else value) (
+              # nix.conf is written in alphabetical order, so "extra-substituters"
+              # would land before "substituters" and get overwritten by it.
+              # Merge extra-* lists into their base settings instead.
+              builtins.removeAttrs nixConfig [
+                "extra-substituters"
+                "extra-trusted-public-keys"
+              ]
+              // {
+                substituters = nixConfig.substituters ++ nixConfig.extra-substituters;
+                trusted-public-keys = nixConfig.trusted-public-keys ++ nixConfig.extra-trusted-public-keys;
+              }
+            );
           };
 
           nixpkgs.config.allowUnfree = true;
