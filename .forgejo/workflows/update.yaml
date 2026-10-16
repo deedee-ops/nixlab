@@ -31,7 +31,7 @@ jobs:
           echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
 
           nix --accept-flake-config run .#cache -- \
-          --ci --update-flake --attic-token='${{ secrets.ATTIC_TOKEN }}' --github-token='${{ secrets.GH_TOKEN }}'
+          --ci --update-flake --github-token='${{ secrets.GH_TOKEN }}'
         env:
           CI: "true"
 

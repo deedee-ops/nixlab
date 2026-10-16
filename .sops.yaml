@@ -7,6 +7,7 @@ keys:
       - &homeManager age13lpwsgyvdsu690mg4kup99cuzmtq8kwu0t9zmj5ufkshvacxpecsyfmzlv
   - hosts:
       - &dexter age1s3hlmga37ylfxp7y96uha27j6g4mxjs74ecsvjs9d6hwrv0uus5s4teuqn
+      - &claude age1sqjpl7adx3fhx696rj4fv7e090mxmy9l8p40js8ztg7arm5jqf5qddj03l
       - &liadtop age1czs2uzrun89mfzaykc2cl65auktzdhkky9lgp7c28wf6ezzz34sq5zhl6q
       - &mandark age15sf9evgkvx4uzk4mgf43rfree6w68cudw8mt0daljmd55230gaxqjgk6rx
       - &work age1p3frxma9rmdfxf4dd26yyc3q9an667k99za5sqyl6ma7e206wdcs7k3ja5
@@ -21,6 +22,11 @@ creation_rules:
       - age:
           - *nixlab
           - *dexter
+  - path_regex: hosts/claude/.*\.sops\.yaml$
+    key_groups:
+      - age:
+          - *nixlab
+          - *claude
   - path_regex: liadtop/.*\.sops\.yaml$
     key_groups:
       - age:
