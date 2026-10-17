@@ -18,6 +18,7 @@
         self.homeModules.features-home-direnv
         self.homeModules.features-home-kubernetes
         self.homeModules.features-home-shell
+        self.homeModules.features-home-syncthing
         self.homeModules.features-home-yazi
         self.homeModules.features-home-zellij
         self.homeModules.features-home-zsh
@@ -85,6 +86,17 @@
         features.home = {
           kubernetes.sopsSecretsFile = ./secrets.sops.yaml;
           nix.sopsSecretsFile = ./secrets.sops.yaml;
+
+          syncthing = {
+            # headless box, daemon only
+            skipTray = true;
+            # keep terraform secrets off the agent box
+            ignores.workspace = [
+              "(?d).DS_Store"
+              "*.tfvars"
+              "*.tfvars.*"
+            ];
+          };
 
           zsh.promptColor = "red";
         };

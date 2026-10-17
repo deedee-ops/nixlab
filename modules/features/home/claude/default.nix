@@ -1,4 +1,5 @@
-_: {
+{ inputs, ... }:
+{
   flake.homeModules.features-home-claude =
     {
       config,
@@ -33,6 +34,11 @@ _: {
           default = [ ];
           example = "/home/example/dir:/dir";
         };
+        includeDesktop = lib.mkOption {
+          type = lib.types.bool;
+          description = "Install the official Claude Desktop app (Linux beta).";
+          default = false;
+        };
       };
       config = {
         sops.secrets = {
@@ -43,6 +49,13 @@ _: {
             sopsFile = cfg.sopsSecretsFile;
           };
         };
+
+        home.packages = lib.optionals cfg.includeDesktop [
+          # no Cowork: it pulls a custom QEMU build that isn't in any cache we use
+          (inputs.claude-desktop.packages."${pkgs.stdenv.hostPlatform.system}".default.override {
+            withCowork = false;
+          })
+        ];
 
         home.shellAliases.claude =
           let

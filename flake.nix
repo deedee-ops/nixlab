@@ -24,6 +24,10 @@ rec {
     import-tree.url = "github:vic/import-tree";
     wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
 
+    claude-desktop = {
+      url = "github:danielbodart/claude-desktop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     claude-code = {
       url = "github:sadjow/claude-code-nix";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -108,9 +108,17 @@
             # sensitive information
             "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
           ];
+          includeDesktop = true;
         };
 
         dosbox.savePath = "/home/${primaryUser}/Sync/retrosaves/dosbox-x";
+
+        # .stignore isn't synced, every device needs its own copy
+        syncthing.ignores.workspace = [
+          "(?d).DS_Store"
+          "*.tfvars"
+          "*.tfvars.*"
+        ];
 
         firefox = {
           inherit trustedRootCertificates;

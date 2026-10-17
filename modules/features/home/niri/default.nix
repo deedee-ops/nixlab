@@ -607,6 +607,16 @@
                 window-rule = {
                   match = _: {
                     props = {
+                      app-id = "com.anthropic.Claude";
+                    };
+                  };
+                  open-maximized = true;
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
                       app-id = "firefox";
                       title = "Picture-in-Picture";
                     };
