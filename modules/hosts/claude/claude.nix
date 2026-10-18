@@ -177,24 +177,76 @@
 
           # One-time setup, over SSH in ${workspace}: run `claude` to log in, trust the directory and accept
           # the bypass permissions warning, then `claude remote-control` to accept the Remote Control prompt.
-          systemd.user.services.claude-remote-control = {
-            Unit = {
-              Description = "Claude Code Remote Control server";
-              StartLimitIntervalSec = 0;
+          systemd.user =
+            let
+              # remote control re-registers the environment recorded here on start; sessions are bound to the
+              # environment, so losing this file orphans every chat in the claude.ai / desktop UI
+              pointer = "${config.home.homeDirectory}/.claude/projects/${
+                lib.replaceStrings [ "/" ] [ "-" ] workspace
+              }/bridge-pointer.json";
+              stateDir = "${config.xdg.stateHome}/claude-remote-control";
+              pointerBackup = "${stateDir}/bridge-pointer.json";
+              debugLog = "${stateDir}/debug.log";
+              preStart = pkgs.writeShellScript "claude-remote-control-pre" ''
+                mkdir -p ${lib.escapeShellArg (dirOf pointerBackup)}
+                if [ ! -e ${lib.escapeShellArg pointer} ] && [ -e ${lib.escapeShellArg pointerBackup} ]; then
+                  mkdir -p ${lib.escapeShellArg (dirOf pointer)}
+                  cp ${lib.escapeShellArg pointerBackup} ${lib.escapeShellArg pointer}
+                fi
+                # keep the previous run's log for post-mortems, the debug log is unbounded otherwise
+                if [ -e ${lib.escapeShellArg debugLog} ]; then
+                  mv ${lib.escapeShellArg debugLog} ${lib.escapeShellArg "${debugLog}.1"}
+                fi
+              '';
+              postStop = pkgs.writeShellScript "claude-remote-control-post" ''
+                if [ -e ${lib.escapeShellArg pointer} ]; then
+                  cp ${lib.escapeShellArg pointer} ${lib.escapeShellArg pointerBackup}
+                fi
+              '';
+              # --debug-file is passed on to every spawned session, each writes its own debug-<session>.log
+              cleanup = pkgs.writeShellScript "claude-remote-control-cleanup" ''
+                ${lib.getExe' pkgs.findutils "find"} ${lib.escapeShellArg stateDir} -maxdepth 1 -type f \
+                  -name 'debug-*.log' -mtime +14 -delete
+              '';
+            in
+            {
+              services.claude-remote-control-cleanup = {
+                Unit.Description = "Remove old Claude Code Remote Control session debug logs";
+                Service = {
+                  Type = "oneshot";
+                  ExecStart = "${cleanup}";
+                };
+              };
+              timers.claude-remote-control-cleanup = {
+                Timer = {
+                  OnCalendar = "daily";
+                  Persistent = true;
+                };
+                Install.WantedBy = [ "timers.target" ];
+              };
+
+              services.claude-remote-control = {
+                Unit = {
+                  Description = "Claude Code Remote Control server";
+                  StartLimitIntervalSec = 0;
+                };
+                Service = {
+                  WorkingDirectory = workspace;
+                  ExecStartPre = "${preStart}";
+                  ExecStopPost = "${postStop}";
+                  # login shell, so sessions get the full system PATH (incl. sudo wrapper) and session variables;
+                  # the debug log records why registration failed or got a new environment (stdout is discarded)
+                  ExecStart = "${lib.getExe pkgs.zsh} -lc 'exec claude remote-control --name claude --permission-mode bypassPermissions --debug-file ${debugLog}'";
+                  Restart = "always";
+                  RestartSec = 30;
+                  # the status UI redraws every second, which would flood the journal; errors still go to stderr
+                  StandardOutput = "null";
+                  # stop like Ctrl+C - on SIGTERM only the pre-created session is resumed, sessions started from the UI are lost
+                  KillSignal = "SIGINT";
+                };
+                Install.WantedBy = [ "default.target" ];
+              };
             };
-            Service = {
-              WorkingDirectory = workspace;
-              # login shell, so sessions get the full system PATH (incl. sudo wrapper) and session variables
-              ExecStart = "${lib.getExe pkgs.zsh} -lc 'exec claude remote-control --name claude --permission-mode bypassPermissions'";
-              Restart = "always";
-              RestartSec = 30;
-              # the status UI redraws every second, which would flood the journal; errors still go to stderr
-              StandardOutput = "null";
-              # stop like Ctrl+C - on SIGTERM only the pre-created session is resumed, sessions started from the UI are lost
-              KillSignal = "SIGINT";
-            };
-            Install.WantedBy = [ "default.target" ];
-          };
         };
     };
 }

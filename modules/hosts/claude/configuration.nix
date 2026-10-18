@@ -97,6 +97,7 @@
               "*.tfvars.*"
             ];
             rescanIntervalS = 300;
+            reconnectionIntervalS = 60;
           };
 
           zsh.promptColor = "red";
