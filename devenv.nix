@@ -103,13 +103,7 @@
         });
       };
 
-      # custom hooks
-      gitleaks = {
-        enable = true;
-        name = "gitleaks";
-        package = pkgs.gitleaks;
-        entry = "${lib.getExe pkgs.gitleaks} protect --verbose --redact --staged";
-      };
+      gitleaks.enable = true;
     };
   };
 

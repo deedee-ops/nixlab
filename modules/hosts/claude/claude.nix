@@ -48,28 +48,55 @@
         pkgs.cargo
         pkgs.cmake
         pkgs.gcc
+        pkgs.gdb
         pkgs.gnumake
-        pkgs.go
+        pkgs.hyperfine
         pkgs.nodejs
         pkgs.pkg-config
         pkgs.pnpm
         pkgs.rustc
         pkgs.uv
 
+        # go - toolchain taken from gopls, so `go` matches the version gopls/golangci-lint/govulncheck are
+        # built with (nixpkgs' default `go` lags behind, and these refuse modules newer than their own toolchain)
+        pkgs.gopls.go
+        pkgs.delve
+        pkgs.gofumpt
+        pkgs.golangci-lint
+        pkgs.gopls
+        pkgs.gotestsum
+        pkgs.gotools
+        pkgs.govulncheck
+
+        # linters and formatters
+        pkgs.actionlint
+        pkgs.deadnix
+        pkgs.hadolint
+        pkgs.markdownlint-cli2
+        pkgs.nixfmt
+        pkgs.shfmt
+        pkgs.statix
+        pkgs.yamllint
+
         # general cli
         pkgs.fd
         pkgs.file
         pkgs.gh
         pkgs.git
+        pkgs.git-lfs
         pkgs.htop
+        pkgs.just
         pkgs.lsof
         pkgs.p7zip
+        pkgs.prek
+        pkgs.pv
         pkgs.rsync
         pkgs.shellcheck
         pkgs.sqlite
         pkgs.strace
         pkgs.tree
         pkgs.unzip
+        pkgs.xxd
         pkgs.yq-go
         pkgs.zip
 
@@ -85,7 +112,9 @@
         pkgs.ethtool
         pkgs.iw
         pkgs.mtr
+        pkgs.iperf3
         pkgs.nmap
+        pkgs.socat
         pkgs.tcpdump
         pkgs.wirelesstools
 
@@ -102,8 +131,15 @@
         pkgs.cilium-cli
         pkgs.fluxcd
         pkgs.hubble
+        pkgs.kubeconform
         pkgs.kubernetes-helm
+        pkgs.kustomize
         pkgs.talosctl
+
+        # secrets - decrypting this host's sops file with the host ssh key
+        pkgs.age
+        pkgs.sops
+        pkgs.ssh-to-age
       ];
 
       home-manager.users."${username}" =
@@ -126,6 +162,11 @@
             file.".claude/CLAUDE.md".source = ./claude-context.md;
 
             sessionVariables = {
+              # set by features-home-telemetry; tools change behaviour under CI (non-interactive modes, different
+              # defaults, skipped steps), which surprises the agent - null drops it from the session entirely
+              CI = lib.mkForce null;
+              # also from features-home-telemetry, but not a telemetry switch - it blocks all Hugging Face downloads
+              HF_HUB_OFFLINE = lib.mkForce null;
               # updates come from the flake input
               DISABLE_AUTOUPDATER = "1";
               TALOSCONFIG = config.sops.secrets."features/home/claude/configs/talosconfig".path;

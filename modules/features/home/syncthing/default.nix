@@ -21,6 +21,11 @@ _: {
           default = false;
           description = "Install syncthing daemon only, without tray.";
         };
+        rescanIntervalS = lib.mkOption {
+          type = lib.types.int;
+          default = 3600;
+          description = "Fallback full-rescan interval in seconds for all folders managed by this host.";
+        };
         ignores = lib.mkOption {
           type = lib.types.attrsOf (lib.types.listOf lib.types.str);
           default = { };
@@ -48,6 +53,10 @@ _: {
                 if [ ! -e "${config.xdg.stateHome}/syncthing/config.xml" ]; then
                   run cp "${./config.xml}" "${config.xdg.stateHome}/syncthing/config.xml"
                 fi
+
+                run ${pkgs.gnused}/bin/sed -i \
+                  's/rescanIntervalS="[0-9]*"/rescanIntervalS="${toString cfg.rescanIntervalS}"/g' \
+                  "${config.xdg.stateHome}/syncthing/config.xml"
 
                 mkdir -p "${config.home.homeDirectory}/Sync"
               ''
