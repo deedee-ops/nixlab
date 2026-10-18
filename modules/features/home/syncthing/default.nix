@@ -26,6 +26,11 @@ _: {
           default = 3600;
           description = "Fallback full-rescan interval in seconds for all folders managed by this host.";
         };
+        reconnectionIntervalS = lib.mkOption {
+          type = lib.types.int;
+          default = 60;
+          description = "Interval in seconds between reconnection attempts to disconnected devices.";
+        };
         ignores = lib.mkOption {
           type = lib.types.attrsOf (lib.types.listOf lib.types.str);
           default = { };
@@ -56,6 +61,10 @@ _: {
 
                 run ${pkgs.gnused}/bin/sed -i \
                   's/rescanIntervalS="[0-9]*"/rescanIntervalS="${toString cfg.rescanIntervalS}"/g' \
+                  "${config.xdg.stateHome}/syncthing/config.xml"
+
+                run ${pkgs.gnused}/bin/sed -i \
+                  's|<reconnectionIntervalS>[0-9]*</reconnectionIntervalS>|<reconnectionIntervalS>${toString cfg.reconnectionIntervalS}</reconnectionIntervalS>|g' \
                   "${config.xdg.stateHome}/syncthing/config.xml"
 
                 mkdir -p "${config.home.homeDirectory}/Sync"
