@@ -444,9 +444,10 @@
 
                   "Mod+1".focus-workspace = "1-thunderbird";
                   "Mod+2".focus-workspace = "2-obsidian";
-                  "Mod+3".focus-workspace = "3-teams";
-                  "Mod+4".focus-workspace = "4-telegram";
-                  "Mod+5".focus-workspace = "5-discord";
+                  "Mod+3".focus-workspace = "3-ai-agent";
+                  "Mod+4".focus-workspace = "4-teams";
+                  "Mod+5".focus-workspace = "5-telegram";
+                  "Mod+6".focus-workspace = "6-discord";
                   "Mod+0".focus-workspace = "x-firefox";
                 };
             })
@@ -462,9 +463,10 @@
                 [
                   "1-thunderbird"
                   "2-obsidian"
-                  "3-teams"
-                  "4-telegram"
-                  "5-discord"
+                  "3-ai-agent"
+                  "4-teams"
+                  "5-telegram"
+                  "6-discord"
                   "x-firefox"
                 ]
             ))
@@ -553,11 +555,22 @@
                 window-rule = {
                   match = _: {
                     props = {
+                      app-id = "com.anthropic.Claude";
+                    };
+                  };
+                  open-maximized = true;
+                  open-on-workspace = "3-ai-agent";
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
                       app-id = "teams-for-linux";
                     };
                   };
                   open-maximized = true;
-                  open-on-workspace = "3-teams";
+                  open-on-workspace = "4-teams";
                 };
               }
               {
@@ -568,7 +581,7 @@
                     };
                   };
                   open-maximized = true;
-                  open-on-workspace = "4-telegram";
+                  open-on-workspace = "5-telegram";
                 };
               }
               {
@@ -579,7 +592,7 @@
                     };
                   };
                   open-maximized = true;
-                  open-on-workspace = "5-discord";
+                  open-on-workspace = "6-discord";
                 };
               }
               {
@@ -598,16 +611,6 @@
                   match = _: {
                     props = {
                       app-id = "youtube";
-                    };
-                  };
-                  open-maximized = true;
-                };
-              }
-              {
-                window-rule = {
-                  match = _: {
-                    props = {
-                      app-id = "com.anthropic.Claude";
                     };
                   };
                   open-maximized = true;
