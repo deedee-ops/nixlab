@@ -126,10 +126,7 @@
           firefox = {
             inherit trustedRootCertificates;
 
-            features = [
-              "radeon"
-              "doh"
-            ];
+            features = [ "radeon" ];
           };
 
           freerdp.windowsHosts.w10vm = {

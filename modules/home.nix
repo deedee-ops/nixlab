@@ -91,10 +91,6 @@ rec {
                 home = {
                   firefox = {
                     inherit trustedRootCertificates;
-
-                    features = [
-                      "doh"
-                    ];
                   };
 
                   thunderbird = {

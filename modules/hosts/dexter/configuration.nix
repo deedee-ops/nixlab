@@ -123,10 +123,7 @@
         firefox = {
           inherit trustedRootCertificates;
 
-          features = [
-            "iHD"
-            "doh"
-          ];
+          features = [ "iHD" ];
         };
 
         gnupg.pinentryPackage = pkgs.pinentry-qt;

@@ -8,6 +8,7 @@
       ...
     }:
     let
+      DoHURI = "@todo if ever doh returns";
       cfg = config.features.home.firefox;
       isGPU =
         (builtins.elem "iHD" cfg.features)
@@ -41,11 +42,11 @@
           "widget.dmabuf.force-enabled" = true;
         }
         // lib.optionalAttrs (!(builtins.elem "doh" cfg.features)) {
-          # Variant A: kill DNS over HTTPS
-          "network.dns.force_waiting_https_rr" = false;
-          "network.dns.upgrade_with_https_rr" = false;
-          "network.dns.use_https_rr_as_altsvc" = false;
-          "network.security.esni.enabled" = false;
+          # Variant A: no DNS over HTTPS, plain DNS through the system resolver (blocky on the LAN).
+          # ECH keeps working: HTTPS records (with the ech key) are fetched through the system resolver.
+          "network.dns.echconfig.enabled" = true;
+          "network.dns.native_https_query" = true;
+          "network.dns.use_https_rr_as_altsvc" = true;
           "network.trr.custom_uri" = "";
           "network.trr.default_provider_uri" = "";
           "network.trr.excluded-domains" = "";
@@ -57,11 +58,11 @@
           "network.dns.echconfig.enabled" = true;
           "network.dns.use_https_rr_as_altsvc" = true;
           "network.security.esni.enabled" = true;
-          "network.trr.custom_uri" = "https://dns.nextdns.io/1ff226";
-          "network.trr.default_provider_uri" = "https://dns.nextdns.io/1ff226";
+          "network.trr.custom_uri" = DoHURI;
+          "network.trr.default_provider_uri" = DoHURI;
           "network.trr.excluded-domains" = "ajgon.casa";
           "network.trr.mode" = 3;
-          "network.trr.uri" = "https://dns.nextdns.io/1ff226";
+          "network.trr.uri" = DoHURI;
         }
         // lib.optionalAttrs (self.theme.polarity == "dark") { "ui.systemUsesDarkTheme" = 1; }
         // {
