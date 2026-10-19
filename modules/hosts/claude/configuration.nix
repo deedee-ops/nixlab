@@ -16,9 +16,10 @@
         self.homeModules.features-home-bat
         self.homeModules.features-home-btop
         self.homeModules.features-home-direnv
+        self.homeModules.features-home-git
         self.homeModules.features-home-kubernetes
         self.homeModules.features-home-shell
-        self.homeModules.features-home-syncthing
+        self.homeModules.features-home-ssh
         self.homeModules.features-home-yazi
         self.homeModules.features-home-zellij
         self.homeModules.features-home-zsh
@@ -84,21 +85,11 @@
 
       home-manager.users."${primaryUser}" = {
         features.home = {
+          git.sopsSecretsFile = ./secrets.sops.yaml;
           kubernetes.sopsSecretsFile = ./secrets.sops.yaml;
           nix.sopsSecretsFile = ./secrets.sops.yaml;
-
-          syncthing = {
-            # headless box, daemon only
-            skipTray = true;
-            # keep terraform secrets off the agent box
-            ignores.workspace = [
-              "(?d).DS_Store"
-              "*.tfvars"
-              "*.tfvars.*"
-            ];
-            rescanIntervalS = 300;
-            reconnectionIntervalS = 60;
-          };
+          # own key (not the personal one), granted per-repo access on forgejo
+          ssh.sopsSecretsFile = ./secrets.sops.yaml;
 
           zsh.promptColor = "red";
         };
