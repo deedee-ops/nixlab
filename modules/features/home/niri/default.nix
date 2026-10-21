@@ -697,6 +697,16 @@
                   block-out-from = "screencast";
                 };
               }
+              {
+                layer-rule = {
+                  match = _: {
+                    props = {
+                      namespace = "^vicinae$";
+                    };
+                  };
+                  block-out-from = "screencast";
+                };
+              }
             ])
             + lib.optionalString config.programs.noctalia.enable ''
 
