@@ -54,9 +54,6 @@ _: {
             # Less
             LESSHISTFILE = "${config.xdg.stateHome}/less/history";
 
-            # Minio
-            MC_CONFIG_DIR = "${config.xdg.configHome}/minio";
-
             # node and NPM
             NODE_REPL_HISTORY = "${config.xdg.stateHome}/node_repl_history";
             NPM_CONFIG_CACHE = "${config.xdg.cacheHome}/npm";

@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.features-home-minio-cli =
+  flake.homeModules.features-home-rclone =
     {
       config,
       pkgs,
@@ -7,10 +7,10 @@ _: {
       ...
     }:
     let
-      cfg = config.features.home.minio-cli;
+      cfg = config.features.home.rclone;
     in
     {
-      options.features.home.minio-cli = {
+      options.features.home.rclone = {
         sopsSecretsFile = lib.mkOption {
           type = lib.types.path;
           description = "Path to sopsfile containing secrets";
@@ -18,11 +18,11 @@ _: {
         };
       };
       config = {
-        sops.secrets = lib.genAttrs [ "features/home/minio-cli/configFile" ] (_: {
+        sops.secrets = lib.genAttrs [ "features/home/rclone/configFile" ] (_: {
           sopsFile = cfg.sopsSecretsFile;
-          path = "${config.xdg.configHome}/minio/config.json";
+          path = "${config.xdg.configHome}/rclone/rclone.conf";
         });
-        home.packages = [ pkgs.minio-client ];
+        home.packages = [ pkgs.rclone ];
       };
     };
 }
