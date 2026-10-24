@@ -11,6 +11,7 @@
       {
         config = {
           xdg.enable = true;
+          programs.noctalia.settings.theme.templates.community_ids = [ "fastfetch" ];
 
           home = {
             preferXdgDirectories = true;
@@ -19,10 +20,14 @@
             '';
 
             packages = [
+              pkgs.fastfetch
               pkgs.jq
               pkgs.openssl
+              pkgs.p7zip
               pkgs.pwgen
               pkgs.ripgrep
+              pkgs.unrar
+              pkgs.unzip
               pkgs.wget
               pkgs.xterm
             ];
@@ -95,7 +100,13 @@
       ];
 
       config = {
+        programs.noctalia.settings.theme.templates.community_ids = [
+          "gimp"
+          "libreoffice"
+        ];
+
         home.packages = [
+          pkgs.gimp
           pkgs.libreoffice
         ];
       };

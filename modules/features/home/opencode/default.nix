@@ -39,6 +39,8 @@
             path = "${config.xdg.configHome}/opencode/agents/homelab-k8s-debugger.md";
           };
         };
+        programs.noctalia.settings.theme.templates.community_ids = [ "opencode" ];
+
         programs.opencode = {
           enable = true;
           tui.theme = self.theme.name;

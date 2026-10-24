@@ -25,6 +25,7 @@
           mode = "0600";
         });
 
+        programs.noctalia.settings.theme.templates.community_ids = [ "fzf" ];
         stylix.targets = {
           k9s.enable = true;
           kubecolor.enable = true;

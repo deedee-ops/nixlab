@@ -13,6 +13,7 @@
           supersonicPkg = pkgs.supersonic;
         in
         {
+          programs.noctalia.settings.theme.templates.community_ids = [ "supersonic" ];
           home.packages = [ supersonicPkg ];
 
           xdg.configFile =
