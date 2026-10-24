@@ -1,21 +1,4 @@
-rec {
-  nixConfig = {
-    substituters = [
-      "https://nix.ajgon.casa"
-    ];
-    trusted-public-keys = [
-      "nix.ajgon.casa-1:qVYJDXgy/BlE5IDjHvjRKb4ArzZKMqP+hBL3UHAGbb4="
-    ];
-    extra-substituters = [ ];
-    extra-trusted-public-keys = [ ];
-    builders-use-substitutes = true;
-    connect-timeout = 5;
-    warn-dirty = false;
-    download-buffer-size = 524288000;
-    # always check for non-existing packages in substituters
-    narinfo-cache-negative-ttl = 0;
-  };
-
+{
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-legacy.url = "github:NixOS/nixpkgs/24.05"; # for work ansible
@@ -56,6 +39,8 @@ rec {
     inputs:
     inputs.flake-parts.lib.mkFlake {
       inherit inputs;
-      specialArgs = { inherit nixConfig; };
+      specialArgs = {
+        nixSettings = import ./nix-settings.nix;
+      };
     } (inputs.import-tree.matchNot ".*/package\.nix" ./modules);
 }

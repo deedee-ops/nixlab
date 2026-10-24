@@ -9,7 +9,6 @@ _: {
           runtimeInputs = [
             pkgs.devenv
             pkgs.git
-            pkgs.jq
             pkgs.nh
           ];
           text = ''

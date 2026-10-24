@@ -35,15 +35,11 @@ if $ci; then
   if [[ -n "$github_token" ]]; then
     echo "access-tokens = github.com=${github_token}" >>~/.config/nix/nix.conf
   fi
-
-  nix eval --json --impure --expr "(import \"$(pwd)/flake.nix\").nixConfig" |
-    jq -r 'to_entries[] | "\(.key) = \(if (.value | type) == "array" then (.value | join(" ")) else .value end)"' \
-      >>~/.config/nix/nix.conf
 fi
 
 if $update; then
   echo "👷 Updating flake"
-  nix --accept-flake-config flake update
+  nix flake update
   echo "✅ All done!"
   echo "👷 Updating devenv"
   devenv update
@@ -56,17 +52,17 @@ fi
 # them explicitly, and do it here rather than at the end: the `nix-collect-garbage
 # -d` below can drop input source trees, since they are not strongly GC-rooted.
 echo "👷 Archiving flake inputs"
-nix --accept-flake-config flake archive --to "$cache_url"
+nix flake archive --to "$cache_url"
 echo "✅ All done!"
 
 # shellcheck disable=SC2044
 for host in $(find modules/hosts -maxdepth 1 -mindepth 1 -type d -exec basename {} \;); do
   echo "👷 Building \"${host}\""
   if $ci; then
-    nix --accept-flake-config build \
+    nix build \
       .#nixosConfigurations."$host".config.system.build.toplevel --out-link "/tmp/result-$host"
   else
-    nh os build ".#${host}" --accept-flake-config --out-link "/tmp/result-$host"
+    nh os build ".#${host}" --out-link "/tmp/result-$host"
   fi
 
   nix copy --to "$cache_url" "/tmp/result-$host"

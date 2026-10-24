@@ -1,4 +1,4 @@
-{ nixConfig, ... }: {
+{ nixSettings, ... }: {
   flake.homeModules.features-home-nix =
     { config, lib, ... }:
     let
@@ -17,7 +17,7 @@
           sopsFile = cfg.sopsSecretsFile;
         });
         nix = {
-          settings = nixConfig;
+          settings = nixSettings;
           extraOptions = ''
             !include ${config.sops.secrets."features/home/shell/nix/accessTokens".path}
           '';

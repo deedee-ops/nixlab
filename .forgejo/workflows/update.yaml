@@ -29,8 +29,9 @@ jobs:
         run: |-
           mkdir -p ~/.config/nix
           echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
+          nix eval --raw --file lib/nix-conf.nix >> ~/.config/nix/nix.conf
 
-          nix --accept-flake-config run .#cache -- \
+          nix run .#cache -- \
           --ci --update-flake --github-token='${{ secrets.GH_TOKEN }}'
         env:
           CI: "true"
