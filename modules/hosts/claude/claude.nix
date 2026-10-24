@@ -169,6 +169,12 @@
               HF_HUB_OFFLINE = lib.mkForce null;
               # updates come from the flake input
               DISABLE_AUTOUPDATER = "1";
+              # the Bash tool otherwise runs the login shell (zsh): no word splitting of `$CMD args` and nomatch
+              # aborting on unquoted globs like `--include=*.nix` keep breaking bash-style commands
+              CLAUDE_CODE_SHELL = lib.getExe pkgs.bashInteractive;
+              # uv defaults to nixpkgs' python, which bypasses nix-ld, so manylinux wheels can't find libz,
+              # libstdc++ etc.; uv-managed builds run through nix-ld and get its libraries
+              UV_PYTHON_PREFERENCE = "only-managed";
               TALOSCONFIG = config.sops.secrets."features/home/claude/configs/talosconfig".path;
             };
 
