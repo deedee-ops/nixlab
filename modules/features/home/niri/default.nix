@@ -445,9 +445,9 @@
                   "Mod+1".focus-workspace = "1-thunderbird";
                   "Mod+2".focus-workspace = "2-obsidian";
                   "Mod+3".focus-workspace = "3-ai-agent";
-                  "Mod+4".focus-workspace = "4-teams";
-                  "Mod+5".focus-workspace = "5-telegram";
-                  "Mod+6".focus-workspace = "6-discord";
+                  "Mod+4".focus-workspace = "4-telegram";
+                  "Mod+5".focus-workspace = "5-discord";
+                  "Mod+6".focus-workspace = "6-teams";
                   "Mod+0".focus-workspace = "x-firefox";
                 };
             })
@@ -464,9 +464,9 @@
                   "1-thunderbird"
                   "2-obsidian"
                   "3-ai-agent"
-                  "4-teams"
-                  "5-telegram"
-                  "6-discord"
+                  "4-telegram"
+                  "5-discord"
+                  "6-teams"
                   "x-firefox"
                 ]
             ))
@@ -566,22 +566,11 @@
                 window-rule = {
                   match = _: {
                     props = {
-                      app-id = "teams-for-linux";
-                    };
-                  };
-                  open-maximized = true;
-                  open-on-workspace = "4-teams";
-                };
-              }
-              {
-                window-rule = {
-                  match = _: {
-                    props = {
                       app-id = "org.telegram.desktop";
                     };
                   };
                   open-maximized = true;
-                  open-on-workspace = "5-telegram";
+                  open-on-workspace = "4-telegram";
                 };
               }
               {
@@ -592,7 +581,18 @@
                     };
                   };
                   open-maximized = true;
-                  open-on-workspace = "6-discord";
+                  open-on-workspace = "5-discord";
+                };
+              }
+              {
+                window-rule = {
+                  match = _: {
+                    props = {
+                      app-id = "teams-for-linux";
+                    };
+                  };
+                  open-maximized = true;
+                  open-on-workspace = "6-teams";
                 };
               }
               {
