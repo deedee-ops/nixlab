@@ -23,6 +23,7 @@
         self.homeModules.features-home-gui
 
         self.homeModules.features-home-dosbox
+        self.homeModules.features-home-frpc
 
         self.homeModules.theme
       ];
