@@ -28,6 +28,10 @@
         };
 
         config = {
+          # Since 6.18.57 acpi/button is a platform driver, so tiny_power_button (also built by nixpkgs) binds the
+          # power button too and sends SIGRTMIN+4 (poweroff) to PID 1 on every notify, including s2idle wakeups.
+          boot.blacklistedKernelModules = [ "tiny_power_button" ];
+
           environment = {
             systemPackages =
               (map (x: x.terminfo) [
