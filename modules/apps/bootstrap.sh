@@ -40,4 +40,15 @@ for i in $(seq 0 $((count - 1))); do
   chmod "$mode" "$dest"
 done
 
-nixos-anywhere --disko-mode disko --extra-files "${temp}" --flake ".#${MACHINE}" "root@${IP}"
+# nixos-anywhere points the installer at the machine's substituters (nix.ajgon.casa), which is signed by the
+# homelab CA the stock installer doesn't trust. Kexec first (no-op if the target already runs an installer),
+# then make the installer's nix use the target host's own CA bundle, then do the actual install.
+cabundle="CA_BUNDLE_${MACHINE}"
+nixos-anywhere --phases kexec --no-use-machine-substituters --flake ".#${MACHINE}" "root@${IP}"
+# installer host keys are ephemeral, nixos-anywhere doesn't check them either
+# shellcheck disable=SC2016 # $HOME must expand on the target
+ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no "root@${IP}" \
+  'mkdir -p "$HOME/.config/nix" && cat > "$HOME/.config/nix/ca-bundle.crt" &&
+   echo "ssl-cert-file = $HOME/.config/nix/ca-bundle.crt" >> "$HOME/.config/nix/nix.conf"' <"${!cabundle}"
+
+nixos-anywhere --phases disko,install,reboot --disko-mode disko --extra-files "${temp}" --flake ".#${MACHINE}" "root@${IP}"
