@@ -203,6 +203,7 @@ _: {
                       type = "filesystem";
                       format = "vfat";
                       mountpoint = "/boot";
+                      mountOptions = [ "umask=0077" ];
                     };
                   };
                   swap = lib.mkIf (cfg.swapSize != null) {
