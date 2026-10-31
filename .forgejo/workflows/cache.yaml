@@ -27,8 +27,7 @@ jobs:
           git fetch --depth=1 origin "${FORGEJO_REF_NAME}"
           git checkout FETCH_HEAD
 
-          nix-env -iA gnused -f '<nixpkgs>' || true
-          sed -i'' 's@enable: true@enable: false@g' devenv.yaml
+          printf 'secretspec:\n  enable: false\n' > devenv.local.yaml
 
       - name: Build and push to cache
         run: |-
@@ -36,7 +35,7 @@ jobs:
           echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
           nix eval --raw --file lib/nix-conf.nix >> ~/.config/nix/nix.conf
 
-          nix run .#cache -- \
-          --ci --github-token='${{ secrets.GH_TOKEN }}'
+          nix run .#cache -- --ci
         env:
           CI: "true"
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
