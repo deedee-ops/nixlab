@@ -5,6 +5,7 @@ set +o nounset
 
 ci=false
 update=false
+github_token="${GH_TOKEN:-}"
 
 # ncps exposes its write routes under /upload and re-signs what it stores with its
 # own key, so pushing needs no credentials -- it is gated on the server by

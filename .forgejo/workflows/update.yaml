@@ -22,8 +22,7 @@ jobs:
         run: |
           git clone "http://x-access-token:${FORGEJO_TOKEN}@${FORGEJO_SERVER_URL#http*://}/${FORGEJO_REPOSITORY}.git" .
 
-          nix-env -iA gnused -f '<nixpkgs>' || true
-          sed -i'' 's@enable: true@enable: false@g' devenv.yaml
+          printf 'secretspec:\n  enable: false\n' > devenv.local.yaml
 
       - name: Update, build and push to cache
         run: |-
@@ -31,18 +30,20 @@ jobs:
           echo 'experimental-features = nix-command flakes' > ~/.config/nix/nix.conf
           nix eval --raw --file lib/nix-conf.nix >> ~/.config/nix/nix.conf
 
-          nix run .#cache -- \
-          --ci --update-flake --github-token='${{ secrets.GH_TOKEN }}'
+          nix run .#cache -- --ci --update-flake
         env:
           CI: "true"
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
       - name: Push back to repo
         run: |
-          sed -i'' 's@enable: false@enable: true@g' devenv.yaml
-
           git config user.name "robodexo2000[bot]"
           git config user.email "robodexo2000@ajgon.casa"
           git config core.hooksPath /dev/null
           git add -A
+          if git diff --cached --quiet; then
+            echo "Nothing to update"
+            exit 0
+          fi
           git commit -m 'chore(deps): lock file maintenance'
           git push origin master
