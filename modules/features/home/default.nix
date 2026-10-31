@@ -2,8 +2,26 @@
 {
   flake.homeModules = {
     features-home =
-      { pkgs, lib, ... }:
       {
+        osConfig ? null,
+        pkgs,
+        lib,
+        ...
+      }:
+      {
+        options.features.home.gpu = lib.mkOption {
+          type = lib.types.nullOr (
+            lib.types.enum [
+              "iHD"
+              "nvidia"
+              "radeon"
+            ]
+          );
+          description = "VA-API driver family of the GPU, enables hardware video acceleration in apps that support it.";
+          default = if osConfig == null then null else osConfig.features.nixos.system.gpu;
+          defaultText = lib.literalExpression "osConfig.features.nixos.system.gpu";
+        };
+
         config = {
           xdg.enable = true;
           programs.noctalia.settings.theme.templates.community_ids = [ "fastfetch" ];

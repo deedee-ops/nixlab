@@ -6,10 +6,6 @@ _: {
     in
     {
       hardware = {
-        bluetooth = {
-          enable = true;
-          powerOnBoot = true;
-        };
         graphics = {
           enable = true;
           extraPackages = [ pkgs.mesa ];
@@ -26,8 +22,6 @@ _: {
         hostName = "liadtop";
       };
 
-      security.rtkit.enable = true;
-
       boot = {
         kernelParams = [ "resume=/dev/disk/by-partlabel/disk-system-swap" ];
         # MT7922 stability: explicit regdomain (world domain limits txpower) and no ASPM
@@ -35,6 +29,11 @@ _: {
           options cfg80211 ieee80211_regdom=PL
           options mt7921e disable_aspm=1
         '';
+      };
+
+      features.nixos.audio = {
+        defaultSink = "alsa_output.pci-0000_04_00.6.HiFi__Speaker__sink";
+        defaultSource = "alsa_input.pci-0000_04_00.6.HiFi__Mic1__source";
       };
 
       systemd.sleep.settings.Sleep = lib.optionalAttrs (lidAction == "suspend-then-hibernate") {
@@ -53,35 +52,6 @@ _: {
         };
 
         upower.enable = true;
-
-        pulseaudio.enable = false;
-        pipewire = {
-          enable = true;
-          alsa.enable = true;
-          alsa.support32Bit = true;
-          pulse.enable = true;
-          wireplumber = {
-            enable = true;
-            extraConfig = {
-              "20-bluetooth" = {
-                "monitor.bluez.rules" = [
-                  {
-                    matches = [ { "device.name" = "~bluez_card.*"; } ];
-                    actions.update-props = {
-                      "bluez5.auto-connect" = "[a2dp_sink a2dp_source]";
-                    };
-                  }
-                ];
-              };
-              "50-default-sink" = {
-                "wireplumber.settings" = {
-                  "default.configured.audio.sink" = "alsa_output.pci-0000_04_00.6.HiFi__Speaker__sink";
-                  "default.configured.audio.source" = "alsa_input.pci-0000_04_00.6.HiFi__Mic1__source";
-                };
-              };
-            };
-          };
-        };
       };
     };
 }

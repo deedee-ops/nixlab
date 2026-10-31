@@ -8,44 +8,18 @@
       ...
     }:
     let
-      trustedRootCertificates = [
-        (builtins.readFile ../../../assets/ca-work.crt)
-        (builtins.readFile ../../../assets/ca-ec384.crt)
-        (builtins.readFile ../../../assets/ca-rsa4096.crt)
-      ];
-
       noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
-      primaryUser = "ajgon";
-      qrcpPort = 55555;
-      homeModules = [
-        self.homeModules.features-home
-        self.homeModules.features-home-console
-        self.homeModules.features-home-gui
-
-        self.homeModules.features-home-dosbox
-        self.homeModules.features-home-frpc
-
-        self.homeModules.theme
-      ];
+      primaryUser = config.features.nixos.user.name;
     in
     {
       imports = [
         self.nixosModules.hardware-zenbook-14
 
-        self.nixosModules.features-nixos-core
-        self.nixosModules.features-nixos-desktop
+        self.nixosModules.hosts-common-desktop
+
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-tailscale
-
-        self.nixosModules.theme
       ];
-
-      sops = {
-        defaultSopsFile = ./secrets.sops.yaml;
-        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      };
-
-      networking.firewall.allowedTCPPorts = [ qrcpPort ];
 
       features = {
         nixos = {
@@ -56,31 +30,7 @@
             systemDiskDevs = [ "/dev/nvme0n1" ];
           };
 
-          docker.username = primaryUser;
-
           grub.mode = "uefi";
-
-          home-manager = {
-            username = primaryUser;
-            modules = homeModules;
-          };
-
-          ssh = {
-            authorizedKeys = {
-              "${primaryUser}" = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
-              ];
-            };
-          };
-
-          system = {
-            inherit trustedRootCertificates;
-          };
-
-          user = {
-            name = primaryUser;
-            extraDirectories = [ "/mnt" ];
-          };
 
           tailscale.acceptRoutes = true;
         };
@@ -105,100 +55,17 @@
         };
 
         features.home = {
-          claude = {
-            defaultContext = builtins.readFile ./claude-context.md;
-            extraMounts = [
-              "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops"
-              # sensitive information
-              "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
-            ];
-            includeDesktop = true;
-          };
-
-          dosbox.savePath = "/home/${primaryUser}/Sync/retrosaves/dosbox-x";
-
-          # .stignore isn't synced, every device needs its own copy
-          syncthing.ignores.workspace = [
-            "(?d).DS_Store"
-            "*.tfvars"
-            "*.tfvars.*"
-          ];
-
-          firefox = {
-            inherit trustedRootCertificates;
-
-            features = [ "radeon" ];
-          };
-
           freerdp.windowsHosts.w10vm = {
             host = "windows.internal";
             username = primaryUser;
           };
 
-          gnupg.pinentryPackage = pkgs.pinentry-qt;
-
-          niri = {
-            displays = [ "eDP-1" ];
-            features = [ "radeon" ];
-            launcher = "vicinae";
-            terminal = "kitty";
-          };
+          niri.displays = [ "eDP-1" ];
 
           noctalia-shell = {
             extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
             extraPlugins = [ "davemhammer/tailscale" ];
           };
-
-          ssh.appendOptions = {
-            settings = {
-              # private
-              "Host git.ajgon.casa" = {
-                ForwardAgent = false;
-                HostName = "git.ajgon.casa";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "git";
-              };
-              mandark = {
-                ForwardAgent = true;
-                HostName = "relay.ajgon.casa";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-              };
-              nas = {
-                ForwardAgent = false;
-                HostName = "nas.internal";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-              };
-              work = {
-                ForwardAgent = false;
-                HostName = "192.168.2.210";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-                StrictHostKeyChecking = false;
-                UserKnownHostsFile = "/dev/null";
-              };
-
-              # public
-              "Host github.com" = {
-                ForwardAgent = false;
-                HostName = "github.com";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "git";
-              };
-            };
-          };
-
-          thunderbird = {
-            inherit trustedRootCertificates;
-          };
-
-          zsh.qrcp.port = qrcpPort;
         };
       };
 

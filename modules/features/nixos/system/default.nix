@@ -14,6 +14,17 @@
       {
         options = {
           features.nixos.system = {
+            gpu = lib.mkOption {
+              type = lib.types.nullOr (
+                lib.types.enum [
+                  "iHD"
+                  "nvidia"
+                  "radeon"
+                ]
+              );
+              description = "VA-API driver family of the GPU, used by home-manager modules (default of `features.home.gpu`).";
+              default = null;
+            };
             extraPackages = lib.mkOption {
               type = lib.types.listOf lib.types.package;
               description = "Extra packages to be installed globally on the system.";

@@ -1,6 +1,8 @@
 _: {
   flake.nixosModules.hardware-zenbook-14 = _: {
     config = {
+      features.nixos.system.gpu = "radeon";
+
       boot = {
         initrd = {
           availableKernelModules = [

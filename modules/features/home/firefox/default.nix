@@ -3,6 +3,7 @@
   flake.homeModules.features-home-firefox =
     {
       config,
+      osConfig ? null,
       pkgs,
       lib,
       ...
@@ -10,10 +11,7 @@
     let
       DoHURI = "@todo if ever doh returns";
       cfg = config.features.home.firefox;
-      isGPU =
-        (builtins.elem "iHD" cfg.features)
-        || (builtins.elem "radeon" cfg.features)
-        || (builtins.elem "nvidia" cfg.features);
+      inherit (config.features.home) gpu;
       firefoxPkg = config.programs.firefox.finalPackage;
 
       addons = inputs.firefox-addons.packages."${pkgs.stdenv.hostPlatform.system}";
@@ -32,10 +30,10 @@
         exec env MOZ_APP_REMOTINGNAME=youtube ${lib.getExe firefoxPkg} -P youtube --name youtube "$url"
       '';
       baseSettings =
-        lib.optionalAttrs isGPU {
+        lib.optionalAttrs (gpu != null) {
           # hardware accelerated video decoding
           "gfx.webrender.all" = true;
-          "media.av1.enabled" = !(builtins.elem "radeon" cfg.features);
+          "media.av1.enabled" = gpu != "radeon";
           "media.ffmpeg.vaapi.enabled" = true;
           "media.hardware-video-decoding.force-enabled" = true;
           "media.rdd-ffmpeg.enabled" = true;
@@ -196,19 +194,17 @@
           type = lib.types.listOf (
             lib.types.enum [
               "doh"
-              "iHD"
-              "nvidia"
-              "radeon"
             ]
           );
-          description = "Extra features enabled in niri configs";
+          description = "Extra features enabled in firefox configs";
           default = [ ];
         };
 
         trustedRootCertificates = lib.mkOption {
           type = lib.types.listOf lib.types.str;
           description = "A list of trusted root certificates in PEM format.";
-          default = [ ];
+          default = if osConfig == null then [ ] else osConfig.security.pki.certificates;
+          defaultText = lib.literalExpression "osConfig.security.pki.certificates";
         };
       };
 
@@ -359,7 +355,7 @@
               run ${pkgs.xdg-utils}/bin/xdg-mime default youtube-handler.desktop x-scheme-handler/ytp
             '';
           };
-          packages = [ youtubeHandler ] ++ lib.optionals isGPU [ pkgs.ffmpeg-full ];
+          packages = [ youtubeHandler ] ++ lib.optionals (gpu != null) [ pkgs.ffmpeg-full ];
 
           sessionVariables = {
             DEFAULT_BROWSER = "${lib.getExe firefoxPkg}";

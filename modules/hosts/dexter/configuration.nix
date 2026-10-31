@@ -1,44 +1,17 @@
 { self, ... }:
 {
   flake.nixosModules.hosts-dexter-configuration =
-    { pkgs, ... }:
-    let
-      trustedRootCertificates = [
-        (builtins.readFile ../../../assets/ca-work.crt)
-        (builtins.readFile ../../../assets/ca-ec384.crt)
-        (builtins.readFile ../../../assets/ca-rsa4096.crt)
-      ];
-
-      primaryUser = "ajgon";
-      qrcpPort = 55555;
-      homeModules = [
-        self.homeModules.features-home
-        self.homeModules.features-home-console
-        self.homeModules.features-home-gui
-
-        self.homeModules.features-home-dosbox
-        self.homeModules.features-home-frpc
-
-        self.homeModules.theme
-      ];
-    in
+    { config, ... }:
     {
       imports = [
         self.nixosModules.hardware-ms-01
 
-        self.nixosModules.features-nixos-core
-        self.nixosModules.features-nixos-desktop
+        self.nixosModules.hosts-common-desktop
+
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-vms
-
-        self.nixosModules.theme
       ];
-
-      sops = {
-        defaultSopsFile = ./secrets.sops.yaml;
-        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-      };
 
       features = {
         nixos = {
@@ -49,23 +22,13 @@
             systemDiskDevs = [ "/dev/disk/by-id/nvme-KINGSTON_OM8PGP41024Q-A0_50026B7382DA5EF6" ];
           };
 
-          docker.username = primaryUser;
-
           grub = {
             mode = "uefi";
             efiInstallAsRemovable = true;
           };
 
-          home-manager = {
-            username = primaryUser;
-            modules = homeModules;
-          };
-
           networking = {
-            firewall = {
-              enable = true;
-              openPorts = [ qrcpPort ];
-            };
+            firewall.enable = true;
             hostname = "dexter";
             mainInterface = {
               name = "enp89s0";
@@ -74,25 +37,8 @@
             };
           };
 
-          ssh = {
-            authorizedKeys = {
-              "${primaryUser}" = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
-              ];
-            };
-          };
-
-          system = {
-            inherit trustedRootCertificates;
-          };
-
-          user = {
-            name = primaryUser;
-            extraDirectories = [ "/mnt" ];
-          };
-
           vms = {
-            username = primaryUser;
+            username = config.features.nixos.user.name;
             dataFS = {
               device = "/dev/disk/by-id/nvme-Patriot_Scorch_M2_288E079211DE06830897";
               fsType = "xfs";
@@ -101,96 +47,13 @@
         };
       };
 
-      home-manager.users."${primaryUser}".features.home = {
-        claude = {
-          defaultContext = builtins.readFile ./claude-context.md;
-          extraMounts = [
-            "/home/${primaryUser}/Projects/home-ops:/home/ubuntu/home-ops"
-            # sensitive information
-            "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
-          ];
-          includeDesktop = true;
-        };
-
-        dosbox.savePath = "/home/${primaryUser}/Sync/retrosaves/dosbox-x";
-
-        # .stignore isn't synced, every device needs its own copy
-        syncthing.ignores.workspace = [
-          "(?d).DS_Store"
-          "*.tfvars"
-          "*.tfvars.*"
+      home-manager.users.${config.features.nixos.user.name}.features.home = {
+        niri.displays = [
+          "DP-1"
+          "HDMI-A-1"
         ];
 
-        firefox = {
-          inherit trustedRootCertificates;
-
-          features = [ "iHD" ];
-        };
-
-        gnupg.pinentryPackage = pkgs.pinentry-qt;
-
-        niri = {
-          features = [ "iHD" ];
-          displays = [
-            "DP-1"
-            "HDMI-A-1"
-          ];
-          launcher = "vicinae";
-          terminal = "kitty";
-        };
-
         noctalia-shell.extraSettings = builtins.fromTOML (builtins.readFile ./noctalia.toml);
-
-        ssh.appendOptions = {
-          settings = {
-            # private
-            "Host git.ajgon.casa" = {
-              ForwardAgent = false;
-              HostName = "git.ajgon.casa";
-              IdentitiesOnly = true;
-              Port = 22;
-              User = "git";
-            };
-            mandark = {
-              ForwardAgent = true;
-              HostName = "relay.ajgon.casa";
-              IdentitiesOnly = true;
-              Port = 22;
-              User = "ajgon";
-            };
-            nas = {
-              ForwardAgent = false;
-              HostName = "nas.internal";
-              IdentitiesOnly = true;
-              Port = 22;
-              User = "ajgon";
-            };
-            work = {
-              ForwardAgent = false;
-              HostName = "192.168.2.210";
-              IdentitiesOnly = true;
-              Port = 22;
-              User = "ajgon";
-              StrictHostKeyChecking = false;
-              UserKnownHostsFile = "/dev/null";
-            };
-
-            # public
-            "Host github.com" = {
-              ForwardAgent = false;
-              HostName = "github.com";
-              IdentitiesOnly = true;
-              Port = 22;
-              User = "git";
-            };
-          };
-        };
-
-        thunderbird = {
-          inherit trustedRootCertificates;
-        };
-
-        zsh.qrcp.port = qrcpPort;
       };
 
       system.stateVersion = "25.11";

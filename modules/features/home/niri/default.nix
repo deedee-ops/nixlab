@@ -42,17 +42,6 @@
           default = "kitty";
         };
 
-        features = lib.mkOption {
-          type = lib.types.listOf (
-            lib.types.enum [
-              "radeon"
-              "iHD"
-              "nvidia"
-            ]
-          );
-          description = "Extra features enabled in niri configs";
-          default = [ ];
-        };
       };
       config = {
         programs = {
@@ -138,17 +127,17 @@
                 SDL_VIDEODRIVER = "wayland,x11";
                 _JAVA_AWT_WM_NONREPARENTING = "1";
               }
-              // lib.optionalAttrs (builtins.elem "radeon" cfg.features) {
+              // lib.optionalAttrs (config.features.home.gpu == "radeon") {
                 LIBVA_DRIVERS_PATH = "${pkgs.mesa}/lib/dri/";
                 LIBVA_DRIVER_NAME = "radeonsi";
                 MOZ_DISABLE_RDD_SANDBOX = "1";
               }
-              // lib.optionalAttrs (builtins.elem "iHD" cfg.features) {
+              // lib.optionalAttrs (config.features.home.gpu == "iHD") {
                 LIBVA_DRIVERS_PATH = "${pkgs.intel-media-driver}/lib/dri/";
                 LIBVA_DRIVER_NAME = "iHD";
                 MOZ_DISABLE_RDD_SANDBOX = "1";
               }
-              // lib.optionalAttrs (builtins.elem "nvidia" cfg.features) {
+              // lib.optionalAttrs (config.features.home.gpu == "nvidia") {
                 LIBVA_DRIVERS_PATH = "${pkgs.nvidia-vaapi-driver}/lib/dri/";
                 LIBVA_DRIVER_NAME = "nvidia";
                 MOZ_DISABLE_RDD_SANDBOX = "1";
