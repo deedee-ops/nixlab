@@ -746,6 +746,7 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "vicinae": "vicinae",
+        "wallpapers": "wallpapers",
         "wrapper-modules": "wrapper-modules"
       }
     },
@@ -1040,6 +1041,23 @@
         "owner": "vicinaehq",
         "repo": "vicinae",
         "type": "github"
+      }
+    },
+    "wallpapers": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793464112,
+        "narHash": "sha256-1HIMzB/oO8W1rgO798zC7vF61Eys/xM3wNfgjwH4GGI=",
+        "ref": "refs/heads/master",
+        "rev": "dbbc168a79326b9542cc4ff41fd03ebfe16557d5",
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/ajgon/wallpapers"
+      },
+      "original": {
+        "shallow": true,
+        "type": "git",
+        "url": "https://github.com/ajgon/wallpapers"
       }
     },
     "wrapper-modules": {

@@ -65,6 +65,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vicinae.url = "github:vicinaehq/vicinae";
+    wallpapers = {
+      url = "git+https://github.com/ajgon/wallpapers?shallow=1";
+      flake = false;
+    };
   };
 
   outputs =

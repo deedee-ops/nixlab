@@ -44,7 +44,7 @@
               };
 
               wallpaper = {
-                path = "${../../../../assets/wallpapers/sddm.jpg}";
+                path = "${inputs.wallpapers}/sddm.jpg";
                 fill_mode = "crop";
               };
             };
