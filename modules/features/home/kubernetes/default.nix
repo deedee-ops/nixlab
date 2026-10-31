@@ -9,6 +9,21 @@
     }:
     let
       cfg = config.features.home.kubernetes;
+      krewCfg = config.programs.krewfile;
+      krewfileSync = pkgs.writeShellScript "krewfile-sync" ''
+        set -e
+        export KREW_ROOT="${krewCfg.krewRoot}"
+        export PATH="$KREW_ROOT/bin:${lib.makeBinPath [ pkgs.git ]}:$PATH"
+        ${lib.getExe pkgs.krew} update
+        ${lib.getExe' inputs.krewfile.packages.${pkgs.stdenv.hostPlatform.system}.default "krewfile"} \
+          -command ${lib.getExe pkgs.krew} -file ${
+            pkgs.writeText "krewfile" (
+              lib.concatStringsSep "\n" (lib.mapAttrsToList (name: url: "index ${name} ${url}") krewCfg.indexes)
+              + "\n\n"
+              + lib.concatStringsSep "\n" krewCfg.plugins
+            )
+          } ${lib.optionalString krewCfg.upgrade "-upgrade"}
+      '';
     in
     {
       options.features.home.kubernetes = {
@@ -38,29 +53,8 @@
             pkgs.stern
           ];
 
-          activation =
-            let
-              cfg = config.programs.krewfile;
-              krewfilePkg = inputs.krewfile.packages."${pkgs.stdenv.hostPlatform.system}".default;
-              krewfileContent = pkgs.writeText "krewfile" (
-                (builtins.concatStringsSep "\n" (
-                  map (key: "index ${key} ${builtins.getAttr key cfg.indexes}") (builtins.attrNames cfg.indexes)
-                ))
-                + "\n\n"
-                + (builtins.concatStringsSep "\n" cfg.plugins)
-              );
-              args = if cfg.upgrade then "-upgrade" else "";
-            in
-            {
-              krew = lib.mkForce (
-                lib.hm.dag.entryAfter [ "installPackages" ] ''
-                  export KREW_ROOT="${config.xdg.configHome}/krew";
-                  export PATH="$KREW_ROOT/bin:$PATH"
-                  run ${lib.getExe' krewfilePkg "krewfile"} -command ${lib.getExe pkgs.krew} -file ${krewfileContent} ${args} || true
-                  run ${pkgs.krew}/bin/krew update || true
-                ''
-              );
-            };
+          # plugin sync needs the network, so it runs from the krewfile units below instead
+          activation.krew = lib.mkForce (lib.hm.dag.entryAfter [ "installPackages" ] "");
 
           sessionVariables = {
             KREW_ROOT = "${config.xdg.configHome}/krew";
@@ -123,9 +117,6 @@
           };
 
           zsh = {
-            initContent = lib.mkOrder 1000 ''
-              source <(${lib.getExe pkgs.kubectl} completion zsh)
-            '';
             plugins = [
               {
                 name = "kubernetes";
@@ -135,18 +126,55 @@
           };
         };
 
-        systemd.user.services.init-kubeconfig = lib.mkHomeActivationAfterSops {
-          name = "init-kubeconfig";
-          script = ''
-            # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
-            # it also can't be symlinked, because sops-nix daemon periodically restores it
+        systemd.user = {
+          services = {
+            krewfile = {
+              Unit = {
+                Description = "Sync krew indexes and plugins with the krewfile";
+                StartLimitIntervalSec = 3600;
+                StartLimitBurst = 5;
+              };
+              Service = {
+                Type = "oneshot";
+                ExecStart = "${krewfileSync}";
+                Restart = "on-failure";
+                RestartSec = 300;
+              };
+            };
+            init-kubeconfig = lib.mkHomeActivationAfterSops {
+              name = "init-kubeconfig";
+              script = ''
+                # kubens and kubectx write lock files alongside config, so using kubeconfig directly from secrets path won't work
+                # it also can't be symlinked, because sops-nix daemon periodically restores it
 
-            mkdir -p "${config.xdg.configHome}/kube"
-            rm -rf "${config.xdg.configHome}/kube/config" || true
-            cp "${
-              config.sops.secrets."features/home/kubernetes/kubeconfig".path
-            }" "${config.xdg.configHome}/kube/config"
-          '';
+                mkdir -p "${config.xdg.configHome}/kube"
+                rm -rf "${config.xdg.configHome}/kube/config" || true
+                cp "${
+                  config.sops.secrets."features/home/kubernetes/kubeconfig".path
+                }" "${config.xdg.configHome}/kube/config"
+              '';
+            };
+            # first install only, afterwards the weekly timer keeps plugins current
+            krewfile-init = {
+              Unit = {
+                Description = "Install krew plugins from the krewfile";
+                ConditionPathExists = "!${krewCfg.krewRoot}/receipts";
+              };
+              Service = {
+                Type = "oneshot";
+                ExecStart = "${krewfileSync}";
+              };
+              Install.WantedBy = [ "default.target" ];
+            };
+          };
+          timers.krewfile = {
+            Timer = {
+              OnCalendar = "weekly";
+              Persistent = true;
+              RandomizedDelaySec = 3600;
+            };
+            Install.WantedBy = [ "timers.target" ];
+          };
         };
       };
     };
