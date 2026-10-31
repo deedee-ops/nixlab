@@ -23,6 +23,11 @@ _: {
           default = null;
           description = "The 32-bit host ID of the machine, formatted as 8 hexadecimal characters. To ensure when using ZFS that a pool isn’t imported accidentally on a wrong machine.";
         };
+        legacyThinPool = mkOption {
+          type = types.bool;
+          default = false;
+          description = "Keep the old ext4 layout (overprovisioned thin LV on a thin pool) for hosts installed with it. Disable before reinstalling the host.";
+        };
         swapSize = mkOption {
           type = types.nullOr types.str;
           default = null;
@@ -317,15 +322,8 @@ _: {
           lvm_vg = {
             rpool = {
               type = "lvm_vg";
-              lvs = {
-                thinpool = {
-                  size = "100%FREE";
-                  lvm_type = "thin-pool";
-                };
-                persist = {
-                  size = "1T"; # overprovision in most cases
-                  lvm_type = "thinlv";
-                  pool = "thinpool";
+              lvs =
+                let
                   content = {
                     type = "filesystem";
                     format = "ext4";
@@ -335,8 +333,27 @@ _: {
                       "noatime"
                     ];
                   };
-                };
-              };
+                in
+                if cfg.legacyThinPool then
+                  {
+                    thinpool = {
+                      size = "100%FREE";
+                      lvm_type = "thin-pool";
+                    };
+                    persist = {
+                      size = "1T"; # overprovision in most cases
+                      lvm_type = "thinlv";
+                      pool = "thinpool";
+                      inherit content;
+                    };
+                  }
+                else
+                  {
+                    persist = {
+                      size = "100%FREE";
+                      inherit content;
+                    };
+                  };
             };
           };
         }
