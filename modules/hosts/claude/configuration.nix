@@ -47,6 +47,7 @@
           disks = {
             enable = true;
             filesystem = "ext4";
+            legacyThinPool = true; # TODO: drop on reinstall
             swapSize = "8G";
             systemDiskDevs = [ "/dev/nvme0n1" ];
           };
