@@ -17,7 +17,7 @@ creation_rules:
       - age:
           - *nixlab
           - *homeManager
-  - path_regex: dexter/.*\.sops\.yaml$
+  - path_regex: hosts/dexter/.*\.sops\.yaml$
     key_groups:
       - age:
           - *nixlab
@@ -27,17 +27,17 @@ creation_rules:
       - age:
           - *nixlab
           - *claude
-  - path_regex: liadtop/.*\.sops\.yaml$
+  - path_regex: hosts/liadtop/.*\.sops\.yaml$
     key_groups:
       - age:
           - *nixlab
           - *liadtop
-  - path_regex: mandark/.*\.sops\.yaml$
+  - path_regex: hosts/mandark/.*\.sops\.yaml$
     key_groups:
       - age:
           - *nixlab
           - *mandark
-  - path_regex: work/.*\.sops\.yaml$
+  - path_regex: hosts/work/.*\.sops\.yaml$
     key_groups:
       - age:
           - *nixlab
