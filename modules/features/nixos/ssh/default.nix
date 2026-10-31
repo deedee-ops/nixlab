@@ -36,12 +36,9 @@ _: {
         # programs.ssh.startAgent = true;
 
         # pass ssh-agent socket when using sudo
-        security.sudo = {
-          execWheelOnly = true;
-          extraConfig = lib.mkAfter ''
-            Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
-          '';
-        };
+        security.sudo.extraConfig = lib.mkAfter ''
+          Defaults:root,%wheel env_keep+=SSH_AUTH_SOCK
+        '';
 
         users.users = builtins.mapAttrs (_: value: {
           openssh = {
