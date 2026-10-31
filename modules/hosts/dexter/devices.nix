@@ -3,13 +3,7 @@ _: {
     { pkgs, ... }:
     {
       environment.systemPackages = [ pkgs.ddcutil ];
-      hardware = {
-        i2c.enable = true;
-        graphics = {
-          enable = true;
-          extraPackages = [ pkgs.intel-media-driver ];
-        };
-      };
+      hardware.i2c.enable = true;
 
       # igc defaults to a 256-descriptor RX ring, which overflows on 2.5G bursts (rx_fifo_errors)
       systemd.network.links."40-enp89s0".linkConfig.RxBufferSize = 4096;
