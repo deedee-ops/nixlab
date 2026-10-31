@@ -68,79 +68,81 @@
           user.extraDirectories = [ "/mnt" ];
         };
 
-        home-manager.users.${user}.features.home = {
-          claude = {
-            defaultContext = builtins.readFile ./claude-context-desktop.md;
-            extraMounts = [
-              "/home/${user}/Projects/home-ops:/home/ubuntu/home-ops"
-              # sensitive information
-              "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
+        home-manager.users.${user} = {
+          features.home = {
+            claude = {
+              defaultContext = builtins.readFile ./claude-context-desktop.md;
+              extraMounts = [
+                "/home/${user}/Projects/home-ops:/home/ubuntu/home-ops"
+                # sensitive information
+                "/etc/NIXOS:/home/ubuntu/home-ops/opentofu/terraform.tfvars:ro"
+              ];
+              includeDesktop = true;
+            };
+
+            dosbox.savePath = "/home/${user}/Sync/retrosaves/dosbox-x";
+
+            # .stignore isn't synced, every device needs its own copy
+            syncthing.ignores.workspace = [
+              "(?d).DS_Store"
+              "*.tfvars"
+              "*.tfvars.*"
             ];
-            includeDesktop = true;
+
+            gnupg.pinentryPackage = pkgs.pinentry-qt;
+
+            niri = {
+              launcher = "vicinae";
+              terminal = "kitty";
+            };
+
+            zsh.qrcp.port = qrcpPort;
           };
 
-          dosbox.savePath = "/home/${user}/Sync/retrosaves/dosbox-x";
+          home.shellAliases.w = "ssh work";
 
-          # .stignore isn't synced, every device needs its own copy
-          syncthing.ignores.workspace = [
-            "(?d).DS_Store"
-            "*.tfvars"
-            "*.tfvars.*"
-          ];
+          programs.ssh.settings = {
+            # private
+            "git.ajgon.casa" = {
+              ForwardAgent = false;
+              HostName = "git.ajgon.casa";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "git";
+            };
+            mandark = {
+              ForwardAgent = true;
+              HostName = "relay.ajgon.casa";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
+            };
+            nas = {
+              ForwardAgent = false;
+              HostName = "nas.internal";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
+            };
+            work = {
+              ForwardAgent = false;
+              HostName = "192.168.2.210";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "ajgon";
+              StrictHostKeyChecking = false;
+              UserKnownHostsFile = "/dev/null";
+            };
 
-          gnupg.pinentryPackage = pkgs.pinentry-qt;
-
-          niri = {
-            launcher = "vicinae";
-            terminal = "kitty";
-          };
-
-          ssh.appendOptions = {
-            settings = {
-              # private
-              "Host git.ajgon.casa" = {
-                ForwardAgent = false;
-                HostName = "git.ajgon.casa";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "git";
-              };
-              mandark = {
-                ForwardAgent = true;
-                HostName = "relay.ajgon.casa";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-              };
-              nas = {
-                ForwardAgent = false;
-                HostName = "nas.internal";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-              };
-              work = {
-                ForwardAgent = false;
-                HostName = "192.168.2.210";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "ajgon";
-                StrictHostKeyChecking = false;
-                UserKnownHostsFile = "/dev/null";
-              };
-
-              # public
-              "Host github.com" = {
-                ForwardAgent = false;
-                HostName = "github.com";
-                IdentitiesOnly = true;
-                Port = 22;
-                User = "git";
-              };
+            # public
+            "github.com" = {
+              ForwardAgent = false;
+              HostName = "github.com";
+              IdentitiesOnly = true;
+              Port = 22;
+              User = "git";
             };
           };
-
-          zsh.qrcp.port = qrcpPort;
         };
       };
   };
