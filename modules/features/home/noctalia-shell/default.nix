@@ -1,4 +1,4 @@
-{ self, ... }:
+{ self, inputs, ... }:
 {
   flake.homeModules.features-home-noctalia-shell =
     {
@@ -159,7 +159,7 @@
             };
 
             wallpaper = {
-              directory = "${../../../../assets/wallpapers}";
+              directory = "${inputs.wallpapers}";
               per_monitor_directories = true;
               transition = [ "honeycomb" ];
               transition_duration = 1500;
