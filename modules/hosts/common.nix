@@ -99,6 +99,8 @@
             zsh.qrcp.port = qrcpPort;
           };
 
+          home.shellAliases.w = "ssh work";
+
           programs.ssh.settings = {
             # private
             "git.ajgon.casa" = {

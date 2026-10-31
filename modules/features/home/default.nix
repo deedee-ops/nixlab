@@ -55,8 +55,6 @@
               ls = "ls --color";
 
               ag = "rg"; # old habits die hard
-
-              w = "ssh work";
             }
             // lib.optionalAttrs pkgs.stdenv.isLinux {
               # check sync process (usually when unmounting USBs)
