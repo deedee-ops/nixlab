@@ -3,4 +3,3 @@
 *.yaml linguist-detectable=true
 *.yaml linguist-language=YAML
 *.sops.* diff=sopsdiffer
-*.glsl linguist-detectable=false

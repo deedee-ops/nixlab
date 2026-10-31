@@ -39,9 +39,6 @@
 
   git-hooks = {
     excludes = [
-      "\\.glsl$"
-      "mpv.*\\.hook$"
-      "\\.patch$"
       "\\.lock$"
     ];
 
@@ -79,7 +76,6 @@
         excludes = [
           ".*\.zsh"
           ".envrc"
-          ".*/nixos-infect"
         ];
       };
       stylua.enable = true;
