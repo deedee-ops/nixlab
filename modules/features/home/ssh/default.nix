@@ -11,11 +11,6 @@ _: {
     in
     {
       options.features.home.ssh = {
-        appendOptions = lib.mkOption {
-          type = lib.types.attrs;
-          default = { };
-          description = "Extra custom options which will be merged with programs.ssh.";
-        };
         sopsSecretsFile = lib.mkOption {
           type = lib.types.path;
           description = "Path to sopsfile containing secrets";
@@ -29,7 +24,7 @@ _: {
         });
 
         programs = {
-          ssh = lib.attrsets.recursiveUpdate {
+          ssh = {
             enable = true;
             enableDefaultConfig = false;
             package = pkgs.symlinkJoin {
@@ -59,7 +54,7 @@ _: {
                 UserKnownHostsFile = "${config.xdg.stateHome}/ssh/known_hosts";
               };
             };
-          } cfg.appendOptions;
+          };
         };
 
         services.ssh-agent = {

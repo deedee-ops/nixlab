@@ -101,23 +101,7 @@
             sopsSecretsFile = ./secrets.sops.yaml;
           };
 
-          ssh = {
-            sopsSecretsFile = ./secrets.sops.yaml;
-
-            appendOptions = {
-              settings."Host *" = {
-                ForwardAgent = false;
-                IdentitiesOnly = true;
-                Port = 22;
-                StrictHostKeyChecking = "accept-new";
-                SetEnv = {
-                  TERM = "xterm-256color";
-                };
-                HostkeyAlgorithms = "+ssh-rsa";
-                PubkeyAcceptedAlgorithms = "+ssh-rsa";
-              };
-            };
-          };
+          ssh.sopsSecretsFile = ./secrets.sops.yaml;
 
           zsh = {
             promptColor = "blue";
@@ -125,6 +109,18 @@
               source ${config.sops.secrets."features/home/zsh/extraConfig".path}
             '';
           };
+        };
+
+        programs.ssh.settings."Host *" = {
+          ForwardAgent = false;
+          IdentitiesOnly = true;
+          Port = 22;
+          StrictHostKeyChecking = "accept-new";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
+          HostkeyAlgorithms = "+ssh-rsa";
+          PubkeyAcceptedAlgorithms = "+ssh-rsa";
         };
       };
 
