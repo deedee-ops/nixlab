@@ -57,7 +57,13 @@
             };
           };
 
-          home.packages = lib.optionals cfg.includeDesktop [ claudePkg ];
+          home = {
+            activation.claude-config = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              run ln -sfT ${config.home.homeDirectory}/Sync/sync/claude ${config.xdg.configHome}/claude || true
+            '';
+
+            packages = lib.optionals cfg.includeDesktop [ claudePkg ];
+          };
 
           systemd.user.services = lib.optionalAttrs cfg.includeDesktop (
             lib.mkGuiStartupService { package = claudePkg; }
