@@ -2,12 +2,7 @@
 {
   flake.homeModules = {
     features-home =
-      {
-        config,
-        pkgs,
-        lib,
-        ...
-      }:
+      { pkgs, lib, ... }:
       {
         config = {
           xdg.enable = true;
@@ -15,9 +10,6 @@
 
           home = {
             preferXdgDirectories = true;
-            activation.init-paths = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              ln -s ${config.home.homeDirectory}/Sync/sync/claude/ ${config.xdg.configHome}/claude || true
-            '';
 
             packages = [
               pkgs.fastfetch
