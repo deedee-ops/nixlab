@@ -7,57 +7,31 @@
       ...
     }:
     let
-      trustedRootCertificates = [
-        (builtins.readFile ../../../assets/ca-ec384.crt)
-        (builtins.readFile ../../../assets/ca-rsa4096.crt)
-        (builtins.readFile ../../../assets/ca-work.crt)
-      ];
-
-      primaryUser = "ajgon";
-      homeModules = [
-        self.homeModules.features-home
-        self.homeModules.features-home-console
-
-        self.homeModules.features-home-zellij
-
-        self.homeModules.theme
-      ];
+      primaryUser = config.features.nixos.user.name;
     in
     {
       imports = [
         self.nixosModules.hardware-lxc-container
 
-        self.nixosModules.features-nixos-core
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-openconnect
         self.nixosModules.features-nixos-squid
         self.nixosModules.features-nixos-tailscale
-
-        self.nixosModules.theme
       ];
 
-      sops = {
-        defaultSopsFile = ./secrets.sops.yaml;
-
-        # Use `/secrets` when using `build-vm`, use `/etc/ssh` when using external VM
-        # age.sshKeyPaths = [ "/secrets/ssh_host_ed25519_key" ];
-        age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-        secrets."features/home/zsh/extraConfig" = {
-          inherit (config.users.users."${primaryUser}") group;
-          owner = config.users.users."${primaryUser}".name;
-          mode = "0400";
-        };
+      sops.secrets."features/home/zsh/extraConfig" = {
+        inherit (config.users.users."${primaryUser}") group;
+        owner = config.users.users."${primaryUser}".name;
+        mode = "0400";
       };
 
       features = {
         nixos = {
-          docker.username = primaryUser;
+          home-manager.modules = [
+            self.homeModules.features-home-console
 
-          home-manager = {
-            username = primaryUser;
-            modules = homeModules;
-          };
+            self.homeModules.features-home-zellij
+          ];
 
           networking = {
             firewall.enable = false;
@@ -70,16 +44,8 @@
             sopsSecretsFile = ./secrets.sops.yaml;
           };
 
-          ssh = {
-            authorizedKeys = {
-              "${primaryUser}" = [
-                "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOrBLT88ZZ+lO8hHcj+4jqtor79OLhQZcDWF98kkWkfn personal"
-              ];
-            };
-          };
-
           system = {
-            inherit trustedRootCertificates;
+            trustedRootCertificates = [ (builtins.readFile ../../../assets/ca-work.crt) ];
 
             extraPackages = [
               pkgs.sshpass
@@ -102,10 +68,6 @@
           # don't let tailnet DNS interfere with the corporate VPN. No accepted routes:
           # this box sits in 192.168.2.0/24 itself, the NAS routes would hijack its own LAN.
           tailscale.acceptDNS = false;
-
-          user = {
-            name = primaryUser;
-          };
         };
       };
 

@@ -2,6 +2,7 @@ _: {
   flake.homeModules.features-home-thunderbird =
     {
       config,
+      osConfig ? null,
       pkgs,
       lib,
       ...
@@ -24,7 +25,8 @@ _: {
         trustedRootCertificates = lib.mkOption {
           type = lib.types.listOf lib.types.str;
           description = "A list of trusted root certificates in PEM format.";
-          default = [ ];
+          default = if osConfig == null then [ ] else osConfig.security.pki.certificates;
+          defaultText = lib.literalExpression "osConfig.security.pki.certificates";
         };
       };
 

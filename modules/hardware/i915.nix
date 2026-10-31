@@ -3,6 +3,8 @@ _: {
     { pkgs, ... }:
     {
       config = {
+        features.nixos.system.gpu = "iHD";
+
         hardware.graphics = {
           enable = true;
           extraPackages = [
