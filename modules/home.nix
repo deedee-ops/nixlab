@@ -1,6 +1,7 @@
 {
   self,
   inputs,
+  config,
   ...
 }:
 let
@@ -18,14 +19,9 @@ let
     self.homeModules.theme
   ];
 in
-rec {
+{
   imports = [
     inputs.home-manager.flakeModules.home-manager
-  ];
-
-  systems = [
-    "x86_64-linux"
-    "aarch64-linux"
   ];
 
   # to apply on non-nixos
@@ -57,7 +53,8 @@ rec {
             {
               home = {
                 username = primaryUser;
-                homeDirectory = "/home/${primaryUser}";
+                homeDirectory =
+                  if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${primaryUser}" else "/home/${primaryUser}";
                 stateVersion = "26.05";
               };
 
@@ -87,6 +84,6 @@ rec {
       map (system: {
         name = "ajgon@${system}";
         value = mkHome system;
-      }) systems
+      }) config.systems
     );
 }

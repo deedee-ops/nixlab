@@ -58,7 +58,7 @@
 
               w = "ssh work";
             }
-            // lib.optionalAttrs pkgs.stdenv.isLinux {
+            // lib.optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
               # check sync process (usually when unmounting USBs)
               syncstatus = "watch -d grep -e Dirty: -e Writeback: /proc/meminfo";
             };

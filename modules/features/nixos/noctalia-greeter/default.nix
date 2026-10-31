@@ -24,22 +24,23 @@
               theme_mode = "dark";
               font_family = "sans-serif";
 
-              palette = {
-                primary = "#cba6f7";
+              # base16 has no crust (#11111b) and no matches for the two greys, those stay literal
+              palette = with config.lib.stylix.colors.withHashtag; {
+                primary = base0E;
                 on_primary = "#11111b";
-                secondary = "#fab387";
+                secondary = base09;
                 on_secondary = "#11111b";
-                tertiary = "#94e2d5";
+                tertiary = base0C;
                 on_tertiary = "#11111b";
-                error = "#f38ba8";
+                error = base08;
                 on_error = "#11111b";
-                surface = "#1e1e2e";
-                on_surface = "#cdd6f4";
-                surface_variant = "#313244";
+                surface = base00;
+                on_surface = base05;
+                surface_variant = base01;
                 on_surface_variant = "#a3b4eb";
                 outline = "#4c4f69";
                 shadow = "#11111b";
-                hover = "#94e2d5";
+                hover = base0C;
                 on_hover = "#11111b";
               };
 

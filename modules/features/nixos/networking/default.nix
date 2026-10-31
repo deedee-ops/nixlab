@@ -106,14 +106,6 @@ _: {
 
       config = {
         assertions = [
-          # TODO:
-          # {
-          #   assertion =
-          #     (!cfg.mainInterface.bridge)
-          #     || (!config.mySystemApps.incus.enable)
-          #     || (cfg.mainInterface.bridgeMAC != null);
-          #   message = "Incus tends to break bridge MAC address, when in auto mode - thus when enabled, mySystem.macInterface.bridgeMAC is required.";
-          # }
           {
             assertion = cfg.secondaryInterface == null || cfg.customNetworking == null;
             message = "secondaryInterface is ignored, when customNetworking is set";

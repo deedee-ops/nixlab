@@ -22,8 +22,6 @@ _: {
       };
 
       config = {
-        boot.kernelModules = [ "kvm-intel" ];
-
         virtualisation = {
           libvirtd.enable = true;
           spiceUSBRedirection.enable = true;

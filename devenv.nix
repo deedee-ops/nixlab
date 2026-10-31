@@ -12,8 +12,8 @@
   };
 
   packages = [
-    inputs.deploy-rs.packages."${pkgs.stdenv.system}".default
-    inputs.nixos-anywhere.packages."${pkgs.stdenv.system}".default
+    inputs.deploy-rs.packages."${pkgs.stdenv.hostPlatform.system}".default
+    inputs.nixos-anywhere.packages."${pkgs.stdenv.hostPlatform.system}".default
 
     pkgs.nh
     pkgs.nix-inspect
@@ -39,9 +39,6 @@
 
   git-hooks = {
     excludes = [
-      "\\.glsl$"
-      "mpv.*\\.hook$"
-      "\\.patch$"
       "\\.lock$"
     ];
 
@@ -79,7 +76,6 @@
         excludes = [
           ".*\.zsh"
           ".envrc"
-          ".*/nixos-infect"
         ];
       };
       stylua.enable = true;

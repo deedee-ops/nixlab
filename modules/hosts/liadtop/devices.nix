@@ -1,15 +1,12 @@
 _: {
   flake.nixosModules.hosts-liadtop-devices =
-    { lib, pkgs, ... }:
+    { lib, ... }:
     let
       lidAction = "suspend"; # suspend or suspend-then-hibernate
     in
     {
       hardware = {
-        graphics = {
-          enable = true;
-          extraPackages = [ pkgs.mesa ];
-        };
+        graphics.enable = true;
         i2c.enable = true;
         wirelessRegulatoryDatabase = true;
       };
@@ -23,7 +20,6 @@ _: {
       };
 
       boot = {
-        kernelParams = [ "resume=/dev/disk/by-partlabel/disk-system-swap" ];
         # MT7922 stability: explicit regdomain (world domain limits txpower) and no ASPM
         extraModprobeConfig = ''
           options cfg80211 ieee80211_regdom=PL
