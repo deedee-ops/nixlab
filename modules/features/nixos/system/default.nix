@@ -82,7 +82,7 @@
               {
                 domain = "*";
                 item = "nofile";
-                type = "-";
+                type = "soft";
                 value = "4096";
               }
             ];

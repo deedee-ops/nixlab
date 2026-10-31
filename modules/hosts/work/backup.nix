@@ -10,8 +10,7 @@ _: {
       commonBackupOpts = {
         backupPrepareCommand = ''
           # remove stale locks - this avoids some occasional annoyance
-          #
-          ${lib.getExe pkgs.restic} unlock --remove-all || true
+          ${lib.getExe pkgs.restic} unlock || true
         '';
         initialize = true;
         paths = [

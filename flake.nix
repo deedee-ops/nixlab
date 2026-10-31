@@ -5,7 +5,10 @@
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     import-tree.url = "github:vic/import-tree";
-    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+    wrapper-modules = {
+      url = "github:BirdeeHub/nix-wrapper-modules";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     claude-desktop = {
       url = "github:danielbodart/claude-desktop";
@@ -21,17 +24,49 @@
       # still fetches crates from crates.io/api/v1, which now returns 403.
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    disko.url = "github:nix-community/disko";
-    firefox-addons.url = "git+https://gitlab.com/rycee/nur-expressions?dir=pkgs/firefox-addons";
-    home-manager.url = "github:nix-community/home-manager";
-    krewfile.url = "github:brumhard/krewfile";
-    nix-index-database.url = "github:nix-community/nix-index-database";
-    nixos-anywhere.url = "github:nix-community/nixos-anywhere";
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-addons = {
+      url = "git+https://gitlab.com/rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    krewfile = {
+      url = "github:brumhard/krewfile";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-anywhere = {
+      url = "github:nix-community/nixos-anywhere";
+      inputs.disko.follows = "disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # noctalia and vicinae keep their own nixpkgs, so builds hit their cachix caches (proxied by ncps)
     noctalia.url = "github:noctalia-dev/noctalia/cachix";
-    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
-    nsticky.url = "github:lonerOrz/nsticky";
-    sops-nix.url = "github:Mic92/sops-nix";
-    stylix.url = "github:danth/stylix";
+    noctalia-greeter = {
+      url = "github:noctalia-dev/noctalia-greeter";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nsticky = {
+      url = "github:lonerOrz/nsticky";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vicinae.url = "github:vicinaehq/vicinae";
   };
 
