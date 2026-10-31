@@ -26,10 +26,6 @@
           "i915.enable_guc=2"
         ];
         extraModulePackages = [ ];
-        loader = {
-          systemd-boot.enable = true;
-          efi.canTouchEfiVariables = true;
-        };
       };
 
       nixpkgs.hostPlatform = "x86_64-linux";

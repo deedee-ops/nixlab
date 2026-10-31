@@ -41,6 +41,11 @@
         };
       };
 
+      boot.loader = {
+        systemd-boot.enable = true;
+        efi.canTouchEfiVariables = true;
+      };
+
       hardware.bluetooth.enable = true;
 
       home-manager.users.${config.features.nixos.user.name} = {
