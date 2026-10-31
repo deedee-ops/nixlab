@@ -116,10 +116,15 @@ _: {
           };
         };
 
+        systemd.tmpfiles.rules = [
+          "d /srv/vms 0755 root root -"
+          "d /srv/vms/data 0755 root root -"
+          "d /srv/vms/isos 0755 ${cfg.username} users -"
+          "d /srv/vms/share 0755 ${cfg.username} users -"
+        ];
+
         system.activationScripts = {
           prepare-vms.text = ''
-            mkdir -p /srv/vms/share /srv/vms/isos
-            chmod -R 777 /srv/vms
             if ! ${lib.getExe' pkgs.libvirt "virsh"} net-list --all | grep -q default; then
               cat ${./vm-network.xml} | ${lib.getExe' pkgs.libvirt "virsh"} net-define /dev/stdin
               ${lib.getExe' pkgs.libvirt "virsh"} net-autostart default
