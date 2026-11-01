@@ -3,6 +3,7 @@
   flake.homeModules.features-home-niri =
     {
       config,
+      osConfig ? null,
       pkgs,
       lib,
       ...
@@ -438,6 +439,14 @@
                   "Mod+5".focus-workspace = "5-discord";
                   "Mod+6".focus-workspace = "6-teams";
                   "Mod+0".focus-workspace = "x-firefox";
+                }
+                // lib.optionalAttrs (osConfig != null && osConfig.features.nixos ? audio) {
+                  "Mod+B".spawn = _: {
+                    props = [
+                      (lib.getExe osConfig.features.nixos.audio.headsetModePackage)
+                      "toggle"
+                    ];
+                  };
                 };
             })
             + "\n"
