@@ -354,6 +354,7 @@ local function push(conn, done)
       item.href = caldav.path(db.calendarUrl) .. uid .. ".ics"
     end
     local rev = item.rev
+    local href = item.href
     local headers = { "Content-Type: text/calendar; charset=utf-8" }
     request(conn, "PUT", caldav.resolve(db.calendarUrl, item.href), item.ics, headers, function(res)
       if not isSuccess(res) then
@@ -363,7 +364,18 @@ local function push(conn, done)
         return fail(res, "upload")
       end
       local current = findItem(uid)
-      if current ~= nil then
+      if current == nil then
+        -- deleted while the upload was in flight: a new item got no tombstone
+        -- then, so queue one now or the next pull brings it back
+        local queued = false
+        for _, t in db.tombstones do
+          queued = queued or t.href == href
+        end
+        if not queued then
+          table.insert(db.tombstones, { href = href })
+          again = true
+        end
+      else
         current.new = false -- on the server now, so deleting it needs a tombstone
         current.etag = "" -- unknown until the next pull
         -- edited again while the upload was in flight: keep it queued
