@@ -181,11 +181,12 @@
           # misc
           "browser.aboutConfig.showWarning" = false;
           "browser.helperApps.deleteTempFileOnExit" = true;
-          "browser.uitour.enabled" = false;
-          "dom.security.https_only_mode" = true;
-          "network.dns.disableIPv6" = true;
           "browser.startup.page" = 1;
           "browser.tabs.closeWindowWithLastTab" = false;
+          "browser.uitour.enabled" = false;
+          "devtools.selfxss.count" = 100; # allow pasting in devtools
+          "dom.security.https_only_mode" = true;
+          "network.dns.disableIPv6" = true;
         };
     in
     {
