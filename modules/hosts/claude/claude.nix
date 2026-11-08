@@ -22,7 +22,15 @@
       programs.nix-ld.enable = true;
 
       # start the remote control server at boot, without a login session
-      users.users."${username}".linger = true;
+      users.users."${username}" = {
+        linger = true;
+        extraGroups = [ "adbusers" ];
+      };
+
+      users.groups.adbusers = { };
+      services.udev.extraRules = ''
+        SUBSYSTEM=="usb", ENV{ID_DEBUG_APPLIANCE}=="android", GROUP="adbusers", MODE="0660"
+      '';
 
       systemd.tmpfiles.rules = [
         "d ${workspace} 0755 ${username} users -"
@@ -119,6 +127,7 @@
         pkgs.wirelesstools
 
         # hardware
+        pkgs.android-tools
         pkgs.dmidecode
         pkgs.lm_sensors
         pkgs.lshw
