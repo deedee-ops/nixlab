@@ -8,6 +8,7 @@
 
         self.nixosModules.hosts-common-desktop
 
+        self.nixosModules.features-nixos-gaming
         self.nixosModules.features-nixos-grub
         self.nixosModules.features-nixos-networking
         self.nixosModules.features-nixos-vms
