@@ -1,8 +1,10 @@
 _: {
   flake.nixosModules.features-nixos-gaming =
-    { pkgs, ... }:
+    { config, pkgs, ... }:
     {
       config = {
+        users.users."${config.features.nixos.user.name}".extraGroups = [ "gamemode" ];
+
         programs = {
           gamemode.enable = true;
           steam = {
