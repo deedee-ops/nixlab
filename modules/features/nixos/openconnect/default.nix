@@ -58,7 +58,7 @@ _: {
               User = "root";
             };
           };
-          timers.openconnect-keepalive = {
+          timers.openconnect-keepalive = lib.mkIf (cfg.keepaliveHost != null) {
             wantedBy = [ "timers.target" ];
             timerConfig = {
               OnCalendar = "*:0/5";
