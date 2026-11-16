@@ -56,8 +56,8 @@ echo "👷 Archiving flake inputs"
 nix flake archive --to "$cache_url"
 echo "✅ All done!"
 
-# shellcheck disable=SC2044
-for host in $(find modules/hosts -maxdepth 1 -mindepth 1 -type d -exec basename {} \;); do
+hosts="$(nix eval --raw .#nixosConfigurations --apply 'c: builtins.concatStringsSep "\n" (builtins.attrNames c)')"
+for host in $hosts; do
   echo "👷 Building \"${host}\""
   if $ci; then
     nix build \
