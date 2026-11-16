@@ -57,7 +57,6 @@
           activation.krew = lib.mkForce (lib.hm.dag.entryAfter [ "installPackages" ] "");
 
           sessionVariables = {
-            KREW_ROOT = "${config.xdg.configHome}/krew";
             KUBECACHEDIR = "${config.xdg.cacheHome}/kube";
             KUBECONFIG = "${config.xdg.configHome}/kube/config";
           };
