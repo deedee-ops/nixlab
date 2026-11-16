@@ -98,7 +98,7 @@
               noctaliaPkg = inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default;
               toKdl =
                 content:
-                inputs.wrapper-modules.lib.toKdl (_: {
+                inputs.wrapper-modules.lib.generators.toKdl (_: {
                   inherit content;
                   version = 1;
                 });
