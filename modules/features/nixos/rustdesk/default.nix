@@ -13,10 +13,10 @@ _: {
       # before hbbs/hbbr start. Copies SOPS-decrypted keys into the working directory
       # so the servers pick them up instead of generating new ones.
       copyKeysScript = pkgs.writeShellScript "rustdesk-copy-keys" ''
-        ${pkgs.coreutils}/bin/install -m 400 -o rustdesk -g rustdesk \
+        ${lib.getExe' pkgs.coreutils "install"} -m 400 -o rustdesk -g rustdesk \
           ${config.sops.secrets."features/nixos/rustdesk/privateKey".path} \
           /var/lib/rustdesk/id_ed25519
-        ${pkgs.coreutils}/bin/install -m 400 -o rustdesk -g rustdesk \
+        ${lib.getExe' pkgs.coreutils "install"} -m 400 -o rustdesk -g rustdesk \
           ${config.sops.secrets."features/nixos/rustdesk/publicKey".path} \
           /var/lib/rustdesk/id_ed25519.pub
       '';

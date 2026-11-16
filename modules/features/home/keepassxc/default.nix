@@ -53,7 +53,7 @@
             package = pkgs.keepassxc;
             command = "${lib.getExe pkgs.keepassxc} --minimized ${secretsDbPath}";
             preStart = [
-              ''${pkgs.crudini}/bin/crudini --set "${config.xdg.configHome}/keepassxc/keepassxc.ini" FdoSecrets Enabled true''
+              ''${lib.getExe pkgs.crudini} --set "${config.xdg.configHome}/keepassxc/keepassxc.ini" FdoSecrets Enabled true''
             ];
           };
 

@@ -38,7 +38,7 @@ _: {
               PartOf = [ "graphical-session.target" ];
             };
             Service = {
-              ExecStartPre = "-${pkgs.glib}/bin/gdbus wait --session --timeout 30 org.kde.StatusNotifierWatcher";
+              ExecStartPre = "-${lib.getExe' pkgs.glib "gdbus"} wait --session --timeout 30 org.kde.StatusNotifierWatcher";
               ExecStart = lib.getExe' pkgs.kdePackages.kdeconnect-kde "kdeconnect-indicator";
               Restart = "on-failure";
               RestartSec = 5;

@@ -59,11 +59,11 @@ _: {
                   run cp "${./config.xml}" "${config.xdg.stateHome}/syncthing/config.xml"
                 fi
 
-                run ${pkgs.gnused}/bin/sed -i \
+                run ${lib.getExe pkgs.gnused} -i \
                   's/rescanIntervalS="[0-9]*"/rescanIntervalS="${toString cfg.rescanIntervalS}"/g' \
                   "${config.xdg.stateHome}/syncthing/config.xml"
 
-                run ${pkgs.gnused}/bin/sed -i \
+                run ${lib.getExe pkgs.gnused} -i \
                   's|<reconnectionIntervalS>[0-9]*</reconnectionIntervalS>|<reconnectionIntervalS>${toString cfg.reconnectionIntervalS}</reconnectionIntervalS>|g' \
                   "${config.xdg.stateHome}/syncthing/config.xml"
 

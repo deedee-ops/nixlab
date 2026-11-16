@@ -45,9 +45,9 @@
         };
         Service = {
           # missing `bin/${package.meta.mainProgram}` is expected here, using only `${package}` for prefix matching
-          ExecCondition = ''${pkgs.bash}/bin/sh -c 'for f in /proc/*/exe; do p=$(readlink "$f" 2>/dev/null); case "$p" in "$0"*) exit 1;; esac; done; exit 0' ${package}'';
+          ExecCondition = ''${pkgs.lib.getExe' pkgs.bash "sh"} -c 'for f in /proc/*/exe; do p=$(readlink "$f" 2>/dev/null); case "$p" in "$0"*) exit 1;; esac; done; exit 0' ${package}'';
           ExecStartPre = preStart ++ [
-            "-${pkgs.glib}/bin/gdbus wait --session --timeout 30 org.kde.StatusNotifierWatcher"
+            "-${pkgs.lib.getExe' pkgs.glib "gdbus"} wait --session --timeout 30 org.kde.StatusNotifierWatcher"
           ];
           ExecStart = if command == null then "${package}/bin/${package.meta.mainProgram}" else command;
           Restart = "on-failure";

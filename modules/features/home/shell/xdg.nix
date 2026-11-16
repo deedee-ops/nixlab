@@ -21,7 +21,7 @@ _: {
           packages = [ pkgs.xdg-ninja ];
 
           shellAliases = {
-            wget = "${pkgs.wget}/bin/wget --hsts-file=\"${config.xdg.dataHome}/wget-hsts\"";
+            wget = "${lib.getExe pkgs.wget} --hsts-file=\"${config.xdg.dataHome}/wget-hsts\"";
           };
 
           sessionVariables = {

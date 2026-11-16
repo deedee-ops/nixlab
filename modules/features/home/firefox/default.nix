@@ -352,8 +352,8 @@
               ${lib.getExe pkgs.pywalfox-native} install
             '';
             init-ytp-handler = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-              run ${pkgs.desktop-file-utils}/bin/update-desktop-database "$HOME/.local/share/applications"
-              run ${pkgs.xdg-utils}/bin/xdg-mime default youtube-handler.desktop x-scheme-handler/ytp
+              run ${lib.getExe' pkgs.desktop-file-utils "update-desktop-database"} "$HOME/.local/share/applications"
+              run ${lib.getExe' pkgs.xdg-utils "xdg-mime"} default youtube-handler.desktop x-scheme-handler/ytp
             '';
           };
           packages = [ youtubeHandler ] ++ lib.optionals (gpu != null) [ pkgs.ffmpeg-full ];

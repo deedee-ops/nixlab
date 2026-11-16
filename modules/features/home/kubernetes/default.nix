@@ -102,7 +102,7 @@
                 confirm = false;
                 description = "Edit Decoded Secret";
                 scopes = [ "secrets" ];
-                command = "${pkgs.kubectl}/bin/kubectl";
+                command = lib.getExe pkgs.kubectl;
                 background = false;
                 args = [
                   "modify-secret"
