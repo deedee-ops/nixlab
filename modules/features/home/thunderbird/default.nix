@@ -16,6 +16,19 @@ _: {
               "${pkgs.writeText "custom-ca.crt" (builtins.concatStringsSep "\n" cfg.trustedRootCertificates)}"
             ];
           };
+          Preferences =
+            lib.mapAttrs
+              (_: value: {
+                Value = value;
+                Status = "locked";
+              })
+              {
+                "media.autoplay.default" = 5; # block all, muted included
+                "media.autoplay.blocking_policy" = 2; # only direct user input may start playback
+                "media.autoplay.allow-extension-background-pages" = false;
+                "dom.webaudio.enabled" = false;
+                "dom.screenwakelock.enabled" = false;
+              };
         };
       };
 
