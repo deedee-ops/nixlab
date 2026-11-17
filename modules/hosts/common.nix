@@ -54,6 +54,9 @@
 
         networking.firewall.allowedTCPPorts = [ qrcpPort ];
 
+        # Moonlander: hidraw access for WebHID (Oryx, typ.ing) and Keymapp
+        hardware.keyboard.zsa.enable = true;
+
         features.nixos = {
           home-manager.modules = [
             self.homeModules.features-home-console
