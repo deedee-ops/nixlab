@@ -48,6 +48,9 @@
         };
       };
 
+      # networkd derives the DHCP client-id from machine-id, which is generic (shared) on desktops
+      systemd.network.networks."1003-br0-up".dhcpV4Config.ClientIdentifier = "mac";
+
       home-manager.users.${config.features.nixos.user.name}.features.home = {
         niri.displays = [
           "DP-1"

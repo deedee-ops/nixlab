@@ -27,6 +27,31 @@ _: {
           spiceUSBRedirection.enable = true;
         };
 
+        # libvirt's secrets key is a systemd credential sealed with the host key, which systemd drops when the
+        # machine-id changes. Upstream only creates the key when it's missing, so libvirtd then fails with
+        # 243/CREDENTIALS forever. Re-create it whenever it can't be decrypted (old blob kept aside).
+        systemd.services.virt-secret-init-encryption = {
+          after = [ "tpm2.target" ];
+          unitConfig.ConditionPathExists = [ "" ];
+          serviceConfig.ExecStart = [
+            ""
+            (pkgs.writeShellScript "virt-secret-init-encryption" ''
+              set -euo pipefail
+              creds=${lib.getExe' config.systemd.package "systemd-creds"}
+              key=/var/lib/libvirt/secrets/secrets-encryption-key
+              if [ -e "$key" ]; then
+                if "$creds" decrypt --name=secrets-encryption-key "$key" - >/dev/null; then
+                  exit 0
+                fi
+                echo "$key can't be decrypted, creating a new one" >&2
+                mv "$key" "$key.undecryptable-$(${lib.getExe' pkgs.coreutils "date"} +%s)"
+              fi
+              ${lib.getExe' pkgs.coreutils "dd"} if=/dev/random status=none bs=32 count=1 \
+                | "$creds" encrypt --name=secrets-encryption-key - "$key"
+            '')
+          ];
+        };
+
         fileSystems."/srv/vms/data" = cfg.dataFS;
 
         programs.virt-manager.enable = true;

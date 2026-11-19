@@ -54,6 +54,12 @@
 
         networking.firewall.allowedTCPPorts = [ qrcpPort ];
 
+        # Whonix/Kicksecure generic machine-id: identical on every install, so it can't fingerprint the host.
+        environment.etc.machine-id = {
+          text = "b08dfa6083e7567a1921a715000001fb\n";
+          mode = "0444";
+        };
+
         # Moonlander: hidraw access for WebHID (Oryx, typ.ing) and Keymapp
         hardware.keyboard.zsa.enable = true;
 
