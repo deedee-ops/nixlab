@@ -26,7 +26,7 @@ _: {
 
             settings = {
               alias = {
-                pf = "push --force-with-lease --force-if-includes";
+                purr = "push --force-with-lease";
                 tags = "tag -l";
                 branches = "branch -a";
                 remotes = "remote -v";
@@ -75,6 +75,7 @@ _: {
               push = {
                 default = "simple";
                 followTags = true;
+                useForceIfIncludes = true;
               };
               rerere = {
                 enabled = true;
