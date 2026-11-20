@@ -23,6 +23,9 @@ _: {
           };
         };
 
+        # vesktop rewrites its settings.json at runtime, which blocks HM activation
+        home.file."${config.xdg.configHome}/vesktop/settings.json".force = true;
+
         systemd.user.services = lib.mkGuiStartupService { package = pkgs.vesktop; };
       };
     };
